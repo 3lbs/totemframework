@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/math
+END
+Vector2D.as
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/math/Vector2D.as
+END
+Transformations.as
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/math/Transformations.as
+END
+Matrix2D.as
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/math/Matrix2D.as
+END
+MathUtils.as
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/math/MathUtils.as
+END
+Geometry.as
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/math/Geometry.as
+END
+AABBox.as
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/math/AABBox.as
+END

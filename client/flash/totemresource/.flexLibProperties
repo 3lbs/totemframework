@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="totem.resource.providers.ResourceProviderBase"/>
+    <classEntry path="totem.resource.DataResource"/>
+    <classEntry path="totem.resource.Resource"/>
+    <classEntry path="totem.resource.XMLResource"/>
+    <classEntry path="totem.resource.providers.FallbackResourceProvider"/>
+    <classEntry path="totem.resource.MP3Resource"/>
+    <classEntry path="totem.resource.ImageResource"/>
+    <classEntry path="totem.resource.ResourceManager"/>
+    <classEntry path="totem.resource.providers.EmbeddedResourceProvider"/>
+    <classEntry path="totem.resource.SoundResource"/>
+    <classEntry path="totem.resource.SWFResource"/>
+    <classEntry path="totem.resource.providers.BulkLoaderResourceProvider"/>
+    <classEntry path="totem.resource.providers.IResourceProvider"/>
+    <classEntry path="totem.resource.ResourceBundle"/>
+    <classEntry path="totem.resource.ResourceEvent"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

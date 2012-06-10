@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors
+END
+Alignment.as
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Alignment.as
+END
+FollowPath.as
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/FollowPath.as
+END
+Wander.as
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Wander.as
+END
+OffsetPursuit.as
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/OffsetPursuit.as
+END
+Dodge.as
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Dodge.as
+END
+Evade.as
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Evade.as
+END
+IGroupBehavior.as
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/IGroupBehavior.as
+END
+Seek.as
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Seek.as
+END
+ProjectedSeek.as
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/ProjectedSeek.as
+END
+ProjectedArrive.as
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/ProjectedArrive.as
+END
+Arrive.as
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Arrive.as
+END
+ABehavior.as
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/ABehavior.as
+END
+ObstacleAvoidance.as
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/ObstacleAvoidance.as
+END
+Cohesion.as
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Cohesion.as
+END
+CircleTarget.as
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/CircleTarget.as
+END
+Interpose.as
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Interpose.as
+END
+Seperation.as
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Seperation.as
+END
+WallAvoidance.as
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/WallAvoidance.as
+END
+Hide.as
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Hide.as
+END
+Pursuit.as
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Pursuit.as
+END
+Flee.as
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Behaviors/Flee.as
+END

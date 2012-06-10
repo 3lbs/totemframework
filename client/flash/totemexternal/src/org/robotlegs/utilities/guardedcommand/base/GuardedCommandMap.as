@@ -1,0 +1,132 @@
+package org.robotlegs.utilities.guardedcommand.base
+{
+	
+	import flash.events.Event;
+	import flash.events.IEventDispatcher;
+	import flash.utils.Dictionary;
+	import flash.utils.describeType;
+	
+	import org.robotlegs.base.CommandMap;
+	import org.robotlegs.base.ContextError;
+	import org.robotlegs.core.IInjector;
+	import org.robotlegs.core.IReflector;
+	import org.robotlegs.utilities.guardedcommand.core.IGuardedCommandMap;
+	
+	public class GuardedCommandMap extends CommandMap implements IGuardedCommandMap
+	{
+		
+		protected var verifiedGuardClasses : Dictionary;
+		
+		public const E_GUARD_NOIMPL : String = 'Guard Class does not implement an approve() method';
+		
+		public function GuardedCommandMap( eventDispatcher : IEventDispatcher, injector : IInjector, reflector : IReflector )
+		{
+			super ( eventDispatcher, injector, reflector );
+			this.verifiedGuardClasses = new Dictionary ( false );
+		}
+		
+		//---------------------------------------
+		// IGuardedCommandMap Implementation
+		//---------------------------------------
+		
+		//import org.robotlegs.core.IGuardedCommandMap;
+		public function mapGuardedEvent( eventType : String, commandClass : Class, guards : *, eventClass : Class = null, oneshot : Boolean = false ) : void
+		{
+			mapGuardedEventWithFallback ( eventType, commandClass, null, guards, eventClass, oneshot );
+		}
+		
+		
+		public function mapGuardedEventWithFallback( eventType : String, commandClass : Class, fallbackCommandClass : Class, guards : *, eventClass : Class = null, oneshot : Boolean = false ) : void
+		{
+			verifyCommandClass ( commandClass );
+			
+			if ( !( guards is Array ) )
+			{
+				guards = [ guards ]
+			}
+			
+			verifyGuardClasses ( guards );
+			
+			eventClass = eventClass || Event;
+			
+			var eventClassMap : Dictionary = eventTypeMap[ eventType ] || ( eventTypeMap[ eventType ] = new Dictionary ( false ) );
+			
+			var callbacksByCommandClass : Dictionary = eventClassMap[ eventClass ] || ( eventClassMap[ eventClass ] = new Dictionary ( false ) );
+			
+			if ( callbacksByCommandClass[ commandClass ] != null )
+			{
+				throw new ContextError ( ContextError.E_COMMANDMAP_OVR + ' - eventType (' + eventType + ') and Command (' + commandClass + ')' );
+			}
+			
+			var callback : Function = function( event : Event ) : void
+			{
+				routeEventToGuardedCommand ( event, commandClass, oneshot, eventClass, guards, fallbackCommandClass );
+			};
+			eventDispatcher.addEventListener ( eventType, callback, false, 0, true );
+			callbacksByCommandClass[ commandClass ] = callback;
+		}
+		
+		
+		protected function routeEventToGuardedCommand( event : Event, commandClass : Class, oneshot : Boolean, originalEventClass : Class, guardClasses : Array, fallbackCommandClass : Class = null ) : void
+		{
+			var eventClass : Class = Object ( event ).constructor;
+			
+			if ( !( event is originalEventClass ) )
+				return;
+			
+			injector.mapValue ( eventClass, event );
+			
+			var approved : Boolean = true;
+			var guardClass : Class;
+			var iLength : uint = guardClasses.length;
+			
+			for ( var i : int = 0; i < iLength; i++ )
+			{
+				guardClass = guardClasses[ i ];
+				var nextGuard : Object = injector.instantiate ( guardClass );
+				approved = ( approved && nextGuard.approve () );
+				
+				if ( ( !approved ) && ( fallbackCommandClass == null ) )
+				{
+					injector.unmap ( eventClass );
+					return;
+				}
+			}
+			
+			var commandClassToRun : Class = approved ? commandClass : fallbackCommandClass;
+			
+			var command : Object = injector.instantiate ( commandClassToRun );
+			injector.unmap ( eventClass );
+			command.execute ();
+			
+			if ( oneshot )
+			{
+				unmapEvent ( event.type, commandClass, originalEventClass );
+			}
+		}
+		
+		
+		protected function verifyGuardClasses( guardClasses : Array ) : void
+		{
+			var iLength : uint = guardClasses.length;
+			var guardClass : Class;
+			
+			for ( var i : int = 0; i < iLength; i++ )
+			{
+				guardClass = guardClasses[ i ];
+				
+				if ( !verifiedGuardClasses[ guardClass ] )
+				{
+					verifiedGuardClasses[ guardClass ] = describeType ( guardClass ).factory.method.( @name == "approve" ).length () == 1;
+					
+					if ( !verifiedGuardClasses[ guardClass ] )
+						throw new ContextError ( E_GUARD_NOIMPL + ' - ' + guardClass );
+				}
+			}
+		
+		}
+	
+	}
+}
+
+

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/15/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI
+END
+Wall.as
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/Wall.as
+END
+SteeringBehavior.as
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/SteeringBehavior.as
+END
+WanderRenderer.as
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/WanderRenderer.as
+END
+AISettings.as
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/11/trunk/Game%20Structure%20Articles%20Code/SteeringBehaviors/src/com/cheezeworld/AI/AISettings.as
+END

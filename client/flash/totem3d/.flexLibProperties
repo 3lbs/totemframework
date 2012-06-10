@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="totem3d.core.contexts.Context3D"/>
+    <classEntry path="totem3d.core.contexts.context3D.base.Mediator3D"/>
+    <classEntry path="totem3d.core.contexts.context3D.core.IMediator3D"/>
+    <classEntry path="totem3d.core.contexts.context3D.base.Render3DEvent"/>
+    <classEntry path="totem3d.core.contexts.context3D.core.IContext3D"/>
+    <classEntry path="totem3d.core.contexts.context3D.base.Mediator3DBase"/>
+    <classEntry path="totem3d.core.contexts.context3D.core.IMediator3DMap"/>
+    <classEntry path="totem3d.core.contexts.context3D.base.Mediator3DMap"/>
+    <classEntry path="totem3d.texture.TextureBuilder"/>
+    <classEntry path="totem3d.components.Spatial3dComponents"/>
+    <classEntry path="totem3d.core.datatypeobject.MeshParam"/>
+    <classEntry path="totem3d.core.datatypeobject.MaterialParam"/>
+    <classEntry path="totem3d.texture.BasicTexture"/>
+    <classEntry path="totem3d.texture.CompositeTexture"/>
+    <classEntry path="totem3d.components.MeshComponent"/>
+    <classEntry path="totem3d.components.TextureMaterialComponent"/>
+    <classEntry path="totem3d.core.controller.MeshAdaptorController"/>
+    <classEntry path="totem3d.core.controller.AnimationAdaptorController"/>
+    <classEntry path="totem3d.objectcache.MeshAsset"/>
+    <classEntry path="totem3d.components.Sequence3dAnimatorComponent"/>
+    <classEntry path="totem3d.events.View3DEvent"/>
+    <classEntry path="totem3d.config.ModelConfig"/>
+    <classEntry path="totem3d.core.datatypeobject.AnimationParam"/>
+    <classEntry path="totem3d.events.Model3DEvent"/>
+    <classEntry path="totem3d.events.MeshEvent"/>
+    <classEntry path="totem3d.core.controller.IMeshLoader"/>
+    <classEntry path="totem3d.utils.TextureMaterialUtil"/>
+    <classEntry path="totem3d.enums.MaterialTypeEnum"/>
+    <classEntry path="totem3d.controllers.Sequence3dAnimator"/>
+    <classEntry path="totem3d.events.Animation3DEvent"/>
+    <classEntry path="totem3d.components.IAnimatorComponent"/>
+    <classEntry path="totem3d.events.MaterialEvent"/>
+    <classEntry path="totem3d.builder.MaterialFactory"/>
+    <classEntry path="totem3d.texture.TextureConfig"/>
+    <classEntry path="totem3d.events.Camera3DEvent"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
