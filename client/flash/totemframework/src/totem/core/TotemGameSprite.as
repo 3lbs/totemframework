@@ -3,7 +3,7 @@ package totem.core
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
-	import org.robotlegs.core.IInjector;
+	import org.swiftsuspenders.Injector;
 	
 	import robotlegs.bender.framework.api.IContext;
 	
@@ -38,7 +38,7 @@ package totem.core
 		 * shell, so no need to worry about it!
 		 */
 		[Inject]
-		public function set parentInjector( value : IInjector ) : void
+		public function set parentInjector( value : Injector ) : void
 		{
 			throw new Error("This needs to be overriden");
 		}

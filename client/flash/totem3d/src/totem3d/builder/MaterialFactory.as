@@ -7,166 +7,153 @@ package totem3d.builder
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	
-	import mx.resources.ResourceManager;
-	
-	import org.casalib.events.RemovableEventDispatcher;
-	import org.robotlegs.core.IInjector;
-	
+	import totem.display.builder.AbstractFactory;
 	import totem.display.builder.BitmapDataFactory;
 	import totem.monitors.CompleteListMonitor;
-	import totem.monitors.IStartMonitor;
-	import totem.resource.Resource;
+	import gorilla.resource.IResource;
+	import gorilla.resource.IResourceManager;
 	
-	import totem3d.core.datatypeobject.MaterialParam;
-	
-	public class MaterialFactory extends RemovableEventDispatcher implements IStartMonitor
+	import totem3d.core.dto.MaterialParam;
+
+	public class MaterialFactory extends AbstractFactory
 	{
-		
+
 		private var material : TextureMaterial;
-		
+
 		private var params : MaterialParam;
-		
-		[Inject]
-		public var resourceManager : ResourceManager;
-		
-		[Inject]
-		public var injector : IInjector;
-		
-		private var failed : Boolean = false;
-		
-		private var _id : String;
-		
-		public function MaterialFactory( data : MaterialParam )
+
+		private var resourceManager : IResourceManager;
+
+		public function MaterialFactory( resourceManager : IResourceManager, data : MaterialParam )
 		{
-			super ();
+			super( data.id );
+
+			this.resourceManager = resourceManager;
 			
 			params = data;
 		}
-		
-		public function start() : void
+
+		override public function start() : void
 		{
-			var url : String = params.url;
-			
+
 			// next problem
 			// diffuse, specualr and normals
-			
-			var bitmapDataMonitor : CompleteListMonitor = new CompleteListMonitor ();
-			bitmapDataMonitor.addEventListener ( Event.COMPLETE, onBitmapDataComplete );
-			
-			
+
+			var bitmapDataMonitor : CompleteListMonitor = new CompleteListMonitor();
+			bitmapDataMonitor.addEventListener( Event.COMPLETE, onBitmapDataComplete );
+
+
 			var bitmapFactory : BitmapDataFactory;
-			
+
 			// diffuse texture
 			if ( params.diffuseTexture )
 			{
-				bitmapFactory = new BitmapDataFactory ( params.diffuseTexture );
-				injector.injectInto( bitmapFactory );
-				bitmapDataMonitor.addDispatcher ( bitmapFactory );
+				bitmapFactory = new BitmapDataFactory( resourceManager, params.diffuseTexture );
+				bitmapDataMonitor.addDispatcher( bitmapFactory );
 			}
-			
+
 			if ( params.specularTexture )
 			{
-				bitmapFactory = new BitmapDataFactory ( params.specularTexture );
-				injector.injectInto( bitmapFactory );
-				bitmapDataMonitor.addDispatcher ( bitmapFactory );
+				bitmapFactory = new BitmapDataFactory( resourceManager, params.specularTexture );
+				bitmapDataMonitor.addDispatcher( bitmapFactory );
 			}
-			
+
 			if ( params.normalTexture )
 			{
-				bitmapFactory = new BitmapDataFactory ( params.normalTexture );
-				injector.injectInto( bitmapFactory );
-				bitmapDataMonitor.addDispatcher ( bitmapFactory );
+				bitmapFactory = new BitmapDataFactory( resourceManager, params.normalTexture );
+				bitmapDataMonitor.addDispatcher( bitmapFactory );
 			}
-			
-			
-			bitmapDataMonitor.start ();
+
+
+			bitmapDataMonitor.start();
 		}
-		
+
 		protected function onBitmapDataComplete( event : Event ) : void
 		{
 			var bitmapDataMonitor : CompleteListMonitor = event.target as CompleteListMonitor;
-			bitmapDataMonitor.removeEventListener ( Event.COMPLETE, onBitmapDataComplete );
-			
+			bitmapDataMonitor.removeEventListener( Event.COMPLETE, onBitmapDataComplete );
+
 			var bitmapData : BitmapData;
 			var bitmapTexture : BitmapTexture;
 			var factory : BitmapDataFactory;
-			
+
 			if ( params.diffuseTexture )
 			{
-				factory = bitmapDataMonitor.getItemByID ( params.diffuseTexture ) as BitmapDataFactory;
-				
+				factory = bitmapDataMonitor.getItemByID( params.diffuseTexture ) as BitmapDataFactory;
+
 				if ( !factory.isFailed )
 				{
 					bitmapData = factory.bitmapData;
-					bitmapTexture = BitmapTextureCache.getInstance ().getTexture ( bitmapData );
+					bitmapTexture = BitmapTextureCache.getInstance().getTexture( bitmapData );
 				}
 			}
-			
-			material = new TextureMaterial ( bitmapTexture );
-			
+
+			material = new TextureMaterial( bitmapTexture );
+
 			// name here
 			material.name = params.id;
-			
+
 			// add params here	
 			for ( var key : String in params )
 			{
-				if ( material.hasOwnProperty ( key ) )
+				if ( material.hasOwnProperty( key ))
 					material[ key ] = params[ key ];
 			}
-			
+
 			if ( params.specularTexture )
 			{
+				factory = bitmapDataMonitor.getItemByID( params.specularTexture ) as BitmapDataFactory;
+
+				if ( !factory.isFailed )
+				{
+					bitmapData = factory.bitmapData;
+					bitmapTexture = BitmapTextureCache.getInstance().getTexture( bitmapData );
+					material.specularMap = bitmapTexture;
+				}
 			}
-			
+
 			if ( params.normalTexture )
 			{
-				
+				factory = bitmapDataMonitor.getItemByID( params.normalTexture ) as BitmapDataFactory;
+
+				if ( !factory.isFailed )
+				{
+					bitmapData = factory.bitmapData;
+					bitmapTexture = BitmapTextureCache.getInstance().getTexture( bitmapData );
+					material.normalMap = bitmapTexture;
+				}
 			}
+
+
+			bitmapDataMonitor.destroy();
 			
+			material.name = params.id;
 			
-			bitmapDataMonitor.destroy ();
-			
-			dispatchEvent ( new Event ( Event.COMPLETE ) );
+			dispatchEvent( new Event( Event.COMPLETE ));
 		}
-		
-		private function onBitmapFailed( resource : Resource ) : void
+
+		private function onBitmapFailed( resource : IResource ) : void
 		{
-			dispatchEvent ( new Event ( Event.COMPLETE ) );
+			dispatchEvent( new Event( Event.COMPLETE ));
 		}
-		
+
 		public function getResult() : TextureMaterial
 		{
 			return material;
 		}
-		
-		public function get isFailed() : Boolean
-		{
-			return failed;
-		}
-		
+
 		override public function destroy() : void
 		{
-			
-			super.destroy ();
-			
+
+			super.destroy();
+
 			params = null;
-			
+
 			// dont destroy the material.  its the product of factory
 			material = null;
-			
-			resourceManager = null;
+
 		}
-		
-		public function get id():String
-		{
-			return _id;
-		}
-		
-		public function set id(value:String):void
-		{
-			_id = value;
-		}
-	
+
 	}
 }
 

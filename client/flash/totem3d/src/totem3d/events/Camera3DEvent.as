@@ -11,6 +11,14 @@ package totem3d.events
 		
 		public static const HOVER_CAMERA:String = "Camera3dEvent:HoverCamera";
 		
+		public static const PAN_CAMERA : String = "Camera3dEvent:PanCamera";
+		
+		public static const ORBIT_CAMERA : String = "Camera3dEvent:OrbitCamera";
+		
+		public static const TRANSFORM_CAMERA : String = "Camera3dEvent:TransformCamera";
+		
+		public static const RESET_CAMERA : String = "Camear3dEvent:ResetCamera";
+		
 		public function Camera3DEvent(type:String, data:Object=null, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, data, bubbles, cancelable);

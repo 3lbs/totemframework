@@ -15,6 +15,9 @@
       </libraryPathEntry>
       <libraryPathEntry kind="3" linkType="1" path="/TotemExternal/bin/TotemExternal.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
+      <libraryPathEntry kind="3" linkType="1" path="/LadyDebug/bin/LadyDebug.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/TotemUtils/bin/TotemUtils.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/GorillaResource/bin/GorillaResource.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

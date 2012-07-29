@@ -1,12 +1,14 @@
 package totem.core
 {
 	import avmplus.getQualifiedClassName;
-
+	
 	import flash.net.registerClassAlias;
-
+	
 	import org.swiftsuspenders.Injector;
-
+	
 	import totem.totem_internal;
+	
+	import totemdebug.Logger;
 
 
 	use namespace totem_internal;
@@ -23,20 +25,9 @@ package totem.core
 	{
 		protected var _items : Vector.<TotemObject> = new Vector.<TotemObject>();
 
-		protected var _injector : Injector = null;
-
 		public function TotemGroup( _name : String = null )
 		{
 			super( _name );
-		}
-
-		totem_internal function get injector() : Injector
-		{
-			if ( _injector )
-				return _injector;
-			else if ( owningGroup )
-				return owningGroup.injector;
-			return null;
 		}
 
 		/**
@@ -58,29 +49,24 @@ package totem.core
 		/**
 		 * Return the SmashObject at the specified index.
 		 */
-		public final function getSmashObjectAt( index : int ) : TotemObject
+		public final function getTotemObjectAt( index : int ) : TotemObject
 		{
 			return _items[ index ];
 		}
 
-		public override function initialize() : void
+		override public function initialize() : void
 		{
-			// Groups can stand alone so don't do the _owningGroup check in the parent class.
-			//super.initialize();
 
 			// If no owning group, add to the global list for debug purposes.
 			if ( owningGroup == null )
 			{
-				// todo add root group error
-				// get engine
-				throw new Error( "A SmashObject must always be in a SmashGroup." );
-				//owningGroup = getEngine().rootGroup;
-				//owningGroup = Smash._rootGroup;
+				// this is a root group				
+				initInjection();
 			}
 			else
 			{
 				if ( _injector )
-					_injector.parentInjector = owningGroup.injector;
+					_injector.parentInjector = owningGroup.getInjector();
 
 				owningGroup.injectInto( this );
 			}
@@ -92,14 +78,14 @@ package totem.core
 
 			// Wipe the items.
 			while ( length )
-				getSmashObjectAt( length - 1 ).destroy();
+				getTotemObjectAt( length - 1 ).destroy();
 
 			// Shut down the managers we own.
 			if ( _injector )
 			{
-				
+
 				_injector.teardown();
-				
+
 				/*for ( var key : * in _injector.mappedValues )
 				{
 					const val : * = _injector.mappedValues[ key ];
@@ -107,6 +93,7 @@ package totem.core
 					if ( val is ISmashManager )
 						( val as ISmashManager ).destroy();
 				}*/
+				_injector = null;
 			}
 		}
 
@@ -135,7 +122,7 @@ package totem.core
 			_injector = new Injector();
 
 			if ( owningGroup )
-				_injector.parentInjector = owningGroup.injector;
+				_injector.parentInjector = owningGroup.getInjector();
 		}
 
 		/**
@@ -146,22 +133,21 @@ package totem.core
 		 * implements ISmashManager. Injection is also done on the manager when it
 		 * is registered.
 		 */
-		public function registerManager( clazz : Class, instance : * ) : void
+		public function registerManager( clazz : Class, instance : *, doInjectInto : Boolean = true ) : void
 		{
 			// register a short name for the manager, this is mainly used for tooling
 			var shortName : String = getQualifiedClassName( clazz ).split( "::" )[ 1 ];
 			registerClassAlias( shortName, clazz );
 
 			initInjection();
-			
-			// old SwiftSuspender
-			//_injector.map( instance, clazz );
-			
-			_injector.map( clazz );
-			_injector.injectInto( instance );
 
-			if ( instance is ITotemManager )
-				( instance as ITotemManager ).initialize();
+			_injector.map( clazz ).toValue( instance );
+
+			if ( doInjectInto )
+				_injector.injectInto( instance );
+
+			if ( instance is ITotemSystem )
+				( instance as ITotemSystem ).initialize();
 		}
 
 		/**
@@ -171,7 +157,7 @@ package totem.core
 		{
 			var res : * = null;
 
-			res = injector.getMapping( clazz );
+			res = getInjector().getMapping( clazz );
 
 			if ( !res )
 				throw new Error( "Can't find manager " + clazz + "!" );
@@ -185,21 +171,90 @@ package totem.core
 		 */
 		public function injectInto( object : * ) : void
 		{
-			injector.injectInto( object );
+			getInjector().injectInto( object );
 		}
 
+		private var entityCounter_ : int = 0;
+
+		public function createEntity( name : String = null ) : TotemEntity
+		{
+			//check duplicate entity name
+			if ( getInjector().satisfies( TotemEntity, name ))
+				throw new Error( "Entity named\"" + name + "\" already exists." );
+
+			if ( !name )
+				name = "entity" + entityCounter_++;
+
+			//add entity to group
+			var entity : TotemEntity = new TotemEntity( name );
+			
+			addChildObject( entity, name );
+			
+			return entity;
+		}
+		
+		public function addGroup ( group : TotemGroup ) : void
+		{
+			//check duplicate entity name
+			if ( getInjector().satisfies( TotemEntity, group.getName() ))
+				throw new Error( "Entity named\"" + group.getName() + "\" already exists." );
+			
+			addChildObject( group, group.getName() );
+			
+		}
+		
+		private function addChildObject ( object : TotemObject, name : String ) : void
+		{
+			
+			if ( object.owningGroup != null )
+				throw new Error( "Object named\"" + object.getName() + "\" is already in a group exists." );
+			
+			// Rusher did this mapping may not want to do this
+			getInjector().map( TotemEntity, name ).toValue( object );
+			object.owningGroup = this;
+			
+			//inject child injector
+			var childInjector : Injector = getInjector().createChildInjector();
+			childInjector.map( TotemEntity ).toValue( object );
+			object.setInjector( childInjector );
+		}
+		
+		//TODO: late removal
+		public function destroyEntity( name : String ) : void
+		{
+			//check entity name existence
+			if ( !getInjector().satisfies( TotemEntity, name ))
+				throw new Error( "Entity named\"" + name + "\" does not exist." );
+
+			var entity : TotemEntity = getEntity( name );
+
+			//remove entity from system
+			entity.dispose();
+			getInjector().unmap( TotemEntity, name );
+			entity.setInjector( null );
+		}
+		
+		
+		public function getEntity( name : String ) : TotemEntity
+		{
+			return getInjector().getInstance( TotemEntity, name );
+		}
+		
 		public function lookup( name : String ) : TotemObject
 		{
 			for each ( var go : TotemObject in _items )
 			{
-				if ( go.name == name )
+				if ( go.getName() == name )
 					return go;
 			}
-
-			//Logger.error(TotemGroup, "lookup", "lookup failed! GameObject by the name of " + name + " does not exist");
-
+			
+			if ( owningGroup )
+			{
+				return owningGroup.lookup( name );
+			}
+			
+			Logger.error(TotemGroup, "lookup", "lookup failed! GameObject by the name of " + name + " does not exist");
 			return null;
-			//return owningGroup.lookup(name);
 		}
 	}
 }

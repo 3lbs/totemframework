@@ -1,7 +1,8 @@
 package totem.core
 {
 	import org.swiftsuspenders.Injector;
-
+	
+	import totem.data.InListNode;
 	import totem.totem_internal;
 
 	use namespace totem_internal;
@@ -18,57 +19,59 @@ package totem.core
 	 * 4. Use the object!
 	 * 5. When you're done, call destroy(). (foo.destroy();)
 	 */
-	public class TotemObject
+	public class TotemObject  implements IDestroyable// extends InListNode
 	{
 		private var _name : String;
 
 		private var _active : Boolean = false;
-
+		
+		protected var _isDestroyed : Boolean;
+		
+		protected var _injector : Injector = null;
+		
 		totem_internal var _owningGroup : TotemGroup;
 
 		totem_internal var _sets : Vector.<TotemSet>;
 
-		public function TotemObject( _name : String = null )
+		public function TotemObject( name : String )
 		{
-			name = _name;
+			_name = name;
 		}
 
-		public function getInjector() : Injector
+		totem_internal function getInjector() : Injector
 		{
-			return owningGroup.injector;
+			if ( _injector )
+				return _injector;
+			else if ( owningGroup )
+				return owningGroup.getInjector();
+			return null;
 		}
-
+		
+		totem_internal function setInjector ( value : Injector ) : void
+		{
+			_injector = value;
+		}
+		
 		public function getInstance( InstanceClass : Class, name : String = "" ) : *
 		{
-			if ( !owningGroup.injector.satisfies( InstanceClass, name ))
+			if ( !getInjector().satisfies( InstanceClass, name ))
 			{
 				throw new Error( "Instance of" + InstanceClass + " named \"" + name + "\" not found." );
 			}
-			return owningGroup.injector.getInstance( InstanceClass, name );
+			return getInjector().getInstance( InstanceClass, name );
 		}
 
-		public function getEntity( name : String ) : TotemEntity
+		public function getSystem( SystemClass : Class ) : *
 		{
-			return getInstance( TotemEntity, name );
+			return getInstance( SystemClass );
 		}
 
 		/**
 		 * Name of the SmashObject. Used for dynamic lookups and debugging.
 		 */
-		public function get name() : String
+		public function getName() : String
 		{
 			return _name;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set name( value : String ) : void
-		{
-			if ( _active && _owningGroup )
-				throw new Error( "Cannot change SmashObject name after initialize() is called and while in a SmashGroup." );
-
-			_name = value;
 		}
 
 		/**
@@ -82,7 +85,7 @@ package totem.core
 		/**
 		 * @private
 		 */
-		public function get owningGroup() : TotemGroup
+		totem_internal function get owningGroup() : TotemGroup
 		{
 			return _owningGroup;
 		}
@@ -91,7 +94,7 @@ package totem.core
 		 * The SmashGroup that contains us. All SmashObjects must be in a SmashGroup,
 		 * and the owningGroup has to be set before calling initialize().
 		 */
-		public function set owningGroup( value : TotemGroup ) : void
+		totem_internal function set owningGroup( value : TotemGroup ) : void
 		{
 			if ( !value )
 				throw new Error( "A SmashObject must always be in a SmashGroup." );
@@ -138,6 +141,8 @@ package totem.core
 		 */
 		public function destroy() : void
 		{
+			this._isDestroyed = true;
+			
 			// Remove from sets.
 			if ( _sets )
 			{
@@ -153,6 +158,11 @@ package totem.core
 			}
 
 			_active = false;
+		}
+		
+		public function get destroyed() : Boolean
+		{
+			return this._isDestroyed;
 		}
 	}
 }

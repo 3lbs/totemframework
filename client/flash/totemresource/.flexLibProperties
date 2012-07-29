@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
-    <classEntry path="totem.resource.providers.ResourceProviderBase"/>
-    <classEntry path="totem.resource.DataResource"/>
-    <classEntry path="totem.resource.Resource"/>
-    <classEntry path="totem.resource.XMLResource"/>
-    <classEntry path="totem.resource.providers.FallbackResourceProvider"/>
-    <classEntry path="totem.resource.MP3Resource"/>
-    <classEntry path="totem.resource.ImageResource"/>
-    <classEntry path="totem.resource.ResourceManager"/>
-    <classEntry path="totem.resource.providers.EmbeddedResourceProvider"/>
-    <classEntry path="totem.resource.SoundResource"/>
-    <classEntry path="totem.resource.SWFResource"/>
-    <classEntry path="totem.resource.providers.BulkLoaderResourceProvider"/>
-    <classEntry path="totem.resource.providers.IResourceProvider"/>
-    <classEntry path="totem.resource.ResourceBundle"/>
-    <classEntry path="totem.resource.ResourceEvent"/>
+    <classEntry path="gorilla.resource.providers.ResourceProviderBase"/>
+    <classEntry path="gorilla.resource.DataResource"/>
+    <classEntry path="gorilla.resource.Resource"/>
+    <classEntry path="gorilla.resource.XMLResource"/>
+    <classEntry path="gorilla.resource.providers.FallbackResourceProvider"/>
+    <classEntry path="gorilla.resource.MP3Resource"/>
+    <classEntry path="gorilla.resource.ImageResource"/>
+    <classEntry path="gorilla.resource.ResourceManager"/>
+    <classEntry path="gorilla.resource.providers.EmbeddedResourceProvider"/>
+    <classEntry path="gorilla.resource.SoundResource"/>
+    <classEntry path="gorilla.resource.SWFResource"/>
+    <classEntry path="gorilla.resource.providers.BulkLoaderResourceProvider"/>
+    <classEntry path="gorilla.resource.providers.IResourceProvider"/>
+    <classEntry path="gorilla.resource.ResourceBundle"/>
+    <classEntry path="gorilla.resource.JSONResource"/>
+    <classEntry path="br.com.stimuli.loading.loadingtypes.BinaryItem"/>
+    <classEntry path="br.com.stimuli.loading.loadingtypes.JSONItem"/>
+    <classEntry path="br.com.stimuli.loading.loadingtypes.SoundItem"/>
+    <classEntry path="br.com.stimuli.loading.utils.SmartURL"/>
+    <classEntry path="br.com.stimuli.loading.BulkProgressEvent"/>
+    <classEntry path="br.com.stimuli.loading.loadingtypes.XMLItem"/>
+    <classEntry path="br.com.stimuli.loading.BulkLoader"/>
+    <classEntry path="br.com.stimuli.loading.lazyloaders.LazyXMLLoader"/>
+    <classEntry path="br.com.stimuli.loading.loadingtypes.URLItem"/>
+    <classEntry path="br.com.stimuli.loading.lazyloaders.LazyJSONLoader"/>
+    <classEntry path="br.com.stimuli.loading.loadingtypes.LoadingItem"/>
+    <classEntry path="br.com.stimuli.loading.loadingtypes.VideoItem"/>
+    <classEntry path="br.com.stimuli.loading.lazyloaders.LazyBulkLoader"/>
+    <classEntry path="br.com.stimuli.loading.loadingtypes.ImageItem"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

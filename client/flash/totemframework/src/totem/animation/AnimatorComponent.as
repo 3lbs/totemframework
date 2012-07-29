@@ -10,12 +10,12 @@ package totem.animation
 {
     import flash.utils.Dictionary;
     
-    import totem.core.Component;
+    import totem.core.TotemComponent;
 	
     /**
      * Component for animating any value on its owner.
      */
-    public class AnimatorComponent extends Component
+    public class AnimatorComponent extends TotemComponent
     {
         /**
          * A list of all the animation that can be played by this component.

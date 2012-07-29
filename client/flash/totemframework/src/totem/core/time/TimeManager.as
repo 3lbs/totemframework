@@ -14,15 +14,17 @@ package totem.core.time
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
-	import totem.TotemUtil;
-	import totem.core.Component;
-	import totem.core.ITotemManager;
-	import totem.debug.Logger;
-	import totem.debug.Profiler;
+	import totem.core.ITotemSystem;
+	import totem.core.TotemComponent;
 	import totem.utils.IPrioritizable;
 	import totem.utils.SimplePriorityQueue;
-	import totem.utils.TypeUtility;
 	import totem.utils.sprintf;
+	
+	import totemdebug.Logger;
+	import totemdebug.Profiler;
+	
+	import totemutils.TotemUtil;
+	import totemutils.TypeUtility;
 
 	/**
 	 * The process manager manages all time related functionality in the engine.
@@ -38,7 +40,7 @@ package totem.core.time
 	 * @see ITickedObject
 	 * @see IAnimatedObject
 	 */
-	public class TimeManager implements ITotemManager
+	public class TimeManager implements ITotemSystem
 	{
 
 		[Inject]
@@ -688,7 +690,7 @@ package totem.core.time
 			for ( var i : int = 0; i < queue.length; ++i )
 			{
 				var item : IPrioritizable = queue[ i ];
-				var component : Component = item as Component;
+				var component : TotemComponent = item as TotemComponent;
 				var hasOwner : String = "no";
 
 				if ( component && component.getOwner() )

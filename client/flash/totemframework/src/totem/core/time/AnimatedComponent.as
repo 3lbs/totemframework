@@ -8,7 +8,7 @@
  ******************************************************************************/
 package totem.core.time
 {
-	import totem.core.Component;
+	import totem.core.TotemComponent;
 
 
 
@@ -16,7 +16,7 @@ package totem.core.time
 	 * Base class for components that need to perform actions every frame. This
 	 * needs to be subclassed to be useful.
 	 */
-	public class AnimatedComponent extends Component implements IAnimated
+	public class AnimatedComponent extends TotemComponent implements IAnimated
 	{
 
 		/**
@@ -71,17 +71,17 @@ package totem.core.time
 			//applyBindings();
 		}
 
-		override public function onAdded() : void
+		override protected function onAdd() : void
 		{
-			super.onAdded();
+			super.onAdd();
 
 			// This causes the component to be registerd if it isn't already.
 			registerForUpdates = registerForUpdates;
 		}
 
-		override public function onRemoved() : void
+		override protected function onRemove() : void
 		{
-			super.onRemoved();
+			super.onRemove();
 
 			// Make sure we are unregistered.
 			registerForUpdates = false;

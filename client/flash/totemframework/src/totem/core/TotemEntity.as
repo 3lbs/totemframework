@@ -1,56 +1,88 @@
 package totem.core
 {
+	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
 
+	import org.casalib.events.RemovableEventDispatcher;
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
 
-	import totem.utils.construct;
+	import totem.totem_internal;
+
+	use namespace totem_internal;
 
 	public class TotemEntity extends TotemObject
 	{
-		private var name_ : String;
 
-		public function getName() : String
-		{
-			return name_;
-		}
+		//public var eventDispatcher : IEventDispatcher = new RemovableEventDispatcher();
 
 		private var components_ : Dictionary = new Dictionary();
 
+		public var onAddSignal : ISignal = new Signal( TotemEntity );
+
+		public var ticked : ISignal = new Signal( Number );
+
+		private var tickEnabled : Boolean;
+
 		public function getComponent( ComponentClass : Class ) : *
 		{
-			return IComponent( getInstance( ComponentClass ));
+			return getInstance( ComponentClass );
 		}
 
 		public function TotemEntity( name : String )
 		{
-			name_ = name;
+			super( name );
 		}
 
-		public function addComponent( ComponentClass : Class, ... params ) : *
+		public function addComponent( component : TotemComponent, ComponentClass : Class ) : TotemComponent
 		{
 			var injector : Injector = getInjector();
 
 			//check component existence
-			if ( injector.satisfies( ComponentClass ))
+			if ( injector.satisfiesDirectly( ComponentClass ))
 				throw new Error( "Component " + ComponentClass + " already added." );
 
-			//add component to entity
-			var component : IComponent = construct( ComponentClass, params );
 
 			//map to entity's and engine's injectors
 			injector.map( ComponentClass ).toValue( component );
-			injector.parentInjector.map( ComponentClass, getName()).toValue( component );
 
-			//intialize component
-			//component.setInjector( getInjector());
-			
+			component.setInjector( injector );
+			component.owner = this;
+			// you may not want to do this with components!!!!!!!!!!!!!!!!!!!!
+			//injector.parentInjector.map( ComponentClass, getName()).toValue( component );
+
 			components_[ ComponentClass ] = component;
 
-			getInjector().injectInto( component );
-			component.onAdded();
+			//component.doAdd();
 
 			return component;
+		}
+
+		override public function initialize() : void
+		{
+			super.initialize();
+
+			for each ( var component : TotemComponent in components_ )
+			{
+				getInjector().injectInto( component );
+				component.doAdd();
+			}
+
+			onAddSignal.dispatch( this );
+
+			onAddSignal.removeAll();
+			onAddSignal = null;
+
+		}
+
+		protected function doInitialize( component : TotemComponent ) : void
+		{
+			//component._owner = this;
+			owningGroup.injectInto( component );
+			component.doAdd();
+
+
 		}
 
 		public function removeComponent( ComponentClass : Class ) : void
@@ -58,18 +90,25 @@ package totem.core
 			var injector : Injector = getInjector();
 
 			//check component existence
-			if ( !injector.satisfies( ComponentClass ))
+			if ( !injector.satisfiesDirectly( ComponentClass ))
 				throw new Error( "Component " + ComponentClass + " not found." );
 
-			var component : IComponent = getComponent( ComponentClass );
+			var component : TotemComponent = getComponent( ComponentClass );
 
 			//remove component from entity
-			component.onRemoved();
-			//component.setInjector( null );
-			
+			component.doRemove();
+
+			injector.unmap( ComponentClass );
+			injector.parentInjector.unmap( ComponentClass, getName());
+
+			components_[ ComponentClass ] = null;
 			delete components_[ ComponentClass ];
 		}
 
+		internal function onTick( delta : Number ) : void
+		{
+			tickEnabled && ticked.dispatch( delta );
+		}
 
 		/** @private */
 		internal function dispose() : void
@@ -78,6 +117,10 @@ package totem.core
 			{
 				removeComponent( ComponentClass );
 			}
+			
+			ticked.removeAll();
+			onAddSignal.removeAll();
+			
 		}
 	}
 }

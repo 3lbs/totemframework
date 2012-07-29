@@ -3,11 +3,11 @@ package totem.core.input
     import flash.display.Stage;
     import flash.events.KeyboardEvent;
     
-    import totem.core.ITotemManager;
+    import totem.core.ITotemSystem;
     import totem.core.time.ITicked;
     import totem.core.time.TimeManager;
     
-    public class KeyboardManager implements totem.core.time.ITicked, ITotemManager
+    public class KeyboardManager implements totem.core.time.ITicked, ITotemSystem
     {
         [Inject]
         public var stage:Stage;

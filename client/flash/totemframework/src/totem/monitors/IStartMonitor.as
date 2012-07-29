@@ -8,7 +8,7 @@ package totem.monitors
 		
 		function get isFailed () : Boolean;
 		
-		function get id () : String;
+		function get id () : *;
 	}
 }
 

@@ -182,7 +182,8 @@ package org.swiftsuspenders
 
 
 		//----------------------            Internal Properties             ----------------------//
-		SsInternal const providerMappings : Dictionary = new Dictionary();
+		//SsInternal const providerMappings : Dictionary = new Dictionary();
+		public var providerMappings : Dictionary = new Dictionary();
 
 
 		//----------------------               Public Methods               ----------------------//
@@ -288,6 +289,7 @@ package org.swiftsuspenders
 		 */
 		public function satisfiesDirectly(type : Class, name : String = '') : Boolean
 		{
+			trace("test");
 			return providerMappings[getQualifiedClassName(type) + '|' + name] != null;
 		}
 
@@ -522,7 +524,8 @@ package org.swiftsuspenders
 			while (injector)
 			{
 				var provider : DependencyProvider =
-						injector.SsInternal::providerMappings[mappingId];
+						injector.providerMappings[mappingId];
+						//injector.SsInternal::providerMappings[mappingId];
 				if (provider)
 				{
 					if (provider is SoftDependencyProvider)

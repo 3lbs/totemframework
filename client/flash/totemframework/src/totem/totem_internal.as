@@ -1,5 +1,5 @@
 package totem
 {
-	public namespace totem_internal = "http://suckerpunch.framework/internal";
+	public namespace totem_internal = "http://totem.framework/internal";
 }
 

@@ -23,28 +23,23 @@ package robotlegs.bender.extensions.eventCommandMap.impl
 		/* Private Properties                                                         */
 		/*============================================================================*/
 
-		private const _mappings:Vector.<ICommandMapping> = new Vector.<ICommandMapping>;
+		private const _mappings : Vector.<ICommandMapping> = new Vector.<ICommandMapping>;
 
-		private var _injector:Injector;
+		private var _injector : Injector;
 
-		private var _dispatcher:IEventDispatcher;
+		private var _dispatcher : IEventDispatcher;
 
-		private var _type:String;
+		private var _type : String;
 
-		private var _eventClass:Class;
+		private var _eventClass : Class;
 
-		private var _once:Boolean;
+		private var _once : Boolean;
 
 		/*============================================================================*/
 		/* Constructor                                                                */
 		/*============================================================================*/
 
-		public function EventCommandTrigger(
-			injector:Injector,
-			dispatcher:IEventDispatcher,
-			type:String,
-			eventClass:Class = null,
-			once:Boolean = false)
+		public function EventCommandTrigger( injector : Injector, dispatcher : IEventDispatcher, type : String, eventClass : Class = null, once : Boolean = false )
 		{
 			_injector = injector.createChildInjector();
 			_dispatcher = dispatcher;
@@ -57,21 +52,24 @@ package robotlegs.bender.extensions.eventCommandMap.impl
 		/* Public Functions                                                           */
 		/*============================================================================*/
 
-		public function addMapping(mapping:ICommandMapping):void
+		public function addMapping( mapping : ICommandMapping ) : void
 		{
-			verifyCommandClass(mapping);
-			_mappings.push(mapping);
-			if (_mappings.length == 1)
+			verifyCommandClass( mapping );
+			_mappings.push( mapping );
+
+			if ( _mappings.length == 1 )
 				addListener();
 		}
 
-		public function removeMapping(mapping:ICommandMapping):void
+		public function removeMapping( mapping : ICommandMapping ) : void
 		{
-			const index:int = _mappings.indexOf(mapping);
-			if (index != -1)
+			const index : int = _mappings.indexOf( mapping );
+
+			if ( index != -1 )
 			{
-				_mappings.splice(index, 1);
-				if (_mappings.length == 0)
+				_mappings.splice( index, 1 );
+
+				if ( _mappings.length == 0 )
 					removeListener();
 			}
 		}
@@ -80,58 +78,59 @@ package robotlegs.bender.extensions.eventCommandMap.impl
 		/* Private Functions                                                          */
 		/*============================================================================*/
 
-		private function verifyCommandClass(mapping:ICommandMapping):void
+		private function verifyCommandClass( mapping : ICommandMapping ) : void
 		{
-			if (describeType(mapping.commandClass).factory.method.(@name == "execute").length() == 0)
-				throw new Error("Command Class must expose an execute method");
+			if ( describeType( mapping.commandClass ).factory.method.( @name == "execute" ).length() == 0 )
+				throw new Error( "Command Class must expose an execute method" );
 		}
 
-		private function addListener():void
+		private function addListener() : void
 		{
-			_dispatcher.addEventListener(_type, handleEvent);
+			_dispatcher.addEventListener( _type, handleEvent );
 		}
 
-		private function removeListener():void
+		private function removeListener() : void
 		{
-			_dispatcher.removeEventListener(_type, handleEvent);
+			_dispatcher.removeEventListener( _type, handleEvent );
 		}
 
-		private function handleEvent(event:Event):void
+		private function handleEvent( event : Event ) : void
 		{
-			const eventConstructor:Class = event["constructor"];
+			const eventConstructor : Class = event[ "constructor" ];
 
 			// check strongly-typed event (if specified)
-			if (_eventClass && eventConstructor != _eventClass)
+			if ( _eventClass && eventConstructor != _eventClass )
 				return;
 
 			// map loosely typed event for injection
-			_injector.map(Event).toValue(event);
+			_injector.map( Event ).toValue( event );
 
 			// map the strongly typed event for injection
-			if (eventConstructor != Event)
-				_injector.map(_eventClass || eventConstructor).toValue(event);
+			if ( eventConstructor != Event )
+				_injector.map( _eventClass || eventConstructor ).toValue( event );
 
 			// run past the guards and hooks, and execute
-			const mappings:Vector.<ICommandMapping> = _mappings.concat();
-			for each (var mapping:ICommandMapping in mappings)
+			const mappings : Vector.<ICommandMapping> = _mappings.concat();
+
+			for each ( var mapping : ICommandMapping in mappings )
 			{
-				if (guardsApprove(mapping.guards, _injector))
+				if ( guardsApprove( mapping.guards, _injector ))
 				{
-					_once && removeMapping(mapping);
-					_injector.map(mapping.commandClass).asSingleton();
-					const command:Object = _injector.getInstance(mapping.commandClass);
-					applyHooks(mapping.hooks, _injector);
-					_injector.unmap(mapping.commandClass);
+					_once && removeMapping( mapping );
+					_injector.map( mapping.commandClass ).asSingleton();
+					const command : Object = _injector.getInstance( mapping.commandClass );
+					applyHooks( mapping.hooks, _injector );
+					_injector.unmap( mapping.commandClass );
 					command.execute();
 				}
 			}
 
 			// unmap the loosely typed event
-			_injector.unmap(Event);
+			_injector.unmap( Event );
 
 			// unmap the strongly typed event
-			if (eventConstructor != Event)
-				_injector.unmap(_eventClass || eventConstructor);
+			if ( eventConstructor != Event )
+				_injector.unmap( _eventClass || eventConstructor );
 		}
 	}
 }

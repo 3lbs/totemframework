@@ -4,48 +4,38 @@ package totem.core.command
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
 	
-	public class Command // implements IDisposable
+	import totem.core.Destroyable;
+	import totem.core.TotemObject;
+
+	public class Command extends Destroyable
 	{
-		private var _onComplete : ISignal = new Signal ( Command );
-		
-		public function get onComplete() : ISignal
-		{
-			return _onComplete;
-		}
-		
+		/** @private */
+		internal var isComplete : Boolean;
+
+		public var onComplete : ISignal = new Signal( Command );
+
 		public function Command()
 		{
+		}
 		
-		}	
-		
+		[Inject]
 		/**
 		 * @private
 		 */
 		internal function injectChildren( injector : Injector ) : void
 		{
-		
+
 		}
 		
 		public function execute() : void
 		{
-		
 		}
 		
-		public function update( dt : Number ) : void
+		
+		protected final function complete():void
 		{
-		
-		}
-		
-		public final function complete() : void
-		{
-			onComplete.dispatch ( this );
-		}
-		
-		public function dispose() : void
-		{
-		
-		}
+			isComplete = true;
+			onComplete.dispatch(this);
+		}	
 	}
 }
-
-

@@ -3,81 +3,67 @@ package totem.display.builder
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	
-	import org.casalib.events.RemovableEventDispatcher;
+	import gorilla.resource.IResource;
+	import gorilla.resource.IResourceManager;
+	import gorilla.resource.ImageResource;
 	
 	import totem.net.URLManager;
-	import totem.monitors.IStartMonitor;
-	
-	public class BitmapDataFactory extends RemovableEventDispatcher implements IStartMonitor
+	import totem.net.getURL;
+
+	public class BitmapDataFactory extends AbstractFactory
 	{
-		
-		//[Inject]
-		//public var resourceManager : ResourceManager;
-		
+
+		public var resourceManager : IResourceManager;
+
 		private var filename : String;
-		
+
 		private var _bitmapData : BitmapData;
-		
-		private var failed : Boolean = false;
-		private var _id:String;
-		
-		public function BitmapDataFactory( url : String )
+
+		public function BitmapDataFactory( manager : IResourceManager, url : String, id : String = "" )
 		{
-			super ();
-			
-			_id = url;  
-			filename = URLManager.getAssetURL( url ); 
+			super( id || url );
+
+			resourceManager = manager;
+
+			filename = getURL( url , URLManager.ASSET_URL );
 		}
-		
-		public function start() : void
+
+		override public function start() : void
 		{
-			//resourceManager.load ( filename, ImageResource, onBitmapComplete, onBitmapFailed );
+			var resource : IResource = resourceManager.load( filename, ImageResource );
+			resource.completeCallback( onBitmapComplete );
+			resource.failedCallback( onBitmapFailed );
 		}
-		
-		/*private function onBitmapFailed( resource : Resource ) : void
+
+		private function onBitmapFailed( resource : IResource ) : void
 		{
 			failed = true;
-			
 			factoryComplete();
-		}*/
-		
-		/*private function onBitmapComplete( resource : ImageResource ) : void
+		}
+
+		private function onBitmapComplete( resource : ImageResource ) : void
 		{
-			
 			_bitmapData = resource.bitmapData;
-			
 			factoryComplete();
-		}*/
-		
-		private function factoryComplete () : void
-		{			
-			dispatchEvent ( new Event ( Event.COMPLETE ) );
 		}
-		
-		
-		public function get isFailed() : Boolean
+
+		private function factoryComplete() : void
 		{
-			return failed;
+			dispatchEvent( new Event( Event.COMPLETE ));
 		}
-		
+
 		override public function destroy() : void
 		{
-			super.destroy ();
-			
+			super.destroy();
+			resourceManager = null;
 			_bitmapData = null;
 		}
-		
-		public function get bitmapData():BitmapData
+
+		public function get bitmapData() : BitmapData
 		{
 			return _bitmapData;
 		}
-		
-		public function get id():String
-		{
-			return _id;
-		}
-	
-	
+
 	}
 }
 

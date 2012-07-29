@@ -1,138 +1,70 @@
 package totem.core.state
 {
-	import org.swiftsuspenders.Injector;
-	
-	import totem.core.command.Command;
-	import totem.core.command.CommandManager;
-	import totem.core.time.Clock;
-	
-	public class StateMachine //implements IComponent, IDisposable
+	import totem.core.TotemObject;
+
+	public class StateMachine extends TotemObject
 	{
-		private var _inTransition : Boolean = false;
-		
-		private var _targetState : State;
-		
-		private var _currentState : State;
-		
-		private var _initState : State;
-		
-		public function StateMachine( initState : State = null )
+		private var inTransition_ : Boolean = false;
+
+		private var nextState_ : State = null;
+
+		private var currentState_ : State = null;
+
+		public function StateMachine( initState : State, name : String = null )
 		{
-			_initState = initState;
-		}
-		
-		private var _clock : Clock;
-		
-		private var _commandManager : CommandManager;
-		
-		private var _injector : Injector;
-		
-		[Inject]
-		public function inject( clock : Clock, commandManager : CommandManager, injector : Injector ) : void
-		{
-			_clock = clock;
-			_commandManager = commandManager;
-			_injector = injector;
+			nextState_ = initState;
 			
-			_clock.add ( update );
-			
-			//start init state
-			if ( _initState )
-				setState ( _initState );
+			super( name );
 		}
-		
-		public function dispose() : void
+
+		public function update( dt : Number ) : void
 		{
-			_clock.remove ( update );
-			_clock = null;
-			
-			_injector.unmap ( StateMachine );
-			_injector = null;
-			
-			_commandManager = null;
-			_targetState = null;
-			_currentState = null;
-		}
-		
-		private function update( dt : Number ) : void
-		{
-			if ( _currentState && !_inTransition )
-				_currentState.update ( dt );
-		}
-		
-		public function input( value : * ) : void
-		{
-			if ( _inTransition )
+			if ( nextState_ && nextState_ != currentState_ )
 			{
-				trace ( "State transition in action. Input ignored." )
-				return;
+				//exit current state
+				if ( currentState_ )
+				{
+					currentState_.exit();
+					currentState_.stateMachine = null;
+
+					//currentState_.owningGroup = this.owningGroup;
+
+						//currentState_.setInjector(null);
+				}
+
+				//set new current state
+				currentState_ = nextState_;
+
+				//initialize current state
+				currentState_.stateMachine = this;
+				//currentState_.owningGroup = this.owningGroup;
+
+				//currentState_.setInjector(getInjector());
+				//currentState_.getInjector().injectInto( currentState_ );
+				currentState_.enter();
+
+				//make next state null
+				nextState_ = null;
 			}
-			
-			if ( _currentState )
-				_currentState.input ( value );
+
+			//update current state
+			if ( currentState_ )
+				currentState_.update( dt );
 		}
-		
-		public function setState( state : State ) : void
+
+		public function setState( nextState : State ) : void
 		{
-			if ( !state )
-				return;
-			
-			//ignore new state when transition is in action
-			if ( _inTransition )
-			{
-				trace ( "WARNING: State transition in action. State not chnaged." );
-				return;
-			}
-			
-			_inTransition = true;
-			_targetState = state;
-			
-			if ( _currentState )
-			{
-				
-				//execute exit command
-				var exitCommand : Command = _currentState.getExitCommand ();
-				exitCommand.onComplete.addOnce ( onCurrentStateExit );
-				_commandManager.execute ( exitCommand );
-			}
-			else
-			{
-				//switch to target state
-				_targetState.stateMachine = this;
-				
-				//dependency injection
-				_injector.injectInto ( _targetState );
-				
-				//execute enter command
-				var enterCommand : Command = _targetState.getEnterCommand ();
-				enterCommand.onComplete.addOnce ( onTargetStateEnter );
-				_commandManager.execute ( enterCommand );
-			}
+			nextState_ = nextState;
 		}
-		
-		private function onCurrentStateExit( command : Command ) : void
+
+		/** @private */
+		internal function dispose() : void
 		{
-			_currentState.dispose ();
-			_currentState.stateMachine = null;
-			_targetState.stateMachine = this;
-			
-			//dependency injection
-			_injector.injectInto ( _targetState );
-			
-			var enterCommand : Command = _targetState.getEnterCommand ();
-			enterCommand.onComplete.addOnce ( onTargetStateEnter );
-			_commandManager.execute ( enterCommand );
-		}
-		
-		private function onTargetStateEnter( command : Command ) : void
-		{
-			_currentState = _targetState;
-			_inTransition = false;
-			_targetState = null;
-			
-			_currentState.onSet ();
+			if ( currentState_ )
+			{
+				currentState_.exit();
+				currentState_ = null;
+			}
 		}
 	}
 }
-
-

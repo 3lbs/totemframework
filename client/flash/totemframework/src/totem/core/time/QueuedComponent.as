@@ -8,7 +8,7 @@
  ******************************************************************************/
 package totem.core.time
 {
-	import totem.core.Component;
+	import totem.core.TotemComponent;
     
     
     /**
@@ -22,7 +22,7 @@ package totem.core.time
      * no allocations are required beyond the initial allocation of the
      * ThinkingComponent.</p>
      */
-    public class QueuedComponent extends Component implements IQueued
+    public class QueuedComponent extends TotemComponent implements IQueued
     {
         protected var _nextThinkTime:int;
         protected var _nextThinkCallback:Function;
@@ -48,9 +48,9 @@ package totem.core.time
             timeManager.dequeueObject(this);
         }
         
-        override public function onRemoved() : void
+        override protected function onRemove() : void
         {
-            super.onRemoved();
+            super.onRemove();
             
             // Do not allow us to be called back if we are still
             // in the queue.

@@ -1,18 +1,19 @@
 package totem.core.command
 {
-	import org.swiftsuspenders.Injector;
-	
+	import totem.data.InListIterator;
+
 	public class SerialCommand extends CompositeCommand
 	{
-		public function SerialCommand( ... commands )
-		{
-			super ( commands );
-		}
-		
+
 		private var _idle : Boolean = true;
-		
+
 		private var _index : int;
-		
+
+		public function SerialCommand( ... subcommands )
+		{
+			super( subcommands );
+		}
+
 		override public function execute() : void
 		{
 			if ( _idle )
@@ -21,36 +22,34 @@ package totem.core.command
 				{
 					_index = 0;
 					_idle = false;
-					
+
 					var command : Command = childrenCommands[ 0 ];
-					command.onComplete.addOnce ( onCommandComplete );
-					commandManager.execute ( command );
+					command.onComplete.addOnce( onCommandComplete );
+					commandManager.executeCommand( command );
 				}
 				else
 				{
 					//zero command
-					complete ();
+					complete();
 				}
 			}
 		}
-		
+
 		protected function onCommandComplete( command : Command ) : void
 		{
 			++_index;
-			
+
 			if ( _index == childrenCommands.length )
 			{
-				complete ();
+				complete();
 				_idle = true;
 			}
 			else
 			{
 				var command : Command = childrenCommands[ _index ];
-				command.onComplete.addOnce ( onCommandComplete );
-				commandManager.execute ( command );
+				command.onComplete.addOnce( onCommandComplete );
+				commandManager.executeCommand( command );
 			}
 		}
 	}
 }
-
-

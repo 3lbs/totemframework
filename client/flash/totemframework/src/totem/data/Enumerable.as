@@ -10,7 +10,7 @@ package totem.data
 {
    import flash.utils.Dictionary;
    
-   import totem.debug.Logger;
+   import totemdebug.Logger;
    
    [EditorData(ignore="true")]
    

@@ -1,8 +1,8 @@
 package totem.sound
 {
-	import totem.core.ITotemManager;
+	import totem.core.ITotemSystem;
 	
-	public interface ISoundManager extends ITotemManager
+	public interface ISoundManager extends ITotemSystem
 	{
 		
 	}

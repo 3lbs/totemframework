@@ -1,55 +1,31 @@
 package totem.core.state
 {
-	import totem.core.command.Command;
-	import totem.core.command.utils.Dummy;
-	
-	public class State //implements IDisposable
+	import totem.core.TotemObject;
+
+	public class State
 	{
-		/**
-		 * @private
-		 */
+		/** @private */
 		internal var stateMachine : StateMachine;
-		
+
 		public function State()
 		{
-		
 		}
-		
-		public function getEnterCommand() : Command
+
+		public function enter() : void
 		{
-			return new Dummy ();
 		}
-		
-		public function getExitCommand() : Command
-		{
-			return new Dummy ();
-		}
-		
-		public function onSet() : void
-		{
-		
-		}
-		
-		public function input( value : * ) : void
-		{
-		
-		}
-		
+
 		public function update( dt : Number ) : void
 		{
-		
 		}
-		
+
+		public function exit() : void
+		{
+		}
+
 		protected final function goto( state : State ) : void
 		{
-			stateMachine.setState ( state );
-		}
-		
-		public function dispose() : void
-		{
-		
+			stateMachine.setState( state );
 		}
 	}
 }
-
-

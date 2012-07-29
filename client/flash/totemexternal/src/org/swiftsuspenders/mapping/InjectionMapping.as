@@ -273,7 +273,7 @@ package org.swiftsuspenders.mapping
 		 */
 		public function hasProvider() : Boolean
 		{
-			return Boolean(_creatingInjector.SsInternal::providerMappings[_mappingId]);
+			return Boolean(_creatingInjector.providerMappings[_mappingId]);
 		}
 
 		/**
@@ -282,7 +282,7 @@ package org.swiftsuspenders.mapping
 		public function getProvider() : DependencyProvider
 		{
 			var provider : DependencyProvider =
-				_creatingInjector.SsInternal::providerMappings[_mappingId];
+				_creatingInjector.providerMappings[_mappingId];
 			while (provider is ForwardingProvider)
 			{
 				provider = ForwardingProvider(provider).provider;
@@ -332,7 +332,8 @@ package org.swiftsuspenders.mapping
 			{
 				provider = new InjectorUsingProvider(_overridingInjector, provider);
 			}
-			_creatingInjector.SsInternal::providerMappings[_mappingId] = provider;
+			_creatingInjector.providerMappings[_mappingId] = provider;
+			//_creatingInjector.SsInternal::providerMappings[_mappingId] = provider;
 		}
 
 		private function throwSealedError() : void

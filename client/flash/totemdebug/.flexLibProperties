@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="totemdebug.Counters"/>
+    <classEntry path="totemdebug.Console"/>
+    <classEntry path="totemdebug.LogColor"/>
+    <classEntry path="totemdebug.LogEntry"/>
+    <classEntry path="totemdebug.ConsoleCommand"/>
+    <classEntry path="totemdebug.GlyphCache"/>
+    <classEntry path="totemdebug.TraceAppender"/>
+    <classEntry path="totemdebug.ConsoleCommandManager"/>
+    <classEntry path="totemdebug.Logger"/>
+    <classEntry path="totemdebug.ILogAppender"/>
+    <classEntry path="totemdebug.LogEvent"/>
+    <classEntry path="totemdebug.ILogger"/>
+    <classEntry path="totemdebug.Stats"/>
+    <classEntry path="totemdebug.Profiler"/>
+    <classEntry path="totemdebug.ladydebug_internal"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
