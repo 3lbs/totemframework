@@ -1,14 +1,12 @@
 package totem.monitors
 {
-	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-	import flash.events.IOErrorEvent;
 	
 	import org.casalib.core.IDestroyable;
 	import org.casalib.events.RemovableEventDispatcher;
 
-	public class CompleteListMonitor extends RemovableEventDispatcher
+	public class CompleteListMonitor extends RemovableEventDispatcher implements IListID
 	{
 
 		private var monitorList : Array;

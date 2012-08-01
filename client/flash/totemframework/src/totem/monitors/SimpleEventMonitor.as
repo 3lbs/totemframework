@@ -20,13 +20,13 @@ package totem.monitors
 	 *
 	 * @author eddie
 	 */
-	public class CompleteSimpleMonitor extends RemovableEventDispatcher
+	public class SimpleEventMonitor extends RemovableEventDispatcher
 	{
 		
 		/**
 		 *
 		 */
-		public function CompleteSimpleMonitor()
+		public function SimpleEventMonitor()
 		{
 			numDispatchers = completed = 0;
 		}

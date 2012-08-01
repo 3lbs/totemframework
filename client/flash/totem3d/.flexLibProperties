@@ -200,6 +200,7 @@
     <classEntry path="totem3d.params.lights.LightList"/>
     <classEntry path="totem3d.actors.components.ITextureMaterialComponent"/>
     <classEntry path="totem3d.resource.away3d.AwayAWDResource"/>
+    <classEntry path="totem3d.builder.MaterialLoader"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

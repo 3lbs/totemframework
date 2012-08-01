@@ -7,28 +7,25 @@ package totem3d.builder
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	
-	import totem.display.builder.AbstractFactory;
+	import gorilla.resource.IResource;
+	
 	import totem.display.builder.BitmapDataFactory;
 	import totem.monitors.CompleteListMonitor;
-	import gorilla.resource.IResource;
-	import gorilla.resource.IResourceManager;
+	import totem.monitors.AbstractProxy;
 	
 	import totem3d.core.dto.MaterialParam;
 
-	public class MaterialFactory extends AbstractFactory
+	public class MaterialFactory extends AbstractProxy
 	{
 
 		private var material : TextureMaterial;
 
 		private var params : MaterialParam;
 
-		private var resourceManager : IResourceManager;
-
-		public function MaterialFactory( resourceManager : IResourceManager, data : MaterialParam )
+		public function MaterialFactory( data : MaterialParam )
 		{
-			super( data.id );
-
-			this.resourceManager = resourceManager;
+			//super( data.id );
+			this.id = data.id;
 			
 			params = data;
 		}
@@ -36,42 +33,7 @@ package totem3d.builder
 		override public function start() : void
 		{
 
-			// next problem
-			// diffuse, specualr and normals
-
-			var bitmapDataMonitor : CompleteListMonitor = new CompleteListMonitor();
-			bitmapDataMonitor.addEventListener( Event.COMPLETE, onBitmapDataComplete );
-
-
-			var bitmapFactory : BitmapDataFactory;
-
-			// diffuse texture
-			if ( params.diffuseTexture )
-			{
-				bitmapFactory = new BitmapDataFactory( resourceManager, params.diffuseTexture );
-				bitmapDataMonitor.addDispatcher( bitmapFactory );
-			}
-
-			if ( params.specularTexture )
-			{
-				bitmapFactory = new BitmapDataFactory( resourceManager, params.specularTexture );
-				bitmapDataMonitor.addDispatcher( bitmapFactory );
-			}
-
-			if ( params.normalTexture )
-			{
-				bitmapFactory = new BitmapDataFactory( resourceManager, params.normalTexture );
-				bitmapDataMonitor.addDispatcher( bitmapFactory );
-			}
-
-
-			bitmapDataMonitor.start();
-		}
-
-		protected function onBitmapDataComplete( event : Event ) : void
-		{
-			var bitmapDataMonitor : CompleteListMonitor = event.target as CompleteListMonitor;
-			bitmapDataMonitor.removeEventListener( Event.COMPLETE, onBitmapDataComplete );
+			var bitmapDataMonitor : CompleteListMonitor = null;//event.target as CompleteListMonitor;
 
 			var bitmapData : BitmapData;
 			var bitmapTexture : BitmapTexture;
