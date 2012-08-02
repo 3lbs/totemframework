@@ -11,10 +11,7 @@ package totem3d.actors.components
 	import org.osflash.signals.Signal;
 	
 	import totem.core.TotemComponent;
-	import totem.core.command.CommandManagerComponent;
 	
-	import totem3d.actors.commands.builder.BuildTextureMaterialCommand;
-	import totem3d.core.dto.MaterialParam;
 	import totem3d.texture.TextureConfig;
 	import totem3d.utils.TextureMaterialUtil;
 	
@@ -34,36 +31,17 @@ package totem3d.actors.components
 		
 		private var repeat : Boolean = true;
 		
-		private var _defaultMaterial : TextureMaterial;
-		
-		private var materialParam : MaterialParam;
-		
 		public var onUpdateMaterial : ISignal = new Signal( ITextureMaterialComponent );
 		
-		public function TextureMaterialComponent( param : MaterialParam = null )
+		public function TextureMaterialComponent()
 		{
-			materialParam = param;
-			
 			super ();
 		}
 		
 		override protected function onAdd() : void
 		{
 			super.onAdd ();
-			
-			
-			// loads all the material in the list
-			if ( materialParam )
-			{
-				var commandComponent : CommandManagerComponent = owner.getComponent( CommandManagerComponent );
-				commandComponent.executeCommandWithInjection( new BuildTextureMaterialCommand( materialParam ) );
-			}
-			else
-			{
-				material = defaultMaterial;
-				applyMaterial ();
-			}
-			
+
 			Mesh3DComponent ( meshComponent ).meshUpdate.add( handleMeshUpdate );
 		}
 		
@@ -106,6 +84,9 @@ package totem3d.actors.components
 		
 		public function set textureMaterial( mat : TextureMaterial ) : void
 		{
+			if ( mat == material )
+				return;
+			
 			material = mat;
 			applyMaterial ();
 		}
@@ -124,31 +105,6 @@ package totem3d.actors.components
 			{
 				destroyMaterial ( material );
 			}
-			
-			if ( defaultMaterial )
-			{
-				TextureMaterialUtil.disposeMaterial ( defaultMaterial );
-				
-				defaultMaterial.dispose ();
-				_defaultMaterial = null;
-			}
-		
-		}
-		
-		private function get defaultMaterial() : TextureMaterial
-		{
-			if ( !_defaultMaterial )
-				_defaultMaterial = createDefaultTextureMaterial ();
-			
-			return _defaultMaterial;
-		}
-		
-		private function createDefaultTextureMaterial() : TextureMaterial
-		{
-			// add default material
-			var defaultBitmapTexture : BitmapTexture = BitmapTextureCache.getInstance ().getTexture ( TextureConfig.defaultModelBitmapData );
-			var mat : TextureMaterial = new TextureMaterial ( defaultBitmapTexture );
-			return mat;
 		}
 		
 	}
