@@ -3,14 +3,14 @@ package totem3d.builder.animation
 	import gorilla.resource.Resource;
 	import gorilla.resource.ResourceManager;
 	
-	import totem.monitors.CompleteProxy;
+	import totem.monitors.AbstractProxy;
 	import totem.net.URLManager;
 	import totem.net.getURL;
 	
 	import totem3d.core.dto.AnimationParam;
 	import totem3d.resource.away3d.AwayMD5AnimationResource;
 
-	public class AnimationLoader extends CompleteProxy
+	public class AnimationLoader extends AbstractProxy
 	{
 		public var resource : AwayMD5AnimationResource;
 

@@ -29,7 +29,7 @@ package totem3d.actors.commands.builder
 
 		override public function execute() : void
 		{
-			materialFactory = new MaterialFactory( resourceManager, materialParam );
+			materialFactory = new MaterialFactory( materialParam );
 			materialFactory.addEventListener( Event.COMPLETE, handleMaterialBuildComplete );
 
 			materialFactory.start();

@@ -69,8 +69,8 @@
     <classEntry path="totem.math.physics.IForce"/>
     <classEntry path="totem.math.physics.VectorForce"/>
     <classEntry path="totem.monitors.CompleteListMonitor"/>
-    <classEntry path="totem.monitors.CompleteSimpleMonitor"/>
-    <classEntry path="totem.monitors.CompleteProxy"/>
+    <classEntry path="totem.monitors.SimpleEventMonitor"/>
+    <classEntry path="totem.monitors.AbstractProxy"/>
     <classEntry path="totem.monitors.CompleteRequireMonitor"/>
     <classEntry path="totem.monitors.IRequireMonitor"/>
     <classEntry path="totem.monitors.IStartMonitor"/>
@@ -115,10 +115,11 @@
     <classEntry path="totem.resource.IResourceManager"/>
     <classEntry path="totem.core.params.display.BitmapDataParam"/>
     <classEntry path="totem.patterns.mvc.BasePresenter"/>
-    <classEntry path="totem.display.builder.AbstractFactory"/>
     <classEntry path="totem.display.builder.BitmapDataFactory"/>
     <classEntry path="totem.net.getURL"/>
     <classEntry path="totem.utils.DestroyUtil"/>
+    <classEntry path="totem.monitors.IListID"/>
+    <classEntry path="totem.monitors.RequiredProxy"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
