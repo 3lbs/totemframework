@@ -44,19 +44,19 @@ package totem3d.builder
 			// diffuse texture
 			if ( params.diffuseTexture )
 			{
-				bitmapFactory = new BitmapDataFactory( resourceManager, params.diffuseTexture );
+				bitmapFactory = new BitmapDataFactory( params.diffuseTexture );
 				bitmapDataMonitor.addDispatcher( bitmapFactory );
 			}
 			
 			if ( params.specularTexture )
 			{
-				bitmapFactory = new BitmapDataFactory( resourceManager, params.specularTexture );
+				bitmapFactory = new BitmapDataFactory( params.specularTexture );
 				bitmapDataMonitor.addDispatcher( bitmapFactory );
 			}
 			
 			if ( params.normalTexture )
 			{
-				bitmapFactory = new BitmapDataFactory( resourceManager, params.normalTexture );
+				bitmapFactory = new BitmapDataFactory( params.normalTexture );
 				bitmapDataMonitor.addDispatcher( bitmapFactory );
 			}
 			

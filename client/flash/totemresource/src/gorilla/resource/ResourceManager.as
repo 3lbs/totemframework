@@ -2,12 +2,12 @@
 package gorilla.resource
 {
 	import flash.utils.Dictionary;
-	
+
 	import gorilla.resource.providers.FallbackResourceProvider;
 	import gorilla.resource.providers.IResourceProvider;
-	
+
 	import totemdebug.Logger;
-	
+
 	import totemutils.TotemUtil;
 
 	/**
@@ -17,6 +17,13 @@ package gorilla.resource
 	 */
 	public class ResourceManager implements IResourceManager
 	{
+
+
+		public function ResourceManager( singletonEnforcer : SingletonEnforcer ) : void
+		{
+			if ( !singletonEnforcer )
+				throw new Error( "Cannot instantiate a singleton class. Use static getInstance instead." );
+		}
 
 		/**
 		 * Loads a resource from a file. If the resource has already been loaded or is embedded, a
@@ -42,6 +49,13 @@ package gorilla.resource
 		 *
 		 * @see Resource
 		 */
+
+
+		public static function getInstance() : ResourceManager
+		{
+			return _instance ||= new ResourceManager( new SingletonEnforcer());
+		}
+
 		public function load( filename : String, resourceType : Class, forceReload : Boolean = false ) : Resource
 		{
 			// Sanity!
@@ -50,8 +64,8 @@ package gorilla.resource
 				Logger.error( this, "load", "Cannot load a " + resourceType + " with empty filename." );
 				return null;
 			}
-			
-	
+
+
 			// Look up the resource.
 			var resourceIdentifier : String = filename.toLowerCase() + resourceType;
 			var resource : Resource = _resources[ resourceIdentifier ] as Resource;
@@ -234,7 +248,11 @@ package gorilla.resource
 		 * List of resource providers used to get resources.
 		 */
 		private var resourceProviders : Array = new Array();
+
+		private static var _instance : ResourceManager;
 	}
 }
 
-
+class SingletonEnforcer
+{
+}

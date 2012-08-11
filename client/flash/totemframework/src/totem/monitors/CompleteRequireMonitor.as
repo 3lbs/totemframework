@@ -41,7 +41,7 @@ package totem.monitors
 					}
 					
 				}
-				else if ( proxy.status == AbstractProxy.EMPTY )
+				else if ( proxy.status == LoaderConst.EMPTY )
 				{
 					proxy.start();
 				}

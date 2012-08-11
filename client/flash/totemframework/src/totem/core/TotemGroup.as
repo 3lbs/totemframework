@@ -133,11 +133,10 @@ package totem.core
 		 * implements ISmashManager. Injection is also done on the manager when it
 		 * is registered.
 		 */
-		public function registerManager( clazz : Class, instance : *, doInjectInto : Boolean = true ) : void
+		public function registerManager( clazz : Class, instance : *, doInjectInto : Boolean = true ) : *
 		{
 			// register a short name for the manager, this is mainly used for tooling
-			var shortName : String = getQualifiedClassName( clazz ).split( "::" )[ 1 ];
-			registerClassAlias( shortName, clazz );
+			var shortName : String = getQualifiedClassName( clazz ).split( "::" )[ 1 ];2
 
 			initInjection();
 
@@ -148,6 +147,8 @@ package totem.core
 
 			if ( instance is ITotemSystem )
 				( instance as ITotemSystem ).initialize();
+			
+			return instance;
 		}
 
 		/**
@@ -203,7 +204,7 @@ package totem.core
 			
 		}
 		
-		private function addChildObject ( object : TotemObject, name : String ) : void
+		protected function addChildObject ( object : TotemObject, name : String ) : void
 		{
 			
 			if ( object.owningGroup != null )

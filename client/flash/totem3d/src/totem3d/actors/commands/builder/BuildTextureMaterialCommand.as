@@ -2,9 +2,7 @@ package totem3d.actors.commands.builder
 {
 	import flash.events.Event;
 	
-	import gorilla.resource.ResourceManager;
-	
-	import totem.core.command.Command;
+	import totem.core.mvc.controller.command.Command;
 	
 	import totem3d.actors.components.ITextureMaterialComponent;
 	import totem3d.builder.MaterialFactory;
@@ -15,9 +13,6 @@ package totem3d.actors.commands.builder
 		private var materialParam : MaterialParam;
 
 		private var materialFactory : MaterialFactory;
-
-		[Inject]
-		public var resourceManager : ResourceManager;
 		
 		[Inject]
 		public var textureMaterialComponent : ITextureMaterialComponent;

@@ -8,15 +8,7 @@ package totem.monitors
 	public class AbstractProxy extends RemovableEventDispatcher implements IStartMonitor
 	{
 
-		public static const EMPTY : int = 0;
-
-		public static const LOADING : int = 1;
-
-		public static const COMPLETE : int = 2;
-
-		public static const FAILED : int = 3;
-
-		private var _status : int = EMPTY;
+		private var _status : int = LoaderConst.EMPTY;
 
 		private var _id : String;
 
@@ -27,7 +19,7 @@ package totem.monitors
 
 		public function isComplete() : Boolean
 		{
-			return status == COMPLETE;
+			return status == LoaderConst.COMPLETE;
 		}
 		
 		public function get status () : Number
@@ -37,24 +29,24 @@ package totem.monitors
 		
 		public function start() : void
 		{
-			_status = LOADING;
+			_status = LoaderConst.LOADING;
 		}
 
 		protected function finished() : void
 		{
-			_status = COMPLETE;
+			_status = LoaderConst.COMPLETE;
 			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 
 		protected function failed() : void
 		{
-			_status = FAILED;
+			_status = LoaderConst.FAILED;
 			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 
 		public function get isFailed() : Boolean
 		{
-			return status == FAILED;
+			return status == LoaderConst.FAILED;
 		}
 
 		public function get id() : *

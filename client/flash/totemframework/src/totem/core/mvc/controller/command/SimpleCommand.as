@@ -1,4 +1,4 @@
-package totem.core.command
+package totem.core.mvc.controller.command
 {
 	public class SimpleCommand extends Command
 	{

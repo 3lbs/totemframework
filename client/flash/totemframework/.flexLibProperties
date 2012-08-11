@@ -20,14 +20,13 @@
     <classEntry path="totem.core.TotemGroup"/>
     <classEntry path="totem.core.TotemObject"/>
     <classEntry path="totem.core.TotemSet"/>
-    <classEntry path="totem.core.command.Command"/>
-    <classEntry path="totem.core.command.CommandMap"/>
-    <classEntry path="totem.core.command.CommandManagerComponent"/>
-    <classEntry path="totem.core.command.CompositeCommand"/>
-    <classEntry path="totem.core.command.ParallelCommand"/>
-    <classEntry path="totem.core.command.SerialCommand"/>
-    <classEntry path="totem.core.command.SimpleCommand"/>
-    <classEntry path="totem.core.command.SystemCommandManager"/>
+    <classEntry path="totem.core.mvc.controller.command.Command"/>
+    <classEntry path="totem.core.mvc.controller.command.ControllerComponent"/>
+    <classEntry path="totem.core.mvc.controller.command.CompositeCommand"/>
+    <classEntry path="totem.core.mvc.controller.command.ParallelCommand"/>
+    <classEntry path="totem.core.mvc.controller.command.SerialCommand"/>
+    <classEntry path="totem.core.mvc.controller.command.SimpleCommand"/>
+    <classEntry path="totem.core.mvc.controller.command.ControllerSystemManager"/>
     <classEntry path="totem.core.input.Key"/>
     <classEntry path="totem.core.input.KeyboardKey"/>
     <classEntry path="totem.core.input.KeyboardManager"/>
@@ -120,6 +119,15 @@
     <classEntry path="totem.utils.DestroyUtil"/>
     <classEntry path="totem.monitors.IListID"/>
     <classEntry path="totem.monitors.RequiredProxy"/>
+    <classEntry path="totem.filesystem.FileMonitor"/>
+    <classEntry path="totem.filesystem.events.FileMonitorEvent"/>
+    <classEntry path="totem.monitors.LoaderConst"/>
+    <classEntry path="totem.display.builder.IBitmapDataFactory"/>
+    <classEntry path="totem.core.di.TotemInjector"/>
+    <classEntry path="totem.core.mvc.TotemContext"/>
+    <classEntry path="totem.utils.NameManager"/>
+    <classEntry path="totem.core.mvc.controller.api.ICommandMap"/>
+    <classEntry path="totem.core.mvc.presenter.PresenterComponent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

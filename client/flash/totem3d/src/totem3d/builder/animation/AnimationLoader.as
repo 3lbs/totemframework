@@ -16,18 +16,14 @@ package totem3d.builder.animation
 
 		public var animationData : AnimationParam;
 
-		private var resourceManager : ResourceManager;
-
-		public function AnimationLoader( resourceManager : ResourceManager, animationData : AnimationParam )
+		public function AnimationLoader( animationData : AnimationParam )
 		{
 			this.animationData = animationData;
-
-			this.resourceManager = resourceManager;
 		}
 
 		override public function start() : void
 		{
-			var resource : AwayMD5AnimationResource = resourceManager.load( getURL( animationData.url, URLManager.ASSET_URL ), AwayMD5AnimationResource ) as AwayMD5AnimationResource;
+			var resource : AwayMD5AnimationResource = ResourceManager.getInstance().load( getURL( animationData.url, URLManager.ASSET_URL ), AwayMD5AnimationResource ) as AwayMD5AnimationResource;
 			resource.id = animationData.id;
 			resource.completeCallback( handleSequenceComplete );
 			resource.failedCallback( handleSequenceFailed );
@@ -46,7 +42,6 @@ package totem3d.builder.animation
 		
 		override public function destroy():void
 		{
-			resourceManager = null;
 			animationData = null;
 			resource = null;
 		}

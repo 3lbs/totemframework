@@ -7,7 +7,7 @@ package totem3d.actors.commands
 	
 	import mx.states.OverrideBase;
 	
-	import totem.core.command.Command;
+	import totem.core.mvc.controller.command.Command;
 	
 	import totem3d.actors.components.LightComponent;
 	import totem3d.actors.components.TextureMaterialComponent;

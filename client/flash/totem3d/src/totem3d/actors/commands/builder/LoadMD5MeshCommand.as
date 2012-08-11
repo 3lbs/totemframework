@@ -3,7 +3,7 @@ package totem3d.actors.commands.builder
 	import gorilla.resource.Resource;
 	import gorilla.resource.ResourceManager;
 	
-	import totem.core.command.Command;
+	import totem.core.mvc.controller.command.Command;
 	
 	import totem3d.actors.components.IMesh3DComponent;
 	import totem3d.actors.components.SkeletonAnimatorComponent;
@@ -18,10 +18,6 @@ package totem3d.actors.commands.builder
 		[Inject]
 		public var animationComponent : SkeletonAnimatorComponent;
 
-		[Inject]
-		public var resourceManager : ResourceManager;
-
-
 		private var url : String;
 
 		public function LoadMD5MeshCommand( url : String )
@@ -32,7 +28,7 @@ package totem3d.actors.commands.builder
 
 		override public function execute() : void
 		{
-			var resource : Resource = resourceManager.load( url, AwayMD5MeshResource );
+			var resource : Resource = ResourceManager.getInstance().load( url, AwayMD5MeshResource );
 			resource.completeCallback( handleMeshLoaded );
 			resource.failedCallback( handleMeshFailed );
 		}
@@ -60,7 +56,6 @@ package totem3d.actors.commands.builder
 			
 			meshCommponent = null;
 			animationComponent = null;
-			resourceManager = null;
 		}
 	}
 }

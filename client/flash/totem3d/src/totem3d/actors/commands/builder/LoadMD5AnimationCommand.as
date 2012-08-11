@@ -4,9 +4,7 @@ package totem3d.actors.commands.builder
 	
 	import flash.events.Event;
 	
-	import gorilla.resource.ResourceManager;
-	
-	import totem.core.command.Command;
+	import totem.core.mvc.controller.command.Command;
 	import totem.monitors.CompleteListMonitor;
 	
 	import totem3d.actors.components.SkeletonAnimatorComponent;
@@ -15,9 +13,6 @@ package totem3d.actors.commands.builder
 
 	public class LoadMD5AnimationCommand extends Command
 	{
-
-		[Inject]
-		public var resourceManager : ResourceManager;
 
 		[Inject]
 		public var skeletonAnimationComponent : SkeletonAnimatorComponent;
@@ -43,7 +38,7 @@ package totem3d.actors.commands.builder
 			for each ( animationData in animationList )
 			{
 				// load animation below
-				animationLoader = new AnimationLoader( resourceManager, animationData );
+				animationLoader = new AnimationLoader( animationData );
 
 				completeMonitor.addDispatcher( animationLoader );
 
@@ -90,7 +85,6 @@ package totem3d.actors.commands.builder
 			super.destroy();
 
 			animationList = null;
-			resourceManager = null;
 			skeletonAnimationComponent = null;
 
 			completeMonitor.destroy();

@@ -6,6 +6,8 @@ package totem.display.builder
 	import gorilla.resource.IResource;
 	import gorilla.resource.IResourceManager;
 	import gorilla.resource.ImageResource;
+	import gorilla.resource.Resource;
+	import gorilla.resource.ResourceManager;
 	
 	import totem.monitors.AbstractProxy;
 	import totem.net.URLManager;
@@ -14,28 +16,28 @@ package totem.display.builder
 	public class BitmapDataFactory extends AbstractProxy
 	{
 
-		public var resourceManager : IResourceManager;
-
 		private var filename : String;
 
 		private var _bitmapData : BitmapData;
 
-		public function BitmapDataFactory( manager : IResourceManager, url : String, id : String = "" )
+		public function BitmapDataFactory( url : String, id : String = "" )
 		{
 			this.id = id || url;
-
-			resourceManager = manager;
 
 			filename = getURL( url , URLManager.ASSET_URL );
 		}
 
 		override public function start() : void
 		{
-			var resource : IResource = resourceManager.load( filename, ImageResource );
+			var resource : IResource = ResourceManager.getInstance().load( filename, ImageResource );
 			resource.completeCallback( onBitmapComplete );
-			resource.failedCallback( failed );
+			resource.failedCallback( onFailed );
 		}
-
+		
+		private function onFailed( resource : Resource ):void
+		{
+		}
+		
 		private function onBitmapComplete( resource : ImageResource ) : void
 		{
 			_bitmapData = resource.bitmapData;
@@ -50,7 +52,6 @@ package totem.display.builder
 		override public function destroy() : void
 		{
 			super.destroy();
-			resourceManager = null;
 			_bitmapData = null;
 		}
 

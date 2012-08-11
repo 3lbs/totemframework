@@ -87,7 +87,7 @@ package totem3d.builder
 			}
 
 
-			bitmapDataMonitor.destroy();
+			//bitmapDataMonitor.destroy();
 			
 			material.name = params.id;
 			

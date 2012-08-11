@@ -1,6 +1,8 @@
-package totem.core.command
+package totem.core.mvc.controller.command
 {
 	import org.swiftsuspenders.Injector;
+	
+	import totem.core.mvc.controller.api.ICommandMap;
 
 	internal class CompositeCommand extends Command
 	{
@@ -14,20 +16,20 @@ package totem.core.command
 			}
 		}
 
-		internal var commandManager : CommandMap;
+		internal var commandManager :  ICommandMap;
 
 		[Inject]
-		public function injectManager( commandManager : CommandMap ) : void
+		public function injectManager( commandManager : ICommandMap ) : void
 		{
 			this.commandManager = commandManager;
 		}
-
 
 		public function append( command : Command ) : void
 		{
 			childrenCommands.push( command );
 		}
 
+		[Inject]
 		override internal function injectChildren( injector : Injector ) : void
 		{
 			for ( var i : int = 0, len : int = childrenCommands.length; i < len; ++i )

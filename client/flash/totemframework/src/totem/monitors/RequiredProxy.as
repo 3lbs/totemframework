@@ -25,7 +25,7 @@ package totem.monitors
 		public function canStart() : Boolean
 		{
 			// you dont want to start a loading or complete proxy again
-			if ( status != EMPTY )
+			if ( status != LoaderConst.EMPTY )
 			{
 				return false;
 			}

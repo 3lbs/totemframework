@@ -30,7 +30,7 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package com.adobe.air.filesystem.events
+package totem.filesystem.events
 {
 	import flash.events.Event;
 	import flash.filesystem.File;
@@ -42,6 +42,7 @@ package com.adobe.air.filesystem.events
 		public static const CREATE:String = "onFileCreate";
 		public static const ADD_VOLUME:String = "onVolumeAdd";
 		public static const REMOVE_VOLUME:String = "onVolumeRemove";
+		public static const LOAD_COMPLETE : String = "onLoadComplete";
 		
 		public var file:File;
 		public function FileMonitorEvent(type:String, bubbles:Boolean=false, 

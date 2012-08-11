@@ -5,11 +5,9 @@ package totem3d.actors.components
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.materials.methods.BasicNormalMethod;
-
+	
 	import totem.core.TotemComponent;
-	import totem.core.command.CommandManagerComponent;
-
-	import totem3d.actors.commands.SetTextureLightsCommand;
+	
 	import totem3d.core.dto.MaterialParam;
 
 	public class LightComponent extends TotemComponent

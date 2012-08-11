@@ -1,4 +1,4 @@
-package totem.core.command
+package totem.core.mvc.controller.command
 {
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;

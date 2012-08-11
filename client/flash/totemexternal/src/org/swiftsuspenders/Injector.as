@@ -289,7 +289,6 @@ package org.swiftsuspenders
 		 */
 		public function satisfiesDirectly(type : Class, name : String = '') : Boolean
 		{
-			trace("test");
 			return providerMappings[getQualifiedClassName(type) + '|' + name] != null;
 		}
 

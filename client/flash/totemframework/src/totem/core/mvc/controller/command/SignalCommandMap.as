@@ -1,16 +1,16 @@
-package totem.core.command
+package totem.core.mvc.controller.command
 {
 	import flash.utils.Dictionary;
 	import flash.utils.describeType;
 	
-	import org.as3commons.collections.utils.NullComparator;
 	import org.osflash.signals.*;
 	import org.swiftsuspenders.Injector;
 	
 	import totem.core.Destroyable;
+	import totem.core.mvc.controller.api.ICommandMap;
 	import totem.utils.DestroyUtil;
 
-	public class SignalCommandMap extends Destroyable
+	public class SignalCommandMap extends Destroyable implements ICommandMap
 	{
 		protected var injector : Injector;
 
@@ -106,20 +106,48 @@ package totem.core.command
 				injector.map( value.constructor ).toValue( value );
 			}
 
-			var command : Object = injector.getInstance( commandClass );
-			injector.injectInto( command );
+			var command : * = injector.getInstance( commandClass );
+			//injector.injectInto( command );
 			
 			for each ( value in valueObjects )
 			{
 				injector.unmap( value.constructor );
 			}
 
-			command.execute();
-
+			executeCommand ( command );
+			
 			if ( oneshot )
 			{
 				unmapSignal( signal, commandClass );
 			}
+		}
+		
+		public function executeCommand( commandClassOrObject : * ) : void
+		{
+			
+			var command  : * = commandClassOrObject;
+			
+			if ( commandClassOrObject is Class )
+			{
+				injector.map( commandClassOrObject );
+				command = injector.getInstance( commandClassOrObject );
+				injector.unmap( commandClassOrObject );
+			}
+			injector.injectInto( command );
+			
+			command.execute();
+			
+			//command not complete after execution
+			if ( !command.isComplete )
+			{
+				command.onComplete.addOnce( onCommandComplete );
+			}
+		}
+		
+		protected function onCommandComplete( command :  Command ) : void
+		{
+			command.destroy();
+			
 		}
 
 		protected function verifyCommandClass( commandClass : Class ) : void

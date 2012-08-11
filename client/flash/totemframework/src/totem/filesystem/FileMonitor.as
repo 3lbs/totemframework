@@ -30,14 +30,17 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package com.adobe.air.filesystem
+package totem.filesystem
 {
-	import flash.filesystem.File;
-	import flash.utils.Timer;
-	import flash.events.TimerEvent;
+	import totem.filesystem.events.FileMonitorEvent;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import com.adobe.air.filesystem.events.FileMonitorEvent;
+	import flash.events.TimerEvent;
+	import flash.filesystem.File;
+	import flash.utils.Timer;
+	
+	import org.casalib.events.RemovableEventDispatcher;
 
 	/*
 		Todo:
@@ -71,7 +74,7 @@ package com.adobe.air.filesystem
 	/**
 	* Class that monitors files for changes.
 	*/
-	public class FileMonitor extends EventDispatcher
+	public class FileMonitor extends RemovableEventDispatcher
 	{
 		private var _file:File;
 		private var timer:Timer;
