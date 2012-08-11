@@ -16,11 +16,6 @@ package totem.core
 		{
 		}
 		
-		override public function initialize() : void
-		{
-			
-		}
-		
 		// might want to submit for update
 		public function update( dt : Number ) : void
 		{

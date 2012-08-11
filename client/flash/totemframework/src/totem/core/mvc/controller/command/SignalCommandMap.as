@@ -108,13 +108,12 @@ package totem.core.mvc.controller.command
 
 			var command : * = injector.getInstance( commandClass );
 			//injector.injectInto( command );
+			executeCommand ( command );
 			
 			for each ( value in valueObjects )
 			{
 				injector.unmap( value.constructor );
 			}
-
-			executeCommand ( command );
 			
 			if ( oneshot )
 			{
@@ -133,7 +132,10 @@ package totem.core.mvc.controller.command
 				command = injector.getInstance( commandClassOrObject );
 				injector.unmap( commandClassOrObject );
 			}
-			injector.injectInto( command );
+			else
+			{			
+				injector.injectInto( command );
+			}
 			
 			command.execute();
 			

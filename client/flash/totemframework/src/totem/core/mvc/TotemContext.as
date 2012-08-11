@@ -4,11 +4,11 @@ package totem.core.mvc
 	import flash.display.Stage;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
-
+	
 	import org.casalib.events.IRemovableEventDispatcher;
 	import org.casalib.events.RemovableEventDispatcher;
 	import org.swiftsuspenders.Injector;
-
+	
 	import totem.core.ITotemSystem;
 	import totem.core.TotemGroup;
 	import totem.core.mvc.controller.command.ControllerSystemManager;
@@ -23,12 +23,6 @@ package totem.core.mvc
 		private var _stage : Stage;
 
 		public var eventDispatcher : IRemovableEventDispatcher;
-
-		private var mediators : MediatorSystemManager;
-
-		private var views : ViewMap;
-
-		private var controller : ControllerSystemManager;
 
 		private var _mainClass : Sprite;
 
@@ -51,6 +45,7 @@ package totem.core.mvc
 		{
 			if ( injectorClass )
 			{
+				disposeInjector();
 				setInjector( injectorClass );
 				initializeInjector();
 			}
@@ -69,18 +64,8 @@ package totem.core.mvc
 
 		private function initializeApplication() : void
 		{
-			disposeCore();
-
-			mediators = new MediatorSystemManager( this );
-			registerManager( MediatorSystemManager, mediators );
-
-			controller = new ControllerSystemManager( this );
-			registerManager( ControllerSystemManager, controller );
-
-			views = new ViewMap();
-			registerManager( ViewMap, views );
-
 			initialize();
+			
 			registerModels();
 			registerViews();
 			registerCommands();
@@ -148,48 +133,17 @@ package totem.core.mvc
 		/** @private */
 		protected function initializeInjector() : void
 		{
-			disposeInjector();
-
-			if ( _injector )
-			{
-				eventDispatcher = new RemovableEventDispatcher();
-				_injector.map( TotemContext, "totemFacdeInstance" ).toValue( this );
-				_injector.map( IRemovableEventDispatcher, "facadeDispatcher" ).toValue( eventDispatcher );
-			}
+			
 		}
 
 		override public function destroy() : void
 		{
 			super.destroy();
 
-			disposeCore();
 			disposeInjector();
 			
 			_mainClass = null;
 			_stage = null;
-		}
-
-		/** @private */
-		private function disposeCore() : void
-		{
-
-			if ( views )
-			{
-				views.dispose();
-				views = null;
-			}
-
-			if ( controller )
-			{
-				controller.destroy();
-				controller = null;
-			}
-
-			if ( mediators )
-			{
-				mediators.destroy();
-				mediators = null;
-			}
 		}
 
 		/** @private */

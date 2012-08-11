@@ -145,8 +145,15 @@ package totem.core
 			if ( doInjectInto )
 				_injector.injectInto( instance );
 
+			if ( instance is TotemObject )
+			{
+				TotemObject( instance ).owningGroup = this;
+			}
+
 			if ( instance is ITotemSystem )
+			{
 				( instance as ITotemSystem ).initialize();
+			}
 			
 			return instance;
 		}

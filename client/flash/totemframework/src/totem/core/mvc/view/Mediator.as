@@ -104,6 +104,7 @@ trace(mediators.hasMediator(view));
 		[PostConstruct]
 		public function postConstruct() : void
 		{ /* removes post construct from super class (the mediator is initialized manually) */
+			trace("ïtes going to sit here");
 		}
 
 
@@ -125,6 +126,15 @@ trace(mediators.hasMediator(view));
 			if ( instance.eventDispatcher.hasEventListener( event.type ))
 				instance.eventDispatcher.dispatchEvent( event );
 		}
-
+		
+		
+		override public function destroy():void
+		{
+			super.destroy();
+			
+			instance = null;
+			
+			viewComponent = null;
+		}
 	}
 }

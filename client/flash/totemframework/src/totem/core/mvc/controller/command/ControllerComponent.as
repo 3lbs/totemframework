@@ -5,6 +5,7 @@ package totem.core.mvc.controller.command
 	import flash.utils.Dictionary;
 	
 	import totem.core.TotemComponent;
+	import totem.core.mvc.controller.api.ICommandMap;
 	import totem.totem_internal;
 
 	use namespace totem_internal;
@@ -13,7 +14,7 @@ package totem.core.mvc.controller.command
 	{
 		public var eventDispatcher : IEventDispatcher;
 
-		private var commandMap : SignalCommandMap;
+		private var commandMap : ICommandMap;
 
 		private var initializeCommand : CompositeCommand;
 
@@ -56,7 +57,6 @@ package totem.core.mvc.controller.command
 		
 		private function handleInitCommandComplete( command : Command ) : void
 		{
-			
 			initializeCommand = null;
 		}
 
