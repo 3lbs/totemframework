@@ -1,6 +1,8 @@
 package totem.data
 {
-  public class InListNode 
+	import totem.core.Destroyable;
+
+  public class InListNode extends Destroyable
   {
     /** @private */
     internal var prev:InListNode = null;

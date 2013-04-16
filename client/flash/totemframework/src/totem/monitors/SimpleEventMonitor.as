@@ -10,12 +10,11 @@
 
 package totem.monitors
 {
-	import flash.events.ErrorEvent;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
-	import flash.events.IOErrorEvent;
-	import org.casalib.events.RemovableEventDispatcher;
+	
+	import totem.events.RemovableEventDispatcher;
+
 	/**
 	 *
 	 * @author eddie
@@ -76,6 +75,7 @@ package totem.monitors
 				dispatchEvent ( new Event ( Event.COMPLETE ) );
 			}
 		}
+		
 	}
 }
 

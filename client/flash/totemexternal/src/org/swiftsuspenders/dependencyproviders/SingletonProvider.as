@@ -11,10 +11,9 @@ package org.swiftsuspenders.dependencyproviders
 	import flash.utils.getQualifiedClassName;
 
 	import org.swiftsuspenders.Injector;
-	import org.swiftsuspenders.InjectorError;
+	import org.swiftsuspenders.errors.InjectorError;
 	import org.swiftsuspenders.typedescriptions.PreDestroyInjectionPoint;
 	import org.swiftsuspenders.typedescriptions.TypeDescription;
-	import org.swiftsuspenders.utils.SsInternal;
 
 	public class SingletonProvider implements DependencyProvider
 	{
@@ -59,7 +58,7 @@ package org.swiftsuspenders.dependencyproviders
 				throw new InjectorError("Forbidden usage of unmapped singleton provider for type "
 					+ getQualifiedClassName(_responseType));
 			}
-			return injector.SsInternal::instantiateUnmapped(_responseType);
+			return injector.instantiateUnmapped(_responseType);
 		}
 
 		public function destroy() : void

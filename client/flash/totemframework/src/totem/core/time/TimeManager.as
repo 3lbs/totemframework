@@ -14,17 +14,15 @@ package totem.core.time
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
+	import ladydebug.Logger;
+	
 	import totem.core.ITotemSystem;
 	import totem.core.TotemComponent;
 	import totem.utils.IPrioritizable;
 	import totem.utils.SimplePriorityQueue;
+	import totem.utils.TotemUtil;
+	import totem.utils.TypeUtility;
 	import totem.utils.sprintf;
-	
-	import totemdebug.Logger;
-	import totemdebug.Profiler;
-	
-	import totemutils.TotemUtil;
-	import totemutils.TypeUtility;
 
 	/**
 	 * The process manager manages all time related functionality in the engine.
@@ -185,7 +183,7 @@ package totem.core.time
 			elapsed = 0.0;
 
 			if ( !timer )
-				timer = new Timer( 32 );
+				timer = new Timer( 16.6 );
 			timer.delay = 1000 / stage.frameRate;
 			timer.start();
 			timer.addEventListener( TimerEvent.TIMER, onFrame );
@@ -456,7 +454,6 @@ package totem.core.time
 		{
 			// This is called from a system event, so it had better be at the 
 			// root of the profiler stack!
-			Profiler.ensureAtRoot();
 
 			// Track current time.
 			var currentTime : Number = getTimer();
@@ -488,7 +485,6 @@ package totem.core.time
 
 		public function advance( deltaTime : Number, suppressSafety : Boolean = false ) : void
 		{
-			Profiler.enter( "advance" );
 
 			// Update platform time, to avoid lots of costly calls to getTimer.
 			_platformTime = getTimer();
@@ -529,7 +525,6 @@ package totem.core.time
 			// processScheduledObjects();
 
 			// Update objects wanting OnFrame callbacks.
-			Profiler.enter( "frame" );
 			duringAdvance = true;
 			_interpolationFactor = elapsed / TICK_RATE_MS;
 
@@ -540,19 +535,14 @@ package totem.core.time
 				if ( !animatedObject )
 					continue;
 
-				Profiler.enter( animatedObject.profilerKey );
 				( animatedObject.listener as IAnimated ).onFrame();
-				Profiler.exit( animatedObject.profilerKey );
 			}
 			duringAdvance = false;
-			Profiler.exit( "frame" );
 
 			// Purge the lists if needed.
 			if ( needPurgeEmpty )
 			{
 				needPurgeEmpty = false;
-
-				Profiler.enter( "purgeEmpty" );
 
 				for ( var j : int = 0; j < animatedObjects.length; j++ )
 				{
@@ -572,12 +562,7 @@ package totem.core.time
 					k--;
 				}
 
-				Profiler.exit( "purgeEmpty" );
 			}
-
-			Profiler.exit( "advance" );
-
-			Profiler.ensureAtRoot();
 		}
 
 		public function fireTick() : void
@@ -590,7 +575,6 @@ package totem.core.time
 			processScheduledObjects();
 
 			// Do the onTick callbacks, noting time in profiler appropriately.
-			Profiler.enter( "tick" );
 
 			duringAdvance = true;
 
@@ -601,13 +585,9 @@ package totem.core.time
 				if ( !object )
 					continue;
 
-				Profiler.enter( object.profilerKey );
 				( object.listener as ITicked ).onTick();
-				Profiler.exit( object.profilerKey );
 			}
 			duringAdvance = false;
-
-			Profiler.exit( "tick" );
 
 			// Update virtual time by subtracting from accumulator.
 			_virtualTime += TICK_RATE_MS;
@@ -621,7 +601,6 @@ package totem.core.time
 
 			if ( oldDeferredMethodQueue.length )
 			{
-				Profiler.enter( "callLater" );
 
 				// Put a new array in the queue to avoid getting into corrupted
 				// state due to more calls being added.
@@ -636,14 +615,11 @@ package totem.core.time
 				// Wipe the old array now we're done with it.
 				oldDeferredMethodQueue.length = 0;
 
-				Profiler.exit( "callLater" );
 			}
 
 			// Process any queued items.
 			if ( thinkHeap.size )
 			{
-				Profiler.enter( "Queue" );
-
 				while ( thinkHeap.size && thinkHeap.front.priority >= -_virtualTime )
 				{
 					var itemRaw : IPrioritizable = thinkHeap.dequeue();
@@ -651,8 +627,6 @@ package totem.core.time
 					var sItem : ScheduleEntry = itemRaw as ScheduleEntry;
 
 					var type : String = TypeUtility.getObjectClassName( itemRaw );
-
-					Profiler.enter( type );
 
 					if ( qItem )
 					{
@@ -669,11 +643,9 @@ package totem.core.time
 					{
 						throw new Error( "Unknown type found in thinkHeap." );
 					}
-					Profiler.exit( type );
 
 				}
 
-				Profiler.exit( "Queue" );
 			}
 		}
 

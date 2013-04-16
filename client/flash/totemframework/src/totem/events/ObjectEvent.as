@@ -17,6 +17,7 @@ package totem.events
 		{
 			return new ObjectEvent( type, data, bubbles, cancelable ) as Event;
 		}
+		
 	}
 }
 

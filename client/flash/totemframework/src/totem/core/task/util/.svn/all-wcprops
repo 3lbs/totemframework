@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/spicefactory/svn/parsley/!svn/ver/1262/tags/v.2.2.1/main/spicelib-task/org/spicefactory/lib/task/util
+END
+DelegateTask.as
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/spicefactory/svn/parsley/!svn/ver/1262/tags/v.2.2.1/main/spicelib-task/org/spicefactory/lib/task/util/DelegateTask.as
+END
+SynchronousDelegateTask.as
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/spicefactory/svn/parsley/!svn/ver/1262/tags/v.2.2.1/main/spicelib-task/org/spicefactory/lib/task/util/SynchronousDelegateTask.as
+END
+XmlLoaderTask.as
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/spicefactory/svn/parsley/!svn/ver/1262/tags/v.2.2.1/main/spicelib-task/org/spicefactory/lib/task/util/XmlLoaderTask.as
+END

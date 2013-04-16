@@ -1,9 +1,10 @@
 package totem.core
 {
+
 	import org.swiftsuspenders.Injector;
 	
-	import totem.data.InListNode;
 	import totem.totem_internal;
+	import totem.data.InListNode;
 
 	use namespace totem_internal;
 
@@ -19,16 +20,14 @@ package totem.core
 	 * 4. Use the object!
 	 * 5. When you're done, call destroy(). (foo.destroy();)
 	 */
-	public class TotemObject  implements IDestroyable// extends InListNode
+	public class TotemObject extends InListNode implements IDestroyable // 
 	{
 		private var _name : String;
 
-		private var _active : Boolean = false;
-		
-		protected var _isDestroyed : Boolean;
-		
-		protected var _injector : Injector = null;
-		
+		protected var _initialzed : Boolean = false;
+
+		protected var injector : Injector = null;
+
 		totem_internal var _owningGroup : TotemGroup;
 
 		totem_internal var _sets : Vector.<TotemSet>;
@@ -38,18 +37,23 @@ package totem.core
 			_name = name;
 		}
 
+		public function get initialzed() : Boolean
+		{
+			return _initialzed;
+		}
+
 		totem_internal function getInjector() : Injector
 		{
-			if ( _injector )
-				return _injector;
+			if ( injector )
+				return injector;
 			else if ( owningGroup )
 				return owningGroup.getInjector();
 			return null;
 		}
-		
-		totem_internal function setInjector ( value : Injector ) : void
+
+		totem_internal function setInjector( value : Injector ) : void
 		{
-			_injector = value;
+			injector = value;
 		}
 		
 		public function getInstance( InstanceClass : Class, name : String = "" ) : *
@@ -128,21 +132,26 @@ package totem.core
 		 */
 		public function initialize() : void
 		{
+			if ( _initialzed )
+				throw new Error( "Totem Object is already initialzed!" );
+			
 			// Error if not in a group.
 			if ( _owningGroup == null )
 				throw new Error( "Can't initialize a SmashObject without an owning SmashGroup!" );
 
-			_active = true;
+			_initialzed = true;
 		}
 
 		/**
 		 * Called to destroy the SmashObject: remove it from sets and groups, and do
 		 * other end of life cleanup.
 		 */
-		public function destroy() : void
+		override public function destroy() : void
 		{
-			this._isDestroyed = true;
+			super.destroy();
 			
+			this._isDestroyed = true;
+
 			// Remove from sets.
 			if ( _sets )
 			{
@@ -157,12 +166,7 @@ package totem.core
 				_owningGroup = null;
 			}
 
-			_active = false;
-		}
-		
-		public function get destroyed() : Boolean
-		{
-			return this._isDestroyed;
+			_initialzed = false;
 		}
 	}
 }

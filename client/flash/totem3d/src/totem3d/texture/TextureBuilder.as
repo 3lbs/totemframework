@@ -2,7 +2,7 @@ package totem3d.texture
 {
 	import flash.events.IEventDispatcher;
 	
-	import org.casalib.events.RemovableEventDispatcher;
+	import totem.events.RemovableEventDispatcher;
 	
 	public class TextureBuilder extends RemovableEventDispatcher
 	{

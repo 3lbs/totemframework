@@ -1,31 +1,31 @@
 package totem.core.state
 {
-	import totem.core.TotemObject;
+	
 
-	public class State
+	public class State implements IState
 	{
 		/** @private */
-		internal var stateMachine : StateMachine;
+		internal var stateMachine : Machine;
 
 		public function State()
 		{
 		}
 
-		public function enter() : void
+		public function enter( fsm : IMachine ) : void
 		{
 		}
 
-		public function update( dt : Number ) : void
+		public function tick( fsm : IMachine ) : void
 		{
 		}
 
-		public function exit() : void
+		public function exit( fsm : IMachine ) : void
 		{
 		}
 
-		protected final function goto( state : State ) : void
+		protected final function gotoState( value : String ) : void
 		{
-			stateMachine.setState( state );
+			stateMachine.setCurrentState( value );
 		}
 	}
 }

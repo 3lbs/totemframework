@@ -1,7 +1,8 @@
 package totem.core.mvc.view
 {
 	import flash.events.Event;
-
+	import flash.events.IEventDispatcher;
+	
 	import totem.core.Destroyable;
 	import totem.core.mvc.TotemContext;
 
@@ -70,21 +71,22 @@ trace(mediators.hasMediator(view));
 	{
 
 		public var instance : TotemContext;
-
+		
+		[Inject]
+		public var eventDispatcher : IEventDispatcher;
+		
 		/**
 		 * View that has been mapped to the mediator instance.
 		 */
 		protected var _viewComponent : Object;
 
-		private var name : String;
-
 		/**
 		 * Create an instance of a Mediator class. The Mediator class should be extended and is usually automatically created (and removed) by the framework.
 		 * @param name Name of the wire.
 		 */
-		public function Mediator( name : String = null )
+		public function Mediator()
 		{
-			this.name = name;
+			
 		}
 
 		/**
@@ -104,13 +106,12 @@ trace(mediators.hasMediator(view));
 		[PostConstruct]
 		public function postConstruct() : void
 		{ /* removes post construct from super class (the mediator is initialized manually) */
-			trace("ïtes going to sit here");
 		}
 
 
 		public function initialize() : void
 		{
-
+			throw new Error()
 		}
 
 		/**
@@ -123,8 +124,8 @@ trace(mediators.hasMediator(view));
 
 		protected function dispatch( event : Event ) : void
 		{
-			if ( instance.eventDispatcher.hasEventListener( event.type ))
-				instance.eventDispatcher.dispatchEvent( event );
+			if ( eventDispatcher.hasEventListener( event.type ))
+				eventDispatcher.dispatchEvent( event );
 		}
 		
 		

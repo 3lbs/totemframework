@@ -6,7 +6,7 @@ package totem.core.params
 		
 		private var _url : String;
 		
-		private var _destroyed : Boolean;
+		public var embeded : Boolean;
 		
 		public function URLAssetParam()
 		{
@@ -21,16 +21,6 @@ package totem.core.params
 		public function set url( value : String ) : void
 		{
 			_url = value;
-		}
-		
-		public function destroy() : void
-		{
-			_destroyed = true;
-		}
-		
-		public function get destroyed() : Boolean
-		{
-			return _destroyed;
 		}
 	}
 }

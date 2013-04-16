@@ -1,21 +1,27 @@
 package totem.core
 {
+
+	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
-
-	import org.casalib.events.RemovableEventDispatcher;
+	
+	import ladydebug.Logger;
+	
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
-
+	
 	import totem.totem_internal;
+	import totem.events.RemovableEventDispatcher;
+	import totem.monitors.SignalCompleteMonitor;
+	import totem.monitors.promise.IPromise;
+	import totem.monitors.promise.SerialDeferred;
 
 	use namespace totem_internal;
 
 	public class TotemEntity extends TotemObject
 	{
-
-		//public var eventDispatcher : IEventDispatcher = new RemovableEventDispatcher();
+		public var eventDispatcher : IEventDispatcher = new RemovableEventDispatcher();
 
 		private var components_ : Dictionary = new Dictionary();
 
@@ -27,7 +33,19 @@ package totem.core
 
 		public function getComponent( ComponentClass : Class ) : *
 		{
-			return getInstance( ComponentClass );
+
+			var component : * = null;
+
+			try
+			{
+				component = getInstance( ComponentClass );
+			}
+			catch ( error : Error )
+			{
+				Logger.warn( this, "getComponent", "doesnt exsists: " + ComponentClass );
+			}
+
+			return component;
 		}
 
 		public function TotemEntity( name : String )
@@ -42,7 +60,6 @@ package totem.core
 			//check component existence
 			if ( injector.satisfiesDirectly( ComponentClass ))
 				throw new Error( "Component " + ComponentClass + " already added." );
-
 
 			//map to entity's and engine's injectors
 			injector.map( ComponentClass ).toValue( component );
@@ -68,23 +85,19 @@ package totem.core
 				getInjector().injectInto( component );
 				component.doAdd();
 			}
-
+			
 			onAddSignal.dispatch( this );
 
 			onAddSignal.removeAll();
 			onAddSignal = null;
 
 		}
-
-		protected function doInitialize( component : TotemComponent ) : void
+		
+		private function handleInitComplete():void
 		{
-			//component._owner = this;
-			owningGroup.injectInto( component );
-			component.doAdd();
-
-
+			eventDispatcher.dispatchEvent( new Event( Event.COMPLETE ) );
 		}
-
+		
 		public function removeComponent( ComponentClass : Class ) : void
 		{
 			var injector : Injector = getInjector();
@@ -99,7 +112,7 @@ package totem.core
 			component.doRemove();
 
 			injector.unmap( ComponentClass );
-			injector.parentInjector.unmap( ComponentClass, getName());
+			//injector.parentInjector.unmap( ComponentClass, getName());
 
 			components_[ ComponentClass ] = null;
 			delete components_[ ComponentClass ];
@@ -110,17 +123,41 @@ package totem.core
 			tickEnabled && ticked.dispatch( delta );
 		}
 
-		/** @private */
-		internal function dispose() : void
+		override public function destroy() : void
 		{
-			for ( var ComponentClass : * in components_ )
+			super.destroy();
+			// deleyed destroy?????
+			deconstruct();
+		}
+
+		public function deconstruct( func : Function = null ) : IPromise
+		{
+			var monitor : SerialDeferred = new SerialDeferred();
+			
+			for each ( var component : TotemComponent in components_ )
 			{
-				removeComponent( ComponentClass );
+				monitor.add( component.deconstruct() );	
 			}
 			
-			ticked.removeAll();
-			onAddSignal.removeAll();
+			monitor.resolveOn( doDeconstruct );
 			
+			return monitor.promise();
+		}
+
+		protected function doDeconstruct() : void
+		{
+			for ( var componentClass : * in components_ )
+			{
+				removeComponent( componentClass );
+			}
+
+			ticked.removeAll();
+
+			if ( injector )
+			{
+				injector.teardown();
+				injector = null;
+			}
 		}
 	}
 }

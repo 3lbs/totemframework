@@ -41,7 +41,16 @@ package totem.utils
 			
 			return t;
 		}
-	
+		
+		public static function convertVectorToArray( iterable:* ) : Array
+		{
+			var t : Array = new Array ();
+			
+			for each ( var item : * in iterable )
+					t.push ( item );
+			
+			return t;
+		}
 	}
 }
 

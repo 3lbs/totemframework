@@ -10,7 +10,6 @@ package org.swiftsuspenders.dependencyproviders
 	import flash.utils.Dictionary;
 
 	import org.swiftsuspenders.Injector;
-	import org.swiftsuspenders.utils.SsInternal;
 
 	public class ClassProvider implements DependencyProvider
 	{
@@ -33,7 +32,7 @@ package org.swiftsuspenders.dependencyproviders
 		public function apply(
 			targetType : Class, activeInjector : Injector, injectParameters : Dictionary) : Object
 		{
-			return activeInjector.SsInternal::instantiateUnmapped(_responseType);
+			return activeInjector.instantiateUnmapped(_responseType);
 		}
 
 		public function destroy() : void

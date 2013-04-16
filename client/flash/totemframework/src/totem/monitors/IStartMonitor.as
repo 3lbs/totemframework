@@ -1,8 +1,10 @@
 package totem.monitors
 {
-	import org.casalib.events.IRemovableEventDispatcher;
+	import totem.totem_internal;
+	import totem.core.IDestroyable;
+	import totem.events.IRemovableEventDispatcher;
 	
-	public interface IStartMonitor extends IRemovableEventDispatcher
+	public interface IStartMonitor extends IRemovableEventDispatcher, IDestroyable
 	{
 		
 		function isComplete() : Boolean;

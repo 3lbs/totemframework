@@ -1,7 +1,7 @@
 package totem.core.params
 {
 	import flash.utils.getQualifiedClassName;
-
+	
 	import org.casalib.util.StringUtil;
 
 	/**

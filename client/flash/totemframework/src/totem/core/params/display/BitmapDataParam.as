@@ -1,15 +1,13 @@
 package totem.core.params.display
 {
-	import totem.core.params.BaseParam;
+	import totem.core.params.URLAssetParam;
 
-	public class BitmapDataParam extends BaseParam
+	public class BitmapDataParam extends URLAssetParam
 	{
 		
-		public var url : String;
+		public var width : Number = 0;
 		
-		public var width : Number;
-		
-		public var height : Number;
+		public var height : Number = 0;
 		
 		public function BitmapDataParam()
 		{

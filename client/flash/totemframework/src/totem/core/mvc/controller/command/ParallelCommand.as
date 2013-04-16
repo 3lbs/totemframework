@@ -1,13 +1,32 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core.mvc.controller.command
 {
-	import totem.data.InListIterator;
+
+	import totem.totem_internal;
+
+	use namespace totem_internal;
 
 	public class ParallelCommand extends CompositeCommand
 	{
 
-		private var _idle : Boolean = true;
-
 		private var _commandCounter : int;
+
+		private var _idle : Boolean = true;
 
 		public function ParallelCommand( ... subcommands )
 		{
@@ -26,8 +45,16 @@ package totem.core.mvc.controller.command
 					for ( var i : int = 0, len : int = childrenCommands.length; i < len; ++i )
 					{
 						command = childrenCommands[ i ];
-						command.onComplete.addOnce( onCommandComplete );
-						commandManager.executeCommand( command );
+
+						if ( command is AsyncCommand )
+							AsyncCommand( command ).onComplete.addOnce( onCommandComplete );
+
+						//commandManager.executeCommand( command );
+
+						command.execute();
+						
+						if ( !command is AsyncCommand )
+							onCommandComplete( command );
 					}
 					_idle = false;
 				}
@@ -39,7 +66,7 @@ package totem.core.mvc.controller.command
 			}
 		}
 
-		private function onCommandComplete( command : Command ) : void
+		private function onCommandComplete( success : Boolean ) : void
 		{
 			++_commandCounter;
 

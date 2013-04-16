@@ -1,6 +1,6 @@
 package totem3d.core.controllers
 {
-	import org.casalib.events.IRemovableEventDispatcher;
+	import totem.events.IRemovableEventDispatcher;
 	
 	public interface IMeshLoader extends IRemovableEventDispatcher
 	{

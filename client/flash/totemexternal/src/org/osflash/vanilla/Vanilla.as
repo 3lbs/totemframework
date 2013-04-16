@@ -168,8 +168,8 @@ package org.osflash.vanilla
 		private function addReflectedFieldRules(injectionMap : InjectionMap, fields : Array) : void
 		{
 			for each (var field : Field in fields) {
-				if (canAccess(field)) {
-					const fieldMetadataEntries : Array = field.getMetadata(METADATA_TAG);
+				if (!field.hasMetadata(Metadata.TRANSIENT) && canAccess(field)) {
+                    			const fieldMetadataEntries : Array = field.getMetadata(METADATA_TAG);
 					const fieldMetadata : Metadata = (fieldMetadataEntries) ? fieldMetadataEntries[0] : null;
 					const arrayTypeHint : Class = extractArrayTypeHint(field.type, fieldMetadata);
 					const sourceFieldName : String = extractFieldName(field, fieldMetadata);
@@ -255,7 +255,7 @@ package org.osflash.vanilla
 		
 		private function isVector(obj : *) : Boolean 
 		{
-    		return (getQualifiedClassName(obj).indexOf('__AS3__.vec::Vector') == 0);
+			return (getQualifiedClassName(obj).indexOf('__AS3__.vec::Vector') == 0);
 		}
 	}
 }

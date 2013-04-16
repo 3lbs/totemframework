@@ -1,6 +1,6 @@
 package totem3d.texture
 {
-	import org.casalib.core.IDestroyable;
+	import totem.core.IDestroyable;
 	
 	public class BasicTexture implements IDestroyable
 	{

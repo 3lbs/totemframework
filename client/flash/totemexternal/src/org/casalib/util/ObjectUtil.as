@@ -112,17 +112,7 @@ package org.casalib.util {
 			
 			return false;
 		}
-		
-		/**
-			Uses the strict equality operator to determine if object is <code>undefined</code>.
-			
-			@param obj: Object to determine if <code>undefined</code>.
-			@return Returns <code>true</code> if object is <code>undefined</code>; otherwise <code>false</code>.
-		*/
-		public static function isUndefined(obj:Object):Boolean {
-			return obj is undefined;
-		}
-		
+
 		/**
 			Uses the strict equality operator to determine if object is <code>null</code>.
 			

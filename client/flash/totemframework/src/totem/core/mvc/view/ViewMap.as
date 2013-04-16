@@ -25,6 +25,10 @@
 package totem.core.mvc.view
 {
 	import flash.utils.Dictionary;
+	
+	import totem.core.IDestroyable;
+	import totem.core.ITotemSystem;
+	import totem.events.RemovableEventDispatcher;
 
 	/**
 	 * <p><b>Author:</b> Romuald Quantin - <a href="http://www.soundstep.com/" target="_blank">www.soundstep.com</a></p>
@@ -58,7 +62,7 @@ private function doSomething():void {
 	 * </listing>
 	 */
 
-	public class ViewMap
+	public class ViewMap extends RemovableEventDispatcher implements ITotemSystem
 	{
 
 		//------------------------------------
@@ -85,13 +89,13 @@ private function doSomething():void {
 		{
 			initialize();
 		}
-
+		
 		//
 		// PRIVATE, PROTECTED
 		//________________________________________________________________________________________________
 
 		/** @private */
-		private function initialize() : void
+		public function initialize() : void
 		{
 			views = new Dictionary();
 		}
@@ -103,8 +107,10 @@ private function doSomething():void {
 		/**
 		 * Destroys all the views and properties. The class will call the dispose method of each view instance.
 		 */
-		public function dispose() : void
+		override public function destroy() : void
 		{
+			super.destroy();
+			
 			// dispose objects, graphics and events listeners
 			for ( var name : String in views )
 			{
@@ -135,7 +141,7 @@ private function doSomething():void {
 		 * @example
 		 * <listing version="3.0">addView(MySprite.NAME, new MySprite());</listing>
 		 */
-		public function addView( viewName : String, view : Object ) : Object
+		public function addView( viewName : String, view : Object ) : *
 		{
 			if ( !views )
 				return null;
@@ -146,8 +152,9 @@ private function doSomething():void {
 			}
 			views[ viewName ] = view;
 
-			if ( Object( views[ viewName ]).hasOwnProperty( "initializeView" ))
-				Object( views[ viewName ]).initializeView();
+			if ( view is IView )
+				IView( view ).initialize();
+			
 			return view;
 		}
 
@@ -167,8 +174,9 @@ private function doSomething():void {
 				throw new Error( "Error in " + this + " View \"" + viewName + "\" not registered." );
 			}
 
-			if ( Object( views[ viewName ]).hasOwnProperty( "dispose" ))
-				Object( views[ viewName ]).dispose();
+			if ( views[ viewName ] is IView )
+				IView( views[ viewName ]).destroy();
+			
 			views[ viewName ] = null;
 			delete views[ viewName ];
 		}
@@ -180,13 +188,14 @@ private function doSomething():void {
 		 * @example
 		 * <listing version="3.0">var mySprite:MySprite = getView(MySprite.NAME) as MySprite;</listing>
 		 */
-		public function getView( viewName : String ) : Object
+		public function getView( viewName : String ) : *
 		{
 			if ( !views )
 				return null;
 
 			if ( !hasView( viewName ))
 				return null;
+			
 			return views[ viewName ];
 		}
 

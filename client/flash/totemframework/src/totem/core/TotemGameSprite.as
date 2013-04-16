@@ -1,48 +1,50 @@
 package totem.core
 {
+
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.UncaughtErrorEvent;
 	
-	import org.swiftsuspenders.Injector;
+	import ladydebug.Logger;
 	
-	import robotlegs.bender.framework.api.IContext;
-	
-	[SWF(frameRate="32",wmode="direct")]
+	import totem.core.mvc.TotemContext;
+
+	[SWF( frameRate = "60" )]
 	public class TotemGameSprite extends Sprite
 	{
-		
+
 		public static var LOCAL_PLAY : Boolean = false;
-		
-		protected var context : IContext;
-		
+
+		protected var context : TotemContext;
+
 		public function TotemGameSprite()
 		{
-			super ();
-			addEventListener ( Event.ADDED_TO_STAGE, handleAddToStage, false, 0, true );
+			super();
+			addEventListener( Event.ADDED_TO_STAGE, handleAddToStage, false, 0, true );
 		}
-		
+
 		protected function handleAddToStage( event : Event ) : void
 		{
-			removeEventListener ( Event.ADDED_TO_STAGE, handleAddToStage );
-			
-			if ( this.parent == this.stage )
+			removeEventListener( Event.ADDED_TO_STAGE, handleAddToStage );
+
+			loaderInfo.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, uncaughtErrorHandler );
+
+			/*if ( this.parent == this.stage )
 			{
 				TotemGameSprite.LOCAL_PLAY = true;
-				parentInjector = null;
-			}
+				parentInjector = new Injector();
+			}*/
 		}
-		
-		/**
-		 * We need to initialize our context by setting the parent
-		 * injector for the module. This is actually injected by the
-		 * shell, so no need to worry about it!
-		 */
-		[Inject]
-		public function set parentInjector( value : Injector ) : void
+
+		private function uncaughtErrorHandler( e : UncaughtErrorEvent ) : void
 		{
-			throw new Error("This needs to be overriden");
-		}
+			trace( "Global error:", e.error );
+			
+			Logger.error( e.target, "uncaughtErrorhandler", e.error + ", " + e.text );
+			
 	
+		}
+
 	}
 }
 

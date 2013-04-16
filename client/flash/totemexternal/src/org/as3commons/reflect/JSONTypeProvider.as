@@ -187,7 +187,7 @@ package org.as3commons.reflect {
 				}
 				var member:IMember = memberClass["newInstance"](m.name, m.type, declaringType, isStatic, applicationDomain);
 				if (member is INamespaceOwner) {
-					INamespaceOwner(member).as3commons_reflect::setNamespaceURI(m.uri);
+					//INamespaceOwner(member).as3commons_reflect::setNamespaceURI(m.uri);
 				}
 				parseMetadata(m.metadata, member);
 				result[result.length] = member;

@@ -12,7 +12,7 @@ package org.swiftsuspenders.typedescriptions
 	import flash.utils.Dictionary;
 
 	import org.swiftsuspenders.Injector;
-	import org.swiftsuspenders.InjectorError;
+	import org.swiftsuspenders.errors.InjectorMissingMappingError;
 	import org.swiftsuspenders.dependencyproviders.DependencyProvider;
 	import org.swiftsuspenders.utils.SsInternal;
 
@@ -68,7 +68,7 @@ package org.swiftsuspenders.typedescriptions
 					{
 						break;
 					}
-					throw(new InjectorError(
+					throw(new InjectorMissingMappingError(
 						'Injector is missing a mapping to handle injection into target "' +
 						target + '" of type "' + getQualifiedClassName(targetType) + '". \
 						Target dependency: ' + parameterMappingId +

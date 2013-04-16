@@ -1,32 +1,55 @@
 package totem.net
 {
-	import flash.utils.Dictionary;
-
 	public class URLManager
 	{
-		public static var ASSET_URL : String = "URLManager:AssetUrl";
+		public static var ASSET_URL : URLManager;
 
-		private static var _instances : Dictionary;
+		private var _url : String;
+
+		public static var fileSeperator : String;
 		
-		private var _url:String;
-
-		public function URLManager( type : String, singletonEnforcer : SingletonEnforcer )
+		public function URLManager( url : String, singletonEnforcer : SingletonEnforcer )
 		{
 			if ( !singletonEnforcer )
 				throw new Error( "This class is a multiton and cannot be instantiated manually. Use URLManager.instance instead." );
+
+			_url = url;
+		}
+
+		public static function instance( url : String ) : URLManager
+		{
+			return new URLManager( url, new SingletonEnforcer());
+		}
+
+		public function getURL( value : String = "" ) : String
+		{
+			if ( value && value.indexOf( _url ) > -1 )
+				return value;
+
 			
-			_url = type;
+			var u : String = _url;
+			
+			
+			return _url + (value || "");
 		}
-
-		public static function instance( type : String ) : URLManager
+		
+		public function getDeepURL( ...arg ) : String
 		{
-			return ( _instances ||= new Dictionary())[ type ] ||= new URLManager( type, new SingletonEnforcer());
+			
+			var u : String = _url + arg[0];
+			
+			if ( arg.length > 1 )
+			{
+				for ( var i : int = 1; i<arg.length; ++i )
+				{
+					u += fileSeperator + arg[i]; 
+				}
+			}
+			
+			return u;
 		}
-
-		public function getURL( value : String ) : String
-		{
-			return _url + value;
-		}
+		
+		
 	}
 }
 

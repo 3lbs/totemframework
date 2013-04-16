@@ -1,10 +1,25 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core.mvc.controller.command
 {
-	import org.swiftsuspenders.Injector;
-	
-	import totem.core.mvc.controller.api.ICommandMap;
 
-	internal class CompositeCommand extends Command
+	import org.swiftsuspenders.Injector;
+
+	internal class CompositeCommand extends AsyncCommand
 	{
 		internal var childrenCommands : Array = [];
 
@@ -16,13 +31,13 @@ package totem.core.mvc.controller.command
 			}
 		}
 
-		internal var commandManager :  ICommandMap;
+		//internal var commandManager :  ICommandMap;
 
-		[Inject]
+		/*[Inject]
 		public function injectManager( commandManager : ICommandMap ) : void
 		{
 			this.commandManager = commandManager;
-		}
+		}*/
 
 		public function append( command : Command ) : void
 		{
@@ -30,13 +45,15 @@ package totem.core.mvc.controller.command
 		}
 
 		[Inject]
-		override internal function injectChildren( injector : Injector ) : void
+		override public function injectChildren( injector : Injector ) : void
 		{
 			for ( var i : int = 0, len : int = childrenCommands.length; i < len; ++i )
 			{
 				var command : Command = childrenCommands[ i ];
 				injector.injectInto( command );
-				command.injectChildren( injector );
+
+				if ( command is AsyncCommand )
+					AsyncCommand( command ).injectChildren( injector );
 			}
 		}
 	}

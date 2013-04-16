@@ -28,6 +28,9 @@ package totem.core
 
 		public function destroy() : void
 		{
+			if ( _isDestroyed )
+				return;
+			
 			this._isDestroyed = true;
 		}
 	}

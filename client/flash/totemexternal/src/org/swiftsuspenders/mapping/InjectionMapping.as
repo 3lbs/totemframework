@@ -8,7 +8,7 @@
 package org.swiftsuspenders.mapping
 {
 	import org.swiftsuspenders.Injector;
-	import org.swiftsuspenders.InjectorError;
+	import org.swiftsuspenders.errors.InjectorError;
 	import org.swiftsuspenders.dependencyproviders.ClassProvider;
 	import org.swiftsuspenders.dependencyproviders.DependencyProvider;
 	import org.swiftsuspenders.dependencyproviders.ForwardingProvider;
@@ -55,7 +55,7 @@ package org.swiftsuspenders.mapping
 		 *
 		 * @return The <code>InjectionMapping</code> the method is invoked on
 		 *
-		 * @throws org.swiftsuspenders.InjectorError Sealed mappings can't be changed in any way
+		 * @throws org.swiftsuspenders.errors.InjectorError Sealed mappings can't be changed in any way
 		 *
 		 * @see #toSingleton()
 		 */
@@ -76,7 +76,7 @@ package org.swiftsuspenders.mapping
 		 *
 		 * @return The <code>InjectionMapping</code> the method is invoked on
 		 *
-		 * @throws org.swiftsuspenders.InjectorError Sealed mappings can't be changed in any way
+		 * @throws org.swiftsuspenders.errors.InjectorError Sealed mappings can't be changed in any way
 		 *
 		 * @see #toProvider()
 		 */
@@ -98,7 +98,7 @@ package org.swiftsuspenders.mapping
 		 *
 		 * @return The <code>InjectionMapping</code> the method is invoked on
 		 *
-		 * @throws org.swiftsuspenders.InjectorError Sealed mappings can't be changed in any way
+		 * @throws org.swiftsuspenders.errors.InjectorError Sealed mappings can't be changed in any way
 		 *
 		 * @see #toProvider()
 		 */
@@ -118,7 +118,7 @@ package org.swiftsuspenders.mapping
 		 *
 		 * @return The <code>InjectionMapping</code> the method is invoked on
 		 *
-		 * @throws org.swiftsuspenders.InjectorError Sealed mappings can't be changed in any way
+		 * @throws org.swiftsuspenders.errors.InjectorError Sealed mappings can't be changed in any way
 		 *
 		 * @see #toProvider()
 		 */
@@ -136,7 +136,7 @@ package org.swiftsuspenders.mapping
 		 *
 		 * @return The <code>InjectionMapping</code> the method is invoked on
 		 *
-		 * @throws org.swiftsuspenders.InjectorError Sealed mappings can't be changed in any way
+		 * @throws org.swiftsuspenders.errors.InjectorError Sealed mappings can't be changed in any way
 		 */
 		public function toProvider(provider : DependencyProvider) : UnsealedMapping
 		{
@@ -169,7 +169,7 @@ package org.swiftsuspenders.mapping
 		 *
 		 * @return The <code>InjectionMapping</code> the method is invoked on
 		 *
-		 * @throws org.swiftsuspenders.InjectorError Sealed mappings can't be changed in any way
+		 * @throws org.swiftsuspenders.errors.InjectorError Sealed mappings can't be changed in any way
 		 */
 		public function softly() : ProviderlessMapping
 		{
@@ -190,7 +190,7 @@ package org.swiftsuspenders.mapping
 		 *
 		 * @return The <code>InjectionMapping</code> the method is invoked on
 		 *
-		 * @throws org.swiftsuspenders.InjectorError Sealed mappings can't be changed in any way
+		 * @throws org.swiftsuspenders.errors.InjectorError Sealed mappings can't be changed in any way
 		 */
 		public function locally() : ProviderlessMapping
 		{
@@ -217,7 +217,7 @@ package org.swiftsuspenders.mapping
 		 *
 		 * @returns An internally created object that can be used as the key for unseal
 		 *
-		 * @throws org.swiftsuspenders.InjectorError Can't be invoked on a mapping that's already sealed
+		 * @throws org.swiftsuspenders.errors.InjectorError Can't be invoked on a mapping that's already sealed
 		 *
 		 * @see #unseal()
 		 */
@@ -240,8 +240,8 @@ package org.swiftsuspenders.mapping
 		 *
 		 * @return The <code>InjectionMapping</code> the method is invoked on
 		 *
-		 * @throws org.swiftsuspenders.InjectorError Has to be invoked with the unique key object returned by an earlier call to <code>seal</code>
-		 * @throws org.swiftsuspenders.InjectorError Can't unseal a mapping that's not sealed
+		 * @throws org.swiftsuspenders.errors.InjectorError Has to be invoked with the unique key object returned by an earlier call to <code>seal</code>
+		 * @throws org.swiftsuspenders.errors.InjectorError Can't unseal a mapping that's not sealed
 		 *
 		 * @see #seal()
 		 */
@@ -273,7 +273,7 @@ package org.swiftsuspenders.mapping
 		 */
 		public function hasProvider() : Boolean
 		{
-			return Boolean(_creatingInjector.providerMappings[_mappingId]);
+			return Boolean(_creatingInjector.SsInternal::providerMappings[_mappingId]);
 		}
 
 		/**
@@ -282,7 +282,7 @@ package org.swiftsuspenders.mapping
 		public function getProvider() : DependencyProvider
 		{
 			var provider : DependencyProvider =
-				_creatingInjector.providerMappings[_mappingId];
+				_creatingInjector.SsInternal::providerMappings[_mappingId];
 			while (provider is ForwardingProvider)
 			{
 				provider = ForwardingProvider(provider).provider;
@@ -332,8 +332,7 @@ package org.swiftsuspenders.mapping
 			{
 				provider = new InjectorUsingProvider(_overridingInjector, provider);
 			}
-			_creatingInjector.providerMappings[_mappingId] = provider;
-			//_creatingInjector.SsInternal::providerMappings[_mappingId] = provider;
+			_creatingInjector.SsInternal::providerMappings[_mappingId] = provider;
 		}
 
 		private function throwSealedError() : void

@@ -1,56 +1,50 @@
 package totem.core.state
 {
-	import totem.core.TotemComponent;
-	import totem.data.InListIterator;
 
-	public class StateMachineComponent extends TotemComponent
+	import totem.core.time.TickedComponent;
+
+	public class StateMachineComponent extends TickedComponent
 	{
-		private var initStates_ : Array;
-		
-		private var stateMachines : StateMachineCollector;
-		
-		public function StateMachineComponent( ... initStates )
+		private var machine : Machine;
+
+		public function StateMachineComponent( m : Machine )
 		{
-			initStates_ = initStates;
+			machine = m;
 		}
 
-		public function onAdded() : void
+		override protected function onAdd() : void
 		{
-			var system : StateMachineSystem = getSystem( StateMachineSystem );
-			system.register( this );
-
-			for ( var i : int = 0, len : int = initStates_.length; i < len; ++i )
-			{
-				stateMachines.add( new StateMachine( initStates_[ i ]));
-			}
+			super.onAdd();
 		}
 
-		public function onRemoved() : void
+		override protected function onRemove() : void
 		{
-			/*var iter : InListIterator = stateMachines_.getIterator();
-			var stateMachine : StateMachine;
+			super.onRemove();
 
-			while ( stateMachine = iter.data())
-			{
-				stateMachine.dispose();
-				iter.next();
-			}
+		/*var iter : InListIterator = stateMachines_.getIterator();
+		var stateMachine : StateMachine;
 
-			var system : StateMachineSystem = getSystem( StateMachineSystem );
-			system.unregister( this );*/
+		while ( stateMachine = iter.data())
+		{
+			stateMachine.dispose();
+			iter.next();
 		}
 
-		/** @private */
-		internal function update( dt : Number ) : void
-		{
-			/*var iter : InListIterator = stateMachines_.getIterator();
-			var stateMachine : StateMachine;
+		var system : StateMachineSystem = getSystem( StateMachineSystem );
+		system.unregister( this );*/
+		}
 
-			while ( stateMachine = iter.data())
-			{
-				stateMachine.update( dt );
-				iter.next();
-			}*/
+		override public function onTick() : void
+		{
+
+		/*var iter : InListIterator = stateMachines_.getIterator();
+		var stateMachine : StateMachine;
+
+		while ( stateMachine = iter.data())
+		{
+			stateMachine.update( dt );
+			iter.next();
+		}*/
 		}
 	}
 }

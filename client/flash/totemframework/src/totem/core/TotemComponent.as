@@ -1,20 +1,22 @@
 package totem.core
 {
+
 	import totem.totem_internal;
+	import totem.monitors.promise.IPromise;
 
 	use namespace totem_internal;
 
 	public class TotemComponent extends TotemObject
 	{
+		
 		private var _safetyFlag : Boolean;
-		
+
 		public var owner : TotemEntity;
-		
-		public function TotemComponent(  name : String = null )
+
+		public function TotemComponent( name : String = null )
 		{
 			super( name );
 		}
-
 
 		// you might want to do get var OWNER instead of going through the mapping
 		public function getOwner() : TotemEntity
@@ -61,13 +63,19 @@ package totem.core
 		protected function onRemove() : void
 		{
 			_safetyFlag = true;
+			
+			destroy();
 		}
-		
-		override public function destroy():void
+
+		override public function destroy() : void
 		{
 			super.destroy();
-			
 			owner = null;
+		}
+		
+		public function deconstruct(): IPromise
+		{
+			return null;
 		}
 	}
 }

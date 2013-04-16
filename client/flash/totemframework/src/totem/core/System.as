@@ -8,17 +8,17 @@ package totem.core
 			super( name );
 		}
 
-		public function onAdded() : void
+		override public function initialize():void
 		{
-		}
-
-		public function onRemoved() : void
-		{
+			
 		}
 		
-		// might want to submit for update
-		public function update( dt : Number ) : void
+		override public function destroy():void
 		{
+			super.destroy();
+			
 		}
+		
+		
 	}
 }

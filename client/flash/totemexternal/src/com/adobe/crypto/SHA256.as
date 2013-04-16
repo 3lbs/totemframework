@@ -33,7 +33,9 @@
 package com.adobe.crypto
 {
 	import com.adobe.utils.IntUtil;
+	
 	import flash.utils.ByteArray;
+	
 	import mx.utils.Base64Encoder;
 	
 	/**
@@ -53,6 +55,7 @@ package com.adobe.crypto
 		 *  @playerversion	9.0
 		 *  @tiptext
 		 */
+		
 		public static function hash( s:String ):String {
 			var blocks:Array = createBlocksFromString( s );
 			var byteArray:ByteArray = hashBlocks( blocks );

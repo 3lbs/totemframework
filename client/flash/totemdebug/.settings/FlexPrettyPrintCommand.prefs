@@ -1,4 +1,4 @@
-#Thu Jul 26 04:20:37 PDT 2012
+#Mon Dec 03 08:40:48 PST 2012
 ASRearr_AddDefaultHeaderForProperties=1
 ASRearr_AddDefaultHeaderForStaticProperties=1
 ASRearr_BlankLinesBeforeElement=
@@ -28,7 +28,7 @@ ASRearr_ModifierOrder_Property=<Namespace>,override,native,public,private,protec
 ASRearr_MoveImportsOutsideClass=true
 ASRearr_RemoveExistingCopyrightHeaders=false
 ASRearr_RemoveExistingSectionHeaders=false
-ASRearr_SectionHeaderMap=\#\r\n\#Thu Jul 26 04\:20\:37 PDT 2012\r\n
+ASRearr_SectionHeaderMap=\#\r\n\#Mon Dec 03 08\:40\:48 PST 2012\r\n
 ASRearr_SortGettersAndSettersWithAssociatedProperties=true
 ASRearr_SortGettersAndSettersWithAssociatedStaticProperties=true
 ASRearr_UseCopyrightGeneration=false
@@ -92,9 +92,9 @@ Actionscript.blankLinesAtFunctionStart=0
 Actionscript.blankLinesBeforeClasses=1
 Actionscript.blankLinesBeforeControlStatements=1
 Actionscript.blankLinesBeforeFunctions=1
-Actionscript.blankLinesBeforeImportBlock=0
+Actionscript.blankLinesBeforeImportBlock=1
 Actionscript.blankLinesBeforeProperties=1
-Actionscript.blankLinesToKeep=0
+Actionscript.blankLinesToKeep=1
 Actionscript.braceStyle=5
 Actionscript.breakLinesBeforeArithmeticOperator=false
 Actionscript.breakLinesBeforeAssignment=false
@@ -106,7 +106,7 @@ Actionscript.docCommentHangingIndentTabs=0
 Actionscript.docCommentReflow=false
 Actionscript.dontIndentPackageItems=false
 Actionscript.dontIndentSwitchCases=false
-Actionscript.keepBlankLines=true
+Actionscript.keepBlankLines=false
 Actionscript.keepElseIfOnSameLine=true
 Actionscript.keepSLCommentsOnColumn1=true
 Actionscript.keepSpacesBeforeLineComments=false
