@@ -9,12 +9,15 @@
 //    `-------'      
 //                       
 //   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
 
 package AI.goal
 {
+
+	import AI.pathfinding.PathPlanner;
 
 	import totem.core.state.Machine;
 	import totem.core.time.TickedComponent;
@@ -26,9 +29,13 @@ package AI.goal
 
 		private var _currentBrain : GoalThink;
 
-		public function GoalDrivenComponent( machine : Machine )
+		private var _pathPlanner : PathPlanner;
+
+		public function GoalDrivenComponent( machine : Machine, planner : PathPlanner )
 		{
 			super( machine );
+
+			_pathPlanner = planner;
 		}
 
 		public function get brain() : GoalThink
@@ -48,11 +55,15 @@ package AI.goal
 
 		}
 
+		public function get pathPlanner() : PathPlanner
+		{
+			return _pathPlanner;
+		}
+
 		override protected function onAdd() : void
 		{
 			super.onAdd();
 
-			
 		}
 	}
 }

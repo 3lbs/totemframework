@@ -7,9 +7,10 @@ package totem.display.components.togglebutton
 	{
 		private var _data : Object;
 
-		public function ToggleButton( mc : MovieClip)
+		public function ToggleButton( mc : MovieClip, data : Object = null )
 		{
 			super( mc );
+			_data = data;
 		}
 
 		public function set data( value : Object ) : void
@@ -28,5 +29,6 @@ package totem.display.components.togglebutton
 			
 			_data = null;
 		}
+		
 	}
 }

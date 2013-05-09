@@ -21,6 +21,7 @@ package totem.core
 			super();
 		}
 
+		[Transient]
 		public function get destroyed() : Boolean
 		{
 			return this._isDestroyed;

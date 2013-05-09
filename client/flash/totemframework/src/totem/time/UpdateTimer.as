@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.time
 {
 
@@ -11,18 +27,30 @@ package totem.time
 
 	public class UpdateTimer extends Destroyable
 	{
-		private var _timer : uint;
-
-		private var isRunning : Boolean;
 
 		public var updateSignal : ISignal = new Signal();
 
 		private var _interval : Number;
 
-		public function UpdateTimer( time : Number )
+		private var _timer : uint;
+
+		private var isRunning : Boolean;
+
+		public function UpdateTimer( time : Number = 1000 )
 		{
 			super();
 			_interval = time;
+		}
+
+		override public function destroy() : void
+		{
+			super.destroy();
+
+			if ( isRunning )
+				stop();
+
+			updateSignal.removeAll();
+			updateSignal = null;
 		}
 
 		public function get interval() : Number
@@ -50,20 +78,9 @@ package totem.time
 			clearTimeout( _timer );
 		}
 
-		private function onTick() : void
+		protected function onTick() : void
 		{
 			updateSignal.dispatch();
-		}
-
-		override public function destroy() : void
-		{
-			super.destroy();
-
-			if ( isRunning )
-				stop();
-
-			updateSignal.removeAll();
-			updateSignal = null;
 		}
 	}
 }

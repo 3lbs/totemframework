@@ -1,20 +1,37 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package AI.steering.behaviors
 {
 
 	import AI.boid.Boid2DComponent;
 	
+	import totem.core.Destroyable;
 	import totem.math.Vector2D;
 
-	public class ABehavior
+	public class ABehavior extends Destroyable
 	{
 
-		public var weight : Number; // Amount the final force will be scaled by
-
-		public var probability : Number; // Probability this will be calculated in prioritized dithering
+		public var agent : Boid2DComponent;
 
 		public var priority : int; // Order in which this will be calculated vs other behaviors
 
-		public var agent : Boid2DComponent;
+		public var probability : Number; // Probability this will be calculated in prioritized dithering
+
+		public var weight : Number; // Amount the final force will be scaled by
 
 		public function ABehavior( a_weight : Number = 1, a_priority : int = 1, a_probability : Number = 1 )
 		{
@@ -26,6 +43,14 @@ package AI.steering.behaviors
 		public function calculate() : Vector2D
 		{
 			throw new Error( "<ABehavior> Abstract function -- Must be overriden!" );
+		}
+		
+		override public function destroy():void
+		{
+			super.destroy();
+			
+			agent = null;
+			
 		}
 	}
 }

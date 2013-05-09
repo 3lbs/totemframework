@@ -80,6 +80,16 @@
     <classEntry path="totem.components.commands.UpdateDisplayComponentCommand"/>
     <classEntry path="totem.core.params.TransformParam"/>
     <classEntry path="totem.utils.TimeCodeUtil"/>
+    <classEntry path="totem.display.components.togglebutton.CheckBoxMobile"/>
+    <classEntry path="quest.QuestSystem"/>
+    <classEntry path="quest.Quest"/>
+    <classEntry path="quest.QuestParam"/>
+    <classEntry path="quest.SubQuest"/>
+    <classEntry path="totem.display.screens.ScreenStateMachine"/>
+    <classEntry path="totem.display.screens.ScreenState"/>
+    <classEntry path="totem.display.screens.IScreenState"/>
+    <classEntry path="totem.events.ApplicationEvent"/>
+    <classEntry path="totem.display.controls.ClockTextField"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

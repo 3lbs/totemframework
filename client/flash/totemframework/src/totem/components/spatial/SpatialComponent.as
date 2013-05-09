@@ -17,8 +17,10 @@
 package totem.components.spatial
 {
 
+	import flash.utils.Dictionary;
+
 	import org.osflash.signals.Signal;
-	
+
 	import totem.components.DisplayRendererComponent;
 	import totem.core.params.TransformParam;
 	import totem.core.time.TickedComponent;
@@ -44,6 +46,8 @@ package totem.components.spatial
 		public var transformUpdate : Signal = new Signal();
 
 		protected var canDispatch : Boolean = false;
+
+		protected var properties : Dictionary;
 
 		private var _rotationX : Number = 0;
 
@@ -87,12 +91,19 @@ package totem.components.spatial
 				_scaleY = data.scaleY;
 				_scaleZ = data.scaleZ;
 			}
+
+			properties = new Dictionary();
 		}
-		
+
 		public function addDisplayRendererSignal( renderer : DisplayRendererComponent ) : void
 		{
 			displayRenderer = renderer;
 			displayRenderer.displayUpdate.add( updateTransformsEvent );
+		}
+
+		public function getProperty( prop : Object ) : Object
+		{
+			return properties[ prop ];
 		}
 
 		public function get rotationX() : Number
@@ -188,6 +199,11 @@ package totem.components.spatial
 			dirtyPosition = true;
 
 			dispatchUpdate();
+		}
+
+		public function setProperty( prop : Object, value : Object ) : void
+		{
+			properties[ prop ] = value;
 		}
 
 		public function setRotation( x : Number, y : Number, z : Number ) : void

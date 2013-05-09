@@ -9,6 +9,7 @@ package totem.core.mvc
 	
 	import totem.totem_internal;
 	import totem.core.TotemGroup;
+	import totem.core.mvc.modular.mvcs.TotemModuleContext;
 	import totem.events.RemovableEventDispatcher;
 
 	use namespace totem_internal;
@@ -20,6 +21,8 @@ package totem.core.mvc
 		protected var _mainClass : DisplayObjectContainer;
 
 		protected var _contextEventDispatcher : RemovableEventDispatcher = new RemovableEventDispatcher();
+		
+		protected var _currentModule : TotemModuleContext;
 		
 		public function TotemContext( name : String, mainclass : DisplayObjectContainer, group : TotemGroup )
 		{
@@ -94,24 +97,19 @@ package totem.core.mvc
 
 			_mainClass = null;
 			_stage = null;
+			
+			_contextEventDispatcher.destroy();
+			_contextEventDispatcher = null;
 		}
 
-		/*override protected function handleStageDeactivated( e : flash.events.Event ) : void
+		public function get currentModule():TotemModuleContext
 		{
-		
-		if ( _playing && _starling )
-		_starling.stop();
-		
-		super.handleStageDeactivated( e );
+			return _currentModule;
 		}
-		
-		override protected function handleStageActivated( e : flash.events.Event ) : void
+
+		public function set currentModule(value:TotemModuleContext):void
 		{
-		
-		if ( _starling && !_starling.isStarted )
-		_starling.start();
-		
-		super.handleStageActivated( e );
-		}*/
+			_currentModule = value;
+		}
 	}
 }

@@ -12,7 +12,7 @@ package totem.core.params
 	{
 		private var _id : String;
 
-		private var _type : String;
+		private var _type : Object;
 
 		private var _name : String;
 
@@ -24,7 +24,7 @@ package totem.core.params
 		public function BaseParam()
 		{
 			_name = getQualifiedClassName( this ).split( "::" )[ 1 ] + "_" + StringUtil.createRandomIdentifier( 3 );
-			_id = _name + StringUtil.createRandomIdentifier( 6 );
+			_id = _name + StringUtil.createRandomIdentifier( 4 );
 		}
 
 		/**
@@ -49,7 +49,7 @@ package totem.core.params
 		 *
 		 * @param value
 		 */
-		public function set type( value : String ) : void
+		public function set type( value : Object ) : void
 		{
 			_type = value;
 		}
@@ -58,7 +58,7 @@ package totem.core.params
 		 *
 		 * @return Object type
 		 */
-		public function get type() : String
+		public function get type() : Object
 		{
 			return _type;
 		}

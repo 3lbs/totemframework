@@ -17,10 +17,10 @@
 package AI.steering
 {
 
+	import AI.params.MovingParam;
+
 	import flash.utils.Dictionary;
 
-	import totem.core.params.TransformParam;
-	import totem.core.time.TickRegulator;
 	import totem.math.AABBox;
 	import totem.math.MathUtils;
 	import totem.math.Matrix2D;
@@ -37,19 +37,21 @@ package AI.steering
 
 		public static const BOUNDS_WRAP : String = "wrap";
 
+		public static const NAME : String = "moving2dcomponent";
+
 		public var acc : Vector2D; // Keeping this as a public so it can be visible for debug etc
 
 		public var boundsBehavior : String = BOUNDS_BOUNCE; // What to do when this entity passes edges
 
-		public var damping : Number = 0; // Amount to slow down the velocity by each tick
+		public var damping : Number = 1; // Amount to slow down the velocity by each tick
 
 		public var doesRotMatchHeading : Boolean; // Will the rotation be locked to the direction the entity is "heading"
 
-		public var friction : Number = 0; // Amount to slow down velocity when hitting things
+		public var friction : Number = 1; // Amount to slow down velocity when hitting things
 
 		public var heading : Vector2D; // The direction this entity is going
 
-		public var maxTurnRate : Number; // Degrees per second, 0 for unlimited rotation speed
+		public var maxTurnRate : Number = 0; // Degrees per second, 0 for unlimited rotation speed
 
 		public var side : Vector2D; // Parallel to heading
 
@@ -63,21 +65,28 @@ package AI.steering
 
 		protected var newPos : Vector2D = new Vector2D();
 
-		protected var tickRegulator : TickRegulator;
-
 		private const BOUNCE_STOP_SPEED : Number = 50;
 
 		private var _maxAcceleration : Number; // Speed per second to accelerate
 
-		private var _maxSpeed : Number; // Max speed per second
+		private var _maxSpeed : Number = 10; // Max speed per second
 
 		private var _velocity : Vector2D; // Speed per second
 
 		private var _worldBounds : AABBox;
 
-		public function Moving2DComponent( data : TransformParam )
+		public function Moving2DComponent( data : MovingParam, name : String = "" )
 		{
-			super( data );
+			super( name || NAME, data );
+
+			// set from data 
+			_maxAcceleration = data.maxAccelleration;
+			_maxSpeed = data.maxSpeed;
+			maxTurnRate = data.maxTurnRate;
+			friction = data.friction;
+			damping = data.damping;
+			doesRotMatchHeading = data.doesRotMatchHeading;
+			boundsBehavior = data.boundsBehavior;
 
 			velocity = new Vector2D();
 			heading = new Vector2D( 1, 0 );
@@ -85,16 +94,7 @@ package AI.steering
 			_forces = [];
 			_constantForces = new Dictionary();
 			_oldVelocity = new Vector2D();
-
-			doesRotMatchHeading = false;
-
-			_maxAcceleration = 0;
-			_maxSpeed = 0;
-
-			side = heading.getPerp();
-
-			_worldBounds = new AABBox( new Vector2D(), 1, 1 );
-
+			_worldBounds = new AABBox( new Vector2D(), 100, 100 );
 			_forces = new Array();
 		}
 
@@ -130,26 +130,23 @@ package AI.steering
 
 		override public function onTick() : void
 		{
-			if ( tickRegulator.isReady())
-			{
-				canDispatch = false;
+			canDispatch = false;
 
-				setInitialValues( 0 );
+			setInitialValues( 0 );
 
-				// might move the regulator to here
-				calculateForces();
+			// might move the regulator to here
+			calculateForces();
 
-				calculateFinalVelocity();
+			calculateFinalVelocity();
 
-				updatePosition();
+			updatePosition();
 
-				updateHeading();
+			updateHeading();
 
-				canDispatch = true;
-				// update assets
-				dispatchUpdate();
-					//updateChildren( a_timePassed );
-			}
+			canDispatch = true;
+			// update assets
+			dispatchUpdate();
+			//updateChildren( a_timePassed );
 		}
 
 		public function removeForce( a_id : String ) : void
@@ -320,14 +317,6 @@ package AI.steering
 			velocity.y += acc.y;
 		}
 
-		override protected function onAdd() : void
-		{
-			super.onAdd();
-
-			tickRegulator = new TickRegulator();
-
-		}
-
 		override protected function onRemove() : void
 		{
 			_forces = null;
@@ -397,6 +386,7 @@ package AI.steering
 			}
 			else
 			{
+				return;
 				velocity.x = 0;
 				velocity.y = 0;
 			}
@@ -411,7 +401,7 @@ package AI.steering
 			x += dx;
 			y += dy;
 
-			switch ( boundsBehavior )
+			/*switch ( boundsBehavior )
 			{
 				case BOUNDS_WRAP:
 					wrapOnBounds();
@@ -419,7 +409,7 @@ package AI.steering
 				case BOUNDS_BOUNCE:
 					bounceOnBounds();
 					break;
-			}
+			}*/
 
 			// need to update position here
 			newPos.x = x;

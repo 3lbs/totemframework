@@ -19,7 +19,6 @@ package totem3d.components
 	import flash.events.Event;
 	import flash.utils.Dictionary;
 	
-	import flare.basic.Scene3D;
 	import flare.core.Label3D;
 	import flare.core.Mesh3D;
 	import flare.core.Pivot3D;

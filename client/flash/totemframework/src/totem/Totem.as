@@ -1,6 +1,8 @@
 package totem
 {
 
+	import com.greensock.TimelineMax;
+	
 	import mx.collections.IList;
 	
 	import nz.co.codec.flexorm.EntityManager;
@@ -26,5 +28,7 @@ package totem
 		private var entityManager : EntityManager;
 		
 		private var list : IList;
+		
+		private var timeline : TimelineMax;
 	}
 }

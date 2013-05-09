@@ -25,8 +25,6 @@ package totem.library.factories
 				
 			}
 
-			
-			
 			if ( item is DisplayObject )
 			{
 			

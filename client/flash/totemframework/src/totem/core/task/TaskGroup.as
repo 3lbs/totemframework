@@ -21,8 +21,9 @@ package totem.core.task
 	
 	import flash.events.ErrorEvent;
 	
-	import totem.core.task.enum.TaskState;
 	import ladydebug.Logger;
+	
+	import totem.core.task.enum.TaskState;
 
 	/**
 	 * Abstract base class for <code>SequentialTaskGroup</code> and <code>ConcurrentTaskGroup</code>.
@@ -198,7 +199,12 @@ package totem.core.task
 		 */
 		public function addTask( task : Task ) : Boolean
 		{
+			return addTaskAt( task, allTasks.getSize() );
+		}
 
+		public function addTaskAt ( task : Task, index : int ) : Boolean
+		{
+			
 			if ( task.state == TaskState.FINISHED )
 			{
 				//logger.warn( "Attempt to add Task '" + task + "' to a TaskGroup which is not restartable" );
@@ -217,7 +223,7 @@ package totem.core.task
 				return false;
 			}
 			task.setParent( this );
-			allTasks.append( task );
+			allTasks.insert( index, task );
 			handleAddedTask( task );
 
 			if ( autoStart && state == TaskState.INACTIVE )
@@ -226,7 +232,6 @@ package totem.core.task
 			}
 			return true;
 		}
-
 		/**
 		 * Removes the specified task from this TaskGroup.
 		 *
@@ -250,7 +255,7 @@ package totem.core.task
 				handleTaskComplete( task );
 			}
 			
-			task.destroy();
+			//task.destroy();
 			
 			return true;
 		}

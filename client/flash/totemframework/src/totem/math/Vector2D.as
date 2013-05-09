@@ -2,6 +2,7 @@
 package totem.math
 {
 	import flash.geom.Point;
+	import flash.geom.Vector3D;
 	
 	public class Vector2D
 	{
@@ -511,6 +512,12 @@ package totem.math
 		public function isInsideRegion( topLeft : Vector2D, botRight : Vector2D ) : Boolean
 		{
 			return !( ( x < topLeft.x ) || ( x > topLeft.x + botRight.x ) || ( y < topLeft.y ) || ( y > topLeft.y + botRight.y ) );
+		}
+		
+		
+		public function isAtPositon ( vector : Vector2D, tolerance : Number = 0 ) : Boolean
+		{
+			return	distanceTo( vector ) < tolerance * tolerance;
 		}
 		
 		// -- PRIVATE --

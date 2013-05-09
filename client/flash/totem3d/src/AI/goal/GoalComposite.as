@@ -28,7 +28,7 @@ package AI.goal
 
 		public function processSubgoals() : int
 		{
-			var goal : GoalComposite;
+			var goal : Goal;
 
 			// when u have a group of subgoals you want to remove the completed goals
 			while ( subgoals.length > 0 && ( subgoals[ 0 ].isCompleted() || subgoals[ 0 ].hasFailed()))

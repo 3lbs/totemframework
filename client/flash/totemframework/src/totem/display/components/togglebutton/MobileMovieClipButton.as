@@ -1,3 +1,18 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
 
 package totem.display.components.togglebutton
 {
@@ -6,48 +21,50 @@ package totem.display.components.togglebutton
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
 
 	import totem.events.RemovableEventDispatcher;
 
 	public class MobileMovieClipButton extends RemovableEventDispatcher
 	{
-		private static const VERTICAL_PADDING : Number = 10.0;
 
 		private static const HORIZONTAL_PADDING : Number = 28.0;
 
-		/** @var Reference to MovieClip */
-		protected var _movieClip : MovieClip;
+		private static const VERTICAL_PADDING : Number = 10.0;
 
-		/** @var Reference to TextField */
-		private var _label : TextField;
-
-		/** @var Horizontal button padding */
-		private var _horizontalPadding : Number;
-
-		/** @var Vertical button padding */
-		private var _verticalPadding : Number;
-
-		private var enabled : Boolean;
+		protected var DISABLED_FRAME : int = 3;
 
 		protected var INACTIVE_FRAME : int = 1;
 
 		protected var ROLLOVER_FRAME : int = 2;
 
-		protected var SELECTED_FRAME : int = 3;
+		protected var SELECTED_FRAME : int = 2;
 
-		protected var DISABLED_FRAME : int = 4;
+		/** @var Reference to MovieClip */
+		protected var _movieClip : MovieClip;
+
+		protected var enabled : Boolean;
+
+		protected var isDown : Boolean;
+
+		private var _currentFrame : int;
+
+		/** @var Horizontal button padding */
+		private var _horizontalPadding : Number;
+
+		/** @var Reference to TextField */
+		private var _label : TextField;
+
+		private var _name : String;
 
 		private var _selected : Boolean = false;
 
-		private var isDown : Boolean;
-
-		private var _name : String;
+		/** @var Vertical button padding */
+		private var _verticalPadding : Number;
 
 		public function MobileMovieClipButton( mc : MovieClip )
 		{
 			_movieClip = mc;
-			_movieClip.gotoAndStop( 1 );
+			goToFrame( 1 );
 
 			// Detect button & label
 			for ( var i : int = 0; i < mc.numChildren; i++ )
@@ -62,7 +79,7 @@ package totem.display.components.togglebutton
 					_label.text = "";
 					_label.mouseEnabled = false;
 					_label.selectable = false;
-					_label.autoSize = TextFieldAutoSize.CENTER;
+						//_label.autoSize = TextFieldAutoSize.CENTER;
 				}
 			}
 
@@ -73,6 +90,99 @@ package totem.display.components.togglebutton
 			enable();
 			// Add event listeners
 			attachButtonListeners();
+		}
+
+		/**
+		 * @return	Alpha value of the button
+		 */
+		public function get alpha() : Number
+		{
+			return _movieClip.alpha;
+		}
+
+		/**
+		 * Sets the alpha value of the button.
+		 *
+		 * @param	a_alpha		New alpha value
+		 */
+		public function set alpha( a_alpha : Number ) : void
+		{
+			_movieClip.alpha = a_alpha;
+		}
+
+		/**
+		 * Clean up.
+		 */
+		override public function destroy() : void
+		{
+			detachButtontListeners();
+			super.destroy();
+
+			_movieClip = null;
+
+			_label = null;
+		}
+
+		/**
+		 * Disable the button.
+		 */
+		public function disable() : void
+		{
+			detachButtontListeners();
+
+			enabled = false;
+			goToFrame( DISABLED_FRAME );
+
+			_movieClip.mouseEnabled = false;
+
+			refresh();
+		}
+
+		/**
+		 * Enable the button.
+		 */
+		public function enable() : void
+		{
+			attachButtonListeners();
+
+			enabled = true;
+
+			goToFrame( INACTIVE_FRAME );
+			_movieClip.mouseEnabled = true;
+
+			refresh();
+
+		}
+
+		public function gotoAndStop( frame : int ) : void
+		{
+			_movieClip.gotoAndStop( frame );
+
+			refresh();
+		}
+
+		/**
+		 * @return	Height of the button
+		 */
+		public function get height() : Number
+		{
+			return _movieClip.height;
+		}
+
+		/**
+		 * @return	Reference to label TextField
+		 */
+		public function get label() : TextField
+		{
+			return _label;
+		}
+
+		/**
+		 * @return	Reference to MovieClip container
+		 */
+		public function get movieClip() : MovieClip
+		{
+			return _movieClip;
 		}
 
 		public function get name() : String
@@ -99,144 +209,12 @@ package totem.display.components.togglebutton
 
 			if ( _selected )
 			{
-				movieClip.gotoAndStop( SELECTED_FRAME );
+				goToFrame( SELECTED_FRAME );
 			}
 			else
 			{
-				movieClip.gotoAndStop( INACTIVE_FRAME );
+				goToFrame( INACTIVE_FRAME );
 			}
-		}
-
-		/**
-		 * Set up event listeners.
-		 */
-		protected function attachButtonListeners() : void
-		{
-			_movieClip.addEventListener( MouseEvent.ROLL_OVER, handleMouseEvent );
-			_movieClip.addEventListener( MouseEvent.ROLL_OUT, handleMouseEvent );
-			_movieClip.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseEvent );
-			_movieClip.addEventListener( MouseEvent.MOUSE_UP, handleMouseEvent );
-			_movieClip.addEventListener( MouseEvent.CLICK, handleMouseEvent );
-			_movieClip.addEventListener( MouseEvent.MOUSE_OVER, handleMouseEvent );
-			_movieClip.addEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent );
-		}
-
-		/**
-		 * Remove event listeners.
-		 */
-		protected function detachButtontListeners() : void
-		{
-			_movieClip.removeEventListener( MouseEvent.ROLL_OVER, handleMouseEvent );
-			_movieClip.removeEventListener( MouseEvent.ROLL_OUT, handleMouseEvent );
-			_movieClip.removeEventListener( MouseEvent.MOUSE_DOWN, handleMouseEvent );
-			_movieClip.removeEventListener( MouseEvent.MOUSE_UP, handleMouseEvent );
-			_movieClip.removeEventListener( MouseEvent.CLICK, handleMouseEvent );
-			_movieClip.removeEventListener( MouseEvent.MOUSE_OVER, handleMouseEvent );
-			_movieClip.removeEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent );
-		}
-
-		/**
-		 * Mouse handler function.
-		 */
-		private function handleMouseEvent( event : MouseEvent ) : void
-		{
-			if ( !enabled || selected )
-			{
-				return;
-			}
-
-			switch ( event.type )
-			{
-				case MouseEvent.ROLL_OVER:
-				case MouseEvent.MOUSE_DOWN:
-				case MouseEvent.MOUSE_OVER:
-				case MouseEvent.CLICK:
-				{
-					isDown = true;
-					movieClip.gotoAndStop( ROLLOVER_FRAME );
-					break;
-				}
-				case MouseEvent.ROLL_OUT:
-				case MouseEvent.MOUSE_UP:
-				case MouseEvent.MOUSE_OUT:
-				{
-					isDown = false;
-					movieClip.gotoAndStop( INACTIVE_FRAME );
-					break;
-				}
-			}
-
-			/*if ( isDown && event.type == MouseEvent.MOUSE_MOVE )
-			{
-				if ( event.localX < movieClip.x ||
-					event.localY < movieClip.y ||
-					event.movementX > 10 ||
-					event.movementY > 10 )
-				{
-					resetContent();
-				}
-			}*/
-
-			if ( isDown )
-			{
-				dispatchEvent( event.clone());
-			}
-
-			//dispatchEvent( event.clone() );
-		}
-
-		protected function resetContent() : void
-		{
-			movieClip.gotoAndStop( INACTIVE_FRAME );
-			isDown = false;
-		}
-
-		/**
-		 * Refresh button display.
-		 */
-		protected function refresh() : void
-		{
-			if ( _label )
-			{
-				setText( _label.text );
-			}
-		}
-
-		/**
-		 * Enable the button.
-		 */
-		public function enable() : void
-		{
-			attachButtonListeners();
-
-			enabled = true;
-
-			_movieClip.gotoAndStop( INACTIVE_FRAME );
-			_movieClip.mouseEnabled = true;
-
-			refresh();
-		}
-
-		public function gotoAndStop( frame : int ) : void
-		{
-			_movieClip.gotoAndStop( frame );
-
-			refresh();
-		}
-
-		/**
-		 * Disable the button.
-		 */
-		public function disable() : void
-		{
-			detachButtontListeners();
-
-			enabled = false;
-			_movieClip.gotoAndStop( DISABLED_FRAME );
-
-			_movieClip.mouseEnabled = false;
-
-			refresh();
 		}
 
 		/**
@@ -297,24 +275,6 @@ package totem.display.components.togglebutton
 		}
 
 		/**
-		 * Sets the alpha value of the button.
-		 *
-		 * @param	a_alpha		New alpha value
-		 */
-		public function set alpha( a_alpha : Number ) : void
-		{
-			_movieClip.alpha = a_alpha;
-		}
-
-		/**
-		 * @return	Alpha value of the button
-		 */
-		public function get alpha() : Number
-		{
-			return _movieClip.alpha;
-		}
-
-		/**
 		 * @return	Width of the button
 		 */
 		public function get width() : Number
@@ -323,41 +283,90 @@ package totem.display.components.togglebutton
 		}
 
 		/**
-		 * @return	Height of the button
+		 * Set up event listeners.
 		 */
-		public function get height() : Number
+		protected function attachButtonListeners() : void
 		{
-			return _movieClip.height;
+			_movieClip.addEventListener( MouseEvent.ROLL_OVER, handleMouseEvent );
+			_movieClip.addEventListener( MouseEvent.ROLL_OUT, handleMouseEvent );
+			_movieClip.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseEvent );
+			_movieClip.addEventListener( MouseEvent.MOUSE_UP, handleMouseEvent );
+			_movieClip.addEventListener( MouseEvent.CLICK, handleMouseEvent );
+			_movieClip.addEventListener( MouseEvent.MOUSE_OVER, handleMouseEvent );
+			_movieClip.addEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent );
 		}
 
 		/**
-		 * @return	Reference to MovieClip container
+		 * Remove event listeners.
 		 */
-		public function get movieClip() : MovieClip
+		protected function detachButtontListeners() : void
 		{
-			return _movieClip;
+			_movieClip.removeEventListener( MouseEvent.ROLL_OVER, handleMouseEvent );
+			_movieClip.removeEventListener( MouseEvent.ROLL_OUT, handleMouseEvent );
+			_movieClip.removeEventListener( MouseEvent.MOUSE_DOWN, handleMouseEvent );
+			_movieClip.removeEventListener( MouseEvent.MOUSE_UP, handleMouseEvent );
+			_movieClip.removeEventListener( MouseEvent.CLICK, handleMouseEvent );
+			_movieClip.removeEventListener( MouseEvent.MOUSE_OVER, handleMouseEvent );
+			_movieClip.removeEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent );
+		}
+
+		protected function goToFrame( frame : int ) : void
+		{
+			movieClip.gotoAndStop( frame );
+			_currentFrame = frame;
 		}
 
 		/**
-		 * @return	Reference to label TextField
+		 * Mouse handler function.
 		 */
-		public function get label() : TextField
+		protected function handleMouseEvent( event : MouseEvent ) : void
 		{
-			return _label;
+			if ( !enabled || ( selected ))
+			{
+				return;
+			}
+
+			switch ( event.type )
+			{
+				case MouseEvent.ROLL_OVER:
+				case MouseEvent.MOUSE_DOWN:
+				case MouseEvent.MOUSE_OVER:
+				{
+					isDown = true;
+					goToFrame( ROLLOVER_FRAME );
+					break;
+				}
+				case MouseEvent.ROLL_OUT:
+				case MouseEvent.MOUSE_UP:
+				case MouseEvent.MOUSE_OUT:
+				case MouseEvent.CLICK:
+				{
+					isDown = false;
+					goToFrame( INACTIVE_FRAME );
+					break;
+				}
+			}
+
+			dispatchEvent( event.clone());
 		}
 
 		/**
-		 * Clean up.
+		 * Refresh button display.
 		 */
-		override public function destroy() : void
+		protected function refresh() : void
 		{
-			detachButtontListeners();
-			super.destroy();
+			if ( _label )
+			{
+				setText( _label.text );
+			}
 
-			_movieClip = null;
-
-			_label = null;
+			goToFrame( _currentFrame );
 		}
 
+		protected function resetContent() : void
+		{
+			goToFrame( INACTIVE_FRAME );
+			isDown = false;
+		}
 	}
 }

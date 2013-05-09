@@ -49,7 +49,6 @@ package totem.core.time
 		 */
 		public function onTick() : void
 		{
-			//applyBindings();
 		}
 
 		/**

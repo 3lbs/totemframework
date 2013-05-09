@@ -13,7 +13,6 @@ package totem.core
 	
 	import totem.totem_internal;
 	import totem.events.RemovableEventDispatcher;
-	import totem.monitors.SignalCompleteMonitor;
 	import totem.monitors.promise.IPromise;
 	import totem.monitors.promise.SerialDeferred;
 
@@ -33,9 +32,7 @@ package totem.core
 
 		public function getComponent( ComponentClass : Class ) : *
 		{
-
 			var component : * = null;
-
 			try
 			{
 				component = getInstance( ComponentClass );
@@ -70,8 +67,6 @@ package totem.core
 			//injector.parentInjector.map( ComponentClass, getName()).toValue( component );
 
 			components_[ ComponentClass ] = component;
-
-			//component.doAdd();
 
 			return component;
 		}
@@ -133,6 +128,8 @@ package totem.core
 		public function deconstruct( func : Function = null ) : IPromise
 		{
 			var monitor : SerialDeferred = new SerialDeferred();
+			
+			
 			
 			for each ( var component : TotemComponent in components_ )
 			{

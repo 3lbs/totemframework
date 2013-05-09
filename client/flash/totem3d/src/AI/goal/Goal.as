@@ -9,6 +9,7 @@
 //    `-------'      
 //                       
 //   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
@@ -17,11 +18,11 @@ package AI.goal
 {
 
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
-
+	
 	import totem.core.TotemEntity;
+	import totem.events.RemovableEventDispatcher;
 
-	public class Goal extends EventDispatcher
+	public class Goal extends RemovableEventDispatcher
 	{
 		public static const ACTIVE : int = 10;
 
@@ -35,7 +36,7 @@ package AI.goal
 
 		public var type : String;
 
-		protected var subgoals : Vector.<GoalComposite>;
+		protected var subgoals : Vector.<Goal>;
 
 		private var _status : int;
 
@@ -46,7 +47,7 @@ package AI.goal
 
 			status = INACTIVE;
 
-			subgoals = new Vector.<GoalComposite>();
+			subgoals = new Vector.<Goal>();
 		}
 
 		public function activate() : void
@@ -55,7 +56,7 @@ package AI.goal
 
 		}
 
-		public function activateIfInacticve() : void
+		public function activateIfInactive() : void
 		{
 			if ( isInactive())
 			{
@@ -65,11 +66,17 @@ package AI.goal
 
 		public function addSubgoal( goal : Goal ) : void
 		{
+			
+			if ( !goal )
+				return;
+			
 			subgoals.unshift( goal );
 		}
 
-		public function destroy() : void
+		override public function destroy() : void
 		{
+			super.destroy();
+			
 			removeAllSubgoals();
 
 			subgoals = null;
@@ -141,7 +148,7 @@ package AI.goal
 
 		public function terminate() : void
 		{
-
+			destroy();
 		}
 
 		protected function forwardMessageToFirstSubGoal( event : Event ) : Boolean

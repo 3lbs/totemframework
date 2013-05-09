@@ -17,46 +17,44 @@
 package AI.boid
 {
 
-	import flash.utils.Dictionary;
-	
+	import AI.params.BoidParam;
 	import AI.spatial.BoidSpatialManager;
 	import AI.steering.Moving2DComponent;
 	import AI.steering.SteeringBehavior;
 	import AI.steering.behaviors.ABehavior;
 	
-	import totem.core.params.TransformParam;
-	import totem.core.time.TickRegulator;
 	import totem.math.Vector2D;
+	
+	import totem3d.components.Animator3DComponent;
 
 	public class Boid2DComponent extends Moving2DComponent implements IBoid
 	{
 		public static const NAME : String = "BoidComponent";
 
-		public var spatialManager : BoidSpatialManager;
-
+		
+		[Inject]
+		public var animatorComponent : Animator3DComponent;
+		
 		public var steering : SteeringBehavior;
-
-		public var type : String;
 
 		private var _neighborDistance : Number = 0;
 
-		private var _node : String;
-
-		private var _parentNode : String;
-
-		private var properties : Dictionary;
-
 		private var testActualPos : Vector2D = new Vector2D();
 
-		public function Boid2DComponent( data : TransformParam )
+		public function Boid2DComponent( boidParam : BoidParam = null, name : String = "" )
 		{
-			super( data );
+			super( boidParam, name || NAME );
 
-			steering = new SteeringBehavior( this );
-
-			properties = new Dictionary();
+			steering = new SteeringBehavior( this, null );
+			
 		}
 
+		override protected function onAdd():void
+		{
+			
+			super.onAdd();
+			
+		}
 		// change this
 		public function get actualPos() : Vector2D
 		{
@@ -68,12 +66,15 @@ package AI.boid
 
 		public function addBehavior( behavior : ABehavior ) : void
 		{
-			steering.addBehavior( behavior );
+			if ( steering )
+				steering.addBehavior( behavior );
 		}
 
-		public function addSpatialManager( a_spatialDatabase : BoidSpatialManager ) : void
+		override public function addSpatialManager( spatialDatabase : BoidSpatialManager ) : void
 		{
-			steering.addSpatialDatabase( a_spatialDatabase );
+			super.addSpatialManager( spatialDatabase );
+
+			steering.addSpatialDatabase( spatialDatabase );
 		}
 
 		public function get neighborDistance() : Number
@@ -86,56 +87,27 @@ package AI.boid
 			_neighborDistance = value;
 		}
 
-		public function get node() : String
-		{
-			return _node;
-		}
-
-		public function set node( value : String ) : void
-		{
-			_node = value;
-		}
-
 		override public function onTick() : void
 		{
-			///  boid might should extend spatial!~
 
-			return;
+			canDispatch = false;
+			
+			setInitialValues( 1 );
 
-			var elaspedTime : Number = tickRegulator.isReady();
+			calculateForces()
 
-			if ( elaspedTime != 0 )
-			{
-				canDispatch = false;
+			calculateSteering();
 
-				setInitialValues( elaspedTime );
+			calculateFinalVelocity();
 
-				calculateForces()
+			updateHeading();
+			
+			updatePosition();
 
-				// you might just want to wrap this with the regulater?
-				calculateSteering();
+			canDispatch = true;
 
-				calculateFinalVelocity();
-
-				updateHeading();
-
-				updatePosition();
-
-				canDispatch = true;
-
-				// update assets
-				dispatchUpdate();
-			}
-		}
-
-		public function get parentNode() : String
-		{
-			return _parentNode;
-		}
-
-		public function set parentNode( value : String ) : void
-		{
-			_parentNode = value;
+			// update assets
+			dispatchUpdate();
 		}
 
 		public function removeAllBehaviors() : void
@@ -155,13 +127,6 @@ package AI.boid
 			velocity.y += acc.y;
 		}
 
-		override protected function onAdd() : void
-		{
-			super.onAdd();
-
-			tickRegulator = new TickRegulator( TickRegulator.NO_FREQUENCY );
-		}
-
 		override protected function onRemove() : void
 		{
 			super.onRemove();
@@ -170,6 +135,18 @@ package AI.boid
 			steering = null;
 
 		}
+		
+		public function isAtPosition ( position : Vector2D )  : Boolean
+		{
+			return actualPos.isAtPositon( position, 10 );
+		}
+
+		public function calculateTimeToReachTarget ( position : Vector2D ) : int
+		{
+			return Number.POSITIVE_INFINITY;
+		}
+		
+	
 	}
 }
 

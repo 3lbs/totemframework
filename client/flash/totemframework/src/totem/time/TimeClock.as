@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 /*
  * hexagonlib - Multi-Purpose ActionScript 3 Library.
  *       __    __
@@ -39,27 +55,24 @@ package totem.time
 	 */
 	public class TimeClock extends Destroyable
 	{
+
+		public var timeCompleteDispatcher : ISignal;
+
+		public var timeTickDispatcher : ISignal;
+
+		private var _currentCount : int;
+
 		//-----------------------------------------------------------------------------------------
 		// Properties
 		//-----------------------------------------------------------------------------------------
 
 		private var _interval : Number;
 
-		private var _repeatCount : int;
-
-		private var _currentCount : int;
+		private var _isRunning : Boolean = false;
 
 		private var _offset : int;
 
-		private var _isRunning : Boolean = false;
-
-		//-----------------------------------------------------------------------------------------
-		// Constructor
-		//-----------------------------------------------------------------------------------------
-
-		public var timeCompleteDispatcher : ISignal;
-
-		public var timeTickDispatcher : ISignal;
+		private var _repeatCount : int;
 
 		private var _stopWatch : Stopwatch;
 
@@ -88,6 +101,103 @@ package totem.time
 			_stopWatch = new Stopwatch();
 
 			reset();
+		}
+
+		/**
+		 * The total number of times the timer has fired since it started at zero.
+		 * If the timer has been reset, only the fires since the reset are counted.
+		 */
+		public function get currentCount() : int
+		{
+			return _currentCount;
+		}
+
+		/**
+		 * The timer's current state; true if the timer is running, otherwise false.
+		 */
+
+		public function get currentTime() : Number
+		{
+			return _stopWatch.time;
+		}
+
+		override public function destroy() : void
+		{
+			super.destroy();
+
+			stop();
+
+			_updateTimer.destroy();
+			_updateTimer = null;
+
+			_stopWatch = null;
+
+			timeCompleteDispatcher.removeAll();
+			timeCompleteDispatcher = null;
+
+			timeTickDispatcher.removeAll();
+			timeTickDispatcher = null;
+
+		}
+
+		//-----------------------------------------------------------------------------------------
+		// Accessors
+		//-----------------------------------------------------------------------------------------
+
+		/**
+		 * The delay, in milliseconds, between timer events. If you set the delay
+		 * interval while the timer is running, the timer will restart at the same
+		 * repeatCount iteration.
+		 *
+		 * @throws com.hexagonstar.env.exception.IllegalArgumentException if the
+		 *          delay specified is negative or not a finite number.
+		 */
+		public function get interval() : Number
+		{
+			return _interval;
+		}
+
+		public function set interval( v : Number ) : void
+		{
+			if ( v < 0 || v == Number.POSITIVE_INFINITY )
+			{
+				return;
+			}
+			_interval = v;
+		}
+
+		public function get isRunning() : Boolean
+		{
+			return _isRunning;
+		}
+
+		/**
+		 * The total number of times the timer is set to run. If the repeat count is
+		 * set to 0, the timer continues forever or until the stop() method is invoked
+		 * or the program stops. If the repeat count is nonzero, the timer runs the
+		 * specified number of times. If repeatCount is set to a total that is the same
+		 * or less then currentCount  the timer stops and will not fire again.
+		 */
+		public function get repeatCount() : int
+		{
+			return _repeatCount;
+		}
+
+		public function set repeatCount( v : int ) : void
+		{
+			_repeatCount = v;
+		}
+
+		/**
+		 * Stops the timer, if it is running, and sets the currentCount property back
+		 * to 0, like the reset button of a stopwatch. Then, when start() is called,
+		 * the timer instance runs for the specified number of repetitions, as set by
+		 * the repeatCount value.
+		 */
+		public function reset() : void
+		{
+			stop();
+			_currentCount = _offset = 0;
 		}
 
 		//-----------------------------------------------------------------------------------------
@@ -124,18 +234,6 @@ package totem.time
 		}
 
 		/**
-		 * Stops the timer, if it is running, and sets the currentCount property back
-		 * to 0, like the reset button of a stopwatch. Then, when start() is called,
-		 * the timer instance runs for the specified number of repetitions, as set by
-		 * the repeatCount value.
-		 */
-		public function reset() : void
-		{
-			stop();
-			_currentCount = _offset = 0;
-		}
-
-		/**
 		 * Returns a String Representation of PreciseTimer.
 		 *
 		 * @return A String Representation of PreciseTimer.
@@ -143,67 +241,6 @@ package totem.time
 		public function toString() : String
 		{
 			return "[PreciseTimer, currentCount=" + _currentCount + "]";
-		}
-
-		//-----------------------------------------------------------------------------------------
-		// Accessors
-		//-----------------------------------------------------------------------------------------
-
-		/**
-		 * The delay, in milliseconds, between timer events. If you set the delay
-		 * interval while the timer is running, the timer will restart at the same
-		 * repeatCount iteration.
-		 *
-		 * @throws com.hexagonstar.env.exception.IllegalArgumentException if the
-		 *          delay specified is negative or not a finite number.
-		 */
-		public function get interval() : Number
-		{
-			return _interval;
-		}
-
-		public function set interval( v : Number ) : void
-		{
-			if ( v < 0 || v == Number.POSITIVE_INFINITY )
-			{
-				return;
-			}
-			_interval = v;
-		}
-
-		/**
-		 * The total number of times the timer is set to run. If the repeat count is
-		 * set to 0, the timer continues forever or until the stop() method is invoked
-		 * or the program stops. If the repeat count is nonzero, the timer runs the
-		 * specified number of times. If repeatCount is set to a total that is the same
-		 * or less then currentCount  the timer stops and will not fire again.
-		 */
-		public function get repeatCount() : int
-		{
-			return _repeatCount;
-		}
-
-		public function set repeatCount( v : int ) : void
-		{
-			_repeatCount = v;
-		}
-
-		/**
-		 * The total number of times the timer has fired since it started at zero.
-		 * If the timer has been reset, only the fires since the reset are counted.
-		 */
-		public function get currentCount() : int
-		{
-			return _currentCount;
-		}
-
-		/**
-		 * The timer's current state; true if the timer is running, otherwise false.
-		 */
-
-		public function get isRunning() : Boolean
-		{
-			return _isRunning;
 		}
 
 		//-----------------------------------------------------------------------------------------
@@ -232,25 +269,6 @@ package totem.time
 			{
 				timeTickDispatcher.dispatch( _stopWatch.time );
 			}
-		}
-
-		override public function destroy() : void
-		{
-			super.destroy();
-
-			stop();
-
-			_updateTimer.destroy();
-			_updateTimer = null;
-
-			_stopWatch = null;
-			
-			timeCompleteDispatcher.removeAll();
-			timeCompleteDispatcher = null;
-			
-			timeTickDispatcher.removeAll();
-			timeTickDispatcher = null;
-			
 		}
 	}
 }

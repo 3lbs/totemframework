@@ -18,27 +18,19 @@ package AI.spatial
 {
 
 	import AI.boid.Boid2DComponent;
-
-	import flash.utils.Dictionary;
-
+	
+	import totem.totem_internal;
 	import totem.components.spatial.ISpatialObject;
 	import totem.events.RemovableEventDispatcher;
 
 	public class BoidSpatialManager extends RemovableEventDispatcher
 	{
 
-		private var boidCategories : Dictionary;
-
 		private var boidObjectList : BoidIterator = new BoidIterator();
 
 		public function BoidSpatialManager()
 		{
-			boidCategories = new Dictionary;
-		}
 
-		public function addSpatialObject( object : ISpatialObject ) : void
-		{
-			boidObjectList.add( object );
 		}
 
 		override public function destroy() : void
@@ -46,11 +38,43 @@ package AI.spatial
 			super.destroy();
 
 			boidObjectList.destroy();
+			boidObjectList = null;
 		}
 
-		public function getCostToClosestItem( type : String, boidComponent : Boid2DComponent  ) : Number
+		public function getDistanceToNearestEntity( prop : Object, type : String, boidComponent : Boid2DComponent ) : Number
 		{
-			return 0;
+			//var dist : Number = boidComponent.neighborDistance * boidComponent.neighborDistance;
+
+			//var boidList : Vector.<Boid2DComponent> = boidCategories[ boidComponent.type ];
+
+			var dist : Number = Number.POSITIVE_INFINITY;
+
+			var xSep : Number;
+			var ySep : Number;
+			var entityDist : Number;
+			var neighborComponent : ISpatialObject;
+
+			while ( boidObjectList.hasNext())
+			{
+				neighborComponent = boidObjectList.next();
+
+				if ( neighborComponent.getProperty( prop ) == type )
+				{
+					// lets inline this with no sq root.  as fast as it gets
+					xSep = boidComponent.z - neighborComponent.z;
+					ySep = boidComponent.x - neighborComponent.x;
+					entityDist = Math.sqrt( ySep * ySep + xSep * xSep );
+
+					if ( entityDist < dist )
+					{
+						dist = entityDist;
+					}
+				}
+			}
+
+			boidObjectList.reset();
+
+			return ( dist == Number.POSITIVE_INFINITY ) ? 0 : dist;
 		}
 
 		/**
@@ -61,6 +85,7 @@ package AI.spatial
 		 */
 		public function getEntitiesOfSameType( list : Vector.<Boid2DComponent>, boidComponent : Boid2DComponent ) : void
 		{
+			// serach distance to be considered a neighbor
 			var dist : Number = boidComponent.neighborDistance * boidComponent.neighborDistance;
 
 			//var boidList : Vector.<Boid2DComponent> = boidCategories[ boidComponent.type ];
@@ -89,6 +114,7 @@ package AI.spatial
 
 		public function getFirstBoidOfType( type : String, boidComponent : Boid2DComponent ) : Boid2DComponent
 		{
+			// serach distance to be considered a neighbor
 			var dist : Number = boidComponent.neighborDistance * boidComponent.neighborDistance;
 
 			var closestBoid : Boid2DComponent = null
@@ -125,9 +151,39 @@ package AI.spatial
 			return closestBoid;
 		}
 
-		public function getNearestEntityOfType( evade : String, boidComponent : Boid2DComponent ) : Vector.<Boid2DComponent>
+		public function getNearestEntityOfType( prop : Object, type : String, boidComponent : Boid2DComponent ) : ISpatialObject
 		{
-			return null;
+			var dist : Number = Number.POSITIVE_INFINITY;
+
+			var xSep : Number;
+			var ySep : Number;
+			var entityDist : Number;
+			var neighborComponent : ISpatialObject;
+			var result : ISpatialObject;
+
+			while ( boidObjectList.hasNext())
+			{
+				neighborComponent = boidObjectList.next();
+
+				if ( neighborComponent.getProperty( prop ) == type )
+				{
+					// lets inline this with no sq root.  as fast as it gets
+					xSep = boidComponent.z - neighborComponent.z;
+					ySep = boidComponent.x - neighborComponent.x;
+					entityDist = Math.sqrt( ySep * ySep + xSep * xSep );
+
+					if ( entityDist < dist )
+					{
+						result = neighborComponent;
+						dist = entityDist;
+					}
+				}
+			}
+
+			boidObjectList.reset();
+
+			return result;
+
 		}
 
 		public function getSpatialList() : BoidIterator
@@ -137,43 +193,17 @@ package AI.spatial
 
 		public function hasItem( item : Boid2DComponent ) : Boolean
 		{
-			return boidCategories[ item.node ] != null;
+			return boidObjectList.hasItem( item );
 		}
 
-		public function insert( item : Boid2DComponent ) : Boolean
+		totem_internal function addSpatialObject( object : ISpatialObject ) : void
 		{
-			var list : Vector.<Boid2DComponent>;
-
-			if ( !boidCategories[ item.node ])
-			{
-				boidCategories[ item.node ] = new Vector.<Boid2DComponent>();
-			}
-
-			list = boidCategories[ item.node ];
-			var idx : int = list.indexOf( item );
-
-			if ( idx < 0 )
-			{
-				list.push( item );
-			}
-
-			return true;
+			boidObjectList.add( object );
 		}
-
-		public function removeItem( item : Boid2DComponent ) : Boolean
+		
+		totem_internal function removeSpatialObject( object:ISpatialObject):void
 		{
-			if ( boidCategories[ item.node ])
-			{
-				var list : Vector.<Boid2DComponent> = boidCategories[ item.node ];
-				var idx : int = list.indexOf( item );
-
-				if ( idx > -1 )
-				{
-					list.splice( idx, 1 );
-					return true;
-				}
-			}
-			return false;
+			boidObjectList.removeItem( object );			
 		}
 	}
 }

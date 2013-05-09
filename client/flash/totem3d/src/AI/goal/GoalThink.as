@@ -78,7 +78,6 @@ package AI.goal
 
 			if ( mostDesirable )
 			{
-				trace( "I am going to do: " + getQualifiedClassName( mostDesirable ) );
 				mostDesirable.setGoal( owner );
 			}
 		}
@@ -93,7 +92,7 @@ package AI.goal
 
 		override public function process() : int
 		{
-			activateIfInacticve();
+			activateIfInactive();
 			var subgoalStatus : int = processSubgoals();
 
 			if ( subgoalStatus == COMPLETED || subgoalStatus == FAILED )
@@ -104,11 +103,22 @@ package AI.goal
 			return status;
 		}
 
-		protected function notPresent( goal : GoalComposite ) : Boolean
+		
+		public function addGoal ( goal : Goal ) : Boolean
+		{
+			if ( notPresent( goal  ) )
+			{
+				removeAllSubgoals();
+				addSubgoal( goal );
+			}
+			return false;
+		}
+		
+		protected function notPresent( goal : Goal ) : Boolean
 		{
 			if ( subgoals.length > 0 )
 			{
-				return subgoals.indexOf( goal ) != -1;
+				return false; //subgoals.indexOf( goal ) != -1;
 			}
 
 			return true;

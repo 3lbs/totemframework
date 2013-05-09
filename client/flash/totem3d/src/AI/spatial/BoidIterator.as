@@ -46,7 +46,12 @@ package AI.spatial
 		{
 			super.destroy();
 			_array.length = 0;
+			_array = null;
+		}
 
+		public function hasItem( item : ISpatialObject ) : Boolean
+		{
+			return _array.indexOf( item ) > -1;
 		}
 
 		public function hasNext() : Boolean
@@ -72,6 +77,23 @@ package AI.spatial
 				return null;
 			}
 			return _array.splice( _index--, 1 )[ 0 ];
+		}
+
+		public function removeItem( item : ISpatialObject ) : ISpatialObject
+		{
+			var idx : int = _array.indexOf( item );
+
+			if ( idx > -1 )
+			{
+				var value : ISpatialObject = _array.splice( _index--, 1 )[ 0 ];
+
+				reset();
+				setLength();
+
+				return value;
+			}
+			
+			return null;
 		}
 
 		public function reset() : void

@@ -1,17 +1,33 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.display.layout
 {
 
-	import flash.display.DisplayObjectContainer;
-
 	import avmplus.getQualifiedClassName;
+
+	import flash.display.DisplayObjectContainer;
 
 	public class ScreenComposite extends TContainer implements IScreenComposite
 	{
 
+		public var depth : Number = 0;
+
 		/** @var Parent container */
 		public var parentNode : IScreenComposite;
-
-		public var depth : Number = 0;
 
 		protected var screens : Vector.<ScreenComposite> = new Vector.<ScreenComposite>();
 
@@ -50,80 +66,15 @@ package totem.display.layout
 			screen.onRegister();
 		}
 
-		/**
-		 * Removes a given child ScreenComposite, if it exists.
-		 *
-		 * @param	a_screen	ScreenComposite to remove
-		 */
-		public function removeScreen( screen : ScreenComposite ) : ScreenComposite
+		override public function destroy() : void
 		{
-			var idx : int = screens.indexOf( screen );
+			super.destroy();
 
-			if ( idx > -1 )
-			{
-				screens.splice( idx, 1 );
-
-				removeChild( screen );
-
-				screen.onRemove();
-
-				// Update remaining screens
-				sortScreens();
-				updateDisplay();
-			}
-			else
-			{
-				for ( var layer : int = 0; layer < screens.length; layer++ )
-				{
-					screens[ layer ].removeScreen( screen );
-				}
-			}
-
-			return screen;
-		}
-
-		public function removeAllScreens() : void
-		{
 			while ( screens.length > 0 )
-			{
-				var screen : ScreenComposite = screens.pop();
-				removeChild( screen );
-				screen.onRemove();
-			}
+				screens.pop().destroy();
 
-			updateDisplay();
-		}
+			parentNode = null;
 
-		public function hasScreen( screen : ScreenComposite ) : Boolean
-		{
-			return ( screens.indexOf( screen ) > -1 );
-		}
-
-		public function sortScreens() : void
-		{
-			screens.sort( sortFunction );
-
-			var layerIndex : int = 0;
-
-			for ( var layer : int = 0; layer < screens.length; layer++ )
-			{
-				var screen : DisplayObjectContainer = screens[ layer ] as DisplayObjectContainer;
-				setChildIndex( screen, layerIndex );
-				layerIndex++;
-			}
-		}
-
-		private function sortFunction( objx : ScreenComposite, objy : ScreenComposite ) : Number
-		{
-			if ( objx.depth > objy.depth )
-			{
-				return 1;
-			}
-			else if ( objx.depth < objy.depth )
-			{
-				return -1;
-			}
-			return 0;
 		}
 
 		public function getScreenByName( n : String ) : ScreenComposite
@@ -146,6 +97,91 @@ package totem.display.layout
 			return null;
 		}
 
+		public function hasScreen( screen : ScreenComposite ) : Boolean
+		{
+			return ( screens.indexOf( screen ) > -1 );
+		}
+
+		public function onRegister() : void
+		{
+
+		}
+
+		public function onRemove() : void
+		{
+
+		}
+
+		public function removeAllScreens() : void
+		{
+			while ( screens.length > 0 )
+			{
+				var screen : ScreenComposite = screens.pop();
+				removeChild( screen );
+				screen.onRemove();
+
+				screen.destroy();
+			}
+
+			updateDisplay();
+		}
+
+		public function removeFromParent() : void
+		{
+			if ( parentNode && this.parent )
+			{
+				parentNode.removeScreen( this );
+			}
+		}
+
+		/**
+		 * Removes a given child ScreenComposite, if it exists.
+		 *
+		 * @param	a_screen	ScreenComposite to remove
+		 */
+		public function removeScreen( screen : ScreenComposite ) : ScreenComposite
+		{
+			var idx : int = screens.indexOf( screen );
+
+			if ( idx > -1 )
+			{
+				screens.splice( idx, 1 );
+
+				if ( screen.parent )
+					removeChild( screen );
+
+				screen.onRemove();
+
+				// Update remaining screens
+				sortScreens();
+				updateDisplay();
+			}
+			else
+			{
+				// go through the child screens
+				for ( var layer : int = 0; layer < screens.length; layer++ )
+				{
+					screens[ layer ].removeScreen( screen );
+				}
+			}
+
+			return screen;
+		}
+
+		public function sortScreens() : void
+		{
+			screens.sort( sortFunction );
+
+			var layerIndex : int = 0;
+
+			for ( var layer : int = 0; layer < screens.length; layer++ )
+			{
+				var screen : DisplayObjectContainer = screens[ layer ] as DisplayObjectContainer;
+				setChildIndex( screen, layerIndex );
+				layerIndex++;
+			}
+		}
+
 		override public function updateDisplay() : void
 		{
 			super.updateDisplay();
@@ -157,23 +193,17 @@ package totem.display.layout
 			}
 		}
 
-		public function onRegister() : void
+		private function sortFunction( objx : ScreenComposite, objy : ScreenComposite ) : Number
 		{
-
-		}
-
-		public function onRemove() : void
-		{
-			destroy();
-		}
-
-		override public function destroy() : void
-		{
-			super.destroy();
-
-			while ( screens.length > 0 )
-				screens.pop().destroy();
-
+			if ( objx.depth > objy.depth )
+			{
+				return 1;
+			}
+			else if ( objx.depth < objy.depth )
+			{
+				return -1;
+			}
+			return 0;
 		}
 	}
 }

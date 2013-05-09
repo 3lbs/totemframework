@@ -21,11 +21,20 @@ package totem.utils
 
 	public class TimeCodeUtil
 	{
-		public static const HOURS : String = "h";
 
-		public static const MINUTES : String = "m";
+		public static const AUTO_NEAREST_FORMAT : uint = 3;
 
-		public static const SECONDS : String = "s";
+		public static const CODE_HOURS : String = "h";
+
+		public static const CODE_MINUTES : String = "m";
+
+		public static const CODE_SECONDS : String = "s";
+
+		public static const HOURS : uint = 2;
+
+		public static const MINUTES : uint = 1;
+
+		public static const SECONDS : uint = 0;
 
 		public static function convertTimeCodeToMilliseconds( code : String ) : Object
 		{
@@ -46,17 +55,17 @@ package totem.utils
 
 			switch ( units )
 			{
-				case HOURS:
+				case CODE_HOURS:
 				{
 					totalTime = ConversionUtil.hoursToMilliseconds( inTime );
 					break;
 				}
-				case MINUTES:
+				case CODE_MINUTES:
 				{
 					totalTime = ConversionUtil.minutesToMilliseconds( inTime );
 					break;
 				}
-				case SECONDS:
+				case CODE_SECONDS:
 				{
 					totalTime = ConversionUtil.secondsToMilliseconds( inTime );
 					break;
@@ -75,6 +84,31 @@ package totem.utils
 
 			return timeObject;
 
+		}
+
+		public static function formatTime( time : Number, detailLevel : uint = AUTO_NEAREST_FORMAT ) : String
+		{
+			var hours = Math.floor( time / 3600000 );
+			var minutes = Math.floor(( time % 3600000 ) / 60000 );
+			var seconds = Math.floor((( time % 3600000 ) % 60000 ) / 1000 );
+
+			// print
+
+			if ( detailLevel == AUTO_NEAREST_FORMAT )
+			{
+				detailLevel = MINUTES;
+
+				if ( hours > 0 )
+				{
+					detailLevel = HOURS;
+				}
+			}
+
+			var hourString : String = detailLevel == HOURS ? hours + ":" : "";
+			var minuteString : String = detailLevel >= MINUTES ? (( detailLevel == HOURS && minutes < 10 ? "0" : "" ) + minutes + ":" ) : "0:";
+			var secondString : String = (( seconds < 10 ) ? "0" : "" ) + seconds;
+
+			return hourString + minuteString + secondString;
 		}
 	}
 }

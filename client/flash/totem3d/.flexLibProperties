@@ -40,7 +40,7 @@
     <classEntry path="AI.steering.behaviors.ProjectedArrive"/>
     <classEntry path="AI.steering.behaviors.Alignment"/>
     <classEntry path="AI.boid.IBoid"/>
-    <classEntry path="AI.params.BoidParams"/>
+    <classEntry path="AI.params.MovingParam"/>
     <classEntry path="AI.Wall"/>
     <classEntry path="AI.goal.GoalDrivenComponent"/>
     <classEntry path="AI.steering.behaviors.FollowPath"/>
@@ -50,6 +50,11 @@
     <classEntry path="AI.goal.GoalEvaluator"/>
     <classEntry path="totem3d.loaders.IModel3DLoader"/>
     <classEntry path="AI.spatial.BoidIterator"/>
+    <classEntry path="AI.pathfinding.PathPlanner"/>
+    <classEntry path="AI.params.BoidParam"/>
+    <classEntry path="AI.pathfinding.PathEdge"/>
+    <classEntry path="AI.collision.ICollision"/>
+    <classEntry path="AI.collision.ACollider"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

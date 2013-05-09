@@ -28,6 +28,8 @@ package AI.steering
 	
 	import totem.events.RemovableEventDispatcher;
 	import totem.math.Vector2D;
+	
+	import totem3d.components.Animator3DComponent;
 
 	public class SteeringBehavior extends RemovableEventDispatcher
 	{
@@ -55,9 +57,9 @@ package AI.steering
 
 		private var spatialDatabase : BoidSpatialManager;
 
-		public function SteeringBehavior( a_agent : Boid2DComponent, a_calculationMethod : int = CALCULATE_ACCURACY )
+		public function SteeringBehavior( a_agent : Boid2DComponent, animator : Animator3DComponent, calculationMethod : int = CALCULATE_ACCURACY )
 		{
-			calculateMethod = a_calculationMethod;
+			this.calculateMethod = calculationMethod;
 			m_agent = a_agent;
 			m_force = new Vector2D();
 			behaviors = [];
@@ -87,7 +89,6 @@ package AI.steering
 		public function addSpatialDatabase( a_spatialDatabase : BoidSpatialManager ) : void
 		{
 			spatialDatabase = a_spatialDatabase;
-			spatialDatabase.insert( m_agent );
 		}
 
 		public function calculate() : Vector2D
@@ -134,8 +135,8 @@ package AI.steering
 		{
 			super.destroy();
 
-			removeFromDatabase();
-
+			spatialDatabase = null;
+			
 			neighbors.length = 0;
 			neighbors = null;
 
@@ -163,7 +164,7 @@ package AI.steering
 
 		public function getNearestBoids( type : String ) : Vector.<Boid2DComponent>
 		{
-			return spatialDatabase.getNearestEntityOfType( type, m_agent );
+			return null; //spatialDatabase.getNearestEntityOfType( type, m_agent );
 		}
 
 		public function removeAllBehaviors() : void
@@ -200,13 +201,6 @@ package AI.steering
 				m_hasGroupBehavior = false;
 			}
 
-		}
-
-		public function removeFromDatabase() : void
-		{
-
-			if ( spatialDatabase )
-				spatialDatabase.removeItem( m_agent );
 		}
 
 		/**

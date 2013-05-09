@@ -13,6 +13,10 @@ package totem.core
 	public class TotemGameSprite extends Sprite
 	{
 
+		public static var STAGE_HEIGHT : Number = 0;
+		
+		public static var STAGE_WIDTH : Number = 0;
+		
 		public static var LOCAL_PLAY : Boolean = false;
 
 		protected var context : TotemContext;
