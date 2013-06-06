@@ -85,6 +85,26 @@ package totem.utils
 			return timeObject;
 
 		}
+		
+		public static function printTimeCode ( code : String ) : String
+		{
+			
+			var whitespace : RegExp = /[\s\r\n]*/gim;
+			code = code.replace( whitespace, '' );
+			
+			var _inTime : String = code;
+			
+			var units = code;
+			
+			var reg : RegExp = /\d/g;
+			units = units.replace( reg, '' );
+			
+			reg = /\D/g;
+			var inTime : Number = Number( _inTime.replace( reg, '' ));
+			
+			
+			return  inTime + " " + units;
+		}
 
 		public static function formatTime( time : Number, detailLevel : uint = AUTO_NEAREST_FORMAT ) : String
 		{

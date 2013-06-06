@@ -55,6 +55,8 @@ package totem.monitors.startupmonitor
 		{
 			super.destroy();
 
+			
+			
 			resourceList = null
 			injector = null;
 		}

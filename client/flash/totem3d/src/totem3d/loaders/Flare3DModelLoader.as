@@ -27,6 +27,7 @@ package totem3d.loaders
 	import gorilla.resource.ResourceManager;
 	
 	import totem.monitors.AbstractMonitorProxy;
+	import totem.time.Stopwatch;
 	
 	import totem3d.core.param.AnimationParam;
 
@@ -40,6 +41,8 @@ package totem3d.loaders
 		private var forceReload : Boolean;
 
 		private var url : String;
+
+		private var timer:Stopwatch;
 
 		public function Flare3DModelLoader( url : String, params : Vector.<AnimationParam> = null, reload : Boolean = false )
 		{
@@ -66,17 +69,30 @@ package totem3d.loaders
 		{
 			super.start();
 
+			timer = new Stopwatch();
+			timer.start();
+			
 			var resource : Resource = ResourceManager.getInstance().load( url, DataResource, forceReload );
 			resource.completeCallback( handleDataLoaded );
 			resource.failedCallback( handleDataFailed );
+			
+			
+			//sceneLoader = new Flare3DLoader( url );
+			//sceneLoader.addEventListener( Event.COMPLETE, handleModelLoaded, false, 0, true );
+			//sceneLoader.load();
+			
 		}
 
 		protected function handleModelLoaded( event : Event ) : void
 		{
 
+			
 			// unload the data source or it will just stay around.
 			ResourceManager.getInstance().unload( url, DataResource );
 
+			
+			timer.stop();
+			trace("timer for load model! " + timer.time );
 			// objectpool
 			// register with sessioncache
 

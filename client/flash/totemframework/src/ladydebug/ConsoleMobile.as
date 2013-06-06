@@ -233,7 +233,7 @@ package ladydebug
 			_currentCommandManager = new ConsoleCommandManager();
 			// Set up some handy helper commands.
 			_currentCommandManager.init();
-			_currentCommandManager.registerCommand( "toggle", toggleConsole, "Hide or show the console." );
+			_currentCommandManager.registerCommand( "exit", toggleConsole, "Hides the console." );
 
 			/*_currentCommandManager.registerCommand( "cd", changeDirectory, ".. to go up to parent, otherwise index or name to change to subgroup." );
 			_currentCommandManager.registerCommand( "ls", listDirectory, "Show the SmashGroups in the current SmashGroup." );*/

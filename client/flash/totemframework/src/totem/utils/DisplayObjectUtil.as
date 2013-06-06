@@ -1,5 +1,22 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.utils
 {
+
 	/**
 	 * uk.soulwire.utils.display.DisplayUtils
 	 *
@@ -21,12 +38,103 @@ package totem.utils
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.MovieClip;
 	import flash.display.PixelSnapping;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 
 	public class DisplayObjectUtil
 	{
+
+		public static function alignInRect( displayObject : DisplayObject, rectangle : Rectangle, fillRect : Boolean = true, align : String = "C", applyTransform : Boolean = true ) : Matrix
+		{
+			var matrix : Matrix = new Matrix();
+
+			var w : Number = displayObject.width;
+			var h : Number = displayObject.height;
+
+			var wR : Number = rectangle.width;
+			var hR : Number = rectangle.height;
+
+			var tX : Number = 0.0;
+			var tY : Number = 0.0;
+
+			// X coordinate
+			switch ( align )
+			{
+				case Alignment.BOTTOM_LEFT:
+				case Alignment.TOP_LEFT:
+				case Alignment.LEFT:
+					tX = 0.0;
+					break;
+				case Alignment.TOP_RIGHT:
+				case Alignment.RIGHT:
+				case Alignment.BOTTOM_RIGHT:
+					tX = Math.abs( wR - w );
+					break;
+				case Alignment.CENTER:
+				case Alignment.BOTTOM_CENTER:
+				case Alignment.TOP_CENTER:
+					tX = 0.5 * Math.abs( wR - w );
+					break;
+				default:
+			}
+
+			// Y coordinate
+			switch ( align )
+			{
+				case Alignment.TOP:
+				case Alignment.TOP_LEFT:
+				case Alignment.TOP_RIGHT:
+				case Alignment.RIGHT:
+					tY = 0.0;
+					break;
+				case Alignment.BOTTOM:
+				case Alignment.BOTTOM_LEFT:
+				case Alignment.BOTTOM_RIGHT:
+				case Alignment.BOTTOM_CENTER:
+					tY = Math.abs( hR - h );
+					break;
+				case Alignment.CENTER:
+					tY = 0.5 * Math.abs( hR - h );
+					break;
+				default:
+			}
+
+			matrix.scale( displayObject.scaleX, displayObject.scaleY );
+			matrix.translate( rectangle.left + tX, rectangle.top + tY );
+
+			if ( applyTransform )
+			{
+				displayObject.transform.matrix = matrix;
+			}
+
+			return matrix;
+		}
+
+		public static function clone( a_displayObject : DisplayObject ) : Bitmap
+		{
+			var dispRect : Rectangle = a_displayObject.getRect( a_displayObject.stage );
+
+			var bitmapData : BitmapData = new BitmapData( dispRect.width, dispRect.height, true, 0x000000 );
+
+			var matrixOffset : Matrix = a_displayObject.transform.matrix;
+			matrixOffset.tx = a_displayObject.x - dispRect.x;
+			matrixOffset.ty = a_displayObject.y - dispRect.y;
+
+			bitmapData.draw( a_displayObject, matrixOffset );
+
+			var clone : Bitmap = new Bitmap( bitmapData, PixelSnapping.AUTO, true );
+
+			return clone;
+		}
+
+		public static function cloneDisplayObject( source : DisplayObject ) : DisplayObject
+		{
+			var exampleType : Class = Object( source ).constructor;
+			return new exampleType();
+		}
 
 		/**
 		 * Fits a DisplayObject into a rectangular area with several options for scale
@@ -59,170 +167,102 @@ package totem.utils
 		 * either with a DisplayObject's transform property or with, for example, BitmapData.draw()
 		 */
 
-		public static function fitIntoRect(displayObject:DisplayObject, rectangle:Rectangle, fillRect:Boolean=true, align:String="C", applyTransform:Boolean=true, imageRectSize:Boolean=false):Matrix
+		public static function fitIntoRect( displayObject : DisplayObject, rectangle : Rectangle, fillRect : Boolean = true, align : String = "C", applyTransform : Boolean = true, imageRectSize : Boolean = false ) : Matrix
 		{
-			var matrix:Matrix=new Matrix();
+			var matrix : Matrix = new Matrix();
 
-			var srw:Number=displayObject.width;
-			var srh:Number=displayObject.height;
+			var srw : Number = displayObject.width;
+			var srh : Number = displayObject.height;
 
-			if (displayObject.scrollRect)
+			if ( displayObject.scrollRect )
 			{
-				srw=displayObject.scrollRect.width;
-				srh=displayObject.scrollRect.height;
+				srw = displayObject.scrollRect.width;
+				srh = displayObject.scrollRect.height;
 			}
 
-			var wD:Number=srw / displayObject.scaleX;
-			var hD:Number=srh / displayObject.scaleY;
+			var wD : Number = srw / displayObject.scaleX;
+			var hD : Number = srh / displayObject.scaleY;
 
-			var wR:Number=rectangle.width;
-			var hR:Number=rectangle.height;
+			var wR : Number = rectangle.width;
+			var hR : Number = rectangle.height;
 
-			var sX:Number=wR / wD;
-			var sY:Number=hR / hD;
+			var sX : Number = wR / wD;
+			var sY : Number = hR / hD;
 
-			var rD:Number=wD / hD;
-			var rR:Number=wR / hR;
+			var rD : Number = wD / hD;
+			var rR : Number = wR / hR;
 
-			var sH:Number=fillRect ? sY : sX;
-			var sV:Number=fillRect ? sX : sY;
+			var sH : Number = fillRect ? sY : sX;
+			var sV : Number = fillRect ? sX : sY;
 
-			var s:Number=rD >= rR ? sH : sV;
-			var w:Number=wD * s;
-			var h:Number=hD * s;
+			var s : Number = rD >= rR ? sH : sV;
+			var w : Number = wD * s;
+			var h : Number = hD * s;
 
-			var tX:Number=0.0;
-			var tY:Number=0.0;
+			var tX : Number = 0.0;
+			var tY : Number = 0.0;
 
-			switch (align)
+			switch ( align )
 			{
 				case Alignment.LEFT:
 				case Alignment.TOP_LEFT:
 				case Alignment.BOTTOM_LEFT:
-					tX=0.0;
+					tX = 0.0;
 					break;
 
 				case Alignment.RIGHT:
 				case Alignment.TOP_RIGHT:
 				case Alignment.BOTTOM_RIGHT:
-					tX=w - wR;
+					tX = w - wR;
 					break;
 
 				default:
-					tX=0.5 * (w - wR);
+					tX = 0.5 * ( w - wR );
 			}
 
-			switch (align)
+			switch ( align )
 			{
 				case Alignment.TOP:
 				case Alignment.TOP_LEFT:
 				case Alignment.TOP_RIGHT:
-					tY=0.0;
+					tY = 0.0;
 					break;
 
 				case Alignment.BOTTOM:
 				case Alignment.BOTTOM_LEFT:
 				case Alignment.BOTTOM_RIGHT:
-					tY=h - hR;
+					tY = h - hR;
 					break;
 
 				default:
-					tY=0.5 * (h - hR);
+					tY = 0.5 * ( h - hR );
 			}
 
-			matrix.scale(s, s);
-			matrix.translate(rectangle.left - tX, rectangle.top - tY);
+			matrix.scale( s, s );
+			matrix.translate( rectangle.left - tX, rectangle.top - tY );
 
-			if (applyTransform)
+			if ( applyTransform )
 			{
-				displayObject.transform.matrix=matrix;
+				displayObject.transform.matrix = matrix;
 			}
 
 			return matrix;
 		}
 
-
-		public static function alignInRect(displayObject:DisplayObject, rectangle:Rectangle, fillRect:Boolean=true, align:String="C", applyTransform:Boolean=true):Matrix
+		public static function getVisibleBounds( source : DisplayObject, bitmapDataArea : BitmapData = null ) : Rectangle
 		{
-			var matrix:Matrix=new Matrix();
+			//var matrix:Matrix = new Matrix()
+			//matrix.tx = -source.getBounds(null).x;
+			//matrix.ty = -source.getBounds(null).y;
 
-			var w:Number=displayObject.width;
-			var h:Number=displayObject.height;
+			if ( !bitmapDataArea )
+				bitmapDataArea = new BitmapData( source.width, source.height, true, 0x00000000 );
 
-			var wR:Number=rectangle.width;
-			var hR:Number=rectangle.height;
+			bitmapDataArea.draw( source );
+			var bounds : Rectangle = bitmapDataArea.getColorBoundsRect( 0xFFFFFFFF, 0x000000, false );
+			bitmapDataArea.dispose();
 
-			var tX:Number=0.0;
-			var tY:Number=0.0;
-
-			// X coordinate
-			switch (align)
-			{
-				case Alignment.BOTTOM_LEFT:
-				case Alignment.TOP_LEFT:
-				case Alignment.LEFT:
-					tX=0.0;
-					break;
-				case Alignment.TOP_RIGHT:
-				case Alignment.RIGHT:
-				case Alignment.BOTTOM_RIGHT:
-					tX=Math.abs(wR - w);
-					break;
-				case Alignment.CENTER:
-				case Alignment.BOTTOM_CENTER:
-				case Alignment.TOP_CENTER:
-					tX=0.5 * Math.abs(wR - w);
-					break;
-				default:
-			}
-
-			// Y coordinate
-			switch (align)
-			{
-				case Alignment.TOP:
-				case Alignment.TOP_LEFT:
-				case Alignment.TOP_RIGHT:
-				case Alignment.RIGHT:
-					tY=0.0;
-					break;
-				case Alignment.BOTTOM:
-				case Alignment.BOTTOM_LEFT:
-				case Alignment.BOTTOM_RIGHT:
-				case Alignment.BOTTOM_CENTER:
-					tY=Math.abs(hR - h);
-					break;
-				case Alignment.CENTER:
-					tY=0.5 * Math.abs(hR - h);
-					break;
-				default:
-			}
-
-			matrix.scale(displayObject.scaleX, displayObject.scaleY);
-			matrix.translate(rectangle.left + tX, rectangle.top + tY);
-
-			if (applyTransform)
-			{
-				displayObject.transform.matrix=matrix;
-			}
-
-			return matrix;
-		}
-
-		public static function clone(a_displayObject:DisplayObject):Bitmap
-		{
-			var dispRect:Rectangle=a_displayObject.getRect(a_displayObject.stage);
-
-			var bitmapData:BitmapData=new BitmapData(dispRect.width, dispRect.height, true, 0x000000);
-
-			var matrixOffset:Matrix=a_displayObject.transform.matrix;
-			matrixOffset.tx=a_displayObject.x - dispRect.x;
-			matrixOffset.ty=a_displayObject.y - dispRect.y;
-
-			bitmapData.draw(a_displayObject, matrixOffset);
-
-			var clone:Bitmap=new Bitmap(bitmapData, PixelSnapping.AUTO, true);
-
-			return clone;
+			return bounds;
 		}
 
 		/**
@@ -230,31 +270,29 @@ package totem.utils
 		 *
 		 * @param	a_displayObject		DisplayObject to remove
 		 */
-		public static function removeFromParent(a_displayObject:DisplayObject):void
+		public static function removeFromParent( a_displayObject : DisplayObject ) : void
 		{
-			if (a_displayObject.parent)
+			if ( a_displayObject.parent )
 			{
-				a_displayObject.parent.removeChild(a_displayObject);
+				a_displayObject.parent.removeChild( a_displayObject );
 			}
 		}
 
-		public static function cloneDisplayObject(source:DisplayObject):DisplayObject
+		public static function setAllCacheToBitmap( target : DisplayObjectContainer, value : Boolean = true ) : void
 		{
-			var exampleType:Class=Object(source).constructor;
-			return new exampleType();
-		}
+			if ( target is MovieClip )
+				DisplayObject( target ).cacheAsBitmap = value;
 
-		public static function getVisibleBounds(source:DisplayObject):Rectangle
-		{
-			//var matrix:Matrix = new Matrix()
-			//matrix.tx = -source.getBounds(null).x;
-			//matrix.ty = -source.getBounds(null).y;
+			var n : int = target.numChildren;
+			var i : int;
 
-			var data:BitmapData=new BitmapData(source.width, source.height, true, 0x00000000);
-			data.draw(source);
-			var bounds:Rectangle=data.getColorBoundsRect(0xFFFFFFFF, 0x000000, false);
-			data.dispose();
-			return bounds;
+			for ( i = 0; i < n; ++i )
+			{
+				var child : DisplayObjectContainer = target.getChildAt( i ) as DisplayObjectContainer;
+
+				if ( child )
+					setAllCacheToBitmap( child, value );
+			}
 		}
 	}
 }

@@ -83,8 +83,8 @@ package totem3d.components
 			isPlaying = false;
 
 			
-			if ( mesh )
-				mesh.stop();
+			//if ( mesh )
+			//	mesh.stop();
 		}
 
 		protected function handleAnimationComplete( event : Event ) : void

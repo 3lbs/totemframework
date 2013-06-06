@@ -43,7 +43,7 @@ package org.casalib.util {
 		@author Mike Creighton
 		@author David Nelson
 		@author Jon Adams
-		@version 05/10/11
+		@version 06/23/11
 	*/
 	public class StringUtil {
 		public static const WHITESPACE:String = " \t\n\r"; /**< Whitespace characters (space, tab, new line and return). */
@@ -99,7 +99,7 @@ package org.casalib.util {
 			@return String with capitalized words.
 		*/
 		public static function toTitleCase(source:String, lowerCaseSmallWords:Boolean = true):String {
-			source = StringUtil._checkWords(source, ' ', true, lowerCaseSmallWords);
+			source = StringUtil._checkWords(source.toLowerCase(), ' ', true, lowerCaseSmallWords);
 			
 			var parts:Array = source.split(' ');
 			var last:int    = parts.length - 1;

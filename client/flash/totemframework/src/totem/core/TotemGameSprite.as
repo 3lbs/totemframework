@@ -7,6 +7,8 @@ package totem.core
 	
 	import ladydebug.Logger;
 	
+	import org.casalib.util.StageReference;
+	
 	import totem.core.mvc.TotemContext;
 
 	[SWF( frameRate = "60" )]
@@ -33,11 +35,7 @@ package totem.core
 
 			loaderInfo.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, uncaughtErrorHandler );
 
-			/*if ( this.parent == this.stage )
-			{
-				TotemGameSprite.LOCAL_PLAY = true;
-				parentInjector = new Injector();
-			}*/
+			StageReference.setStage( this.stage );
 		}
 
 		private function uncaughtErrorHandler( e : UncaughtErrorEvent ) : void

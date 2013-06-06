@@ -23,7 +23,7 @@ package totem.core.mvc
 	import totem.core.ITotemSystem;
 	import totem.core.TotemEntity;
 	import totem.core.TotemGroup;
-	import totem.core.mvc.modular.mvcs.TotemModuleContext;
+	import totem.monitors.IProgressMonitor;
 
 	public interface ITotemContext extends ITotemSystem
 	{
@@ -32,15 +32,13 @@ package totem.core.mvc
 
 		function createEntity( name : String = null ) : TotemEntity;
 
-		function get currentModule() : TotemModuleContext
-
-		function set currentModule( value : TotemModuleContext ) : void
-
 		function destroyEntity( name : String ) : void;
 
 		function get eventDispatcher() : IEventDispatcher;
 
 		function get mainClass() : DisplayObjectContainer;
+
+		function get progressMonitor() : IProgressMonitor;
 
 		function registerManager( clazz : Class, instance : *, doInjectInto : Boolean = true ) : *
 	}

@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 /*
  * Copyright 2007 the original author or authors.
  *
@@ -18,11 +34,11 @@ package totem.core.task
 {
 
 	import com.adobe.errors.IllegalStateError;
-	
+
 	import flash.events.ErrorEvent;
-	
+
 	import ladydebug.Logger;
-	
+
 	import totem.core.task.enum.TaskState;
 
 	/**
@@ -38,23 +54,23 @@ package totem.core.task
 		/**
 		 * @private
 		 */
-		protected var allTasks : IList;
+		protected var activeTasks : IList;
 
 		/**
 		 * @private
 		 */
-		protected var activeTasks : IList;
+		protected var allTasks : IList;
 
 		private var _autoStart : Boolean;
 
 		private var _ignoreChildErrors : Boolean;
 
+		private var _pendingCancelation : Boolean;
+
 		// if we operate on the tasks of this group in a way that those tasks throw events
 		// application code should NOT be able to alter the state of this group in their event handlers
 		// since this would lead to unmanagable recursions and conflicting inner state changes
 		private var locked : Boolean;
-
-		private var _pendingCancelation : Boolean;
 
 		/**
 		 * @private
@@ -72,83 +88,39 @@ package totem.core.task
 		}
 
 		/**
-		 * @private
+		 * Adds the specified task to this TaskGroup.
+		 *
+		 * @param task the Task to be added to this TaskGroup
+		 * @return true if the Task was successfully added to this TaskGroup
 		 */
-		public override function get cancelable() : Boolean
+		public function addTask( task : Task ) : Boolean
 		{
-			if ( !super.cancelable )
-				return false;
-
-			for ( var i : Number = 0; i < allTasks.getSize(); i++ )
+			if ( task.state == TaskState.FINISHED )
 			{
-				var t : Task = Task( allTasks.get( i ));
+				//logger.warn( "Attempt to add Task '" + task + "' to a TaskGroup which is not restartable" );
+				return false;
+			}
 
-				if ( !t.cancelable )
-					return false;
+			if ( task.state != TaskState.INACTIVE )
+			{
+				//logger.error( "Attempt to add an already active Task '" + task + "' to a TaskGroup" );
+				return false;
+			}
+
+			if ( task.parent != null )
+			{
+				//logger.error( "Cannot add Task '" + task + "': Task is already member of another TaskGroup" );
+				return false;
+			}
+			task.setParent( this );
+			allTasks.append( task );
+			handleAddedTask( task );
+
+			if ( autoStart && state == TaskState.INACTIVE )
+			{
+				start();
 			}
 			return true;
-		}
-
-		/**
-		 * @private
-		 */
-		public override function get restartable() : Boolean
-		{
-			if ( !super.restartable )
-				return false;
-
-			for ( var i : Number = 0; i < allTasks.getSize(); i++ )
-			{
-				var t : Task = Task( allTasks.get( i ));
-
-				if ( !t.restartable )
-					return false;
-			}
-			return true;
-		}
-
-		/**
-		 * @private
-		 */
-		public override function get suspendable() : Boolean
-		{
-			if ( !super.suspendable )
-				return false;
-
-			for ( var i : Number = 0; i < allTasks.getSize(); i++ )
-			{
-				var t : Task = Task( allTasks.get( i ));
-
-				if ( !t.suspendable )
-					return false;
-			}
-			return true;
-		}
-
-		/**
-		 * @private
-		 */
-		public override function get skippable() : Boolean
-		{
-			if ( !super.skippable )
-				return false;
-
-			for ( var i : Number = 0; i < allTasks.getSize(); i++ )
-			{
-				var t : Task = Task( allTasks.get( i ));
-
-				if ( !t.skippable )
-					return false;
-			}
-			return true;
-		}
-
-		/**
-		 * @private
-		 */
-		internal function get pendingCancelation() : Boolean
-		{
-			return _pendingCancelation;
 		}
 
 		/**
@@ -172,6 +144,51 @@ package totem.core.task
 		}
 
 		/**
+		 * @private
+		 */
+		override public function cancel() : Boolean
+		{
+			checkLock();
+			return super.cancel();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function get cancelable() : Boolean
+		{
+			if ( !super.cancelable )
+				return false;
+
+			for ( var i : Number = 0; i < allTasks.getSize(); i++ )
+			{
+				var t : Task = Task( allTasks.get( i ));
+
+				if ( !t.cancelable )
+					return false;
+			}
+			return true;
+		}
+
+		override public function destroy() : void
+		{
+			super.destroy();
+
+			//removeAllTasks();
+		}
+
+		/**
+		 * Returns the Task at the specified index.
+		 *
+		 * @param index the zero-based index of the Task to return.
+		 * @return the Task at the specified index
+		 */
+		public function getTask( index : uint ) : Task
+		{
+			return Task( allTasks.get( index ));
+		}
+
+		/**
 		 * Indicates whether <code>ERROR</code> events of child tasks should be ignored or if they
 		 * should stop the whole group.
 		 *
@@ -186,52 +203,37 @@ package totem.core.task
 			_ignoreChildErrors = ignore;
 		}
 
-		public function set timeout( value : uint ) : void
-		{
-			setTimeout( value );
-		}
-
 		/**
-		 * Adds the specified task to this TaskGroup.
-		 *
-		 * @param task the Task to be added to this TaskGroup
-		 * @return true if the Task was successfully added to this TaskGroup
+		 * Removes all tasks from this TaskGroup.
 		 */
-		public function addTask( task : Task ) : Boolean
+		public function removeAllTasks() : void
 		{
-			return addTaskAt( task, allTasks.getSize() );
+			for ( var i : uint = 0; i < allTasks.getSize(); i++ )
+			{
+				var t : Task = allTasks.get( i );
+				t.setParent( null );
+				t.destroy();
+			}
+
+			/*while( allTasks.getSize() > 0 )
+			{
+				var t : Task = allTasks.removeLast();
+				t.setParent( null );
+				t.destroy();
+			}*/
+
+			allTasks.removeAll();
+			activeTasks.removeAll();
+
+			if ( state == TaskState.ACTIVE || state == TaskState.SUSPENDED )
+			{
+				handleRemoveAll();
+
+				if ( state == TaskState.ACTIVE )
+					complete();
+			}
 		}
 
-		public function addTaskAt ( task : Task, index : int ) : Boolean
-		{
-			
-			if ( task.state == TaskState.FINISHED )
-			{
-				//logger.warn( "Attempt to add Task '" + task + "' to a TaskGroup which is not restartable" );
-				return false;
-			}
-
-			if ( task.state != TaskState.INACTIVE )
-			{
-				//logger.error( "Attempt to add an already active Task '" + task + "' to a TaskGroup" );
-				return false;
-			}
-
-			if ( task.parent != null )
-			{
-				//logger.error( "Cannot add Task '" + task + "': Task is already member of another TaskGroup" );
-				return false;
-			}
-			task.setParent( this );
-			allTasks.insert( index, task );
-			handleAddedTask( task );
-
-			if ( autoStart && state == TaskState.INACTIVE )
-			{
-				start();
-			}
-			return true;
-		}
 		/**
 		 * Removes the specified task from this TaskGroup.
 		 *
@@ -254,41 +256,237 @@ package totem.core.task
 			{
 				handleTaskComplete( task );
 			}
-			
+
 			//task.destroy();
-			
+
 			return true;
 		}
 
 		/**
-		 * Removes all tasks from this TaskGroup.
+		 * @private
 		 */
-		public function removeAllTasks() : void
+		override public function get restartable() : Boolean
 		{
-			for ( var i : uint = 0; i < allTasks.getSize(); i++ )
-			{
-				var t : Task = allTasks.get( i );
-				t.setParent( null );
-				t.destroy();
-			}
-			
-			/*while( allTasks.getSize() > 0 )
-			{
-				var t : Task = allTasks.removeLast();
-				t.setParent( null );
-				t.destroy();
-			}*/
-			
-			allTasks.removeAll();
-			activeTasks.removeAll();
+			if ( !super.restartable )
+				return false;
 
-			if ( state == TaskState.ACTIVE || state == TaskState.SUSPENDED )
+			for ( var i : Number = 0; i < allTasks.getSize(); i++ )
 			{
-				handleRemoveAll();
+				var t : Task = Task( allTasks.get( i ));
 
-				if ( state == TaskState.ACTIVE )
-					complete();
+				if ( !t.restartable )
+					return false;
 			}
+			return true;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function resume() : Boolean
+		{
+			checkLock();
+			return super.resume();
+		}
+
+		/**
+		 * The number of tasks added to this TaskGroup.
+		 */
+		public function get size() : uint
+		{
+			return allTasks.getSize();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function skip() : Boolean
+		{
+			checkLock();
+			return super.skip();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function get skippable() : Boolean
+		{
+			if ( !super.skippable )
+				return false;
+
+			for ( var i : Number = 0; i < allTasks.getSize(); i++ )
+			{
+				var t : Task = Task( allTasks.get( i ));
+
+				if ( !t.skippable )
+					return false;
+			}
+			return true;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function suspend() : Boolean
+		{
+			checkLock();
+			return super.suspend();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function get suspendable() : Boolean
+		{
+			if ( !super.suspendable )
+				return false;
+
+			for ( var i : Number = 0; i < allTasks.getSize(); i++ )
+			{
+				var t : Task = Task( allTasks.get( i ));
+
+				if ( !t.suspendable )
+					return false;
+			}
+			return true;
+		}
+
+		public function set timeout( value : uint ) : void
+		{
+			setTimeout( value );
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function doCancel() : void
+		{
+			locked = true;
+			_pendingCancelation = true;
+
+			try
+			{
+				for ( var i : Number = 0; i < activeTasks.getSize(); i++ )
+				{
+					var t : Task = Task( activeTasks.get( i ));
+
+					if ( !t.cancel())
+					{
+						handleTaskError( t, "cancel" );
+					}
+				}
+			}
+			finally
+			{
+				locked = false;
+				_pendingCancelation = false;
+				activeTasks.removeAll();
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function doError( message : String ) : void
+		{
+			doCancel();
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function doResume() : void
+		{
+			if ( activeTasks.isEmpty())
+			{
+				// Some active tasks were removed while TaskGroup was suspended
+				complete();
+				return;
+			}
+			locked = true;
+
+			try
+			{
+				for ( var i : Number = 0; i < activeTasks.getSize(); i++ )
+				{
+					var t : Task = Task( activeTasks.get( i ));
+
+					if ( t.state == TaskState.INACTIVE )
+					{
+						// Task was added to TaskGroup while TaskGroup was suspended
+						startTask( t );
+					}
+					else if ( !t.resume())
+					{
+						handleTaskError( t, "resume" );
+					}
+				}
+			}
+			finally
+			{
+				locked = false;
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function doSkip() : void
+		{
+			locked = true;
+			_pendingCancelation = true;
+
+			try
+			{
+				for ( var i : Number = 0; i < activeTasks.getSize(); i++ )
+				{
+					var t : Task = Task( activeTasks.get( i ));
+
+					if ( !t.skip())
+					{
+						handleTaskError( t, "finish" );
+					}
+				}
+			}
+			finally
+			{
+				locked = false;
+				_pendingCancelation = false;
+				activeTasks.removeAll();
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function doSuspend() : void
+		{
+			locked = true;
+
+			try
+			{
+				for ( var i : Number = 0; i < activeTasks.getSize(); i++ )
+				{
+					var t : Task = Task( activeTasks.get( i ));
+
+					if ( t.state != TaskState.SUSPENDED && !t.suspend())
+					{
+						handleTaskError( t, "suspend" );
+					}
+				}
+			}
+			finally
+			{
+				locked = false;
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function doTimeout() : void
+		{
+			doCancel();
 		}
 
 		/**
@@ -297,6 +495,15 @@ package totem.core.task
 		 * @param task the Task that was added to this TaskGroup
 		 */
 		protected function handleAddedTask( t : Task ) : void
+		{
+		/* template method */
+		}
+
+		/**
+		 * Method hook for subclasses that gets called when all child tasks have been removed from
+		 * this TaskGroup.
+		 */
+		protected function handleRemoveAll() : void
 		{
 		/* template method */
 		}
@@ -313,43 +520,13 @@ package totem.core.task
 		}
 
 		/**
-		 * Method hook for subclasses that gets called when all child tasks have been removed from
-		 * this TaskGroup.
-		 */
-		protected function handleRemoveAll() : void
-		{
-		/* template method */
-		}
-
-		/**
-		 * The number of tasks added to this TaskGroup.
-		 */
-		public function get size() : uint
-		{
-			return allTasks.getSize();
-		}
-
-		/**
-		 * Returns the Task at the specified index.
+		 * Method hook for subclasses that gets called when a child Task has completed its operation.
 		 *
-		 * @param index the zero-based index of the Task to return.
-		 * @return the Task at the specified index
+		 * @param task the Task that has completed its operation
 		 */
-		public function getTask( index : uint ) : Task
+		protected function handleTaskComplete( task : Task ) : void
 		{
-			return Task( allTasks.get( index ));
-		}
-
-		// start, cancel, suspend, resume
-		private function handleTaskError( t : Task, action : String ) : void
-		{
-			//logger.error( "Unable to " + action + " Task '" + t + "': Task will be removed from this TaskGroup" );
-			removeTask( t );
-		}
-
-		private function swallowError( event : ErrorEvent ) : void
-		{
-		/* just need to listen to avoid error popups for children without listeners */
+		/* default implementation does nothing */
 		}
 
 		/**
@@ -362,11 +539,36 @@ package totem.core.task
 			if ( !activeTasks.contains( task ))
 				activeTasks.append( task );
 			task.onError.add( swallowError );
-			
+
 			if ( !task.startInternal())
 			{
 				handleTaskError( task, "start" );
 			}
+		}
+
+		/**
+		 * @private
+		 */
+		internal function cancelChild( t : Task ) : void
+		{
+			checkLock();
+
+			if ( !removeActiveTask( t ))
+			{
+				//logger.error( "Task '" + t + "' threw CANCEL event but was not active in this TaskGroup" );
+				return;
+			}
+
+			if ( state != TaskState.ACTIVE && state != TaskState.SUSPENDED )
+			{
+				//logger.error( "Task '" + t + "' threw CANCEL event while TaskGroup was in illegal state: " + state );
+				return;
+			}
+			runProtected( t.fireCancelEvent );
+			handleTaskComplete( t );
+
+			if ( autoStart || !t.restartable )
+				removeTask( t );
 		}
 
 		/**
@@ -405,31 +607,6 @@ package totem.core.task
 		/**
 		 * @private
 		 */
-		internal function cancelChild( t : Task ) : void
-		{
-			checkLock();
-
-			if ( !removeActiveTask( t ))
-			{
-				//logger.error( "Task '" + t + "' threw CANCEL event but was not active in this TaskGroup" );
-				return;
-			}
-
-			if ( state != TaskState.ACTIVE && state != TaskState.SUSPENDED )
-			{
-				//logger.error( "Task '" + t + "' threw CANCEL event while TaskGroup was in illegal state: " + state );
-				return;
-			}
-			runProtected( t.fireCancelEvent );
-			handleTaskComplete( t );
-
-			if ( autoStart || !t.restartable )
-				removeTask( t );
-		}
-
-		/**
-		 * @private
-		 */
 		internal function errorChild( t : Task, message : String ) : void
 		{
 			checkLock();
@@ -448,7 +625,7 @@ package totem.core.task
 			}
 			runProtected( t.fireErrorEvent, [ message ]);
 			t.onError.remove( swallowError );
-			
+
 			if ( ignoreChildErrors )
 			{
 				handleTaskComplete( t );
@@ -462,6 +639,31 @@ package totem.core.task
 				removeTask( t );
 		}
 
+		/**
+		 * @private
+		 */
+		internal function get pendingCancelation() : Boolean
+		{
+			return _pendingCancelation;
+		}
+
+		private function checkLock() : void
+		{
+			if ( locked )
+			{
+				var message : String = "You cannot alter the state of a TaskGroup or a sibling Task " + " in an event handler of one of its children";
+				Logger.error( this, "checkLock", message );
+				throw new IllegalStateError( message );
+			}
+		}
+
+		// start, cancel, suspend, resume
+		private function handleTaskError( t : Task, action : String ) : void
+		{
+			//logger.error( "Unable to " + action + " Task '" + t + "': Task will be removed from this TaskGroup" );
+			removeTask( t );
+		}
+
 		private function removeActiveTask( t : Task, keepListener : Boolean = false ) : Boolean
 		{
 			if ( !activeTasks.remove( t ))
@@ -469,7 +671,7 @@ package totem.core.task
 
 			if ( !keepListener )
 				t.onError.remove( swallowError );
-			
+
 			return true;
 		}
 
@@ -488,202 +690,10 @@ package totem.core.task
 			locked = false;
 		}
 
-		/**
-		 * Method hook for subclasses that gets called when a child Task has completed its operation.
-		 *
-		 * @param task the Task that has completed its operation
-		 */
-		protected function handleTaskComplete( task : Task ) : void
+		private function swallowError( event : ErrorEvent ) : void
 		{
-		/* default implementation does nothing */
+		/* just need to listen to avoid error popups for children without listeners */
 		}
-
-		private function checkLock() : void
-		{
-			if ( locked )
-			{
-				var message : String = "You cannot alter the state of a TaskGroup or a sibling Task " + " in an event handler of one of its children";
-				Logger.error( this, "checkLock", message );
-				throw new IllegalStateError( message );
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		public override function suspend() : Boolean
-		{
-			checkLock();
-			return super.suspend();
-		}
-
-		/**
-		 * @private
-		 */
-		public override function resume() : Boolean
-		{
-			checkLock();
-			return super.resume();
-		}
-
-		/**
-		 * @private
-		 */
-		public override function cancel() : Boolean
-		{
-			checkLock();
-			return super.cancel();
-		}
-
-		/**
-		 * @private
-		 */
-		public override function skip() : Boolean
-		{
-			checkLock();
-			return super.skip();
-		}
-
-		/**
-		 * @private
-		 */
-		protected override function doSuspend() : void
-		{
-			locked = true;
-
-			try
-			{
-				for ( var i : Number = 0; i < activeTasks.getSize(); i++ )
-				{
-					var t : Task = Task( activeTasks.get( i ));
-
-					if ( t.state != TaskState.SUSPENDED && !t.suspend())
-					{
-						handleTaskError( t, "suspend" );
-					}
-				}
-			}
-			finally
-			{
-				locked = false;
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		protected override function doResume() : void
-		{
-			if ( activeTasks.isEmpty())
-			{
-				// Some active tasks were removed while TaskGroup was suspended
-				complete();
-				return;
-			}
-			locked = true;
-
-			try
-			{
-				for ( var i : Number = 0; i < activeTasks.getSize(); i++ )
-				{
-					var t : Task = Task( activeTasks.get( i ));
-
-					if ( t.state == TaskState.INACTIVE )
-					{
-						// Task was added to TaskGroup while TaskGroup was suspended
-						startTask( t );
-					}
-					else if ( !t.resume())
-					{
-						handleTaskError( t, "resume" );
-					}
-				}
-			}
-			finally
-			{
-				locked = false;
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		protected override function doCancel() : void
-		{
-			locked = true;
-			_pendingCancelation = true;
-
-			try
-			{
-				for ( var i : Number = 0; i < activeTasks.getSize(); i++ )
-				{
-					var t : Task = Task( activeTasks.get( i ));
-
-					if ( !t.cancel())
-					{
-						handleTaskError( t, "cancel" );
-					}
-				}
-			}
-			finally
-			{
-				locked = false;
-				_pendingCancelation = false;
-				activeTasks.removeAll();
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		protected override function doSkip() : void
-		{
-			locked = true;
-			_pendingCancelation = true;
-
-			try
-			{
-				for ( var i : Number = 0; i < activeTasks.getSize(); i++ )
-				{
-					var t : Task = Task( activeTasks.get( i ));
-
-					if ( !t.skip())
-					{
-						handleTaskError( t, "finish" );
-					}
-				}
-			}
-			finally
-			{
-				locked = false;
-				_pendingCancelation = false;
-				activeTasks.removeAll();
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		protected override function doError( message : String ) : void
-		{
-			doCancel();
-		}
-
-		/**
-		 * @private
-		 */
-		protected override function doTimeout() : void
-		{
-			doCancel();
-		}
-		
-		override public function destroy():void
-		{
-			super.destroy();
-			
-			//removeAllTasks();
-		}
-
 	}
 
 }

@@ -51,6 +51,37 @@ package gorilla.resource
             mp3:"gorilla.resource.MP3Resource"
         };
 		
+		
+		public static function getResourceClassFromExtType ( ext : String ) : Class
+		{
+			if (ext == "")
+				return null;
+
+			var resTypeName:String= "gorilla.resource.DataResource";;
+			// If the extension type is recognized or not...
+			if ( ExtensionTypes.hasOwnProperty(ext) )
+			{
+				// And if the assigned value is a valid resource type, then take it from the array.
+				resTypeName = ExtensionTypes[ext] as String;
+			}
+			// Now that we (hopefully) have our resource type name, we can try to instantiate it.
+			var resType:Class;
+			try 
+			{
+				// Look up the class!
+				resType = getDefinitionByName( resTypeName ) as Class;
+			} 
+			catch ( err:Error ) 
+			{
+				// Failed, so make sure it's null.
+				resType = null;
+			}
+				
+			return resType;
+		}
+		
+		
+		
         private var registered:Boolean;
         
         /**

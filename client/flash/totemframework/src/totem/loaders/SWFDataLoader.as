@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.loaders
 {
 
@@ -5,14 +21,15 @@ package totem.loaders
 	import gorilla.resource.Resource;
 	import gorilla.resource.ResourceManager;
 	import gorilla.resource.SWFResource;
-	
+
 	import totem.monitors.AbstractMonitorProxy;
 
 	public class SWFDataLoader extends AbstractMonitorProxy
 	{
-		private var url : String;
 
 		public var swfResource : SWFResource;
+
+		private var url : String;
 
 		public function SWFDataLoader( url : String, id : String = "" )
 		{
@@ -23,31 +40,30 @@ package totem.loaders
 
 		}
 
+		override public function destroy() : void
+		{
+			super.destroy();
+
+		}
+
 		override public function start() : void
 		{
 			super.start();
 
 			var resource : IResource = ResourceManager.getInstance().load( url, SWFResource );
-			resource.completeCallback( onBitmapComplete );
+			resource.completeCallback( handleSwfComplete );
 			resource.failedCallback( onFailed );
 		}
 
-		private function onFailed( resource : Resource ) : void
-		{
-			failed();
-		}
-
-		private function onBitmapComplete( resource : SWFResource ) : void
+		private function handleSwfComplete( resource : SWFResource ) : void
 		{
 			swfResource = resource;
 			finished();
 		}
 
-		
-		override public function destroy():void
+		private function onFailed( resource : Resource ) : void
 		{
-			super.destroy();
-			
+			failed();
 		}
 	}
 }

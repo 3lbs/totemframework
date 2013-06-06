@@ -17,8 +17,6 @@
 package totem.display.layout
 {
 
-	import avmplus.getQualifiedClassName;
-
 	import flash.display.DisplayObjectContainer;
 
 	public class ScreenComposite extends TContainer implements IScreenComposite
@@ -70,8 +68,12 @@ package totem.display.layout
 		{
 			super.destroy();
 
+
 			while ( screens.length > 0 )
 				screens.pop().destroy();
+
+			if ( parentNode )
+				parentNode.removeScreen( this );
 
 			parentNode = null;
 
@@ -104,7 +106,6 @@ package totem.display.layout
 
 		public function onRegister() : void
 		{
-
 		}
 
 		public function onRemove() : void

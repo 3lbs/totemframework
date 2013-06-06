@@ -589,7 +589,6 @@ package totem.core.task
 		internal function fireCancelEvent() : void
 		{
 			doCancel();
-
 			onCancelled.dispatch( this );
 		}
 

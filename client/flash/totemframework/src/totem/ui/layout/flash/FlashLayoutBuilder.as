@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.ui.layout.flash
 {
 
@@ -11,8 +27,6 @@ package totem.ui.layout.flash
 	import starling.textures.TextureAtlas;
 	import starling.utils.HAlign;
 	import starling.utils.VAlign;
-	
-	import totem.display.components.togglebutton.SToggleButton;
 
 	public class FlashLayoutBuilder
 	{
@@ -38,7 +52,7 @@ package totem.ui.layout.flash
 					case "sprite":
 						display = new Sprite();
 						display.touchable = false;
-						
+
 						Sprite( display ).flatten();
 						display.addChild( new Image( atlas.getTextures( layout.textureName )[ 0 ]));
 						break;
@@ -93,6 +107,5 @@ package totem.ui.layout.flash
 			}
 
 		}
-
 	}
 }

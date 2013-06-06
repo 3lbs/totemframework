@@ -54,9 +54,9 @@ package gorilla.resource
 	{
 		public var provider : IResourceProvider;
 
-		private var complete : ISignal = new Signal( Resource );
+		protected var complete : ISignal = new Signal( Resource );
 
-		private var failed : ISignal = new Signal( Resource );
+		protected var failed : ISignal = new Signal( Resource );
 
 		private var _id : *;
 
@@ -245,18 +245,18 @@ package gorilla.resource
 
 		}
 
-		private function onDownloadComplete( event : Event ) : void
+		protected function onDownloadComplete( event : Event ) : void
 		{
 			var data : ByteArray = (( event.target ) as URLLoader ).data as ByteArray;
 			initialize( data );
 		}
 
-		private function onDownloadError( event : IOErrorEvent ) : void
+		protected function onDownloadError( event : IOErrorEvent ) : void
 		{
 			onFailed( event.text );
 		}
 
-		private function onDownloadSecurityError( event : SecurityErrorEvent ) : void
+		protected function onDownloadSecurityError( event : SecurityErrorEvent ) : void
 		{
 			onFailed( event.text );
 		}
@@ -276,13 +276,13 @@ package gorilla.resource
 
 		protected var _filename : String = null;
 
-		private var _isLoaded : Boolean = false;
+		protected var _isLoaded : Boolean = false;
 
-		private var _didFail : Boolean = false;
+		protected var _didFail : Boolean = false;
 
-		private var _urlLoader : URLLoader;
+		protected var _urlLoader : URLLoader;
 
-		private var _loader : Loader;
+		protected var _loader : Loader;
 
 		protected var _referenceCount : int = 0;
 
@@ -324,10 +324,10 @@ package gorilla.resource
 
 			if ( _loader )
 			{
-				_loader.unload();
+				_loader.unloadAndStop();
 				_loader = null;
 			}
-
+			
 			complete.removeAll();
 			complete = null;
 

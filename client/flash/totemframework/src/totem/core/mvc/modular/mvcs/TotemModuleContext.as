@@ -1,9 +1,25 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core.mvc.modular.mvcs
 {
 
 	import flash.display.DisplayObjectContainer;
 	import flash.events.IEventDispatcher;
-	
+
 	import totem.core.TotemGroup;
 	import totem.core.mvc.TotemContext;
 	import totem.core.mvc.modular.base.ModuleEventDispatcher;
@@ -26,27 +42,25 @@ package totem.core.mvc.modular.mvcs
 			_contextEventDispatcher = value as RemovableEventDispatcher;
 		}
 
-		public function get moduleEventDispatcher() : IModuleEventDispatcher
+		override public function destroy() : void
 		{
-			return _moduleEventDispatcher;
+			super.destroy();
+			
+			ModuleEventDispatcher( _moduleEventDispatcher ).destroy();
+			_moduleEventDispatcher = null;
 		}
 
 		override public function initialize() : void
 		{
 			super.initialize();
-			
+
 			_moduleEventDispatcher = new ModuleEventDispatcher();
 			injector.map( IModuleEventDispatcher ).toValue( _moduleEventDispatcher );
 		}
 
-		override public function destroy() : void
+		public function get moduleEventDispatcher() : IModuleEventDispatcher
 		{
-			ModuleEventDispatcher( _moduleEventDispatcher ).destroy();
-			_moduleEventDispatcher = null;
-			
-			_contextEventDispatcher = null;
-			
-			super.destroy();
+			return _moduleEventDispatcher;
 		}
 	}
 }
