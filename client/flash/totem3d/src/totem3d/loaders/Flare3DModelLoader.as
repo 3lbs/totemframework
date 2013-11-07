@@ -17,52 +17,73 @@
 package totem3d.loaders
 {
 
-	import flash.events.Event;
-	
+	import flare.core.Mesh3D;
 	import flare.core.Pivot3D;
 	import flare.loaders.Flare3DLoader;
-	
+
+	import flash.events.Event;
+
 	import gorilla.resource.DataResource;
 	import gorilla.resource.Resource;
 	import gorilla.resource.ResourceManager;
-	
+
 	import totem.monitors.AbstractMonitorProxy;
 	import totem.time.Stopwatch;
-	
-	import totem3d.core.param.AnimationParam;
+	import totem.utils.objectpool.ObjectPoolManager;
+
+	import totem3d.components.Mesh3DComponent;
+	import totem3d.utils.meshpool.Mesh3DPoolFactory;
+	import totem3d.utils.meshpool.Mesh3DPoolHelper;
 
 	public class Flare3DModelLoader extends AbstractMonitorProxy implements IModel3DLoader
 	{
 
+		public var meshID : *;
+
+		public var meshName : String;
+
+		public var poolMesh : Boolean = true;
+
 		public var sceneLoader : Flare3DLoader;
 
-		private var animationParamsList : Vector.<AnimationParam>;
+		private var component : Mesh3DComponent;
 
 		private var forceReload : Boolean;
 
+		private var mesh : Mesh3D;
+
+		private var timer : Stopwatch;
+
 		private var url : String;
 
-		private var timer:Stopwatch;
-
-		public function Flare3DModelLoader( url : String, params : Vector.<AnimationParam> = null, reload : Boolean = false )
+		public function Flare3DModelLoader( url : String, id : String = "", reload : Boolean = false )
 		{
-			super( url );
+			super( id || url );
 
 			forceReload = reload;
 
 			this.url = url;
 
-			this.animationParamsList = params;
+		}
+
+		public function addComponent( component : Mesh3DComponent ) : void
+		{
+
+			this.component = component;
+
 		}
 
 		override public function destroy() : void
 		{
 			super.destroy();
 
-			animationParamsList = null;
-
 			sceneLoader.dispose();
 			sceneLoader = null;
+		}
+
+		public function getMesh() : Pivot3D
+		{
+			return mesh;
 		}
 
 		override public function start() : void
@@ -71,40 +92,45 @@ package totem3d.loaders
 
 			timer = new Stopwatch();
 			timer.start();
-			
+
 			var resource : Resource = ResourceManager.getInstance().load( url, DataResource, forceReload );
 			resource.completeCallback( handleDataLoaded );
 			resource.failedCallback( handleDataFailed );
-			
-			
+
 			//sceneLoader = new Flare3DLoader( url );
 			//sceneLoader.addEventListener( Event.COMPLETE, handleModelLoaded, false, 0, true );
 			//sceneLoader.load();
-			
+
 		}
 
 		protected function handleModelLoaded( event : Event ) : void
 		{
 
-			
 			// unload the data source or it will just stay around.
 			ResourceManager.getInstance().unload( url, DataResource );
 
-			
 			timer.stop();
-			trace("timer for load model! " + timer.time );
-			// objectpool
-			// register with sessioncache
-
 			sceneLoader.removeEventListener( Event.COMPLETE, handleModelLoaded );
+
+			//mesh =  new Box("test", 50, 50, 50 ); 
+
+			mesh = sceneLoader.getChildByName( meshName ) as Mesh3D;
+
+			if ( poolMesh )
+			{
+				var objectPoolManager : ObjectPoolManager = ObjectPoolManager.getInstance();
+				objectPoolManager.initObjectPool( meshID, 1, false, new Mesh3DPoolFactory( mesh ), new Mesh3DPoolHelper());
+				mesh = objectPoolManager.checkOut( meshID ) as Mesh3D;
+			}
+
+			mesh.animationEnabled = false;
+			mesh.stop();
+
+			component.mesh = mesh;
+
 			complete();
 		}
 
-		public function getMesh ( value : String ) : Pivot3D
-		{
-			return sceneLoader.getChildByName( value );
-		}
-			
 		private function handleDataFailed( resouce : Resource ) : void
 		{
 			throw new Error( "Failed to load mesh " + url );

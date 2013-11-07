@@ -136,6 +136,11 @@ package totem.components.spatial
 		{
 			return _rotationZ;
 		}
+		
+		override public function onTick():void
+		{
+			dispatchUpdate();
+		}
 
 		public function set rotationZ( value : Number ) : void
 		{

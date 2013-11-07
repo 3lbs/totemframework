@@ -13,8 +13,12 @@ package totem.monitors
 
 		public function requires( ... args ) : void
 		{
+			
 			for each ( var obj : IStartMonitor in args )
 			{
+				if ( obj == null )
+					continue;
+				
 				_requires.push( obj );
 			}
 		}

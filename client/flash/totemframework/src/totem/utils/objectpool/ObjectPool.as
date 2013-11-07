@@ -71,7 +71,7 @@ package totem.utils.objectpool
 				node.next = null;
 				
 				if ( _helper )
-					_helper.destroy( node.data );
+					_helper.dispose( node.data );
 				
 				node.data = null;
 				node = t;

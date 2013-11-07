@@ -16,8 +16,6 @@ package totem.core.params
 
 		private var _name : String;
 
-		private var _empty : Boolean;
-
 		/**
 		 *
 		 */
@@ -47,24 +45,6 @@ package totem.core.params
 
 		/**
 		 *
-		 * @param value
-		 */
-		public function set type( value : Object ) : void
-		{
-			_type = value;
-		}
-
-		/**
-		 *
-		 * @return Object type
-		 */
-		public function get type() : Object
-		{
-			return _type;
-		}
-
-		/**
-		 *
 		 * @return Object Instance human readable name
 		 */
 		public function get name() : String
@@ -79,16 +59,6 @@ package totem.core.params
 		public function set name( value : String ) : void
 		{
 			_name = value;
-		}
-
-
-		/**
-		 *
-		 * @return
-		 */
-		public function isEmpty() : Boolean
-		{
-			return _empty;
 		}
 
 	}

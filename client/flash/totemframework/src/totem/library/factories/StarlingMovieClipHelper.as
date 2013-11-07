@@ -43,7 +43,7 @@ package totem.library.factories
 
 		}
 
-		public function destroy( item : * ) : void
+		public function dispose( item : * ) : void
 		{
 			if ( item.hasOwnProperty( "dispose" ))
 				item.dispose();

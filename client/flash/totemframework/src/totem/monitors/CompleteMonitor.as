@@ -19,7 +19,7 @@ package totem.monitors
 
 	import flash.events.Event;
 	
-	import totem.monitors.promise.wait;
+	import totem.totem_internal;
 
 	public class CompleteMonitor extends AbstractMonitorProxy implements IListID
 	{
@@ -36,11 +36,11 @@ package totem.monitors
 
 		private var runningProcess : int;
 
-		public function CompleteMonitor( id : String = "", type : int = MAX )
+		public function CompleteMonitor( id : String = "", loadLimit : int = MAX )
 		{
 			super( id );
 
-			processAllowed = type;
+			processAllowed = loadLimit;
 
 			_resources = new Vector.<IStartMonitor>();
 		}
@@ -101,7 +101,7 @@ package totem.monitors
 
 			_failedCount = 0;
 
-			if ( !doStartResource() )
+			if ( !doStartResource())
 			{
 				finished();
 			}
@@ -135,18 +135,18 @@ package totem.monitors
 		{
 			if ( _resources == null || _resources.length == 0 )
 				return false;
-			
+
 			var proxy : IStartMonitor;
 			var l : int = _resources.length;
 			var i : int;
-			
+
 			var isBuilding : Boolean;
 
 			for ( i = 0; i < _resources.length; ++i )
 			{
 				proxy = _resources[ i ];
 
-				if ( proxy.status == AbstractMonitorProxy.COMPLETE || proxy.status == AbstractMonitorProxy.FAILED  )
+				if ( proxy.status == AbstractMonitorProxy.COMPLETE || proxy.status == AbstractMonitorProxy.FAILED )
 				{
 					continue;
 				}
@@ -165,15 +165,15 @@ package totem.monitors
 								if ( IRequireMonitor( proxy ).canStart())
 								{
 									runningProcess++;
-									proxy.start();
-									//wait( 2, proxy.start );
+									AbstractMonitorProxy( proxy ).totem_internal::start();
+										//wait( 2, proxy.start );
 								}
 							}
 							else
 							{
 								runningProcess++;
-								proxy.start();
-								//wait( 2, proxy.start );
+								AbstractMonitorProxy( proxy ).totem_internal::start();
+									//wait( 2, proxy.start );
 							}
 						}
 						else
@@ -190,7 +190,7 @@ package totem.monitors
 		{
 			var target : IStartMonitor = eve.target as IStartMonitor;
 			target.removeEventListener( eve.type, onComplete );
-			
+
 			if ( target.isFailed )
 			{
 				_failedCount += 1;
@@ -199,7 +199,7 @@ package totem.monitors
 			runningProcess--;
 
 			// if no resources to start.. FINISH
-			if ( !doStartResource() )
+			if ( !doStartResource())
 			{
 				finished();
 			}

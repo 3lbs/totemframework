@@ -18,6 +18,7 @@ package totem.utils
 {
 
 	import flash.display.Stage;
+	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
 
 	import org.casalib.util.StageReference;
@@ -45,6 +46,8 @@ package totem.utils
 		private static const _IPHONE_RETINA_WIDTH : uint = 640;
 
 		private static var _STAGE : Stage;
+
+		private static var _viewRect : Rectangle;
 
 		public static function get iOS_MARGIN() : uint
 		{
@@ -167,6 +170,14 @@ package totem.utils
 			}
 			else
 				return false;
+		}
+
+		public static function viewRect() : Rectangle
+		{
+			if ( !_STAGE )
+				_STAGE = StageReference.getStage();
+
+			return _viewRect ||= ( isIOS() || isAndroid() ? new Rectangle( 0, 0, _STAGE.fullScreenWidth, _STAGE.fullScreenHeight ) : new Rectangle( 0, 0, _STAGE.stageWidth, _STAGE.stageHeight ));
 		}
 	}
 }

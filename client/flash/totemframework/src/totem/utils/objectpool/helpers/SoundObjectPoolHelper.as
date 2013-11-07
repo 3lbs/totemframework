@@ -15,7 +15,7 @@ package totem.utils.objectpool.helpers
 
 		}
 		
-		public function destroy ( item : * ) : void
+		public function dispose ( item : * ) : void
 		{
 			
 		}

@@ -26,9 +26,9 @@ package totem.core.task.util
 		{
 			super.doStart();
 
-			atlasLoader = new AtlasDataLoader( atlasURL, spriteName, false );
+			/*atlasLoader = new AtlasDataLoader( atlasURL, spriteName, false );
 			atlasLoader.addEventListener( Event.COMPLETE, handleAtlasComplete );
-			atlasLoader.start();
+			atlasLoader.start();*/
 		}
 
 		protected function handleAtlasComplete( event : Event ) : void

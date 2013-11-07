@@ -17,6 +17,8 @@
 package totem.display.scenes
 {
 
+	import ladydebug.Logger;
+
 	import totem.core.System;
 	import totem.display.layout.ScreenComposite;
 
@@ -42,6 +44,10 @@ package totem.display.scenes
 			if ( _screenStateMachine.getState( screenName ) != null && _screenStateMachine.currentStateName != screenName )
 			{
 				transitionTask.setCurrentState( screenName )
+			}
+			else
+			{
+				Logger.warn( this, "changeScreen", "ScreenName Does not exsits: " + screenName );
 			}
 		}
 

@@ -40,6 +40,10 @@ package totem.core.mvc
 
 		function get progressMonitor() : IProgressMonitor;
 
-		function registerManager( clazz : Class, instance : *, doInjectInto : Boolean = true ) : *
+		function registerManager( clazz : Class, instance : *, doInjectInto : Boolean = true ) : *;
+		
+		function getManager( clazz : Class ) : *;
+		
+		function getEntity( name : String ) : TotemEntity;
 	}
 }

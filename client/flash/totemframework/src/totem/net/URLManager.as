@@ -18,18 +18,18 @@ package totem.net
 {
 
 	import flash.filesystem.File;
-
+	
 	import ladydebug.Logger;
 
 	public class URLManager
 	{
 		public static var ASSET_URL : URLManager;
 
-		public static var fileSeperator : String;
+		public static var fileSeperator : String = File.separator;
 
 		public static function instance( url : String ) : URLManager
 		{
-			return new URLManager( url, new SingletonEnforcer());
+			return new URLManager( url + File.separator, new SingletonEnforcer());
 		}
 
 		private var _file : File;

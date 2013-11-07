@@ -20,8 +20,6 @@ package totem.core.params
 	public class URLAssetParam extends BaseParam
 	{
 
-		public var embeded : Boolean;
-
 		private var _url : String;
 
 		public function URLAssetParam()

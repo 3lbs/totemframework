@@ -24,6 +24,8 @@ package totem.display.scenes
 	public class SceneState extends Destroyable implements ISceneState
 	{
 
+		public static const NO_TRANSITION : String = "NoTransition";
+
 		public static const TRANSITION_IMAGE : String = "UseImageForTransition";
 
 		public static const TRANSITION_QUICK : String = "QuickTransitionNoImage";

@@ -4,7 +4,6 @@
     <classEntry path="totem3d.actors.commands.builder.LoadMD2Command"/>
     <classEntry path="totem3d.core.flare3d_include"/>
     <classEntry path="totem3d.loaders.Flare3DModelLoader"/>
-    <classEntry path="totem3d.utils.meshpool.MeshPoolManager"/>
     <classEntry path="totem3d.enums.PhysicPrimativeEnum"/>
     <classEntry path="totem3d.components.MeshInputComponent"/>
     <classEntry path="AI.steering.Moving2DComponent"/>
@@ -55,6 +54,13 @@
     <classEntry path="AI.pathfinding.PathEdge"/>
     <classEntry path="AI.collision.ICollision"/>
     <classEntry path="AI.collision.ACollider"/>
+    <classEntry path="totem3d.core.param.TextureCompositeParam"/>
+    <classEntry path="totem3d.loaders.IShader3DBuilder"/>
+    <classEntry path="totem3d.loaders.Flare3DMonitor"/>
+    <classEntry path="totem3d.utils.meshpool.Mesh3DPoolFactory"/>
+    <classEntry path="totem3d.utils.meshpool.Mesh3DPoolHelper"/>
+    <classEntry path="totem3d.core.model.Flare3DViewer3DModel"/>
+    <classEntry path="totem3d.core.model.ITotemView3D"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

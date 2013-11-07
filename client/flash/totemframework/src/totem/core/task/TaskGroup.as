@@ -133,9 +133,9 @@ package totem.core.task
 			return _autoStart;
 		}
 
-		public function set autoStart( autoStart : Boolean ) : void
+		public function set autoStart( value : Boolean ) : void
 		{
-			_autoStart = autoStart;
+			_autoStart = value;
 
 			if ( _autoStart && state == TaskState.INACTIVE && !allTasks.isEmpty())
 			{

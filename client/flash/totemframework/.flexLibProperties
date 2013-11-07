@@ -130,6 +130,46 @@
     <classEntry path="totem.display.components.MultiStateButton"/>
     <classEntry path="totem.display.components.ButtonState"/>
     <classEntry path="application.AppParam"/>
+    <classEntry path="application.loadingscreen.AppLoadingScreen"/>
+    <classEntry path="application.loadingscreen.Intro3lbsScreenTask"/>
+    <classEntry path="application.task.FadeFromTask"/>
+    <classEntry path="application.task.AddDisplayObjectTask"/>
+    <classEntry path="application.task.FadeToTask"/>
+    <classEntry path="application.task.DelayTask"/>
+    <classEntry path="application.task.RemoveDisplayObjectTask"/>
+    <classEntry path="totem.core.task.RandomSequenceTask"/>
+    <classEntry path="totem.core.TotemStarlingContext"/>
+    <classEntry path="totem.utils.ColorUtil"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.analyzers.SmartClippingAnalyzer"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.BasicTile"/>
+    <classEntry path="totem.pathfinder.astar.basic3d.GravityMap3D"/>
+    <classEntry path="totem.pathfinder.astar.core.IAstarTile"/>
+    <classEntry path="totem.pathfinder.astar.core.AstarError"/>
+    <classEntry path="totem.pathfinder.astar.basic3d.BasicTile3D"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.Map"/>
+    <classEntry path="totem.pathfinder.astar.core.Analyzer"/>
+    <classEntry path="totem.pathfinder.astar.basic3d.analyzers.GravityAnalyzer"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.analyzers.OccupationAnalyzer"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.analyzers.IHeightTile"/>
+    <classEntry path="totem.pathfinder.astar.basic3d.analyzers.FullClipping3DAnalyzer"/>
+    <classEntry path="totem.pathfinder.astar.core.DataTile"/>
+    <classEntry path="totem.pathfinder.astar.core.AstarEvent"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.analyzers.IOccupationTile"/>
+    <classEntry path="totem.pathfinder.astar.basic3d.Map3D"/>
+    <classEntry path="totem.pathfinder.astar.core.Astar"/>
+    <classEntry path="totem.pathfinder.astar.core.IMap"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.analyzers.WalkableAnalyzer"/>
+    <classEntry path="totem.pathfinder.astar.core.AstarPath"/>
+    <classEntry path="totem.pathfinder.astar.core.ICostTile"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.analyzers.FullClippingAnalyzer"/>
+    <classEntry path="totem.pathfinder.astar.core.PathRequest"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.IWalkableTile"/>
+    <classEntry path="totem.pathfinder.astar.basic3d.Point3D"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.IPositionTile"/>
+    <classEntry path="totem.pathfinder.astar.basic3d.IWalkable3DTile"/>
+    <classEntry path="totem.pathfinder.astar.basic2d.analyzers.HeightAnalyzer"/>
+    <classEntry path="totem.utils.DrawUtil"/>
+    <classEntry path="totem.input.InputEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

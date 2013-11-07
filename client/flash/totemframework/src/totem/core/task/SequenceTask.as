@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 /*
  * Copyright 2007 the original author or authors.
  *
@@ -52,24 +68,7 @@ package totem.core.task
 		/**
 		 * @private
 		 */
-		protected override function handleRemovedTask( t : Task, index : uint ) : void
-		{
-			if ( index <= currentIndex )
-				currentIndex--;
-		}
-
-		/**
-		 * @private
-		 */
-		protected override function handleRemoveAll() : void
-		{
-			currentIndex = 0;
-		}
-
-		/**
-		 * @private
-		 */
-		protected override function doStart() : void
+		override protected function doStart() : void
 		{
 			currentIndex = 0;
 			nextTask();
@@ -78,7 +77,24 @@ package totem.core.task
 		/**
 		 * @private
 		 */
-		protected override function handleTaskComplete( t : Task ) : void
+		override protected function handleRemoveAll() : void
+		{
+			currentIndex = 0;
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function handleRemovedTask( t : Task, index : uint ) : void
+		{
+			if ( index <= currentIndex )
+				currentIndex--;
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function handleTaskComplete( t : Task ) : void
 		{
 			currentIndex++;
 
@@ -96,9 +112,9 @@ package totem.core.task
 
 		private function nextTask() : void
 		{
-			
+
 			trace( allTasks.getSize(), currentIndex );
-			
+
 			if ( allTasks.getSize() == currentIndex )
 			{
 				//logger.info( "Completed all tasks" );
@@ -111,7 +127,6 @@ package totem.core.task
 				startTask( t );
 			}
 		}
-
 	}
 
 }

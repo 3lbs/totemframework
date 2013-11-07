@@ -17,19 +17,21 @@
 package totem3d.components
 {
 
-	import flare.basic.Scene3D;
-	import flare.core.Mesh3D;
-	import flare.core.Pivot3D;
-
 	import flash.events.Event;
 	import flash.geom.Vector3D;
-
+	
+	import flare.basic.Scene3D;
+	import flare.core.Mesh3D;
+	
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-
+	
 	import totem.core.TotemComponent;
-
+	import totem.utils.objectpool.ObjectPoolManager;
+	
 	import totem3d.loaders.IModel3DLoader;
+	import totem3d.utils.meshpool.Mesh3DPoolFactory;
+	import totem3d.utils.meshpool.Mesh3DPoolHelper;
 
 	/**
 	 *
@@ -65,6 +67,8 @@ package totem3d.components
 		private var _meshName : String;
 
 		private var _meshStatus : int = EMPTY;
+
+		private var _poolMesh : Boolean = true;
 
 		private var _scale : Number = 1;
 
@@ -179,13 +183,6 @@ package totem3d.components
 			_meshID = value;
 		}
 
-		public function meshLoader( value : IModel3DLoader ) : void
-		{
-			loader = value;
-			loader.addEventListener( Event.COMPLETE, handleMeshLoadComplete );
-
-		}
-
 		public function get meshName() : String
 		{
 			return _meshName;
@@ -199,6 +196,16 @@ package totem3d.components
 		public function get meshStatus() : int
 		{
 			return _meshStatus;
+		}
+
+		public function get poolMesh() : Boolean
+		{
+			return _poolMesh;
+		}
+
+		public function set poolMesh( value : Boolean ) : void
+		{
+			_poolMesh = value;
 		}
 
 		/**
@@ -357,26 +364,21 @@ package totem3d.components
 			meshUpdate.removeAll();
 			meshUpdate = null;
 
+			if ( poolMesh )
+			{
+				var objectPoolManager : ObjectPoolManager = ObjectPoolManager.getInstance();
+				objectPoolManager.checkIn( _mesh, meshID );
+			}
+			else
+			{
+				_mesh.dispose();
+			}
+
 			_mesh = null;
 		}
 
 		private function addListeners() : void
 		{
-		}
-
-		private function handleMeshLoadComplete( event : Event ) : void
-		{
-			//mesh =  new Box("test", 50, 50, 50 ); 
-
-			mesh = loader.getMesh( _meshName ) as Mesh3D;
-
-			trace( mesh.isPlaying );
-			mesh.animationEnabled = false;
-			mesh.stop();
-			trace( mesh.isPlaying );
-			//mesh.gotoAndPlay( "walk" );
-			loader.removeEventListener( Event.COMPLETE, handleMeshLoadComplete );
-			loader = null;
 		}
 
 		private function removeListeners() : void

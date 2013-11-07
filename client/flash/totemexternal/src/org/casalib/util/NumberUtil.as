@@ -485,6 +485,21 @@ package org.casalib.util {
 			return (value < 10) ? '0' + value : value.toString();
 		}
 		
+		
+		public static function leftPadding(source:String, targetLength:int, padChar:String = " "):String
+		{
+			if (source.length < targetLength)
+			{
+				var padding:String = "";
+				
+				while (padding.length + source.length < targetLength)
+					padding += padChar;
+				
+				return padding + source;
+			}
+			
+			return source;
+		}
 		/**
 			Spells the provided number.
 			

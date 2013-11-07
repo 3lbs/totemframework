@@ -9,6 +9,7 @@
 //    `-------'      
 //                       
 //   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
@@ -16,19 +17,21 @@
 package totem3d.components
 {
 
-	import flash.events.Event;
-	import flash.utils.Dictionary;
-	
 	import flare.core.Label3D;
 	import flare.core.Mesh3D;
 	import flare.core.Pivot3D;
-	
+
+	import flash.events.Event;
+	import flash.utils.Dictionary;
+
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-	
+
 	import totem.core.time.TickedComponent;
 	import totem.enums.LoadStatusEnum;
-	import totem.monitors.promise.wait;
+	import totem.utils.DestroyUtil;
+
+	import totem3d.loaders.Flare3DAnimationsLoader;
 
 	public class Animator3DComponent extends TickedComponent
 	{
@@ -43,11 +46,13 @@ package totem3d.components
 
 		public var onUpdatePosition : ISignal = new Signal( Animator3DComponent );
 
-		private var animationDictionary : Dictionary;
+		private var animationDictionary : Dictionary = new Dictionary();
 
 		private var animationListStatus : int = LoadStatusEnum.EMPTY;
 
 		private var isPlaying : Boolean = false;
+
+		private var loader : Flare3DAnimationsLoader;
 
 		private var mesh : Mesh3D;
 
@@ -56,12 +61,26 @@ package totem3d.components
 		public function Animator3DComponent()
 		{
 			super();
-			animationDictionary = new Dictionary();
 		}
 
 		public function addAnimationLabel( label : Label3D ) : void
 		{
-			animationDictionary[ label.name ] = label;
+
+		}
+
+		public function getLabel( value : String ) : Label3D
+		{
+
+			var labels : Object = mesh.labels;
+
+			for ( var key : String in labels )
+			{
+				if ( key == value )
+				{
+					return labels[ key ] as Label3D;
+				}
+			}
+			return null;
 		}
 
 		override public function onTick() : void
@@ -82,33 +101,32 @@ package totem3d.components
 		{
 			isPlaying = false;
 
-			
 			//if ( mesh )
 			//	mesh.stop();
 		}
 
 		protected function handleAnimationComplete( event : Event ) : void
 		{
-			trace("complete animation event");
+			trace( "complete animation event" );
 			onAnimationComplete.dispatch( this );
-			
+
 			//stopAnimation();
-			
+
 			//mesh.stop();
-			
-		//	mesh.prevFrame();
+
+			//	mesh.prevFrame();
 			//mesh.gotoAndPlay( "t-pose", 0, Pivot3D.ANIMATION_STOP_MODE );
 		}
 
 		protected function handleMeshUpdateComplete( component : Mesh3DComponent ) : void
 		{
 			stopAnimation();
-			
+
 			if ( mesh )
 			{
 				mesh.removeEventListener( Pivot3D.ANIMATION_COMPLETE_EVENT, handleAnimationComplete );
 			}
-			
+
 			mesh = component.mesh;
 
 			var labels : Object = mesh.labels;
@@ -123,21 +141,22 @@ package totem3d.components
 			//mesh.gotoAndPlay( "walk", 0, Pivot3D.ANIMATION_LOOP_MODE );
 			//mesh.gotoAndPlay( "t-pose", 0, Pivot3D.ANIMATION_STOP_MODE );
 			//stopAnimation();
+
+			mesh.animationEnabled = true;
 			mesh.gotoAndStop( 1 );
-			wait( 500, handleAnimationDelay );
 		}
-		
-		private function handleAnimationDelay () : void
-		{
-			mesh.gotoAndStop( 1 );
-			mesh.stop();
-		}
-		
+
 		override protected function onAdd() : void
 		{
 			super.onAdd();
 
 			meshComponent.meshUpdate.add( handleMeshUpdateComplete );
+
+			if ( meshComponent.meshStatus == Mesh3DComponent.LOADED )
+			{
+				handleMeshUpdateComplete( meshComponent );
+			}
+
 			registerForTicks = true;
 		}
 
@@ -151,19 +170,12 @@ package totem3d.components
 			{
 				mesh.removeEventListener( Pivot3D.ANIMATION_COMPLETE_EVENT, handleAnimationComplete );
 			}
-				
-			
+
 			mesh = null;
 
 			if ( animationDictionary )
 			{
-				for ( var key : String in animationDictionary )
-				{
-					animationDictionary[ key ] = null;
-					delete animationDictionary[ key ];
-				}
-
-				animationDictionary = null;
+				DestroyUtil.destroyDictionary( animationDictionary );
 			}
 
 			onUpdatePosition.removeAll();

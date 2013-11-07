@@ -32,6 +32,8 @@ package totem.monitors
 		function start() : void;
 
 		function get status() : Number;
+		
+		function unloadData () : void;
 	}
 }
 

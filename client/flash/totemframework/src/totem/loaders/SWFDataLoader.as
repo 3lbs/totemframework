@@ -29,7 +29,7 @@ package totem.loaders
 
 		public var swfResource : SWFResource;
 
-		private var url : String;
+		protected var url : String;
 
 		public function SWFDataLoader( url : String, id : String = "" )
 		{

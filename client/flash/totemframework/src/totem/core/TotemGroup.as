@@ -17,11 +17,14 @@
 package totem.core
 {
 
+	import flash.utils.Dictionary;
+	
 	import avmplus.getQualifiedClassName;
-
+	
 	import org.swiftsuspenders.Injector;
-
+	
 	import totem.totem_internal;
+	import totem.utils.DestroyUtil;
 
 	use namespace totem_internal;
 
@@ -38,6 +41,8 @@ package totem.core
 		protected var _items : Vector.<TotemObject> = new Vector.<TotemObject>();
 
 		private var entityCounter_ : int = 0;
+
+		private var managerMap : Dictionary = new Dictionary();
 
 		public function TotemGroup( _name : String = null )
 		{
@@ -89,6 +94,10 @@ package totem.core
 			while ( length )
 				getTotemObjectAt( length - 1 ).destroy();
 
+			
+			DestroyUtil.destroyDictionary( managerMap );
+			managerMap = null;
+			
 			// Shut down the managers we own.
 			if ( injector )
 			{
@@ -224,6 +233,8 @@ package totem.core
 			{
 				( instance as ITotemSystem ).initialize();
 			}
+
+			managerMap[ shortName ] = clazz;
 
 			return instance;
 		}

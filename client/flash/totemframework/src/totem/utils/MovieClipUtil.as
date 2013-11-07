@@ -43,7 +43,9 @@ package totem.utils
 		public static function stopAllAnimation( target : DisplayObjectContainer ) : void
 		{
 			if ( target is MovieClip )
+			{
 				MovieClip( target ).stop();
+			}
 
 			var n : int = target.numChildren;
 			var i : int;

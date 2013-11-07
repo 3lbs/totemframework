@@ -55,6 +55,8 @@ package totem.core.mvc.modular.mvcs
 		override public function destroy():void
 		{
 			super.destroy();
+			
+			
 			moduleDispatcher = null;
 		}
 	}

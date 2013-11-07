@@ -9,6 +9,7 @@
 //    `-------'      
 //                       
 //   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
@@ -17,12 +18,20 @@ package totem3d.components
 {
 
 	import flare.core.Mesh3D;
+	import flare.core.Texture3D;
 	import flare.materials.Shader3D;
-	
+	import flare.materials.filters.TextureMapFilter;
+
+	import flash.display.BitmapData;
+	import flash.events.Event;
+
+	import org.casalib.util.StringUtil;
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-	
+
 	import totem.core.TotemComponent;
+
+	import totem3d.loaders.IShader3DBuilder;
 
 	public class TextureMaterialComponent extends TotemComponent
 	{
@@ -33,7 +42,13 @@ package totem3d.components
 
 		public var onUpdateMaterial : ISignal = new Signal( TextureMaterialComponent );
 
-		protected var material : Shader3D;
+		protected var _shader : Shader3D;
+
+		private var _materialName : String;
+
+		private var _textureBitmapData : BitmapData;
+
+		private var loader : IShader3DBuilder;
 
 		private var repeat : Boolean = true;
 
@@ -44,47 +59,78 @@ package totem3d.components
 			super();
 		}
 
-		public function handleMeshUpdate( component : Mesh3DComponent ) : void
+		public function get canApplyMaterial() : Boolean
 		{
-			// handle material builder!
-			applyMaterial();
+			return meshComponent.meshStatus == Mesh3DComponent.LOADED;
 		}
 
-		public function get textureMaterial() : Shader3D
+		public function materialLoader( l : IShader3DBuilder ) : void
 		{
-			return material;
+			loader = l;
+			loader.addEventListener( Event.COMPLETE, handleMaterialComplete );
 		}
 
-		public function set textureMaterial( mat : Shader3D ) : void
+		public function get materialName() : String
 		{
-			if ( mat == material )
+			return _materialName;
+		}
+
+		public function set materialName( value : String ) : void
+		{
+			_materialName = value;
+		}
+
+		public function get shader3D() : Shader3D
+		{
+			return _shader;
+		}
+
+		public function set shader3D( mat : Shader3D ) : void
+		{
+			if ( mat == _shader )
 				return;
 
-			material = mat;
-			applyMaterial();
+			if ( canApplyMaterial && mat )
+			{
+				var mesh : Mesh3D = meshComponent.mesh;
+				mesh.setMaterial( mat );
+
+				if ( _shader )
+				{
+					_shader.dispose();
+				}
+			}
+
+			_shader = mat;
+			onUpdateMaterial.dispatch( this );
+		}
+
+		public function get textureBitmapData() : BitmapData
+		{
+			return _textureBitmapData;
+		}
+
+		public function set textureBitmapData( value : BitmapData ) : void
+		{
+
+			if ( _textureBitmapData == value )
+				return;
+
+			_textureBitmapData = value;
+
+			var texture3D : Texture3D = new Texture3D( _textureBitmapData );
+
+			var bitmapFilter : TextureMapFilter = new TextureMapFilter( texture3D );
+
+			var newShader : Shader3D = new Shader3D( "mat_" + StringUtil.createRandomIdentifier( 4 ), null, true );
+			newShader.filters.push( bitmapFilter );
+			newShader.build()
+
+			shader3D = newShader;
 		}
 
 		public function updateMaterialMethod() : void
 		{
-		}
-
-		protected function applyMaterial() : void
-		{
-			var meshStatus : int = meshComponent.meshStatus;
-
-			// could just test for mesh
-			if ( meshStatus == Mesh3DComponent.LOADED && material )
-			{
-				var mesh : Mesh3D = meshComponent.mesh;
-				//mesh.getMaterialByName( "mElsa" ) as Shader3D;
-
-				//if ( mesh.material == material )
-				//return;
-
-				//mesh.material = material;
-
-				onUpdateMaterial.dispatch( this );
-			}
 		}
 
 		override protected function onAdd() : void
@@ -98,10 +144,9 @@ package totem3d.components
 		{
 			super.onRemove();
 
-			if ( material )
+			if ( _shader )
 			{
-				//TextureMaterialUtil.disposeMaterial( material );
-				material = null;
+				_shader = null;
 			}
 
 			meshComponent = null;
@@ -111,8 +156,16 @@ package totem3d.components
 
 		}
 
-		private function destroyMaterial( mat : * ) : void
+		private function handleMaterialComplete( eve : Event ) : void
 		{
+			shader3D = loader.shader3D;
+			loader.removeEventListener( Event.COMPLETE, handleMaterialComplete );
+			loader = null;
+		}
+
+		private function handleMeshUpdate( component : Mesh3DComponent ) : void
+		{
+			shader3D = _shader;
 		}
 	}
 }

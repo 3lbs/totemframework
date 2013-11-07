@@ -115,7 +115,7 @@ package totem.core.mvc
 
 		}
 
-		private function initializeApplication() : void
+		protected function initializeApplication() : void
 		{
 			initialize();
 			start();

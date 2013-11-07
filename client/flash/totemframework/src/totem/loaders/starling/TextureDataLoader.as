@@ -1,16 +1,32 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.loaders.starling
 {
 
 	import flash.display.BitmapData;
-	
+
 	import gorilla.resource.DataResource;
 	import gorilla.resource.IResource;
 	import gorilla.resource.ImageResource;
 	import gorilla.resource.Resource;
 	import gorilla.resource.ResourceManager;
-	
+
 	import starling.textures.Texture;
-	
+
 	import totem.monitors.RequiredProxy;
 	import totem.utils.URLUtil;
 
@@ -18,41 +34,62 @@ package totem.loaders.starling
 	{
 		protected var filename : String;
 
-		private var fileType : String;
+		private var _bitmapData : BitmapData;
 
 		private var _texture : Texture;
 
-		private var generateMipMaps : Boolean;
+		private var fileType : String;
 
-		private var _bitmapData : BitmapData;
+		private var generateMipMaps : Boolean;
 
 		public function TextureDataLoader( url : String, genMipMap : Boolean, id : String = "" )
 		{
 			this.id = id || url;
 
+			generateMipMaps = genMipMap;
 			filename = url;
 		}
 
-		public function get bitmapData():BitmapData
+		public function get bitmapData() : BitmapData
 		{
 			return _bitmapData;
+		}
+
+		override public function destroy() : void
+		{
+			super.destroy();
+			_texture = null;
+
+			unloadData();
+
+			_bitmapData = null;
 		}
 
 		override public function start() : void
 		{
 			super.start();
-			
+			loadTextureImage();
+		}
+
+		public function get texture() : Texture
+		{
+			return _texture;
+		}
+
+		override public function unloadData() : void
+		{
+			var resourceClass : Class = ( fileType == "atf" ) ? DataResource : ImageResource;
+			ResourceManager.getInstance().unload( filename, resourceClass );
+		}
+
+		protected function loadTextureImage() : void
+		{
 			fileType = URLUtil.getFileExtension( filename );
 			var resourceClass : Class = ( fileType == "atf" ) ? DataResource : ImageResource;
 
 			var resource : IResource = ResourceManager.getInstance().load( filename, resourceClass );
 			resource.completeCallback( onBitmapComplete );
 			resource.failedCallback( onFailed );
-		}
-
-		private function onFailed( resource : Resource ) : void
-		{
-			failed();
 		}
 
 		private function onBitmapComplete( resource : Resource ) : void
@@ -71,16 +108,9 @@ package totem.loaders.starling
 			finished();
 		}
 
-		override public function destroy() : void
+		private function onFailed( resource : Resource ) : void
 		{
-			super.destroy();
-			_texture = null;
-			_bitmapData = null;
-		}
-
-		public function get texture() : Texture
-		{
-			return _texture;
+			failed();
 		}
 	}
 }

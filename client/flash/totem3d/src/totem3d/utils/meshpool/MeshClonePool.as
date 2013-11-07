@@ -1,26 +1,36 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem3d.utils.meshpool
 {
 
-	import flash.utils.Dictionary;
-	
 	import flare.core.Mesh3D;
+
+	import flash.utils.Dictionary;
 
 	public class MeshClonePool
 	{
 		public var initItem : Mesh3D;
 
-		private var pool : Array;
-
 		private var meshPool : Dictionary = new Dictionary();
 
-		public function get currentSize() : int
-		{
-			return pool.length;
-		}
+		private var pool : Array;
 
-		public function initialze( item : Mesh3D ) : void
+		public function checkIn( item : Mesh3D ) : void
 		{
-			initItem = item;
 			meshPool[ item ] = 0;
 		}
 
@@ -40,30 +50,18 @@ package totem3d.utils.meshpool
 			return key;
 		}
 
-		public function checkIn( item : Mesh3D ) : void
+		public function clone() : Mesh3D
 		{
-			meshPool[ item ] = 0;
+			return initItem.clone() as Mesh3D;
 		}
 
-		private function getEmptyNode() : Mesh3D
+		public function get currentSize() : int
 		{
-			for ( var key : * in meshPool )
-			{
-				if ( meshPool[ key ] == 0 )
-					return key;
-			}
-			return null;
+			return pool.length;
 		}
 
-		public function resetAllMeshes() : void
+		public function destroy() : void
 		{
-			for ( var key : * in meshPool )
-				meshPool[ key ] = 0;
-		}
-
-		public function get intstanceCount() : int
-		{
-			return getAllMeshes().length;
 		}
 
 		public function getAllMeshes() : Array
@@ -73,6 +71,17 @@ package totem3d.utils.meshpool
 			for ( var key : * in meshPool )
 				keys.push( key );
 			return keys;
+		}
+
+		public function initialze( item : Mesh3D ) : void
+		{
+			initItem = item;
+			meshPool[ item ] = 0;
+		}
+
+		public function get intstanceCount() : int
+		{
+			return getAllMeshes().length;
 		}
 
 		public function purge() : void
@@ -88,13 +97,20 @@ package totem3d.utils.meshpool
 			}
 		}
 
-		public function clone() : Mesh3D
+		public function resetAllMeshes() : void
 		{
-			return initItem.clone() as Mesh3D;
+			for ( var key : * in meshPool )
+				meshPool[ key ] = 0;
 		}
 
-		public function destroy() : void
+		private function getEmptyNode() : Mesh3D
 		{
+			for ( var key : * in meshPool )
+			{
+				if ( meshPool[ key ] == 0 )
+					return key;
+			}
+			return null;
 		}
 	}
 }

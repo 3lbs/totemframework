@@ -42,7 +42,13 @@ package totem.loaders
 		override public function destroy() : void
 		{
 			super.destroy();
+			unloadData();
 			_JSONData = null;
+		}
+		
+		override public function unloadData():void
+		{
+			ResourceManager.getInstance().unload( filename, JSONDataLoader );
 		}
 
 		public function get JSONData() : Object
