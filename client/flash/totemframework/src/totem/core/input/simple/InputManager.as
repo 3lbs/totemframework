@@ -11,9 +11,7 @@ package totem.core.input.simple
 
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
-
-	import gorilla.resource.ResourceManager;
-
+	
 	import totem.core.time.ITicked;
 	import totem.events.RemovableEventDispatcher;
 

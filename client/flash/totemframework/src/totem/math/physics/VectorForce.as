@@ -52,7 +52,7 @@ package totem.math.physics
 		{
 			if ( scaleMass )
 			{
-				value.Set ( fvx * invmass, fvy * invmass );
+				value.setTo ( fvx * invmass, fvy * invmass );
 			}
 			return value;
 		}

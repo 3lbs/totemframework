@@ -170,6 +170,8 @@
     <classEntry path="totem.pathfinder.astar.basic2d.analyzers.HeightAnalyzer"/>
     <classEntry path="totem.utils.DrawUtil"/>
     <classEntry path="totem.input.InputEvent"/>
+    <classEntry path="totem.components.input.TouchInputComponent"/>
+    <classEntry path="totem.components.input.InputController"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
