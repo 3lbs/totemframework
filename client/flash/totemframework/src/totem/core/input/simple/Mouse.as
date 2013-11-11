@@ -94,11 +94,11 @@ package totem.core.input.simple
             _x = _stage.mouseX;
             _y = _stage.mouseY;
             
-            //calculate difference between frames
+
             _dx = _x - _prevX;
             _dy = _y - _prevY;
             
-            //handle initial NaN exceptions when stage starts up
+            //handle initial NaN excepwtions when stage starts up
             if (isNaN(_dx)) _dx = 0;
             if (isNaN(_dy)) _dy = 0;
             

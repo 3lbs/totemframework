@@ -75,7 +75,7 @@ package application.loadingscreen
 			FRAME_RATE = stage.frameRate;
 			stage.frameRate = 30;
 
-			var _urlRequest : URLRequest = new URLRequest( "../resources/assets/intro3lbsmachine.swf" );
+			var _urlRequest : URLRequest = new URLRequest( "../resources/assets/intro3lbsmachine_portrait.swf" );
 			_loader = new Loader();
 			var _lc : LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain, null );
 
