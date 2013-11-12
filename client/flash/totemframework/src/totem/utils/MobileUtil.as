@@ -20,7 +20,7 @@ package totem.utils
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
-
+	
 	import org.casalib.util.StageReference;
 
 	/**
@@ -178,6 +178,16 @@ package totem.utils
 				_STAGE = StageReference.getStage();
 
 			return _viewRect ||= ( isIOS() || isAndroid() ? new Rectangle( 0, 0, _STAGE.fullScreenWidth, _STAGE.fullScreenHeight ) : new Rectangle( 0, 0, _STAGE.stageWidth, _STAGE.stageHeight ));
+		}
+		
+		public static function getViewWidth () : Number
+		{
+			return viewRect().width;
+		}
+		
+		public static function getViewHeight () : Number
+		{
+			return viewRect().height;
 		}
 	}
 }
