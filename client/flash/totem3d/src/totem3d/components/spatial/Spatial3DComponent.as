@@ -14,7 +14,7 @@
 //
 //------------------------------------------------------------------------------
 
-package totem3d.components
+package totem3d.components.spatial
 {
 
 	import flash.geom.Vector3D;
@@ -28,15 +28,16 @@ package totem3d.components
 	import org.osflash.signals.Signal;
 	
 	import totem.totem_internal;
-	import totem.components.spatial.ISpatialObject;
 	import totem.core.params.TransformParam;
 	import totem.core.time.TickedComponent;
 	import totem.math.AABBox;
 	import totem.math.Vector2D;
+	
+	import totem3d.components.Mesh3DComponent;
 
 	use namespace totem_internal;
 
-	public class Spatial3DComponent extends TickedComponent implements ISpatialObject
+	public class Spatial3DComponent extends TickedComponent implements ISpatial3D
 	{
 		public static const NAME : String = "spatialComponent";
 

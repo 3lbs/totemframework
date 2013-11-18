@@ -14,16 +14,16 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.monitors
+package totem.monitors.startupmonitor
 {
 
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-
-	import totem.events.RemovableEventDispatcher;
+	
+	import totem.monitors.AbstractMonitorProxy;
 	import totem.structures.lists.SLinkedList;
 
-	public class EventMonitor extends RemovableEventDispatcher
+	public class EventMonitor extends AbstractMonitorProxy
 	{
 		protected var _monitors : SLinkedList;
 
@@ -71,7 +71,7 @@ package totem.monitors
 
 			if ( _monitors.size == 0 )
 			{
-				dispatchEvent( new Event( Event.COMPLETE ));
+				finished();
 			}
 		}
 	}

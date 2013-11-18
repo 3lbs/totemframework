@@ -20,8 +20,10 @@ package AI.spatial
 	import AI.boid.Boid2DComponent;
 	
 	import totem.totem_internal;
-	import totem.components.spatial.ISpatialObject;
+	import totem.components.spatial.ISpatial2D;
 	import totem.events.RemovableEventDispatcher;
+	
+	import totem3d.components.spatial.ISpatial3D;
 
 	public class BoidSpatialManager extends RemovableEventDispatcher
 	{
@@ -52,7 +54,7 @@ package AI.spatial
 			var xSep : Number;
 			var ySep : Number;
 			var entityDist : Number;
-			var neighborComponent : ISpatialObject;
+			var neighborComponent : ISpatial3D;
 
 			while ( boidObjectList.hasNext())
 			{
@@ -93,7 +95,7 @@ package AI.spatial
 			var xSep : Number;
 			var ySep : Number;
 			var entityDist : Number;
-			var neighborComponent : ISpatialObject;
+			var neighborComponent : ISpatial3D;
 
 			while ( boidObjectList.hasNext())
 			{
@@ -151,15 +153,15 @@ package AI.spatial
 			return closestBoid;
 		}
 
-		public function getNearestEntityOfType( prop : Object, type : String, boidComponent : Boid2DComponent ) : ISpatialObject
+		public function getNearestEntityOfType( prop : Object, type : String, boidComponent : Boid2DComponent ) : ISpatial3D
 		{
 			var dist : Number = Number.POSITIVE_INFINITY;
 
 			var xSep : Number;
 			var ySep : Number;
 			var entityDist : Number;
-			var neighborComponent : ISpatialObject;
-			var result : ISpatialObject;
+			var neighborComponent : ISpatial3D;
+			var result : ISpatial3D;
 
 			while ( boidObjectList.hasNext())
 			{
@@ -196,12 +198,12 @@ package AI.spatial
 			return boidObjectList.hasItem( item );
 		}
 
-		totem_internal function addSpatialObject( object : ISpatialObject ) : void
+		totem_internal function addSpatialObject( object : ISpatial3D ) : void
 		{
 			boidObjectList.add( object );
 		}
 		
-		totem_internal function removeSpatialObject( object:ISpatialObject):void
+		totem_internal function removeSpatialObject( object:ISpatial3D):void
 		{
 			boidObjectList.removeItem( object );			
 		}

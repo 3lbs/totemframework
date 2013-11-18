@@ -3,19 +3,22 @@ package totem.monitors
 	
 	public class RequiredProxy extends AbstractMonitorProxy implements IRequireMonitor
 	{
-		private var _requires : Vector.<IStartMonitor>;
+		private var _requires : Vector.<IMonitor>;
 
 		public function RequiredProxy( id : String = "" )
 		{
 			super( id );
 
-			_requires = new Vector.<IStartMonitor>();
+			_requires = new Vector.<IMonitor>();
 
 		}
 
 		public function requires( ... args ) : void
 		{
-			for each ( var obj : IStartMonitor in args )
+			if ( !args )
+				return;
+			
+			for each ( var obj : IMonitor in args )
 			{
 				_requires.push( obj );
 			}
@@ -30,7 +33,7 @@ package totem.monitors
 			}
 
 			// test all the dependent proxy are ready
-			for each ( var proxy : IStartMonitor in _requires )
+			for each ( var proxy : IMonitor in _requires )
 			{
 				if ( proxy.isComplete() == false )
 				{
@@ -44,7 +47,7 @@ package totem.monitors
 		public function getItemByID( value : * ) : *
 		{
 
-			for each ( var dispatcher : IStartMonitor in _requires )
+			for each ( var dispatcher : IMonitor in _requires )
 			{
 				if ( dispatcher.id == value )
 					return dispatcher;

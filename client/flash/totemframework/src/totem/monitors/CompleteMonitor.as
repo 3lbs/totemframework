@@ -28,7 +28,7 @@ package totem.monitors
 
 		public var data : Object;
 
-		protected var _resources : Vector.<IStartMonitor>;
+		protected var _resources : Vector.<IMonitor>;
 
 		private var _failedCount : int;
 
@@ -42,7 +42,7 @@ package totem.monitors
 
 			processAllowed = loadLimit;
 
-			_resources = new Vector.<IStartMonitor>();
+			_resources = new Vector.<IMonitor>();
 		}
 
 		/**
@@ -50,7 +50,7 @@ package totem.monitors
 		 * @param ev
 		 * @param eventType
 		 */
-		public function addDispatcher( monitor : IStartMonitor, eventType : String = Event.COMPLETE ) : IStartMonitor
+		public function addDispatcher( monitor : IMonitor, eventType : String = Event.COMPLETE ) : IMonitor
 		{
 			if ( !monitor )
 				return null;
@@ -76,7 +76,7 @@ package totem.monitors
 		public function getItemByID( value : * ) : *
 		{
 
-			for each ( var dispatcher : IStartMonitor in _resources )
+			for each ( var dispatcher : IMonitor in _resources )
 			{
 				if ( dispatcher.id == value )
 					return dispatcher;
@@ -90,7 +90,7 @@ package totem.monitors
 			return _failedCount > 0;
 		}
 
-		public function get list() : Vector.<IStartMonitor>
+		public function get list() : Vector.<IMonitor>
 		{
 			return _resources;
 		}
@@ -133,10 +133,10 @@ package totem.monitors
 
 		private function doStartResource() : Boolean
 		{
-			if ( _resources == null || _resources.length == 0 )
+			if ( _resources == null || _resources.length == 0 || status == COMPLETE )
 				return false;
 
-			var proxy : IStartMonitor;
+			var proxy : IMonitor;
 			var l : int = _resources.length;
 			var i : int;
 
@@ -188,7 +188,7 @@ package totem.monitors
 
 		private function onComplete( eve : Event ) : void
 		{
-			var target : IStartMonitor = eve.target as IStartMonitor;
+			var target : IMonitor = eve.target as IMonitor;
 			target.removeEventListener( eve.type, onComplete );
 
 			if ( target.isFailed )

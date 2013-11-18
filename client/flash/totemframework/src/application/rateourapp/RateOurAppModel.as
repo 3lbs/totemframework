@@ -30,9 +30,9 @@ package application.rateourapp
 	import org.casalib.util.ConversionUtil;
 	import org.osflash.vanilla.extract;
 
-	import totem.core.mvc.EventContextDispatcher;
+	import totem.core.mvc.model.Model;
 
-	public class RateOurAppModel extends EventContextDispatcher
+	public class RateOurAppModel extends Model
 	{
 
 		public static const RATE_NEVER : int = 20;

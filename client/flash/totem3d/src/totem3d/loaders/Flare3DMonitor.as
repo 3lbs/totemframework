@@ -69,7 +69,7 @@ package totem3d.loaders
 
 		private function handleComplete( eve : Event ) : void
 		{
-			complete();
+			finished();
 		}
 	}
 }

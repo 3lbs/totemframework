@@ -71,22 +71,22 @@ package totem.core.time
 		 * and you will constantly get the "too many ticks per frame" warning,
 		 * if you have disableSlowWarning set to true.</p>
 		 */
-		public const MAX_TICKS_PER_FRAME : int = 5;
+		public static const MAX_TICKS_PER_FRAME : int = 5;
 
 		/**
 		 * The number of ticks that will happen every second.
 		 */
-		public const TICKS_PER_SECOND : int = 60;
+		public static const TICKS_PER_SECOND : int = 60;
 
 		/**
 		 * The rate at which ticks are fired, in seconds.
 		 */
-		public const TICK_RATE : Number = 1.0 / Number( TICKS_PER_SECOND );
+		public static const TICK_RATE : Number = 1.0 / Number( TICKS_PER_SECOND );
 
 		/**
 		 * The rate at which ticks are fired, in milliseconds.
 		 */
-		public const TICK_RATE_MS : Number = TICK_RATE * 1000;
+		public static const TICK_RATE_MS : Number = TICK_RATE * 1000;
 
 		/**
 		 * If true, disables warnings about losing ticks.

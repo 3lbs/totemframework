@@ -19,7 +19,7 @@ package AI.pathfinding
 
 	import flash.events.IEventDispatcher;
 	
-	import totem.components.spatial.ISpatialObject;
+	import totem.components.spatial.ISpatial2D;
 	import totem.events.RemovableEventDispatcher;
 
 	public class PathPlanner extends RemovableEventDispatcher
@@ -29,7 +29,7 @@ package AI.pathfinding
 			super( target );
 		}
 
-		public function requestPathToItem( item : ISpatialObject ) : Vector.<PathEdge>
+		public function requestPathToItem( item : ISpatial2D ) : Vector.<PathEdge>
 		{
 
 			var paths : Vector.<PathEdge> = new Vector.<PathEdge>();

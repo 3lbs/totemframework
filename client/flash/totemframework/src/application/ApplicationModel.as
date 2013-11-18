@@ -17,9 +17,9 @@
 package application
 {
 
-	import totem.core.mvc.EventContextDispatcher;
+	import totem.core.mvc.model.Model;
 
-	public class ApplicationModel extends EventContextDispatcher
+	public class ApplicationModel extends Model
 	{
 		public function ApplicationModel()
 		{

@@ -1,7 +1,7 @@
 package totem.monitors
 {
 
-	public interface IRequireMonitor extends IStartMonitor
+	public interface IRequireMonitor extends IMonitor
 	{
 		function requires(... args):void;
 

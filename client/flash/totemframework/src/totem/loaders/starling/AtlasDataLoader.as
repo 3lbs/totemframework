@@ -18,13 +18,13 @@ package totem.loaders.starling
 {
 
 	import flash.display.BitmapData;
-	
+
 	import starling.textures.TextureAtlas;
-	
+
 	import totem.loaders.XMLDataLoader;
 	import totem.monitors.CompleteMonitor;
 	import totem.monitors.IRequireMonitor;
-	import totem.monitors.IStartMonitor;
+	import totem.monitors.IMonitor;
 
 	public class AtlasDataLoader extends CompleteMonitor
 	{
@@ -35,15 +35,19 @@ package totem.loaders.starling
 
 		private var _textureAtlas : TextureAtlas;
 
+		private var cacheBitmapData : Boolean;
+
 		private var generateMipMap : Boolean;
 
 		private var url : String;
 
-		public function AtlasDataLoader( url : String, generateMipMap : Boolean = false, id : String = "" )
+		public function AtlasDataLoader( url : String, generateMipMap : Boolean = false, cacheBitmapData : Boolean = false, id : String = "" )
 		{
 			this.id = id || url;
 
 			this.url = url;
+
+			this.cacheBitmapData = cacheBitmapData;
 
 			this.generateMipMap = generateMipMap;
 		}
@@ -64,16 +68,16 @@ package totem.loaders.starling
 		override public function start() : void
 		{
 
-			_textureAtlas = AtlasTextureCache.getInstance().getTexture( url );
-			_bitmapData = AtlasTextureCache.getInstance().getBitmapData( url );
+			_textureAtlas = AtlasTextureCache.getInstance().getTexture( id );
+			_bitmapData = AtlasTextureCache.getInstance().getBitmapData( id );
 
 			if ( _textureAtlas )
 			{
-				complete();
+				finished();
 				return;
 			}
 
-			var xmlLoader : IStartMonitor = addDispatcher( new XMLDataLoader( url ));
+			var xmlLoader : IMonitor = addDispatcher( new XMLDataLoader( url ));
 			var atlasLoader : IRequireMonitor = addDispatcher( new AtlasTextureLoader( url, null, generateMipMap, ATLAS_ID )) as IRequireMonitor;
 			atlasLoader.requires( xmlLoader );
 
@@ -88,13 +92,17 @@ package totem.loaders.starling
 		override protected function finished() : void
 		{
 			var textureLoader : AtlasTextureLoader = getItemByID( ATLAS_ID );
-			_textureAtlas = textureLoader.textureAtlas;
-			_bitmapData = textureLoader.bitmapData;
+			
+			if ( textureLoader )
+			{
+				_textureAtlas = textureLoader.textureAtlas;
+				_bitmapData = textureLoader.bitmapData;
 
-			AtlasTextureCache.getInstance().createIndex( url, _textureAtlas );
+				AtlasTextureCache.getInstance().createIndex( id, _textureAtlas );
+			}
 
-			if ( _bitmapData )
-				AtlasTextureCache.getInstance().createBitmapData( url, _bitmapData );
+			if ( _bitmapData && cacheBitmapData )
+				AtlasTextureCache.getInstance().createBitmapData( id, _bitmapData );
 
 			super.finished();
 		}
