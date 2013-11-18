@@ -128,13 +128,13 @@ package totem3d.loaders
 
 			component.mesh = mesh;
 
-			complete();
+			finished();
 		}
 
 		private function handleDataFailed( resouce : Resource ) : void
 		{
 			throw new Error( "Failed to load mesh " + url );
-			complete();
+			finished();
 		}
 
 		private function handleDataLoaded( resource : DataResource ) : void

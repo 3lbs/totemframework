@@ -3,7 +3,7 @@
   <includeClasses>
     <classEntry path="totem.loaders.starling.TextureDataLoader"/>
     <classEntry path="totem.display.components.togglebutton.ToggleButtonEvent"/>
-    <classEntry path="totem.components.ParticleEffectComponent"/>
+    <classEntry path="totem.components.animation.ParticleEffectComponent"/>
     <classEntry path="ladydebug.DebugCommand"/>
     <classEntry path="ladydebug.ILogAppender"/>
     <classEntry path="ladydebug.TraceAppender"/>
@@ -72,10 +72,9 @@
     <classEntry path="totem.loaders.SWFDataLoader"/>
     <classEntry path="totem.library.factories.MovieClipFactory"/>
     <classEntry path="totem.core.task.util.SpriteLoaderTask"/>
-    <classEntry path="totem.monitors.SignalCompleteMonitor"/>
+    <classEntry path="totem.monitors.simple.SignalCompleteMonitor"/>
     <classEntry path="totem.components.spatial.ISpatialManager"/>
     <classEntry path="totem.components.spatial.SpatialManager"/>
-    <classEntry path="totem.components.commands.UpdateDisplayComponentCommand"/>
     <classEntry path="totem.core.params.TransformParam"/>
     <classEntry path="totem.utils.TimeCodeUtil"/>
     <classEntry path="totem.display.components.togglebutton.CheckBoxMobile"/>
@@ -100,7 +99,7 @@
     <classEntry path="localization.injectLocalize"/>
     <classEntry path="totem.monitors.IProgressMonitor"/>
     <classEntry path="totem.monitors.ProgressMonitor"/>
-    <classEntry path="totem.monitors.EventMonitor"/>
+    <classEntry path="totem.monitors.simple.EventMonitor"/>
     <classEntry path="application.ApplicationModel"/>
     <classEntry path="application.AppDatabaseService"/>
     <classEntry path="application.App"/>
@@ -172,6 +171,12 @@
     <classEntry path="totem.input.InputEvent"/>
     <classEntry path="totem.components.input.TouchInputComponent"/>
     <classEntry path="totem.components.input.InputController"/>
+    <classEntry path="totem.data.type.Point2d"/>
+    <classEntry path="totem.monitors.StartupDispatcherMonitor"/>
+    <classEntry path="totem.loaders.promise.JSONPromise"/>
+    <classEntry path="totem.structures.arrays.ArrayIterator"/>
+    <classEntry path="totem.structures.IIterator"/>
+    <classEntry path="totem.structures.NullIterator"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

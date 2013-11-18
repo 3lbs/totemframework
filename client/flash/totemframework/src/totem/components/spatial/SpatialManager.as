@@ -28,7 +28,7 @@ package totem.components.spatial
 		{
 		}
 
-		public function addSpatialObject( object : ISpatialObject ) : void
+		public function addSpatialObject( object : ISpatial2D ) : void
 		{
 			spatialList.push( object );
 		}

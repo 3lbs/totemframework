@@ -20,10 +20,10 @@ package totem3d.loaders
 	import flare.core.Mesh3D;
 	import flare.core.Pivot3D;
 	import flare.utils.Pivot3DUtils;
-	
+
 	import totem.monitors.RequiredCompleteMonitor;
 	import totem.net.MobileURLConfig;
-	
+
 	import totem3d.components.Animator3DComponent;
 	import totem3d.components.Mesh3DComponent;
 	import totem3d.core.param.AnimationParam;
@@ -51,7 +51,27 @@ package totem3d.loaders
 			return _animationParams;
 		}
 
-		override public function complete() : void
+		override public function start() : void
+		{
+
+			var meshComponent : Mesh3DComponent = component.getSibling( Mesh3DComponent ) as Mesh3DComponent;
+			var mesh : Mesh3D = meshComponent.mesh as Mesh3D;
+
+			var labels : Object = mesh.labels;
+
+			for each ( var ani : AnimationParam in _animationParams )
+			{
+				if ( hasLabel( ani.id, labels ))
+					continue;
+
+				var loader : Flare3DMonitor = new Flare3DMonitor( MobileURLConfig.ASSETS_DIRECTORY.getURLFromDelimtedString( ani.url ), ani.id );
+				addDispatcher( loader );
+			}
+
+			super.start();
+		}
+
+		override protected function finished() : void
 		{
 			// TODO Auto-generated method stub
 
@@ -77,27 +97,7 @@ package totem3d.loaders
 			mesh.animationEnabled = true;
 			mesh.gotoAndPlay( "ants_wave", 0, Pivot3D.ANIMATION_STOP_MODE );
 
-			super.complete();
-		}
-
-		override public function start() : void
-		{
-
-			var meshComponent : Mesh3DComponent = component.getSibling( Mesh3DComponent ) as Mesh3DComponent;
-			var mesh : Mesh3D = meshComponent.mesh as Mesh3D;
-
-			var labels : Object = mesh.labels;
-
-			for each ( var ani : AnimationParam in _animationParams )
-			{
-				if ( hasLabel( ani.id, labels ))
-					continue;
-
-				var loader : Flare3DMonitor = new Flare3DMonitor( MobileURLConfig.ASSETS_DIRECTORY.getURLFromDelimtedString( ani.url ), ani.id );
-				addDispatcher( loader );
-			}
-
-			super.start();
+			super.finished();
 		}
 
 		private function hasLabel( id : String, labels : Object ) : Boolean

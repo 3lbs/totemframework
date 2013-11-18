@@ -14,7 +14,7 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.monitors
+package totem.monitors.simple
 {
 
 	import flash.events.Event;

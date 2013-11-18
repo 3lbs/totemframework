@@ -61,6 +61,7 @@
     <classEntry path="totem3d.utils.meshpool.Mesh3DPoolHelper"/>
     <classEntry path="totem3d.core.model.Flare3DViewer3DModel"/>
     <classEntry path="totem3d.core.model.ITotemView3D"/>
+    <classEntry path="totem3d.components.spatial.ISpatial3D"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

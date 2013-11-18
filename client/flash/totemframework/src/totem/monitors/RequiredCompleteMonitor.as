@@ -1,26 +1,30 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.monitors
 {
 
 	public class RequiredCompleteMonitor extends CompleteMonitor implements IRequireMonitor
 	{
 
-		private var _requires : Vector.<IStartMonitor> = new Vector.<IStartMonitor>();
+		private var _requires : Vector.<IMonitor> = new Vector.<IMonitor>();
 
 		public function RequiredCompleteMonitor( id : String = "" )
 		{
 			super( id );
-		}
-
-		public function requires( ... args ) : void
-		{
-			
-			for each ( var obj : IStartMonitor in args )
-			{
-				if ( obj == null )
-					continue;
-				
-				_requires.push( obj );
-			}
 		}
 
 		public function canStart() : Boolean
@@ -32,7 +36,7 @@ package totem.monitors
 			}
 
 			// test all the dependent proxy are ready
-			for each ( var proxy : IStartMonitor in _requires )
+			for each ( var proxy : IMonitor in _requires )
 			{
 				if ( proxy.isComplete() == false )
 				{
@@ -43,9 +47,17 @@ package totem.monitors
 			return true;
 		}
 
+		override public function destroy() : void
+		{
+			super.destroy();
+
+			_requires.length = 0;
+			_requires = null;
+		}
+
 		public function getRequiredItemByID( value : * ) : *
 		{
-			for each ( var dispatcher : IStartMonitor in _requires )
+			for each ( var dispatcher : IMonitor in _requires )
 			{
 				if ( dispatcher.id == value )
 					return dispatcher;
@@ -53,13 +65,17 @@ package totem.monitors
 			// serach the array for item with id = value;
 			return null;
 		}
-		
-		override public function destroy () : void
+
+		public function requires( ... args ) : void
 		{
-			super.destroy();
-			
-			_requires.length = 0;
-			_requires = null;
+
+			for each ( var obj : IMonitor in args )
+			{
+				if ( obj == null )
+					continue;
+
+				_requires.push( obj );
+			}
 		}
 	}
 }

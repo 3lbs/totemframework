@@ -1,5 +1,5 @@
 
-package totem.core.mvc.controller
+package totem.components.commands
 {
 
 	import flash.events.IEventDispatcher;
@@ -20,7 +20,7 @@ package totem.core.mvc.controller
 	{
 		public var eventDispatcher : IEventDispatcher;
 
-		private var commandMap : ICommandMap;
+		private var _commandMap : ICommandMap;
 
 		private var deconstructCommand : SerialCommand;
 
@@ -31,11 +31,17 @@ package totem.core.mvc.controller
 			super( name );
 		}
 
+		public function get commandMap():ICommandMap
+		{
+			return _commandMap;
+		} 
+
 		override protected function onAdd() : void
 		{
 			super.onAdd();
 
-			commandMap = new SignalCommandMap( getInjector());
+			_commandMap = new SignalCommandMap( getInjector());
+			
 			injector.map( ICommandMap ).toValue( commandMap );
 
 			owner.onAddSignal.addOnce( doInitialize );

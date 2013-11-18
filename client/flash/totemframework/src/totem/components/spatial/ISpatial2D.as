@@ -14,26 +14,22 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.monitors
+package totem.components.spatial
 {
 
-	import totem.core.IDestroyable;
-	import totem.events.IRemovableEventDispatcher;
-
-	public interface IStartMonitor extends IRemovableEventDispatcher, IDestroyable
+	public interface ISpatial2D
 	{
 
-		function get id() : *;
+		function getProperty( prop : Object ) : Object;
+		function setProperty( prop : Object, value : Object ) : void
 
-		function isComplete() : Boolean;
+		function get x() : Number
 
-		function get isFailed() : Boolean;
+		function set x( value : Number ) : void
 
-		function start() : void;
+		function get y() : Number
 
-		function get status() : Number;
-		
-		function unloadData () : void;
+		function set y( value : Number ) : void
+
 	}
 }
-

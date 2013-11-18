@@ -18,6 +18,7 @@ package totem.monitors
 {
 
 	import flash.events.Event;
+	import totem.monitors.simple.EventMonitor;
 
 	public class ProgressMonitor extends EventMonitor implements IProgressMonitor
 	{

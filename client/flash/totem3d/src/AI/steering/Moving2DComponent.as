@@ -26,7 +26,7 @@ package AI.steering
 	import totem.math.Matrix2D;
 	import totem.math.Vector2D;
 
-	import totem3d.components.Spatial3DComponent;
+	import totem3d.components.spatial.Spatial3DComponent;
 
 	public class Moving2DComponent extends Spatial3DComponent
 	{

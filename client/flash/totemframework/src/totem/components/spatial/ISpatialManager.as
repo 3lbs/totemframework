@@ -21,7 +21,7 @@ package totem.components.spatial
 
 	public interface ISpatialManager extends IDestroyable
 	{
-		function addSpatialObject( object : ISpatialObject ) : void
+		function addSpatialObject( object : ISpatial2D ) : void
 
 		function getCostToClosestItem( type : String ) : Number;
 		

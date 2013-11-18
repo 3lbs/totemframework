@@ -22,10 +22,10 @@ package totem.display.scenes
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 
-	import totem.core.mvc.EventContextDispatcher;
+	import totem.core.mvc.model.Model;
 	import totem.display.layout.ScreenComposite;
 
-	public class SceneStateMachine extends EventContextDispatcher
+	public class SceneStateMachine extends Model
 	{
 
 		public var parentScreen : ScreenComposite;

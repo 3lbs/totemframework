@@ -9,19 +9,21 @@
 //    `-------'      
 //                       
 //   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
 
-package totem.components
+package totem3d.components.spatial
 {
 
-	public class IsoDisplayComponent extends DisplayStarlingComponent
+	import totem.components.spatial.ISpatial2D;
+
+	public interface ISpatial3D extends ISpatial2D
 	{
 
-		public function IsoDisplayComponent( name : String = null )
-		{
-			super( name );
-		}
+		function get z() : Number;
+
+		function set z( value : Number ) : void;
 	}
 }

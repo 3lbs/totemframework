@@ -17,19 +17,19 @@
 package totem3d.core.model
 {
 
-	import flare.basic.Scene3D;
-	import flare.basic.Viewer3D;
-	import flare.core.Camera3D;
-
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
-
-	import totem.core.mvc.EventContextDispatcher;
+	
+	import flare.basic.Scene3D;
+	import flare.basic.Viewer3D;
+	import flare.core.Camera3D;
+	
+	import totem.core.mvc.model.Model;
 	import totem.utils.MobileUtil;
 
-	public class Flare3DViewer3DModel extends EventContextDispatcher implements ITotemView3D
+	public class Flare3DViewer3DModel extends Model implements ITotemView3D
 	{
 
 		private var _viewer3D : Viewer3D;

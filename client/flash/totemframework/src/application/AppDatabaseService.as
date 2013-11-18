@@ -28,9 +28,9 @@ package application
 
 	import nz.co.codec.flexorm.EntityManager;
 
-	import totem.core.mvc.EventContextDispatcher;
+	import totem.core.mvc.model.Model;
 
-	public class AppDatabaseService extends EventContextDispatcher
+	public class AppDatabaseService extends Model
 	{
 
 		public static var application : App;

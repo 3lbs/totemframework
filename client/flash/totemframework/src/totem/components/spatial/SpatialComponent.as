@@ -18,16 +18,16 @@ package totem.components.spatial
 {
 
 	import flash.utils.Dictionary;
-
+	
 	import org.osflash.signals.Signal;
-
-	import totem.components.DisplayRendererComponent;
-	import totem.core.params.TransformParam;
+	
+	import totem.components.display.DisplayObjectComponent;
+	import totem.components.display.IDisplay2DRenderer;
 	import totem.core.time.TickedComponent;
 	import totem.math.AABBox;
 	import totem.math.Vector2D;
 
-	public class SpatialComponent extends TickedComponent implements ISpatialObject
+	public class SpatialComponent extends TickedComponent implements ISpatial2D
 	{
 		public static const NAME : String = "spatialComponent";
 
@@ -35,13 +35,13 @@ package totem.components.spatial
 
 		public var bounds : AABBox;
 
-		public var positionChange : Signal = new Signal( Number, Number, Number );
+		public var positionChange : Signal = new Signal( Number, Number );
 
 		public var radius : Number = 1;
 
-		public var rotationChange : Signal = new Signal( Number, Number, Number );
+		public var rotationChange : Signal = new Signal( Number, Number );
 
-		public var scaleChange : Signal = new Signal( Number, Number, Number );
+		public var scaleChange : Signal = new Signal( Number, Number );
 
 		public var transformUpdate : Signal = new Signal();
 
@@ -49,56 +49,32 @@ package totem.components.spatial
 
 		protected var properties : Dictionary;
 
-		private var _rotationX : Number = 0;
-
-		private var _rotationY : Number = 0;
-
-		private var _rotationZ : Number = 0;
+		private var _rotation : Number = 0;
 
 		private var _scaleX : Number = 1;
 
 		private var _scaleY : Number = 1;
 
-		private var _scaleZ : Number = 1;
-
 		private var _x : Number = 0;
 
 		private var _y : Number = 0;
-
-		private var _z : Number = 0;
-
+		
 		private var dirtyPosition : Boolean = true;
 
 		private var dirtyRotation : Boolean = true;
 
 		private var dirtyScale : Boolean = true;
 
-		private var displayRenderer : DisplayRendererComponent;
+		private var displayRenderer : IDisplay2DRenderer;
 
-		public function SpatialComponent( data : TransformParam = null )
+		public function Spatial2DComponent()
 		{
-			if ( data )
-			{
-				x = data.translateX;
-				y = data.translateY;
-				z = data.translateZ;
-
-				_rotationX = data.rotateX;
-				_rotationY = data.rotateY;
-				_rotationZ = data.rotateZ;
-
-				_scaleX = data.scaleX;
-				_scaleY = data.scaleY;
-				_scaleZ = data.scaleZ;
-			}
-
 			properties = new Dictionary();
 		}
 
-		public function addDisplayRendererSignal( renderer : DisplayRendererComponent ) : void
+		public function addDisplayRendererSignal( renderer : IDisplay2DRenderer ) : void
 		{
 			displayRenderer = renderer;
-			displayRenderer.displayUpdate.add( updateTransformsEvent );
 		}
 
 		public function getProperty( prop : Object ) : Object
@@ -106,47 +82,21 @@ package totem.components.spatial
 			return properties[ prop ];
 		}
 
-		public function get rotationX() : Number
+		public function get rotation() : Number
 		{
-			return _rotationX;
+			return _rotation;
 		}
 
-		public function set rotationX( value : Number ) : void
+		public function set rotation( value : Number ) : void
 		{
-			_rotationX = value;
+			_rotation = value;
 			dirtyRotation = true;
 
 			dispatchUpdate();
 		}
 
-		public function get rotationY() : Number
-		{
-			return _rotationY;
-		}
-
-		public function set rotationY( value : Number ) : void
-		{
-			_rotationY = value;
-			dirtyRotation = true;
-
-			dispatchUpdate();
-		}
-
-		public function get rotationZ() : Number
-		{
-			return _rotationZ;
-		}
-		
 		override public function onTick():void
 		{
-			dispatchUpdate();
-		}
-
-		public function set rotationZ( value : Number ) : void
-		{
-			_rotationZ = value;
-			dirtyRotation = true;
-
 			dispatchUpdate();
 		}
 
@@ -180,26 +130,11 @@ package totem.components.spatial
 			}
 		}
 
-		public function get scaleZ() : Number
-		{
-			return _scaleZ;
-		}
 
-		public function set scaleZ( value : Number ) : void
-		{
-			if ( value != _scaleZ )
-			{
-				_scaleZ = value;
-				dirtyScale = true;
-				dispatchUpdate();
-			}
-		}
-
-		public function setPosition( x : Number, y : Number, z : Number ) : void
+		public function setPosition( x : Number, y : Number ) : void
 		{
 			_x = x;
 			_y = y;
-			_z = z;
 
 			dirtyPosition = true;
 
@@ -211,11 +146,9 @@ package totem.components.spatial
 			properties[ prop ] = value;
 		}
 
-		public function setRotation( x : Number, y : Number, z : Number ) : void
+		public function setRotation( value : Number ) : void
 		{
-			_rotationX = x;
-			_rotationY = y;
-			_rotationZ = z;
+			_rotation = value;
 
 			dirtyRotation = true;
 
@@ -226,7 +159,6 @@ package totem.components.spatial
 		{
 			_scaleX = x;
 			_scaleY = y;
-			_scaleZ = z;
 
 			dirtyScale = true;
 
@@ -264,21 +196,6 @@ package totem.components.spatial
 			dispatchUpdate();
 		}
 
-		public function get z() : Number
-		{
-			return _z;
-		}
-
-		public function set z( value : Number ) : void
-		{
-			if ( value == _z )
-				return;
-
-			_z = value;
-
-			dirtyPosition = true;
-			dispatchUpdate();
-		}
 
 		protected function dispatchUpdate( force : Boolean = false ) : void
 		{
@@ -289,11 +206,11 @@ package totem.components.spatial
 
 					if ( displayRenderer )
 					{
-						displayRenderer.setPosition( _x, _y, _z );
+						displayRenderer.setPosition( _x, _y );
 					}
 					else
 					{
-						positionChange.dispatch( _x, _y, _z );
+						positionChange.dispatch( _x, _y );
 					}
 
 					dirtyPosition = false;
@@ -304,11 +221,11 @@ package totem.components.spatial
 
 					if ( displayRenderer )
 					{
-						displayRenderer.setRotation( _rotationX, _rotationY, _rotationZ );
+						displayRenderer.setRotation( _rotation );
 					}
 					else
 					{
-						rotationChange.dispatch( _rotationX, _rotationY, _rotationZ );
+						rotationChange.dispatch( _rotation );
 					}
 
 					dirtyRotation = false;
@@ -319,11 +236,11 @@ package totem.components.spatial
 
 					if ( displayRenderer )
 					{
-						displayRenderer.setScale( _scaleX, _scaleY, _scaleZ );
+						displayRenderer.setScale( _scaleX, _scaleY );
 					}
 					else
 					{
-						rotationChange.dispatch( _scaleX, _scaleY, _scaleZ );
+						rotationChange.dispatch( _scaleX, _scaleY );
 					}
 
 					dirtyScale = false;
@@ -354,7 +271,7 @@ package totem.components.spatial
 			transformUpdate.removeAll();
 		}
 
-		private function updateTransformsEvent( component : DisplayRendererComponent ) : void
+		private function updateTransformsEvent( component : DisplayObjectComponent ) : void
 		{
 			dirtyPosition = true;
 			dirtyRotation = true;

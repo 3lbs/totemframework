@@ -18,13 +18,13 @@ package totem.monitors
 {
 
 	import flash.events.Event;
-
+	
 	import ladydebug.Logger;
+	
+	import totem.totem_internal;
 	import totem.events.RemovableEventDispatcher;
 
-	import totem.totem_internal;
-
-	public class AbstractMonitorProxy extends RemovableEventDispatcher implements IStartMonitor
+	public class AbstractMonitorProxy extends RemovableEventDispatcher implements IMonitor
 	{
 
 		public static const COMPLETE : int = 2;
@@ -44,7 +44,7 @@ package totem.monitors
 			_id = id;
 		}
 
-		public function complete() : void
+		protected function complete() : void
 		{
 			_status = COMPLETE;
 			dispatchEvent( new Event( Event.COMPLETE ));

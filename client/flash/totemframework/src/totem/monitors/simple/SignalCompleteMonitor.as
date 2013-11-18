@@ -1,4 +1,4 @@
-package totem.monitors
+package totem.monitors.simple
 {
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
