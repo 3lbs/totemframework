@@ -20,14 +20,15 @@ package totem.monitors
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 
+	import org.as3commons.collections.LinkedList;
+	import org.as3commons.collections.framework.IIterator;
+
 	import totem.monitors.startupmonitor.IStartupProxy;
-	import totem.structures.IIterator;
-	import totem.structures.lists.SLinkedList;
 
 	public class StartupDispatcherMonitor extends RequiredProxy
 	{
 
-		protected var _monitors : SLinkedList;
+		protected var _monitors : LinkedList;
 
 		protected var count : int;
 
@@ -35,14 +36,14 @@ package totem.monitors
 		{
 			super( id );
 
-			_monitors = new SLinkedList();
+			_monitors = new LinkedList();
 
 		}
 
 		public function addCompleteDispatcher( dispatcher : IStartupProxy, eventType : String = Event.COMPLETE ) : void
 		{
 			dispatcher.addEventListener( eventType, onComplete );
-			_monitors.append( dispatcher );
+			_monitors.add( dispatcher );
 
 			count += 1;
 		}
@@ -60,7 +61,7 @@ package totem.monitors
 
 		override public function start() : void
 		{
-			var itr : IIterator = _monitors.iterator;
+			var itr : IIterator = _monitors.iterator();
 
 			while ( itr.hasNext())
 			{
@@ -80,11 +81,9 @@ package totem.monitors
 
 			_monitors.remove( dispatcher );
 
-			dispatchEvent( new Event( Event.CHANGE ));
-
 			if ( _monitors.size == 0 )
 			{
-				dispatchEvent( new Event( Event.COMPLETE ));
+				finished();
 			}
 		}
 	}
