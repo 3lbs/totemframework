@@ -14,28 +14,10 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.core.mvc.model
+package totem.core.params
 {
-
-	import flash.events.Event;
-	import flash.events.IEventDispatcher;
-
-	import totem.core.Destroyable;
-
-	public class Model extends Destroyable
+	public function getDataParam( clazz : * ) : *
 	{
-
-		[Inject]
-		public var eventDispatcher : IEventDispatcher;
-
-		public function Model()
-		{
-		}
-
-		protected function dispatchContext( e : Event ) : void
-		{
-			if ( eventDispatcher.hasEventListener( e.type ))
-				eventDispatcher.dispatchEvent( e );
-		}
+		return DataObjectLoader.getInstance().getData( clazz );
 	}
 }

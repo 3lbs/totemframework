@@ -21,7 +21,7 @@ package totem.monitors
 	
 	import totem.totem_internal;
 
-	public class CompleteMonitor extends AbstractMonitorProxy implements IListID
+	public class GroupMonitor extends AbstractMonitorProxy implements IListID
 	{
 
 		public static const MAX : int = 0;
@@ -36,7 +36,7 @@ package totem.monitors
 
 		private var runningProcess : int;
 
-		public function CompleteMonitor( id : String = "", loadLimit : int = MAX )
+		public function GroupMonitor( id : String = "", loadLimit : int = MAX )
 		{
 			super( id );
 

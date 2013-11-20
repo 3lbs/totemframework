@@ -82,7 +82,7 @@ package totem.monitors
 
 		public function unloadData() : void
 		{
-
+			_status = EMPTY;
 		}
 
 		protected function failed() : void

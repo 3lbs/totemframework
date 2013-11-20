@@ -14,28 +14,10 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.core.mvc.model
+package application
 {
-
-	import flash.events.Event;
-	import flash.events.IEventDispatcher;
-
-	import totem.core.Destroyable;
-
-	public class Model extends Destroyable
+	public function getDatabase() : AppDatabaseService
 	{
-
-		[Inject]
-		public var eventDispatcher : IEventDispatcher;
-
-		public function Model()
-		{
-		}
-
-		protected function dispatchContext( e : Event ) : void
-		{
-			if ( eventDispatcher.hasEventListener( e.type ))
-				eventDispatcher.dispatchEvent( e );
-		}
+		return null;
 	}
 }

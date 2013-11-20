@@ -14,20 +14,29 @@
 //
 //------------------------------------------------------------------------------
 
-package application
+package totem.net
 {
 
-	import totem.core.mvc.model.Model;
-
-	public class ApplicationModel extends Model
+	public class AppURL
 	{
-		public function ApplicationModel()
-		{
-		}
 
-		override public function load() : void
+		public static var APPLICATION : URLManager;
+
+		public static var ASSETS : URLManager;
+
+		public static var DATA : URLManager;
+
+		public static var RESOURCE : URLManager;
+
+		public static function initialize( url : String ) : void
 		{
-			// count launches
+			APPLICATION = URLManager.instance( url );
+
+			RESOURCE = URLManager.instance( APPLICATION.getURL( "resources" ));
+
+			ASSETS = URLManager.instance( RESOURCE.getURL( "assets" ));
+
+			DATA = URLManager.instance( RESOURCE.getURL( "data" ));
 		}
 	}
 }

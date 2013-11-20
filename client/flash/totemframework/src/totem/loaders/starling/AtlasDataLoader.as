@@ -22,11 +22,11 @@ package totem.loaders.starling
 	import starling.textures.TextureAtlas;
 
 	import totem.loaders.XMLDataLoader;
-	import totem.monitors.CompleteMonitor;
+	import totem.monitors.GroupMonitor;
 	import totem.monitors.IRequireMonitor;
 	import totem.monitors.IMonitor;
 
-	public class AtlasDataLoader extends CompleteMonitor
+	public class AtlasDataLoader extends GroupMonitor
 	{
 
 		private static const ATLAS_ID : String = "atlasid";

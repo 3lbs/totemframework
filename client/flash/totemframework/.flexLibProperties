@@ -5,7 +5,6 @@
     <classEntry path="application.AppDatabaseService"/>
     <classEntry path="application.AppParam"/>
     <classEntry path="application.ApplicationConfig"/>
-    <classEntry path="application.ApplicationModel"/>
     <classEntry path="application.loadingscreen.AppLoadingScreen"/>
     <classEntry path="application.loadingscreen.Intro3lbsScreenTask"/>
     <classEntry path="application.rateourapp.RateOurAppCommand"/>
@@ -279,13 +278,13 @@
     <classEntry path="totem.math.physics.VectorForce"/>
     <classEntry path="totem.memory.MemoryManager"/>
     <classEntry path="totem.monitors.AbstractMonitorProxy"/>
-    <classEntry path="totem.monitors.CompleteMonitor"/>
+    <classEntry path="totem.monitors.GroupMonitor"/>
     <classEntry path="totem.monitors.IListID"/>
     <classEntry path="totem.monitors.IMonitor"/>
     <classEntry path="totem.monitors.IProgressMonitor"/>
     <classEntry path="totem.monitors.IRequireMonitor"/>
     <classEntry path="totem.monitors.ProgressMonitor"/>
-    <classEntry path="totem.monitors.RequiredCompleteMonitor"/>
+    <classEntry path="totem.monitors.GroupRequiredMonitor"/>
     <classEntry path="totem.monitors.RequiredProxy"/>
     <classEntry path="totem.monitors.StartupDispatcherMonitor"/>
     <classEntry path="totem.monitors.promise.Deferred"/>
@@ -303,7 +302,7 @@
     <classEntry path="totem.monitors.startupmonitor.StartupFactoryProxy"/>
     <classEntry path="totem.monitors.startupmonitor.StartupMonitorProxy"/>
     <classEntry path="totem.monitors.startupmonitor.StartupResourceProxy"/>
-    <classEntry path="totem.net.MobileURLConfig"/>
+    <classEntry path="totem.net.AppURL"/>
     <classEntry path="totem.net.URLManager"/>
     <classEntry path="totem.pathfinder.astar.basic2d.BasicTile"/>
     <classEntry path="totem.pathfinder.astar.basic2d.IPositionTile"/>
@@ -341,9 +340,7 @@
     <classEntry path="totem.structures.NullIterator"/>
     <classEntry path="totem.structures.ProtectedIterator"/>
     <classEntry path="totem.structures.arrays.ArrayIterator"/>
-    <classEntry path="totem.structures.grids.Grid2D"/>
     <classEntry path="totem.structures.lists.AbstractList"/>
-    <classEntry path="totem.structures.lists.DLinkedList"/>
     <classEntry path="totem.structures.lists.IList"/>
     <classEntry path="totem.structures.lists.ListIterator"/>
     <classEntry path="totem.structures.lists.SLinkedList"/>
@@ -409,6 +406,12 @@
     <classEntry path="totem.utils.objectpool.helpers.SoundObjectPoolHelper"/>
     <classEntry path="totem.utils.sprintf"/>
     <classEntry path="totem.utils.string.TabularText"/>
+    <classEntry path="totem.core.params.getDataParam"/>
+    <classEntry path="totem.structures.grids.Grid2D"/>
+    <classEntry path="totem.structures.lists.DLinkedList"/>
+    <classEntry path="totem.core.params.DataObjectLoader"/>
+    <classEntry path="totem.core.params.DataParamProxy"/>
+    <classEntry path="application.getDatabase"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

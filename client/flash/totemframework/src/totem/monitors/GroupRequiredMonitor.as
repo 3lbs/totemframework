@@ -17,12 +17,12 @@
 package totem.monitors
 {
 
-	public class RequiredCompleteMonitor extends CompleteMonitor implements IRequireMonitor
+	public class GroupRequiredMonitor extends GroupMonitor implements IRequireMonitor
 	{
 
 		private var _requires : Vector.<IMonitor> = new Vector.<IMonitor>();
 
-		public function RequiredCompleteMonitor( id : String = "" )
+		public function GroupRequiredMonitor( id : String = "" )
 		{
 			super( id );
 		}
