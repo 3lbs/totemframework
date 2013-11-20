@@ -1,8 +1,25 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core.params
 {
-	import flash.utils.getQualifiedClassName;
-	
+
 	import org.casalib.util.StringUtil;
+	
+	import totem.utils.TypeUtility;
 
 	/**
 	 *
@@ -12,8 +29,6 @@ package totem.core.params
 	{
 		private var _id : String;
 
-		private var _type : Object;
-
 		private var _name : String;
 
 		/**
@@ -21,7 +36,7 @@ package totem.core.params
 		 */
 		public function BaseParam()
 		{
-			_name = getQualifiedClassName( this ).split( "::" )[ 1 ] + "_" + StringUtil.createRandomIdentifier( 3 );
+			_name = TypeUtility.getObjectShortClassName( this ) + "_" + StringUtil.createRandomIdentifier( 3 );
 			_id = _name + StringUtil.createRandomIdentifier( 4 );
 		}
 
@@ -60,7 +75,6 @@ package totem.core.params
 		{
 			_name = value;
 		}
-
 	}
 }
 

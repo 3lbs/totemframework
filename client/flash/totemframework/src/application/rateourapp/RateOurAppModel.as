@@ -17,22 +17,23 @@
 package application.rateourapp
 {
 
-	import application.AppDatabaseService;
-	import application.ApplicationConfig;
-
 	import com.freshplanet.nativeExtensions.AirNetworkInfo;
-
+	
 	import flash.events.Event;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
 	import flash.system.Capabilities;
-
+	
+	import application.AppDatabaseService;
+	import application.ApplicationConfig;
+	
 	import org.casalib.util.ConversionUtil;
 	import org.osflash.vanilla.extract;
+	
+	import totem.events.RemovableEventDispatcher;
+	import totem.monitors.startupmonitor.IStartupProxy;
 
-	import totem.core.mvc.model.Model;
-
-	public class RateOurAppModel extends Model
+	public class RateOurAppModel extends RemovableEventDispatcher implements IStartupProxy
 	{
 
 		public static const RATE_NEVER : int = 20;
@@ -99,7 +100,7 @@ package application.rateourapp
 			return Capabilities.manufacturer.indexOf( 'Android' ) > -1;
 		}
 
-		override public function load() : void
+		public function load() : void
 		{
 			var rateAppObject : String = AppDatabaseService.getAppProp( RATE_APP_KEY );
 

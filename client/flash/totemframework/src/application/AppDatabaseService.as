@@ -28,9 +28,10 @@ package application
 
 	import nz.co.codec.flexorm.EntityManager;
 
-	import totem.core.mvc.model.Model;
+	import totem.events.RemovableEventDispatcher;
+	import totem.monitors.startupmonitor.IStartupProxy;
 
-	public class AppDatabaseService extends Model
+	public class AppDatabaseService extends RemovableEventDispatcher implements IStartupProxy
 	{
 
 		public static var application : App;
@@ -114,7 +115,7 @@ package application
 			conn.close();
 		}
 
-		override public function load() : void
+		public function load() : void
 		{
 			var encrytpedPassword : ByteArray = null; //UserConfig.getEncriptionKey( password );
 

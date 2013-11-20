@@ -21,14 +21,14 @@ package totem3d.loaders
 	import flare.core.Pivot3D;
 	import flare.utils.Pivot3DUtils;
 
-	import totem.monitors.RequiredCompleteMonitor;
-	import totem.net.MobileURLConfig;
+	import totem.monitors.GroupRequiredMonitor;
+	import totem.net.AppURL;
 
 	import totem3d.components.Animator3DComponent;
 	import totem3d.components.Mesh3DComponent;
 	import totem3d.core.param.AnimationParam;
 
-	public class Flare3DAnimationsLoader extends RequiredCompleteMonitor
+	public class Flare3DAnimationsLoader extends GroupRequiredMonitor
 	{
 		private var _animationParams : Vector.<AnimationParam>;
 
@@ -64,7 +64,7 @@ package totem3d.loaders
 				if ( hasLabel( ani.id, labels ))
 					continue;
 
-				var loader : Flare3DMonitor = new Flare3DMonitor( MobileURLConfig.ASSETS_DIRECTORY.getURLFromDelimtedString( ani.url ), ani.id );
+				var loader : Flare3DMonitor = new Flare3DMonitor( AppURL.ASSETS.getURLFromDelimtedString( ani.url ), ani.id );
 				addDispatcher( loader );
 			}
 

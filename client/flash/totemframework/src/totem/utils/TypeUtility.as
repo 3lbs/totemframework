@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 /*******************************************************************************
  * Smash Engine
  * Copyright (C) 2009 Smash Labs, LLC
@@ -8,6 +24,7 @@
  ******************************************************************************/
 package totem.utils
 {
+
 	import flash.utils.Dictionary;
 	import flash.utils.Proxy;
 	import flash.utils.describeType;
@@ -20,45 +37,10 @@ package totem.utils
 	 */
 	public class TypeUtility
 	{
-		/**
-		 * Registers a function that will be called when the specified type needs to be
-		 * instantiated. The function should return an instance of the specified type.
-		 *
-		 * @param typeName The name of the type the specified function should handle.
-		 * @param instantiator The function that instantiates the specified type.
-		 */
-		public static function registerInstantiator( typeName : String, instantiator : Function ) : void
-		{
-			if ( _instantiators[ typeName ])
-				throw new Error( "TypeUtility: registerInstantiator", "An instantiator for " + typeName + " has already been registered. It will be replaced." );
 
-			_instantiators[ typeName ] = instantiator;
-		}
+		private static var _instantiators : Dictionary = new Dictionary();
 
-		/**
-		 * Returns the fully qualified name of the type
-		 * of the passed in object.
-		 *
-		 * @param object The object whose type is being retrieved.
-		 *
-		 * @return The name of the specified object's type.
-		 */
-		public static function getObjectClassName( object : * ) : String
-		{
-			return flash.utils.getQualifiedClassName( object );
-		}
-
-		/**
-		 * Returns the Class object for the given class.
-		 *
-		 * @param className The fully qualified name of the class being looked up.
-		 *
-		 * @return The Class object of the specified class, or null if wasn't found.
-		 */
-		public static function getClassFromName( className : String ) : Class
-		{
-			return getDefinitionByName( className ) as Class;
-		}
+		private static var _typeDescriptions : Dictionary = new Dictionary();
 
 		/**
 		 * This is a clever discovery in the SwiftSuspenders library, so I copied it :P
@@ -86,41 +68,70 @@ package totem.utils
 		}
 
 		/**
-		 * Creates an instance of a type based on its name.
+		 * Gets the xml description of a class through a call to the
+		 * flash.utils.describeType method. Results are cached, so only the first
+		 * call will impact performance.
 		 *
-		 * @param className The name of the class to instantiate.
+		 * @param className The name of the class to describe.
 		 *
-		 * @return An instance of the class, or null if instantiation failed.
+		 * @return The xml description of the class.
 		 */
-		public static function instantiate( className : String, suppressError : Boolean = false ) : *
+		public static function getClassDescription( className : String ) : XML
 		{
-			// Deal with strings explicitly as they are a primitive.
-			if ( className == "String" )
-				return "";
-
-			// Class is also a primitive type.
-			if ( className == "Class" )
-				return Class;
-
-			// Check for overrides.
-			if ( _instantiators[ className ])
-				return _instantiators[ className ]();
-
-			// Give it a shot!
-			try
+			if ( !_typeDescriptions[ className ])
 			{
-				return new ( getDefinitionByName( className ));
-			}
-			catch ( e : Error )
-			{
-				if ( !suppressError )
+				try
 				{
-					//Logger.warn( null, "Instantiate", "Failed to instantiate " + className + " due to " + e.toString());
-					//Logger.warn( null, "Instantiate", "Is " + className + " included in your SWF? Make sure you call context.registerType(" + className + "); somewhere in your project." );
+					_typeDescriptions[ className ] = describeType( getDefinitionByName( className ));
+				}
+				catch ( error : Error )
+				{
+					return null;
 				}
 			}
 
-			// If we get here, couldn't new it.
+			return _typeDescriptions[ className ];
+		}
+
+		/**
+		 * Returns the Class object for the given class.
+		 *
+		 * @param className The fully qualified name of the class being looked up.
+		 *
+		 * @return The Class object of the specified class, or null if wasn't found.
+		 */
+		public static function getClassFromName( className : String ) : Class
+		{
+			return getDefinitionByName( className ) as Class;
+		}
+
+		/**
+		 * Get the xml for the metadata of the field.
+		 */
+		public static function getEditorData( object : *, field : String ) : XML
+		{
+			var description : XML = getTypeDescription( object );
+
+			if ( !description )
+				return null;
+
+			for each ( var variable : XML in description.* )
+			{
+				// Skip if it's not the field we want.
+				if ( variable.@name != field )
+					continue;
+
+				// Only check variables/accessors.
+				if ( variable.name() != "variable" && variable.name() != "accessor" )
+					continue;
+
+				// Scan for EditorData metadata.
+				for each ( var metadataXML : XML in variable.* )
+				{
+					if ( metadataXML.@name == "EditorData" )
+						return metadataXML;
+				}
+			}
 			return null;
 		}
 
@@ -154,23 +165,72 @@ package totem.utils
 			return null;
 		}
 
-		/**
-		 * Determines if an object is an instance of a dynamic class.
-		 *
-		 * @param object The object to check.
-		 *
-		 * @return True if the object is dynamic, false otherwise.
-		 */
-		public static function isDynamic( object : * ) : Boolean
+		public static function getListOfPublicFields( object : * ) : Array
 		{
-			if ( object is Class )
+			var fields : Array = [];
+
+			if ( object == null || object == undefined )
+				return fields;
+
+			// Get the list of public fields.
+			var sourceFields : XML = getTypeDescription( object );
+
+			for each ( var fieldInfo : XML in sourceFields.* )
 			{
-				//Logger.error( object, "isDynamic", "The object is a Class type, which is always dynamic" );
-				return true;
+				// Skip anything that is not a field.
+				if ( fieldInfo.name() != "variable" && fieldInfo.name() != "accessor" )
+					continue;
+
+				// Skip write-only stuff.
+				if ( fieldInfo.@access == "writeonly" )
+					continue;
+
+				var fieldName : String = fieldInfo.@name;
+				fields.push( fieldName );
 			}
 
-			var typeXml : XML = getTypeDescription( object );
-			return typeXml.@isDynamic == "true";
+			// Deal with dynamic fields, too.
+			for ( var field : String in object )
+				fields.push( field );
+
+			return fields;
+		}
+
+		/**
+		 * Returns the fully qualified name of the type
+		 * of the passed in object.
+		 *
+		 * @param object The object whose type is being retrieved.
+		 *
+		 * @return The name of the specified object's type.
+		 */
+		public static function getObjectClassName( object : * ) : String
+		{
+			return flash.utils.getQualifiedClassName( object );
+		}
+
+		public static function getObjectShortClassName( object : * ) : String
+		{
+			return getQualifiedClassName( object ).split( "::" )[ 1 ]
+		}
+
+		/**
+		 * Gets the xml description of an object's type through a call to the
+		 * flash.utils.describeType method. Results are cached, so only the first
+		 * call will impact performance.
+		 *
+		 * @param object The object to describe.
+		 *
+		 * @return The xml description of the object.
+		 */
+		public static function getTypeDescription( object : * ) : XML
+		{
+			var className : String = getObjectClassName( object );
+
+			if ( !_typeDescriptions[ className ])
+				_typeDescriptions[ className ] = describeType( object );
+
+			return _typeDescriptions[ className ];
 		}
 
 		/**
@@ -227,113 +287,76 @@ package totem.utils
 		}
 
 		/**
-		 * Get the xml for the metadata of the field.
+		 * Creates an instance of a type based on its name.
+		 *
+		 * @param className The name of the class to instantiate.
+		 *
+		 * @return An instance of the class, or null if instantiation failed.
 		 */
-		public static function getEditorData( object : *, field : String ) : XML
+		public static function instantiate( className : String, suppressError : Boolean = false ) : *
 		{
-			var description : XML = getTypeDescription( object );
+			// Deal with strings explicitly as they are a primitive.
+			if ( className == "String" )
+				return "";
 
-			if ( !description )
-				return null;
+			// Class is also a primitive type.
+			if ( className == "Class" )
+				return Class;
 
-			for each ( var variable : XML in description.* )
+			// Check for overrides.
+			if ( _instantiators[ className ])
+				return _instantiators[ className ]();
+
+			// Give it a shot!
+			try
 			{
-				// Skip if it's not the field we want.
-				if ( variable.@name != field )
-					continue;
-
-				// Only check variables/accessors.
-				if ( variable.name() != "variable" && variable.name() != "accessor" )
-					continue;
-
-				// Scan for EditorData metadata.
-				for each ( var metadataXML : XML in variable.* )
+				return new ( getDefinitionByName( className ));
+			}
+			catch ( e : Error )
+			{
+				if ( !suppressError )
 				{
-					if ( metadataXML.@name == "EditorData" )
-						return metadataXML;
+					//Logger.warn( null, "Instantiate", "Failed to instantiate " + className + " due to " + e.toString());
+					//Logger.warn( null, "Instantiate", "Is " + className + " included in your SWF? Make sure you call context.registerType(" + className + "); somewhere in your project." );
 				}
 			}
+
+			// If we get here, couldn't new it.
 			return null;
 		}
 
 		/**
-		 * Gets the xml description of an object's type through a call to the
-		 * flash.utils.describeType method. Results are cached, so only the first
-		 * call will impact performance.
+		 * Determines if an object is an instance of a dynamic class.
 		 *
-		 * @param object The object to describe.
+		 * @param object The object to check.
 		 *
-		 * @return The xml description of the object.
+		 * @return True if the object is dynamic, false otherwise.
 		 */
-		public static function getTypeDescription( object : * ) : XML
+		public static function isDynamic( object : * ) : Boolean
 		{
-			var className : String = getObjectClassName( object );
+			if ( object is Class )
+			{
+				//Logger.error( object, "isDynamic", "The object is a Class type, which is always dynamic" );
+				return true;
+			}
 
-			if ( !_typeDescriptions[ className ])
-				_typeDescriptions[ className ] = describeType( object );
-
-			return _typeDescriptions[ className ];
+			var typeXml : XML = getTypeDescription( object );
+			return typeXml.@isDynamic == "true";
 		}
 
 		/**
-		 * Gets the xml description of a class through a call to the
-		 * flash.utils.describeType method. Results are cached, so only the first
-		 * call will impact performance.
+		 * Registers a function that will be called when the specified type needs to be
+		 * instantiated. The function should return an instance of the specified type.
 		 *
-		 * @param className The name of the class to describe.
-		 *
-		 * @return The xml description of the class.
+		 * @param typeName The name of the type the specified function should handle.
+		 * @param instantiator The function that instantiates the specified type.
 		 */
-		public static function getClassDescription( className : String ) : XML
+		public static function registerInstantiator( typeName : String, instantiator : Function ) : void
 		{
-			if ( !_typeDescriptions[ className ])
-			{
-				try
-				{
-					_typeDescriptions[ className ] = describeType( getDefinitionByName( className ));
-				}
-				catch ( error : Error )
-				{
-					return null;
-				}
-			}
+			if ( _instantiators[ typeName ])
+				throw new Error( "TypeUtility: registerInstantiator", "An instantiator for " + typeName + " has already been registered. It will be replaced." );
 
-			return _typeDescriptions[ className ];
+			_instantiators[ typeName ] = instantiator;
 		}
-
-		public static function getListOfPublicFields( object : * ) : Array
-		{
-			var fields : Array = [];
-
-			if ( object == null || object == undefined )
-				return fields;
-
-			// Get the list of public fields.
-			var sourceFields : XML = getTypeDescription( object );
-
-			for each ( var fieldInfo : XML in sourceFields.* )
-			{
-				// Skip anything that is not a field.
-				if ( fieldInfo.name() != "variable" && fieldInfo.name() != "accessor" )
-					continue;
-
-				// Skip write-only stuff.
-				if ( fieldInfo.@access == "writeonly" )
-					continue;
-
-				var fieldName : String = fieldInfo.@name;
-				fields.push( fieldName );
-			}
-
-			// Deal with dynamic fields, too.
-			for ( var field : String in object )
-				fields.push( field );
-
-			return fields;
-		}
-
-		private static var _typeDescriptions : Dictionary = new Dictionary();
-
-		private static var _instantiators : Dictionary = new Dictionary();
 	}
 }

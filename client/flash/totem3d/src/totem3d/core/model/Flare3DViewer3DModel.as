@@ -26,10 +26,11 @@ package totem3d.core.model
 	import flare.basic.Viewer3D;
 	import flare.core.Camera3D;
 	
-	import totem.core.mvc.model.Model;
+	import totem.events.RemovableEventDispatcher;
+	import totem.monitors.startupmonitor.IStartupProxy;
 	import totem.utils.MobileUtil;
 
-	public class Flare3DViewer3DModel extends Model implements ITotemView3D
+	public class Flare3DViewer3DModel extends RemovableEventDispatcher implements ITotemView3D, IStartupProxy
 	{
 
 		private var _viewer3D : Viewer3D;
@@ -49,7 +50,7 @@ package totem3d.core.model
 			_viewer3D = null;
 		}
 
-		override public function load() : void
+		public function load() : void
 		{
 			_viewer3D = new Viewer3D( container );
 			_viewer3D.autoDispose = false;
@@ -81,10 +82,10 @@ package totem3d.core.model
 			_viewer3D.setViewport( 0, 0, viewPort.width, viewPort.height );
 
 			_viewer3D.clearColor.setTo( 0, 0, 0 );
-			_viewer3D.backgroundColor= 0xFFFFFF;
+			_viewer3D.backgroundColor = 0xFFFFFF;
 			_viewer3D.setupFrame(); // sets some global variables to use during the frame render..
 			_viewer3D.context.clear(); // clear the back buffer.
-			_viewer3D.render(); 
+			_viewer3D.render();
 
 		}
 

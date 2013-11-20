@@ -30,6 +30,11 @@ package totem.loaders.promise
 	public class JSONPromise extends Destroyable
 	{
 
+		public static function create( url : String ) : IPromise
+		{
+			return new JSONPromise( url ).promise();
+		}
+
 		private var _filename : String;
 
 		private var _outcome : Deferred;

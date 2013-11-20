@@ -40,12 +40,14 @@ package totem.monitors
 
 		}
 
-		public function addCompleteDispatcher( dispatcher : IStartupProxy, eventType : String = Event.COMPLETE ) : void
+		public function addProxy( dispatcher : IStartupProxy, eventType : String = Event.COMPLETE ) : IStartupProxy
 		{
 			dispatcher.addEventListener( eventType, onComplete );
 			_monitors.add( dispatcher );
 
 			count += 1;
+
+			return dispatcher;
 		}
 
 		override public function destroy() : void
