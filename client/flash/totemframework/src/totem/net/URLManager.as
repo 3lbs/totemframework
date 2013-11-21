@@ -76,7 +76,7 @@ package totem.net
 			return _file.resolvePath( value || "" ).url;
 		}
 
-		public function getURLFromDelimtedString( value : String, delimiter : String = "|" ) : String
+		public function getURLDelimiter( value : String, delimiter : String = "|" ) : String
 		{
 			var tFile : File = _file.clone();
 			var results : String = value.replace( delimiter, fileSeperator );

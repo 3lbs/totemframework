@@ -24,8 +24,8 @@ package application.rateourapp
 	import flash.net.navigateToURL;
 	import flash.system.Capabilities;
 	
-	import application.AppDatabaseService;
 	import application.ApplicationConfig;
+	import application.getDatabase;
 	
 	import org.casalib.util.ConversionUtil;
 	import org.osflash.vanilla.extract;
@@ -67,7 +67,7 @@ package application.rateourapp
 			// user doesnt have an internet connection
 			var connected : Boolean = AirNetworkInfo.networkInfo.isConnected();
 
-			if ( AppDatabaseService.application.launches < minLaunchesTilPrompt || !connected )
+			if ( getDatabase().getApp().launches < minLaunchesTilPrompt || !connected )
 			{
 				return false;
 			}
@@ -102,7 +102,7 @@ package application.rateourapp
 
 		public function load() : void
 		{
-			var rateAppObject : String = AppDatabaseService.getAppProp( RATE_APP_KEY );
+			var rateAppObject : String = getDatabase().getAppProp( RATE_APP_KEY );
 
 			if ( rateAppObject )
 			{
@@ -140,7 +140,7 @@ package application.rateourapp
 			rateAppParam.totalNumberOfPrompts += 1;
 			rateAppParam.lastRequest = new Date().getTime();
 
-			AppDatabaseService.setAppProp( RATE_APP_KEY, JSON.stringify( rateAppParam ));
+			getDatabase().setAppProp( RATE_APP_KEY, JSON.stringify( rateAppParam ));
 
 			return ( value == RATE_YES );
 		}

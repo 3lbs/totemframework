@@ -63,11 +63,20 @@ package totem.monitors
 
 		override public function start() : void
 		{
-			var itr : IIterator = _monitors.iterator();
+			super.start();
 
-			while ( itr.hasNext())
+			if ( _monitors.size == 0 )
 			{
-				IStartupProxy( itr.next()).load();
+				finished();
+			}
+			else
+			{
+				var itr : IIterator = _monitors.iterator();
+
+				while ( itr.hasNext())
+				{
+					IStartupProxy( itr.next()).load();
+				}
 			}
 		}
 

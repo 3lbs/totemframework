@@ -18,35 +18,79 @@ package application
 {
 
 	import com.adobe.air.crypto.EncryptionKeyGenerator;
-
+	
 	import flash.data.SQLConnection;
 	import flash.events.Event;
 	import flash.filesystem.File;
 	import flash.utils.ByteArray;
-
+	
 	import mx.collections.ArrayCollection;
-
+	
 	import nz.co.codec.flexorm.EntityManager;
-
+	
 	import totem.events.RemovableEventDispatcher;
 	import totem.monitors.startupmonitor.IStartupProxy;
 
 	public class AppDatabaseService extends RemovableEventDispatcher implements IStartupProxy
 	{
 
-		public static var application : App;
+		private static var _instance : AppDatabaseService;
 
-		public static var newInstall : Boolean;
-
-		public static function getAppProp( key : String ) : *
+		public static function createDatabase( p : String, url : String ) : AppDatabaseService
 		{
-			return AppDatabaseService.application.getAppProp( key );
+			return _instance ||= new AppDatabaseService( new SingletonEnforcer(), p, url );
 		}
 
-		public static function getEncriptionKey( password : String ) : ByteArray
+		public static function getInstance() : AppDatabaseService
+		{
+			if ( !_instance )
+				throw new Error( "Database has not been created" );
+
+			return _instance;
+		}
+
+		public var gameProp : Object;
+
+		public var newInstall : Boolean;
+
+		protected var entityManager : EntityManager = EntityManager.instance;
+
+		private var app : App;
+
+		private var conn : SQLConnection;
+
+		private var dbFile : File;
+
+		private var password : String;
+
+		public function AppDatabaseService( enforcer : SingletonEnforcer, p : String, url : String )
+		{
+			dbFile = File.applicationStorageDirectory.resolvePath( url );
+
+			password = p;
+			conn = new SQLConnection();
+		}
+
+		public function getApp() : App
+		{
+			return app;
+		}
+
+		override public function destroy() : void
+		{
+			super.destroy();
+			conn.close();
+		}
+
+		public function getAppProp( key : String ) : *
+		{
+			return app.getAppProp( key );
+		}
+
+		public function getEncriptionKey( password : String ) : ByteArray
 		{
 
-			//var password : String = "stewiegriffen";
+			//var password : StrFing = "stewiegriffen";
 			var keyGenerator : EncryptionKeyGenerator = new EncryptionKeyGenerator();
 
 			if ( !keyGenerator.validateStrongPassword( password ))
@@ -61,58 +105,10 @@ package application
 
 		}
 
-		public static function getList( clazz : Class ) : ArrayCollection
+		public function getList( clazz : Class ) : ArrayCollection
 		{
-			var allUsers : ArrayCollection = EntityManager.instance.findAll( clazz );
-			return allUsers;
-		}
-
-		public static function removeData( data : * ) : void
-		{
-			//entityManager.startTransaction();
-			EntityManager.instance.remove( data );
-			//entityManager.endTransaction();
-		}
-
-		public static function saveData( data : * ) : void
-		{
-			var test : * = EntityManager.instance.save( data );
-		}
-
-		public static function setAppProp( key : String, value : * ) : *
-		{
-			AppDatabaseService.application.appProps[ key ] = value;
-			updateApplication();
-			return value;
-		}
-
-		public static function updateApplication() : void
-		{
-			var test : * = EntityManager.instance.save( application );
-		}
-
-		public var gameProp : Object;
-
-		protected var entityManager : EntityManager = EntityManager.instance;
-
-		private var conn : SQLConnection;
-
-		private var dbFile : File;
-
-		private var password : String;
-
-		public function AppDatabaseService( p : String, url : String )
-		{
-			dbFile = File.applicationStorageDirectory.resolvePath( url );
-
-			password = p;
-			conn = new SQLConnection();
-		}
-
-		override public function destroy() : void
-		{
-			super.destroy();
-			conn.close();
+			var list : ArrayCollection = EntityManager.instance.findAll( clazz );
+			return list;
 		}
 
 		public function load() : void
@@ -140,19 +136,43 @@ package application
 			}
 			entityManager.openSyncConnection( dbFile.nativePath );
 
-			application = entityManager.loadItem( App, 1 ) as App;
+			app = entityManager.loadItem( App, 1 ) as App;
 
-			if ( !application )
+			if ( !app )
 			{
-				application = new App();
+				app = new App();
 			}
 
 			//application.launches += 1;
-			AppDatabaseService.application.launches += 1;
+			app.launches += 1;
 
-			entityManager.save( application );
+			entityManager.save( app );
 
 			dispatchEvent( new Event( Event.COMPLETE ));
+		}
+
+		public function removeData( data : * ) : void
+		{
+			//entityManager.startTransaction();
+			EntityManager.instance.remove( data );
+			//entityManager.endTransaction();
+		}
+
+		public function saveData( data : * ) : void
+		{
+			var test : * = EntityManager.instance.save( data );
+		}
+
+		public function setAppProp( key : String, value : * ) : *
+		{
+			app.appProps[ key ] = value;
+			updateApplication();
+			return value;
+		}
+
+		public function updateApplication() : void
+		{
+			var test : * = EntityManager.instance.save( app );
 		}
 	}
 }

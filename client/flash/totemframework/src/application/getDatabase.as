@@ -18,6 +18,6 @@ package application
 {
 	public function getDatabase() : AppDatabaseService
 	{
-		return null;
+		return AppDatabaseService.getInstance();
 	}
 }

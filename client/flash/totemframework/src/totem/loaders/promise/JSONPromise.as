@@ -21,7 +21,7 @@ package totem.loaders.promise
 	import gorilla.resource.JSONResource;
 	import gorilla.resource.Resource;
 	import gorilla.resource.ResourceManager;
-
+	
 	import totem.core.Destroyable;
 	import totem.monitors.promise.Deferred;
 	import totem.monitors.promise.IPromise;
@@ -43,12 +43,15 @@ package totem.loaders.promise
 		{
 			_filename = url
 			_outcome = new Deferred();
+			_outcome.thenFinally( destroy );
 		}
 
 		override public function destroy() : void
 		{
 			super.destroy();
 			_outcome = null;
+			
+			//ResourceManager.getInstance().unload( filename, JSONResource );
 		}
 
 		public function get filename() : String
@@ -65,13 +68,11 @@ package totem.loaders.promise
 		private function onFailed( resource : Resource ) : void
 		{
 			_outcome.reject( null );
-			destroy();
 		}
 
 		private function onJSONComplete( resource : JSONResource ) : void
 		{
 			_outcome.resolve( resource.JSONData );
-			destroy();
 		}
 
 		private function start() : void
