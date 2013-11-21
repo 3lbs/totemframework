@@ -83,7 +83,7 @@ package totem.monitors
 		public function get totalDispatchers() : int
 		{
 			return _monitors.size;
-		}
+		} 
 
 		protected function onComplete( eve : Event ) : void
 		{
