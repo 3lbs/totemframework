@@ -17,20 +17,23 @@
 package totem.components.spatial
 {
 
-	import totem.events.RemovableEventDispatcher;
+	import org.as3commons.collections.LinkedList;
+	
+	import totem.core.System;
 
-	public class SpatialManager extends RemovableEventDispatcher implements ISpatialManager
+	public class SpatialManager extends System implements ISpatialManager
 	{
 
-		public var spatialList : Array = new Array();
+		public var spatialList : LinkedList = new LinkedList();
 
-		public function SpatialManager()
+		public function SpatialManager( name : String = null )
 		{
+			super( name );
 		}
 
 		public function addSpatialObject( object : ISpatial2D ) : void
 		{
-			spatialList.push( object );
+			spatialList.add( object );
 		}
 
 		public function getCostToClosestItem( type : String ) : Number
@@ -40,7 +43,12 @@ package totem.components.spatial
 
 		public function getSpatialList() : Array
 		{
-			return spatialList;
+			return spatialList.toArray();
+		}
+
+		public function removeSpatialObject( object : ISpatial2D ) : void
+		{
+			spatialList.remove( object );
 		}
 	}
 }

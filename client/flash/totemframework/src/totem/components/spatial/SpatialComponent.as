@@ -39,7 +39,7 @@ package totem.components.spatial
 
 		public var radius : Number = 1;
 
-		public var rotationChange : Signal = new Signal( Number, Number );
+		public var rotationChange : Signal = new Signal( Number );
 
 		public var scaleChange : Signal = new Signal( Number, Number );
 
@@ -55,10 +55,12 @@ package totem.components.spatial
 
 		private var _scaleY : Number = 1;
 
+		private var _spatialManager : ISpatialManager;
+
 		private var _x : Number = 0;
 
 		private var _y : Number = 0;
-		
+
 		private var dirtyPosition : Boolean = true;
 
 		private var dirtyRotation : Boolean = true;
@@ -72,14 +74,39 @@ package totem.components.spatial
 			properties = new Dictionary();
 		}
 
-		public function addDisplayRendererSignal( renderer : IDisplay2DRenderer ) : void
+		public function addDisplayRenderer( renderer : IDisplay2DRenderer ) : void
 		{
 			displayRenderer = renderer;
 		}
 
+		public function addSpatialManager( spatialDatabase : ISpatialManager ) : void
+		{
+			_spatialManager = spatialDatabase;
+			_spatialManager.addSpatialObject( this );
+		}
+
+	
 		public function getProperty( prop : Object ) : Object
 		{
 			return properties[ prop ];
+		}
+
+		public function getSpatialManager() : ISpatialManager
+		{
+			return _spatialManager;
+		}
+
+		override public function onTick() : void
+		{
+			dispatchUpdate();
+		}
+
+		public function removeItemFromManager() : void
+		{
+			if ( _spatialManager )
+			{
+				_spatialManager.removeSpatialObject( this );
+			}
 		}
 
 		public function get rotation() : Number
@@ -92,11 +119,6 @@ package totem.components.spatial
 			_rotation = value;
 			dirtyRotation = true;
 
-			dispatchUpdate();
-		}
-
-		override public function onTick():void
-		{
 			dispatchUpdate();
 		}
 
@@ -129,7 +151,6 @@ package totem.components.spatial
 				dispatchUpdate();
 			}
 		}
-
 
 		public function setPosition( x : Number, y : Number ) : void
 		{
@@ -195,7 +216,6 @@ package totem.components.spatial
 			dirtyPosition = true;
 			dispatchUpdate();
 		}
-
 
 		protected function dispatchUpdate( force : Boolean = false ) : void
 		{
