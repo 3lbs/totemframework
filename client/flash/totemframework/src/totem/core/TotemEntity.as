@@ -1,20 +1,36 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core
 {
 
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
-	
+
 	import ladydebug.Logger;
-	
+
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
-	
-	import totem.totem_internal;
 	import totem.events.RemovableEventDispatcher;
 	import totem.monitors.promise.IPromise;
 	import totem.monitors.promise.SerialDeferred;
+
+	import totem.totem_internal;
 
 	use namespace totem_internal;
 
@@ -22,28 +38,13 @@ package totem.core
 	{
 		public var eventDispatcher : IEventDispatcher = new RemovableEventDispatcher();
 
-		private var components_ : Dictionary = new Dictionary();
-
 		public var onAddSignal : ISignal = new Signal( TotemEntity );
 
 		public var ticked : ISignal = new Signal( Number );
 
+		private var components_ : Dictionary = new Dictionary();
+
 		private var tickEnabled : Boolean;
-
-		public function getComponent( ComponentClass : Class ) : *
-		{
-			var component : * = null;
-			try
-			{
-				component = getInstance( ComponentClass );
-			}
-			catch ( error : Error )
-			{
-				Logger.warn( this, "getComponent", "doesnt exsists: " + ComponentClass );
-			}
-
-			return component;
-		}
 
 		public function TotemEntity( name : String )
 		{
@@ -71,6 +72,43 @@ package totem.core
 			return component;
 		}
 
+		public function deconstruct( func : Function = null ) : IPromise
+		{
+			var monitor : SerialDeferred = new SerialDeferred();
+
+			for each ( var component : TotemComponent in components_ )
+			{
+				monitor.add( component.deconstruct());
+			}
+
+			monitor.resolveOn( doDeconstruct );
+
+			return monitor.promise();
+		}
+
+		override public function destroy() : void
+		{
+			super.destroy();
+			// deleyed destroy?????
+			deconstruct();
+		}
+
+		public function getComponent( ComponentClass : Class ) : *
+		{
+			var component : * = null;
+
+			try
+			{
+				component = getInstance( ComponentClass );
+			}
+			catch ( error : Error )
+			{
+				Logger.warn( this, "getComponent", "doesnt exsists: " + ComponentClass );
+			}
+
+			return component;
+		}
+
 		override public function initialize() : void
 		{
 			super.initialize();
@@ -80,19 +118,30 @@ package totem.core
 				getInjector().injectInto( component );
 				component.doAdd();
 			}
-			
+
 			onAddSignal.dispatch( this );
 
 			onAddSignal.removeAll();
 			onAddSignal = null;
 
 		}
-		
-		private function handleInitComplete():void
+
+		public function onActivate() : void
 		{
-			eventDispatcher.dispatchEvent( new Event( Event.COMPLETE ) );
+			for each ( var component : TotemComponent in components_ )
+			{
+				component.doActivate();
+			}
 		}
-		
+
+		public function onRetire() : void
+		{
+			for each ( var component : TotemComponent in components_ )
+			{
+				component.doRetire();
+			}
+		}
+
 		public function removeComponent( ComponentClass : Class ) : void
 		{
 			var injector : Injector = getInjector();
@@ -113,34 +162,6 @@ package totem.core
 			delete components_[ ComponentClass ];
 		}
 
-		internal function onTick( delta : Number ) : void
-		{
-			tickEnabled && ticked.dispatch( delta );
-		}
-
-		override public function destroy() : void
-		{
-			super.destroy();
-			// deleyed destroy?????
-			deconstruct();
-		}
-
-		public function deconstruct( func : Function = null ) : IPromise
-		{
-			var monitor : SerialDeferred = new SerialDeferred();
-			
-			
-			
-			for each ( var component : TotemComponent in components_ )
-			{
-				monitor.add( component.deconstruct() );	
-			}
-			
-			monitor.resolveOn( doDeconstruct );
-			
-			return monitor.promise();
-		}
-
 		protected function doDeconstruct() : void
 		{
 			for ( var componentClass : * in components_ )
@@ -155,6 +176,16 @@ package totem.core
 				injector.teardown();
 				injector = null;
 			}
+		}
+
+		internal function onTick( delta : Number ) : void
+		{
+			tickEnabled && ticked.dispatch( delta );
+		}
+
+		private function handleInitComplete() : void
+		{
+			eventDispatcher.dispatchEvent( new Event( Event.COMPLETE ));
 		}
 	}
 }

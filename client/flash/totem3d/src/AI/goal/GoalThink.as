@@ -18,7 +18,7 @@ package AI.goal
 {
 
 	import avmplus.getQualifiedClassName;
-	
+
 	import totem.core.TotemEntity;
 
 	public class GoalThink extends GoalComposite
@@ -44,18 +44,28 @@ package AI.goal
 		{
 			evaluators.push( evaluator );
 		}
-		
+
+		public function addGoal( goal : Goal ) : Boolean
+		{
+			if ( notPresent( goal ))
+			{
+				removeAllSubgoals();
+				addSubgoal( goal );
+			}
+			return false;
+		}
+
 		//----------------------------- Update ----------------------------------------
 		// 
 		//  this method iterates through each goal option to determine which one has
 		//  the highest desirability.
 		//-----------------------------------------------------------------------------
-		
+
 		/**
-		 * 
+		 *
 		 * this method iterates through each goal option to determine which one has
 		 * the highest desirability.
-		 * 
+		 *
 		 */
 		public function arbitrate() : void
 		{
@@ -103,17 +113,11 @@ package AI.goal
 			return status;
 		}
 
-		
-		public function addGoal ( goal : Goal ) : Boolean
+		public function removeEvaluators() : void
 		{
-			if ( notPresent( goal  ) )
-			{
-				removeAllSubgoals();
-				addSubgoal( goal );
-			}
-			return false;
+			evaluators.length = 0;
 		}
-		
+
 		protected function notPresent( goal : Goal ) : Boolean
 		{
 			if ( subgoals.length > 0 )

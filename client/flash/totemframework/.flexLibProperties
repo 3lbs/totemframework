@@ -412,6 +412,7 @@
     <classEntry path="totem.core.params.DataObjectLoader"/>
     <classEntry path="totem.core.params.DataParamProxy"/>
     <classEntry path="application.getDatabase"/>
+    <classEntry path="totem.core.state.NullState"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

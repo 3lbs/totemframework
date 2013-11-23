@@ -14,24 +14,17 @@
 //
 //------------------------------------------------------------------------------
 
-package AI.pathfinding
+package totem.core.state
 {
 
-	import flash.events.IEventDispatcher;
-	
-	import totem.components.spatial.ISpatial2D;
-	import totem.events.RemovableEventDispatcher;
-
-	public class PathPlanner extends RemovableEventDispatcher
+	public class NullState extends State
 	{
-		public function PathPlanner( target : IEventDispatcher = null )
-		{
-			super( target );
-		}
 
-		public function requestPathToItem( item : ISpatial2D ) : Vector.<PathEdge>
+		public static const NAME : String = "NothingState";
+
+		public function NullState()
 		{
-			return null;
+			super();
 		}
 	}
 }

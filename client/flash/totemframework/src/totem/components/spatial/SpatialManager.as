@@ -15,10 +15,11 @@
 //------------------------------------------------------------------------------
 
 package totem.components.spatial
+
 {
 
 	import org.as3commons.collections.LinkedList;
-	
+
 	import totem.core.System;
 
 	public class SpatialManager extends System implements ISpatialManager
@@ -31,9 +32,12 @@ package totem.components.spatial
 			super( name );
 		}
 
-		public function addSpatialObject( object : ISpatial2D ) : void
+		public function addSpatialObject( component : ISpatial2D ) : void
 		{
-			spatialList.add( object );
+			if ( spatialList.has( component ))
+				return;
+
+			spatialList.add( component );
 		}
 
 		public function getCostToClosestItem( type : String ) : Number
@@ -46,9 +50,9 @@ package totem.components.spatial
 			return spatialList.toArray();
 		}
 
-		public function removeSpatialObject( object : ISpatial2D ) : void
+		public function removeSpatialObject( component : ISpatial2D ) : void
 		{
-			spatialList.remove( object );
+			spatialList.remove( component );
 		}
 	}
 }

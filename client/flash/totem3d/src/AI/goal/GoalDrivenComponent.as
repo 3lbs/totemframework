@@ -27,15 +27,18 @@ package AI.goal
 
 		public static const NAME : String = "GoalDrivenComponent";
 
-		private var _currentBrain : GoalThink;
+		protected var _currentBrain : GoalThink;
 
-		private var _pathPlanner : PathPlanner;
+		protected var _machine : Machine;
+
+		protected var _pathPlanner : PathPlanner;
 
 		public function GoalDrivenComponent( machine : Machine, planner : PathPlanner )
 		{
-			super( machine );
+			super( NAME );
 
 			_pathPlanner = planner;
+			_machine = machine;
 		}
 
 		public function get brain() : GoalThink
