@@ -64,6 +64,7 @@
     <classEntry path="totem3d.components.spatial.ISpatial3D"/>
     <classEntry path="AI.pathfinding.AStarPathPlanner"/>
     <classEntry path="totem3d.core.param.Transform3DParam"/>
+    <classEntry path="AI.steering.IMover2D"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

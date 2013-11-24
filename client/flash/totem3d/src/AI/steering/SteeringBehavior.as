@@ -21,7 +21,6 @@ package AI.steering
 
 	import flash.geom.Rectangle;
 	
-	import AI.boid.Boid2DComponent;
 	import AI.steering.behaviors.ABehavior;
 	import AI.steering.behaviors.IGroupBehavior;
 	
@@ -29,8 +28,6 @@ package AI.steering
 	import totem.components.spatial.ISpatialManager;
 	import totem.events.RemovableEventDispatcher;
 	import totem.math.Vector2D;
-	
-	import totem3d.components.Animator3DComponent;
 
 	public class SteeringBehavior extends RemovableEventDispatcher
 	{
