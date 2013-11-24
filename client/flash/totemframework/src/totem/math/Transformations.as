@@ -37,7 +37,7 @@ package totem.math
 		public static function pointToWorldSpace( a_point : Vector2D, a_heading : Vector2D, a_side : Vector2D, a_pos : Vector2D ) : Vector2D
 		{
 			var transPoint : Vector2D = a_point.clone ();
-			m_mat.Set ();
+			m_mat.setTo ();
 			
 			m_mat.rotateVector ( a_heading, a_side );
 			m_mat.translate ( a_pos.x, a_pos.y );
@@ -58,7 +58,7 @@ package totem.math
 		public static function vectorToWorldSpace( vector : Vector2D, heading : Vector2D, side : Vector2D ) : Vector2D
 		{
 			var transVec : Vector2D = vector.clone ();
-			m_mat.Set ();
+			m_mat.setTo ();
 			
 			m_mat.rotateVector ( heading, side );
 			m_mat.transformVector ( transVec );
@@ -82,7 +82,7 @@ package totem.math
 			var tx : Number = -pos.dotOf ( heading );
 			var ty : Number = -pos.dotOf ( side );
 			
-			m_mat.Set ( heading.x, side.x, 0, heading.y, side.y, 0, tx, ty );
+			m_mat.setTo ( heading.x, side.x, 0, heading.y, side.y, 0, tx, ty );
 			
 			m_mat.transformVector ( transPoint );
 			
@@ -102,7 +102,7 @@ package totem.math
 		{
 			var transPoint : Vector2D = vector.clone ();
 			
-			m_mat.Set ( heading.x, side.x, 0, heading.y, side.y );
+			m_mat.setTo ( heading.x, side.x, 0, heading.y, side.y );
 			
 			m_mat.transformVector ( transPoint );
 			
@@ -117,9 +117,10 @@ package totem.math
 		 */
 		public static function rotateAroundOrigin( vector : Vector2D, angle : Number ) : void
 		{
-			var mat : Matrix2D = new Matrix2D ();
+			var mat : Matrix2D = Matrix2D.create ();
 			mat.rotate ( angle );
 			mat.transformVector ( vector );
+			mat.dispose();
 		}
 		
 		/**

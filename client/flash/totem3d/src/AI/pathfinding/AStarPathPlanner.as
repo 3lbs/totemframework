@@ -17,19 +17,29 @@
 package AI.pathfinding
 {
 
+	
 	import totem.components.spatial.ISpatial2D;
-	import totem.core.Destroyable;
 	import totem.monitors.promise.IPromise;
+	import totem.pathfinder.astar.core.Astar;
+	import totem.pathfinder.astar.core.IMap;
+	import totem.pathfinder.astar.core.PathRequest;
 
-	public class PathPlanner extends Destroyable
+	public class AStarPathPlanner extends PathPlanner
 	{
-		public function PathPlanner()
+		private var _aStar : Astar;
+
+		private var _map : IMap;
+
+		public function AStarPathPlanner( astar : Astar, map : IMap )
 		{
+			_aStar = astar;
+			_map = map;
+			
 		}
 
-		public function requestPathToItem( item : ISpatial2D ) : IPromise
+		override public function requestPathToItem( item : ISpatial2D ) : IPromise 
 		{
-			return null;
+			return PathRequest.create( null, null, _map );
 		}
 	}
 }

@@ -18,14 +18,14 @@ package AI.steering.behaviors
 {
 
 	import AI.AISettings;
-	import AI.boid.Boid2DComponent;
-
+	
+	import totem.components.spatial.ISpatial2D;
 	import totem.math.Vector2D;
 
 	public class Arrive extends ABehavior
 	{
 
-		public static function calc( a_agent : Boid2DComponent, a_target : Vector2D, a_speed : int = 3 ) : Vector2D
+		public static function calc( a_agent : ISpatial2D, a_target : Vector2D, a_speed : int = 3 ) : Vector2D
 		{
 			var toTarget : Vector2D = a_target.subtractedBy( a_agent.actualPos );
 			var dist : Number = toTarget.length;

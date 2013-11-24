@@ -19,13 +19,14 @@ package AI.steering.behaviors
 
 	import AI.AISettings;
 	import AI.boid.Boid2DComponent;
-
+	
+	import totem.components.spatial.ISpatial2D;
 	import totem.math.Vector2D;
 
 	public class Evade extends ABehavior
 	{
 
-		public static function calc( a_agent : Boid2DComponent, a_pursuer : Boid2DComponent, a_fleeDistSq : Number = 0 ) : Vector2D
+		public static function calc( a_agent : ISpatial2D, a_pursuer : ISpatial2D, a_fleeDistSq : Number = 0 ) : Vector2D
 		{
 			var toPursuer : Vector2D = a_pursuer.actualPos.subtractedBy( a_agent.actualPos );
 
@@ -40,9 +41,9 @@ package AI.steering.behaviors
 
 		public var fleeDistSq : Number;
 
-		public var pursuer : Boid2DComponent;
+		public var pursuer : ISpatial2D;
 
-		public function Evade( a_pursuer : Boid2DComponent, a_fleeDistSq : Number = 0 )
+		public function Evade( a_pursuer : ISpatial2D, a_fleeDistSq : Number = 0 )
 		{
 			pursuer = a_pursuer;
 			fleeDistSq = a_fleeDistSq;
@@ -69,7 +70,7 @@ package AI.steering.behaviors
 			pursuer = null;
 		}
 
-		private function turnAroundTime( a_agent : Boid2DComponent, a_pursuer : Boid2DComponent ) : Number
+		private function turnAroundTime( a_agent : ISpatial2D, a_pursuer : ISpatial2D ) : Number
 		{
 			var toTarget : Vector2D = a_pursuer.actualPos.subtractedBy( a_agent.actualPos ).getNormalized();
 			var dot : Number = a_agent.heading.dotOf( toTarget );

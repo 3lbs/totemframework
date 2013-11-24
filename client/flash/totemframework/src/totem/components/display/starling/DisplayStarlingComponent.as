@@ -24,11 +24,19 @@ package totem.components.display.starling
 	import starling.display.DisplayObjectContainer;
 
 	import totem.components.display.IDisplay2DRenderer;
+	import totem.core.TotemEntity;
 	import totem.core.time.TickedComponent;
 	import totem.data.type.Point2d;
 
 	public class DisplayStarlingComponent extends TickedComponent implements IDisplay2DRenderer
 	{
+		public static function addToScene( entity : TotemEntity, scene : DisplayObjectContainer ) : void
+		{
+			var displayComponment : DisplayStarlingComponent = entity.getComponent( IDisplay2DRenderer ) as DisplayStarlingComponent;
+
+			displayComponment.scene = scene;
+		}
+
 		public var snapToNearestPixels : Boolean = true;
 
 		protected var _alpha : Number = 1;
@@ -301,6 +309,12 @@ package totem.components.display.starling
 			}
 		}
 
+		override protected function onActivate() : void
+		{
+			super.onActivate();
+			addToScene();
+		}
+
 		override protected function onAdd() : void
 		{
 			super.onAdd();
@@ -316,6 +330,13 @@ package totem.components.display.starling
 			super.onRemove();
 
 			// Remove ourselves from the scene when we are removed.
+			removeFromScene();
+		}
+
+		override protected function onRetire() : void
+		{
+			super.onRetire();
+			
 			removeFromScene();
 		}
 

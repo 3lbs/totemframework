@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.utils.objectpool.helpers
 {
 
@@ -9,7 +25,7 @@ package totem.utils.objectpool.helpers
 	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
-	
+
 	import totem.core.IDestroyable;
 	import totem.utils.objectpool.IObjectPoolHelper;
 
@@ -17,6 +33,20 @@ package totem.utils.objectpool.helpers
 	{
 		public function DisplayObjectObjectPoolHelper()
 		{
+		}
+
+		public function activate( item : * ) : void
+		{
+
+		}
+
+		public function dispose( item : * ) : void
+		{
+			if ( item is IDestroyable )
+				IDestroyable( item );
+
+			if ( item is DisplayObjectContainer )
+				DisplayObjectContainer( item ).removeChildren();
 		}
 
 		public function retire( item : * ) : void
@@ -60,15 +90,6 @@ package totem.utils.objectpool.helpers
 				d.transform.matrix = new Matrix();
 				d.transform.colorTransform = new ColorTransform();
 			}
-		}
-		
-		public function dispose ( item : * ) : void
-		{
-			if ( item is IDestroyable )
-				IDestroyable( item );
-			
-			if ( item is DisplayObjectContainer )
-				DisplayObjectContainer( item ).removeChildren();
 		}
 	}
 }

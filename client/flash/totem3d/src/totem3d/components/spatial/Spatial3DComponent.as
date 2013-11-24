@@ -28,7 +28,7 @@ package totem3d.components.spatial
 	import org.osflash.signals.Signal;
 	
 	import totem.totem_internal;
-	import totem.core.params.TransformParam;
+	import totem3d.core.param.Transform3DParam;
 	import totem.core.time.TickedComponent;
 	import totem.math.AABBox;
 	import totem.math.Vector2D;
@@ -90,7 +90,7 @@ package totem3d.components.spatial
 
 		private var dirtyScale : Boolean = true;
 
-		public function Spatial3DComponent( name : String = "", data : TransformParam = null )
+		public function Spatial3DComponent( name : String = "", data : Transform3DParam = null )
 		{
 			super( name || NAME );
 

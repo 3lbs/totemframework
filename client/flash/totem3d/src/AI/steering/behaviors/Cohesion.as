@@ -18,8 +18,8 @@ package AI.steering.behaviors
 {
 
 	import AI.AISettings;
-	import AI.boid.Boid2DComponent;
 
+	import totem.components.spatial.ISpatial2D;
 	import totem.math.Vector2D;
 
 	public class Cohesion extends ABehavior implements IGroupBehavior
@@ -27,7 +27,7 @@ package AI.steering.behaviors
 
 		private var centerOfMass : Vector2D;
 
-		private var neighbor : Boid2DComponent;
+		private var neighbor : ISpatial2D;
 
 		private var neighborCount : int;
 

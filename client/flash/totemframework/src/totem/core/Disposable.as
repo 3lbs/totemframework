@@ -14,22 +14,19 @@
 //
 //------------------------------------------------------------------------------
 
-package AI.pathfinding
+package totem.core
 {
 
-	import totem.components.spatial.ISpatial2D;
-	import totem.core.Destroyable;
-	import totem.monitors.promise.IPromise;
-
-	public class PathPlanner extends Destroyable
+	public class Disposable extends Destroyable
 	{
-		public function PathPlanner()
+		public function Disposable()
 		{
+			super();
 		}
 
-		public function requestPathToItem( item : ISpatial2D ) : IPromise
+		public function dispose() : void
 		{
-			return null;
+
 		}
 	}
 }

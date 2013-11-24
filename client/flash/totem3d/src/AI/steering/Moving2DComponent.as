@@ -276,12 +276,13 @@ package AI.steering
 		{
 			if ( maxTurnRate > 0 && _oldVelocity.angleTo( velocity ) > ( maxTurnRate * MathUtils.DEG_TO_RAD ) * _stepSize )
 			{
-				var mat : Matrix2D = new Matrix2D();
+				var mat : Matrix2D = Matrix2D.create();
 				mat.rotate((( maxTurnRate * MathUtils.DEG_TO_RAD ) * _stepSize ) * heading.sign( velocity ));
 				mat.transformVector( _oldVelocity );
 				mat.transformVector( heading );
 				velocity.x = _oldVelocity.x;
 				velocity.y = _oldVelocity.y;
+				mat.dispose();
 			}
 
 			velocity.x *= damping;

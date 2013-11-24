@@ -17,15 +17,14 @@
 package AI.steering.behaviors
 {
 
-	import AI.boid.Boid2DComponent;
-	
+	import totem.components.spatial.ISpatial2D;
 	import totem.core.Destroyable;
 	import totem.math.Vector2D;
 
 	public class ABehavior extends Destroyable
 	{
 
-		public var agent : Boid2DComponent;
+		public var agent : ISpatial2D;
 
 		public var priority : int; // Order in which this will be calculated vs other behaviors
 

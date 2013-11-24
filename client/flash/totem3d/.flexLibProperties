@@ -62,6 +62,8 @@
     <classEntry path="totem3d.core.model.Flare3DViewer3DModel"/>
     <classEntry path="totem3d.core.model.ITotemView3D"/>
     <classEntry path="totem3d.components.spatial.ISpatial3D"/>
+    <classEntry path="AI.pathfinding.AStarPathPlanner"/>
+    <classEntry path="totem3d.core.param.Transform3DParam"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

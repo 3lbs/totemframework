@@ -74,7 +74,7 @@ package AI.boid
 		{
 			super.addSpatialManager( spatialDatabase );
 
-			steering.addSpatialDatabase( spatialDatabase );
+			//steering.addSpatialDatabase( spatialDatabase );
 		}
 
 		public function get neighborDistance() : Number

@@ -155,7 +155,6 @@
     <classEntry path="totem.core.mvc.view.MediatorSystem"/>
     <classEntry path="totem.core.mvc.view.ViewMap"/>
     <classEntry path="totem.core.params.BaseParam"/>
-    <classEntry path="totem.core.params.TransformParam"/>
     <classEntry path="totem.core.params.URLAssetParam"/>
     <classEntry path="totem.core.params.display.AtlasDataParam"/>
     <classEntry path="totem.core.params.display.BitmapDataParam"/>
@@ -413,6 +412,7 @@
     <classEntry path="totem.core.params.DataParamProxy"/>
     <classEntry path="application.getDatabase"/>
     <classEntry path="totem.core.state.NullState"/>
+    <classEntry path="totem.core.Disposable"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

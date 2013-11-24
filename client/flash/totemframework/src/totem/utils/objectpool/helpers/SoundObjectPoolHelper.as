@@ -15,6 +15,11 @@ package totem.utils.objectpool.helpers
 
 		}
 		
+		public function activate( item : * ) : void
+		{
+			
+		}
+		
 		public function dispose ( item : * ) : void
 		{
 			

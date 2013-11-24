@@ -12,7 +12,7 @@ package totem.math
 		public static function create(x:Number=0, y:Number=0):Vector2D
 		{
 			if (disposed.length > 0)
-				return disposed.pop().setTo(x, y);
+				return disposed.shift().setTo(x, y);
 			else
 				return new Vector2D(x, y);
 		}
@@ -25,17 +25,18 @@ package totem.math
 			}
 		}
 
-		public function dispose():void
+		public function dispose():Vector2D
 		{
-			_length=0;
 
 			var a:Vector2D;
 
 			for each (a in disposed)
 				if (this == a)
-					return;
+					return this;
 
 			disposed.push(this);
+			
+			return this;
 		}
 
 		override public function destroy():void

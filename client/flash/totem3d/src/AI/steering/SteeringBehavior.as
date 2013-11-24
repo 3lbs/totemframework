@@ -22,10 +22,11 @@ package AI.steering
 	import flash.geom.Rectangle;
 	
 	import AI.boid.Boid2DComponent;
-	import AI.spatial.BoidSpatialManager;
 	import AI.steering.behaviors.ABehavior;
 	import AI.steering.behaviors.IGroupBehavior;
 	
+	import totem.components.spatial.ISpatial2D;
+	import totem.components.spatial.ISpatialManager;
 	import totem.events.RemovableEventDispatcher;
 	import totem.math.Vector2D;
 	
@@ -43,9 +44,9 @@ package AI.steering
 
 		public var calculateMethod : int = CALCULATE_ACCURACY;
 
-		public var neighbors : Vector.<Boid2DComponent>;
+		public var neighbors : Vector.<ISpatial2D>;
 
-		private var m_agent : Boid2DComponent;
+		private var m_agent : ISpatial2D;
 
 		private var m_force : Vector2D;
 
@@ -55,15 +56,15 @@ package AI.steering
 
 		private var searchRect : Rectangle;
 
-		private var spatialDatabase : BoidSpatialManager;
+		private var spatialDatabase : ISpatialManager;
 
-		public function SteeringBehavior( a_agent : Boid2DComponent, animator : Animator3DComponent, calculationMethod : int = CALCULATE_ACCURACY )
+		public function SteeringBehavior( a_agent : ISpatial2D, calculationMethod : int = CALCULATE_ACCURACY )
 		{
 			this.calculateMethod = calculationMethod;
 			m_agent = a_agent;
 			m_force = new Vector2D();
 			behaviors = [];
-			neighbors = new Vector.<Boid2DComponent>();
+			neighbors = new Vector.<ISpatial2D>();
 
 			/*spatialDatabase = a_spatialDatabase;
 			spatialDatabase.addItem ( m_agent );*/
@@ -86,7 +87,7 @@ package AI.steering
 
 		}
 
-		public function addSpatialDatabase( a_spatialDatabase : BoidSpatialManager ) : void
+		public function addSpatialDatabase( a_spatialDatabase : ISpatialManager ) : void
 		{
 			spatialDatabase = a_spatialDatabase;
 		}
@@ -157,12 +158,12 @@ package AI.steering
 			throw new Error( "<SteeringBehavior> Behavior does not exist!" );
 		}
 
-		public function getFirstBoidOfType( type : String ) : Boid2DComponent
+		public function getFirstBoidOfType( type : String ) : ISpatial2D
 		{
 			return spatialDatabase.getFirstBoidOfType( type, m_agent );
 		}
 
-		public function getNearestBoids( type : String ) : Vector.<Boid2DComponent>
+		public function getNearestBoids( type : String ) : Vector.<ISpatial2D>
 		{
 			return null; //spatialDatabase.getNearestEntityOfType( type, m_agent );
 		}

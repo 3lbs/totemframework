@@ -17,19 +17,14 @@
 package totem.components.display.starling
 {
 
-	import org.osflash.signals.ISignal;
-	import org.osflash.signals.Signal;
-
 	import starling.textures.Texture;
-
+	
 	import totem.core.time.TimeManager;
 	import totem.display.starling.Animation;
 	import totem.display.starling.AnimationMovieClip;
 
 	public class MovieClipStarlingComponent extends DisplayStarlingComponent
 	{
-
-		public var dispatchAddToScene:ISignal=new Signal(MovieClipStarlingComponent);
 
 		public function MovieClipStarlingComponent()
 		{
@@ -62,9 +57,6 @@ package totem.components.display.starling
 		{
 			super.addToScene();
 
-			registerForTicks=true;
-
-			dispatchAddToScene.dispatch(this);
 		}
 
 		override protected function removeFromScene():void

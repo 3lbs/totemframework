@@ -1,8 +1,8 @@
 package AI.steering.behaviors
 {
 	import AI.AISettings;
-	import AI.boid.Boid2DComponent;
 	
+	import totem.components.spatial.ISpatial2D;
 	import totem.math.Vector2D;
 	
 	
@@ -26,7 +26,7 @@ package AI.steering.behaviors
 		{
 			if ( agent.actualPos.distanceSqTo ( target ) > seekDistSq && seekDistSq > 0 )
 			{
-				return new Vector2D ();
+				return Vector2D.create();
 			}
 			
 			// | target - agentPos | * agentMaxSpeed
@@ -35,14 +35,14 @@ package AI.steering.behaviors
 			return desiredVel.subtractedBy ( agent.velocity );
 		}
 		
-		public static function calc( agent : Boid2DComponent, target : Vector2D, seekDistSq : Number = 0 ) : Vector2D
+		public static function calc( agent : ISpatial2D, target : Vector2D, seekDistSq : Number = 0 ) : Vector2D
 		{
 			if ( agent.actualPos.distanceSqTo ( target ) > seekDistSq && seekDistSq > 0 )
 			{
-				return new Vector2D ();
+				return Vector2D.create();
 			}
 			
-			var desiredVel : Vector2D = ( target.subtractedBy ( agent.actualPos ).getNormalized () ).multipliedBy ( agent.maxSpeed );
+			var desiredVel : Vector2D = ( target.subtractedBy ( agent.actualPos ).dispose().getNormalized ().dispose() ).multipliedBy ( agent.maxSpeed );
 			return desiredVel.subtractedBy ( agent.velocity );
 		}
 	

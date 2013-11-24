@@ -80,6 +80,13 @@ package totem.core.time
 			}
 		}
 
+		override protected function onActivate() : void
+		{
+			super.onActivate();
+
+			registerForTicks = true;
+		}
+
 		override protected function onAdd() : void
 		{
 			super.onAdd();
@@ -93,6 +100,13 @@ package totem.core.time
 			super.onRemove();
 
 			// Make sure we are unregistered.
+			registerForTicks = false;
+		}
+
+		override protected function onRetire() : void
+		{
+			super.onRetire();
+
 			registerForTicks = false;
 		}
 	}

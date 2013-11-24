@@ -18,7 +18,7 @@ package totem3d.utils.meshpool
 {
 
 	import flare.core.Mesh3D;
-
+	
 	import totem.utils.objectpool.IObjectPoolHelper;
 
 	public class Mesh3DPoolHelper implements IObjectPoolHelper
@@ -26,6 +26,11 @@ package totem3d.utils.meshpool
 		public function Mesh3DPoolHelper()
 		{
 			super();
+		}
+
+		public function activate( item : * ) : void
+		{
+
 		}
 
 		public function dispose( item : * ) : void

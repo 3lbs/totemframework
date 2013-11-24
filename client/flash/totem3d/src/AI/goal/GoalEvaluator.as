@@ -17,9 +17,10 @@
 package AI.goal
 {
 
+	import totem.core.Destroyable;
 	import totem.core.TotemEntity;
 
-	public class GoalEvaluator implements IGoalEvaluator
+	public class GoalEvaluator extends Destroyable implements IGoalEvaluator
 	{
 		public var characterBias : Number;
 
@@ -38,6 +39,11 @@ package AI.goal
 		public function setGoal( entity : TotemEntity ) : void
 		{
 
+		}
+
+		internal function setTo( bias : Number ) : void
+		{
+			characterBias = bias;
 		}
 	}
 }

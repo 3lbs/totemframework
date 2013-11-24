@@ -148,6 +148,10 @@ package totem.utils.objectpool
 				_allocNode.data = null;
 				_allocNode = _allocNode.next;
 				_usageCount++;
+				
+				if ( _helper )
+					_helper.activate( o );
+				
 				return o;
 			}
 		}
@@ -214,6 +218,10 @@ package totem.utils.objectpool
 			{
 				n = new ObjNode();
 				n.data = _factory.create();
+				
+				if ( _helper )
+					_helper.retire( n.data );
+				
 				n.next = _head;
 				_head = n;
 			}

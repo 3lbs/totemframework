@@ -22,5 +22,6 @@ package totem.utils.objectpool
 
 		function dispose( item : * ) : void;
 		function retire( item : * ) : void;
+		function activate( item : * ) : void;
 	}
 }

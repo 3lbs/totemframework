@@ -18,15 +18,17 @@ package AI.params
 {
 
 	import AI.steering.Moving2DComponent;
-	
-	import totem.core.params.TransformParam;
 
-	public class MovingParam extends TransformParam
+	import totem.core.params.Transform2DParam;
+
+	public class MovingParam extends Transform2DParam
 	{
 
 		public var boundsBehavior : String = Moving2DComponent.BOUNDS_NONE;
 
 		public var damping : Number;
+
+		public var doesRotMatchHeading : Boolean;
 
 		public var friction : Number;
 
@@ -36,8 +38,6 @@ package AI.params
 
 		public var maxTurnRate : Number;
 
-		public var doesRotMatchHeading : Boolean;
-		
 		public function MovingParam()
 		{
 		}

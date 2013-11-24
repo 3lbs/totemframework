@@ -23,6 +23,7 @@ package totem.components.spatial
 	
 	import totem.components.display.DisplayObjectComponent;
 	import totem.components.display.IDisplay2DRenderer;
+	import totem.core.params.Transform2DParam;
 	import totem.core.time.TickedComponent;
 	import totem.math.AABBox;
 	import totem.math.Vector2D;
@@ -69,8 +70,20 @@ package totem.components.spatial
 
 		private var displayRenderer : IDisplay2DRenderer;
 
-		public function Spatial2DComponent()
+		public function SpatialComponent( name : String = "", data : Transform2DParam = null )
 		{
+			super( name || NAME );
+			if ( data )
+			{
+				x = data.translateX;
+				y = data.translateY;
+				
+				_rotation = data.rotate;
+				
+				_scaleX = data.scaleX;
+				_scaleY = data.scaleY;
+			}
+			
 			properties = new Dictionary();
 		}
 
@@ -277,7 +290,7 @@ package totem.components.spatial
 
 			canDispatch = true;
 
-			dispatchUpdate();
+			dispatchUpdate( true );
 		}
 
 		override protected function onRemove() : void
