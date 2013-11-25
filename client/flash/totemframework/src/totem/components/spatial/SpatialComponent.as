@@ -46,6 +46,8 @@ package totem.components.spatial
 
 		public var transformUpdate : Signal = new Signal();
 
+		protected var _position : Vector2D;
+
 		protected var canDispatch : Boolean = false;
 
 		protected var properties : Dictionary;
@@ -73,17 +75,20 @@ package totem.components.spatial
 		public function SpatialComponent( name : String = "", data : Transform2DParam = null )
 		{
 			super( name || NAME );
+
 			if ( data )
 			{
 				x = data.translateX;
 				y = data.translateY;
-				
+
 				_rotation = data.rotate;
-				
+
 				_scaleX = data.scaleX;
 				_scaleY = data.scaleY;
 			}
-			
+
+			_position = new Vector2D( x, y );
+
 			properties = new Dictionary();
 		}
 
@@ -98,7 +103,6 @@ package totem.components.spatial
 			_spatialManager.addSpatialObject( this );
 		}
 
-	
 		public function getProperty( prop : Object ) : Object
 		{
 			return properties[ prop ];
@@ -112,6 +116,11 @@ package totem.components.spatial
 		override public function onTick() : void
 		{
 			dispatchUpdate();
+		}
+
+		public function get position() : Vector2D
+		{
+			return _position;
 		}
 
 		public function removeItemFromManager() : void
@@ -169,6 +178,9 @@ package totem.components.spatial
 		{
 			_x = x;
 			_y = y;
+			
+			_position.x = _x;
+			_position.y = _y;
 
 			dirtyPosition = true;
 
@@ -210,7 +222,7 @@ package totem.components.spatial
 				return;
 
 			_x = value;
-
+			_position.x = _x;
 			dirtyPosition = true;
 			dispatchUpdate();
 		}
@@ -226,6 +238,7 @@ package totem.components.spatial
 				return;
 
 			_y = value;
+			_position.y = _y;
 			dirtyPosition = true;
 			dispatchUpdate();
 		}

@@ -45,7 +45,7 @@ package AI.boid
 		{
 			super( boidParam, name || NAME );
 
-			steering = new SteeringBehavior( this, null );
+			//steering = new SteeringBehavior( this, null );
 			
 		}
 

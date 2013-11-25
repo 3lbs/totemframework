@@ -17,9 +17,7 @@
 package totem3d.components.spatial
 {
 
-	import totem.components.spatial.ISpatial2D;
-
-	public interface ISpatial3D extends ISpatial2D
+	public interface ISpatial3D
 	{
 
 		function get z() : Number;

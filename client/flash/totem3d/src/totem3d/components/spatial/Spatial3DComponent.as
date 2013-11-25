@@ -36,7 +36,6 @@ package totem3d.components.spatial
 	import totem3d.components.Mesh3DComponent;
 
 	use namespace totem_internal;
-
 	public class Spatial3DComponent extends TickedComponent implements ISpatial3D
 	{
 		public static const NAME : String = "spatialComponent";

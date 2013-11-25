@@ -16,6 +16,7 @@
 
 package totem.components.spatial
 {
+	import totem.math.Vector2D;
 
 	public interface ISpatial2D
 	{
@@ -30,6 +31,8 @@ package totem.components.spatial
 		function get y() : Number
 
 		function set y( value : Number ) : void
+		
+		function get position() : Vector2D
 
 	}
 }

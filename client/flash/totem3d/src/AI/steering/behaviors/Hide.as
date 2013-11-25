@@ -45,7 +45,8 @@ package AI.steering.behaviors
 				}
 			}
 			
-			return ( distToClosest == Number.MAX_VALUE ? Evade.calc ( agent, hunter ) : Arrive.calc ( agent, bestHidingSpot, AISettings.arriveFast ) );
+			//hunter
+			return ( distToClosest == Number.MAX_VALUE ? Evade.calc ( agent, null ) : Arrive.calc ( agent, bestHidingSpot, AISettings.arriveFast ) );
 		}
 		
 		private function getHidingPosition( a_obPos : Vector2D, a_obRadius : Number ) : Vector2D
