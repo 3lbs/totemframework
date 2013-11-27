@@ -2,6 +2,7 @@ package AI.steering.behaviors
 {
 	import AI.AISettings;
 	import AI.boid.Boid2DComponent;
+	import AI.boid.IBoid;
 	
 	import totem.math.Vector2D;
 	
@@ -13,9 +14,9 @@ package AI.steering.behaviors
 		
 		public var obstacles : Array;
 		
-		public var hunter : Boid2DComponent;
+		public var hunter : IBoid;
 		
-		public function Hide( a_hunter : Boid2DComponent, a_obstacles : Array, a_distFromBoundary : Number = 30 )
+		public function Hide( a_hunter : IBoid, a_obstacles : Array, a_distFromBoundary : Number = 30 )
 		{
 			super ( AISettings.hideWeight, AISettings.hidePriority );
 			
@@ -34,7 +35,7 @@ package AI.steering.behaviors
 			while ( --i >= 0 )
 			{
 				ob = obstacles[ i ];
-				hidingSpot = getHidingPosition ( ob.actualPos, ob.radius );
+				hidingSpot = getHidingPosition ( ob.position, ob.radius );
 				var dist : Number = hidingSpot.distanceTo ( agent.actualPos );
 				
 				if ( dist < distToClosest )
@@ -54,7 +55,7 @@ package AI.steering.behaviors
 			//calc how far away the agent is to be from the obstacles radius
 			var distAway : Number = distFromBoundary + a_obRadius;
 			
-			toOb = a_obPos.subtractedBy ( hunter.actualPos ).getNormalized ();
+			toOb = a_obPos.subtractedBy ( hunter.position ).getNormalized ();
 			
 			return ( toOb.multipliedBy ( distAway ) ).addedTo ( a_obPos );
 		}

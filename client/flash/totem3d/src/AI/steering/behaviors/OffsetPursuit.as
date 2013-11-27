@@ -27,7 +27,7 @@ package AI.steering.behaviors
 			{
 				return new Vector2D ();
 			}
-			var worldOffsetPos : Vector2D = Transformations.pointToWorldSpace ( offset, leader.heading, leader.side, leader.actualPos );
+			var worldOffsetPos : Vector2D = Transformations.pointToWorldSpace ( offset, leader.heading, leader.side, leader.position );
 			var toOffset : Vector2D = worldOffsetPos.subtractedBy ( agent.actualPos );
 			
 			var lookAheadTime : Number = toOffset.length / ( agent.maxSpeed + leader.velocity.length );

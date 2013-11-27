@@ -22,12 +22,12 @@ package AI.steering.behaviors
 		
 		public override function calculate() : Vector2D
 		{
-			midPoint = ( targetA.actualPos.addedTo ( targetB.actualPos ) ).dividedBy ( 2 );
+			midPoint = ( targetA.position.addedTo ( targetB.position ) ).dividedBy ( 2 );
 			
 			var timeToReachMidPoint : Number = agent.actualPos.distanceTo ( midPoint ) / agent.maxSpeed;
 			
-			posA = targetA.actualPos.addedTo ( targetA.velocity.multipliedBy ( timeToReachMidPoint ) );
-			posB = targetB.actualPos.addedTo ( targetB.velocity.multipliedBy ( timeToReachMidPoint ) );
+			posA = targetA.position.addedTo ( targetA.velocity.multipliedBy ( timeToReachMidPoint ) );
+			posB = targetB.position.addedTo ( targetB.velocity.multipliedBy ( timeToReachMidPoint ) );
 			
 			midPoint = ( posA.addedTo ( posB ) ).dividedBy ( 2 );
 			

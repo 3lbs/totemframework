@@ -16,13 +16,13 @@
 
 package totem.components.spatial
 {
-	import totem.math.Vector2D;
+
+	import totem.math.AABBox;
 
 	public interface ISpatial2D
 	{
 
-		function getProperty( prop : Object ) : Object;
-		function setProperty( prop : Object, value : Object ) : void
+		function get bounds() : AABBox;
 
 		function get x() : Number
 
@@ -31,8 +31,5 @@ package totem.components.spatial
 		function get y() : Number
 
 		function set y( value : Number ) : void
-		
-		function get position() : Vector2D
-
 	}
 }

@@ -59,6 +59,11 @@ package totem.math
 
 			return _length;
 		}
+		
+		public function equal ( value : Vector2D ) : Boolean
+		{
+			return value.x == x && value.y == y;
+		}
 
 		public function get lengthSq():Number
 		{

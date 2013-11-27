@@ -40,14 +40,14 @@ package AI.steering.behaviors
 		
 		public static function calc( a_agent : Boid2DComponent, a_target : Vector2D, a_projectionDistance : Number, a_seekDistSq : Number = 0 ) : Vector2D
 		{
-			if ( a_agent.actualPos.distanceSqTo ( a_target ) > a_seekDistSq && a_seekDistSq > 0 )
+			if ( a_agent.position.distanceSqTo ( a_target ) > a_seekDistSq && a_seekDistSq > 0 )
 			{
 				return new Vector2D ();
 			}
 			
-			var normalized : Vector2D = a_agent.actualPos.subtractedBy ( a_target ).getNormalized ();
+			var normalized : Vector2D = a_agent.position.subtractedBy ( a_target ).getNormalized ();
 			var newTarget : Vector2D = a_target.addedTo ( normalized.multipliedBy ( a_projectionDistance ) );
-			return newTarget.subtractedBy ( a_agent.actualPos );
+			return newTarget.subtractedBy ( a_agent.position );
 		}
 		
 		private var desiredVel : Vector2D;

@@ -60,15 +60,15 @@ package AI.steering.behaviors
 				if ( neighbor != agent )
 				{
 
-					var dist : Number = agent.actualPos.distanceTo( neighbor.actualPos );
+					var dist : Number = agent.actualPos.distanceTo( neighbor.position );
 					dist = ( dist == 0 ? 0.001 : dist );
 
 					var range : Number = agent.radius + neighbor.radius + seperationDistance;
 
 					if ( dist < range )
 					{
-						toAgent.x = agent.actualPos.x - neighbor.actualPos.x;
-						toAgent.y = agent.actualPos.y - neighbor.actualPos.y;
+						toAgent.x = agent.actualPos.x - neighbor.position.x;
+						toAgent.y = agent.actualPos.y - neighbor.position.y;
 						normalized.x = ( toAgent.x == 0 ? 0.001 : toAgent.x / dist );
 						normalized.y = ( toAgent.y == 0 ? 0.001 : toAgent.y / dist );
 

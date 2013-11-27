@@ -62,10 +62,10 @@ package AI.steering.behaviors
 		
 		public static function calc( agent : Boid2DComponent, target : Vector2D, projectionDistance : Number, speed : int = 3 ) : Vector2D
 		{
-			var normalized : Vector2D = agent.actualPos.subtractedBy ( target ).getNormalized ();
+			var normalized : Vector2D = agent.position.subtractedBy ( target ).getNormalized ();
 			var newTarget : Vector2D = target.addedTo ( normalized.multipliedBy ( projectionDistance ) );
 			
-			var toTarget : Vector2D = newTarget.subtractedBy ( agent.actualPos );
+			var toTarget : Vector2D = newTarget.subtractedBy ( agent.position );
 			var dist : Number = toTarget.length;
 			
 			if ( dist > 0.01 )

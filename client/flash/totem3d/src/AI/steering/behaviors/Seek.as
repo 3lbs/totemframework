@@ -1,5 +1,7 @@
 package AI.steering.behaviors
 {
+	import flash.geom.Point;
+	
 	import AI.AISettings;
 	
 	import totem.components.spatial.ISpatial2D;
@@ -41,6 +43,11 @@ package AI.steering.behaviors
 			{
 				return Vector2D.create();
 			}
+			
+			var pt : Point = new Point();
+			pt.normalize( 30 );
+			
+			desiredVel.normalize();
 			
 			var desiredVel : Vector2D = ( target.subtractedBy ( agent.actualPos ).dispose().getNormalized ().dispose() ).multipliedBy ( agent.maxSpeed );
 			return desiredVel.subtractedBy ( agent.velocity );

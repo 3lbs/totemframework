@@ -21,6 +21,7 @@ package totem.components.display
 	import flash.geom.Vector3D;
 	
 	import totem.core.TotemComponent;
+	import totem.math.Vector2D;
 
 	public class DisplayObjectComponent extends TotemComponent implements IDisplay2DRenderer
 	{
@@ -30,6 +31,10 @@ package totem.components.display
 			super( name );
 		}
 
+		public function set position( value : Vector2D ) : void
+		{
+			
+		}
 		public function rotateX( value : Number, local : Boolean = true, pivotPoint : Vector3D = null ) : void
 		{
 

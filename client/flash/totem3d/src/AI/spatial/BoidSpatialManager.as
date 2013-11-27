@@ -18,12 +18,10 @@ package AI.spatial
 {
 
 	import AI.boid.Boid2DComponent;
+	import AI.boid.IBoid;
 	
 	import totem.totem_internal;
-	import totem.components.spatial.ISpatial2D;
 	import totem.events.RemovableEventDispatcher;
-	
-	import totem3d.components.spatial.ISpatial3D;
 
 	public class BoidSpatialManager extends RemovableEventDispatcher
 	{
@@ -54,7 +52,7 @@ package AI.spatial
 			var xSep : Number;
 			var ySep : Number;
 			var entityDist : Number;
-			var neighborComponent : ISpatial3D;
+			var neighborComponent : IBoid;
 
 			while ( boidObjectList.hasNext())
 			{
@@ -63,7 +61,7 @@ package AI.spatial
 				if ( neighborComponent.getProperty( prop ) == type )
 				{
 					// lets inline this with no sq root.  as fast as it gets
-					xSep = boidComponent.z - neighborComponent.z;
+					xSep = boidComponent.y - neighborComponent.y;
 					ySep = boidComponent.x - neighborComponent.x;
 					entityDist = Math.sqrt( ySep * ySep + xSep * xSep );
 
@@ -95,7 +93,7 @@ package AI.spatial
 			var xSep : Number;
 			var ySep : Number;
 			var entityDist : Number;
-			var neighborComponent : ISpatial3D;
+			var neighborComponent : IBoid;
 
 			while ( boidObjectList.hasNext())
 			{
@@ -153,15 +151,15 @@ package AI.spatial
 			return closestBoid;
 		}
 
-		public function getNearestEntityOfType( prop : Object, type : String, boidComponent : Boid2DComponent ) : ISpatial3D
+		public function getNearestEntityOfType( prop : Object, type : String, boidComponent : Boid2DComponent ) : IBoid
 		{
 			var dist : Number = Number.POSITIVE_INFINITY;
 
 			var xSep : Number;
 			var ySep : Number;
 			var entityDist : Number;
-			var neighborComponent : ISpatial3D;
-			var result : ISpatial3D;
+			var neighborComponent : IBoid;
+			var result : IBoid;
 
 			while ( boidObjectList.hasNext())
 			{
@@ -170,7 +168,7 @@ package AI.spatial
 				if ( neighborComponent.getProperty( prop ) == type )
 				{
 					// lets inline this with no sq root.  as fast as it gets
-					xSep = boidComponent.z - neighborComponent.z;
+					xSep = boidComponent.y - neighborComponent.y;
 					ySep = boidComponent.x - neighborComponent.x;
 					entityDist = Math.sqrt( ySep * ySep + xSep * xSep );
 
@@ -198,14 +196,14 @@ package AI.spatial
 			return boidObjectList.hasItem( item );
 		}
 
-		totem_internal function addSpatialObject( object : ISpatial3D ) : void
+		totem_internal function addSpatialObject( object : IBoid ) : void
 		{
 			boidObjectList.add( object );
 		}
-		
-		totem_internal function removeSpatialObject( object:ISpatial3D):void
+
+		totem_internal function removeSpatialObject( object : IBoid ) : void
 		{
-			boidObjectList.removeItem( object );			
+			boidObjectList.removeItem( object );
 		}
 	}
 }

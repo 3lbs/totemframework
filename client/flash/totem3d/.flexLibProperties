@@ -6,7 +6,6 @@
     <classEntry path="totem3d.loaders.Flare3DModelLoader"/>
     <classEntry path="totem3d.enums.PhysicPrimativeEnum"/>
     <classEntry path="totem3d.components.MeshInputComponent"/>
-    <classEntry path="AI.steering.Moving2DComponent"/>
     <classEntry path="AI.goal.GoalThink"/>
     <classEntry path="AI.steering.behaviors.IGroupBehavior"/>
     <classEntry path="AI.steering.behaviors.ProjectedSeek"/>
@@ -39,7 +38,6 @@
     <classEntry path="AI.steering.behaviors.ProjectedArrive"/>
     <classEntry path="AI.steering.behaviors.Alignment"/>
     <classEntry path="AI.boid.IBoid"/>
-    <classEntry path="AI.params.MovingParam"/>
     <classEntry path="AI.Wall"/>
     <classEntry path="AI.goal.GoalDrivenComponent"/>
     <classEntry path="AI.steering.behaviors.FollowPath"/>
@@ -64,7 +62,6 @@
     <classEntry path="totem3d.components.spatial.ISpatial3D"/>
     <classEntry path="AI.pathfinding.AStarPathPlanner"/>
     <classEntry path="totem3d.core.param.Transform3DParam"/>
-    <classEntry path="AI.steering.IMover2D"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

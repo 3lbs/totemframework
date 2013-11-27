@@ -14,33 +14,15 @@
 //
 //------------------------------------------------------------------------------
 
-package AI.params
+package totem.components.motion
 {
 
-	import AI.steering.Moving2DComponent;
+	import totem.core.IDestroyable;
+	import totem.math.Vector2D;
 
-	import totem.core.params.Transform2DParam;
-
-	public class MovingParam extends Transform2DParam
+	public interface IMotion extends IDestroyable
 	{
-
-		public var boundsBehavior : String = Moving2DComponent.BOUNDS_NONE;
-
-		public var damping : Number;
-
-		public var doesRotMatchHeading : Boolean;
-
-		public var friction : Number;
-
-		public var maxAccelleration : Number;
-
-		public var maxSpeed : Number;
-
-		public var maxTurnRate : Number;
-
-		public function MovingParam()
-		{
-		}
+		function calculate() : Vector2D;
+		function setComponent( agent : IMoveSpatialObject2D ) : void;
 	}
 }
-

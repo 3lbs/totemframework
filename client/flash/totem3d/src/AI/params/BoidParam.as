@@ -16,6 +16,7 @@
 
 package AI.params
 {
+	import totem.components.motion.MovingParam;
 
 	public class BoidParam extends MovingParam
 	{

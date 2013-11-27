@@ -180,25 +180,8 @@ package totem.math
 		{
 			this.center.x = center.x;
 			this.center.y = center.y;
-
-			this.width = width;
-			this.height = height;
-			halfWidth = width / 2;
-			halfHeight = height / 2;
-
-			left = center.x - halfWidth;
-			right = center.x + halfWidth;
-			top = center.y - halfHeight;
-			bottom = center.y + halfHeight;
-
-			topLeft.x = left;
-			topLeft.y = top;
-			topRight.x = right;
-			topRight.y = top;
-			bottomRight.x = right;
-			bottomRight.y = bottom;
-			bottomLeft.x = left;
-			bottomLeft.y = bottom;
+				
+			setSize( width, height );
 
 			return this;
 		}

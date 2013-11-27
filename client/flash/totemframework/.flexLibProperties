@@ -412,7 +412,12 @@
     <classEntry path="totem.core.params.DataParamProxy"/>
     <classEntry path="application.getDatabase"/>
     <classEntry path="totem.core.state.NullState"/>
-    <classEntry path="totem.core.Disposable"/>
+    <classEntry path="totem.components.motion.IMoveSpatialObject2D"/>
+    <classEntry path="totem.components.motion.Moving2DComponent"/>
+    <classEntry path="totem.components.motion.MovingParam"/>
+    <classEntry path="totem.components.motion.MotionComponent"/>
+    <classEntry path="totem.components.motion.IMotion"/>
+    <classEntry path="totem.components.motion.MotionBehavior"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

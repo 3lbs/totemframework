@@ -18,15 +18,14 @@ package totem.components.display.starling
 {
 
 	import flash.geom.Matrix;
-	import flash.geom.Point;
-
+	
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
-
+	
 	import totem.components.display.IDisplay2DRenderer;
 	import totem.core.TotemEntity;
 	import totem.core.time.TickedComponent;
-	import totem.data.type.Point2d;
+	import totem.math.Vector2D;
 
 	public class DisplayStarlingComponent extends TickedComponent implements IDisplay2DRenderer
 	{
@@ -43,15 +42,15 @@ package totem.components.display.starling
 
 		protected var _inScene : Boolean = false;
 
-		protected var _position : Point2d = new Point2d();
+		protected var _position : Vector2D = new Vector2D();
 
-		protected var _positionOffset : Point2d = new Point2d();
+		protected var _positionOffset : Vector2D = new Vector2D();
 
-		protected var _scale : Point2d = new Point2d( 1, 1 );
+		protected var _scale : Vector2D = new Vector2D( 1, 1 );
 
 		protected var _scene : DisplayObjectContainer;
 
-		protected var _transformDirty : Boolean = true;
+		private var _transformDirty : Boolean = true;
 
 		protected var _transformMatrix : Matrix = new Matrix();
 
@@ -103,13 +102,11 @@ package totem.components.display.starling
 		override public function onTick() : void
 		{
 
-			if ( _transformDirty )
-				updateTransform();
 		}
 
-		public function get position() : Point
+		public function get position() : Vector2D
 		{
-			return _position.clone();
+			return _position;
 		}
 
 		/**
@@ -117,7 +114,7 @@ package totem.components.display.starling
 		 *
 		 * @see worldPosition
 		 */
-		public function set position( value : Point ) : void
+		public function set position( value : Vector2D ) : void
 		{
 			var posX : Number;
 			var posY : Number;
@@ -136,12 +133,14 @@ package totem.components.display.starling
 			if ( posX == _position.x && posY == _position.y )
 				return;
 
+			trace(value.toString());
 			_position.x = posX;
 			_position.y = posY;
 			_transformDirty = true;
+			updateTransform();
 		}
 
-		public function get positionOffset() : Point
+		public function get positionOffset() : Vector2D
 		{
 			return _positionOffset.clone();
 		}
@@ -151,10 +150,10 @@ package totem.components.display.starling
 		 *
 		 * Please note: This is unaffected by rotation.
 		 */
-		public function set positionOffset( value : Point ) : void
+		public function set positionOffset( value : Vector2D ) : void
 		{
 
-			if ( value.equals( _positionOffset ))
+			if ( value.equal( _positionOffset ))
 				return;
 
 			_positionOffset.x = value.x;
@@ -162,7 +161,7 @@ package totem.components.display.starling
 			_transformDirty = true;
 		}
 
-		public function get scale() : Point
+		public function get scale() : Vector2D
 		{
 			return _scale.clone();
 		}
@@ -170,7 +169,7 @@ package totem.components.display.starling
 		/**
 		 * You can scale things on the X and Y axes.
 		 */
-		public function set scale( value : Point ) : void
+		public function set scale( value : Vector2D ) : void
 		{
 			if ( value.x == _scale.x && value.y == _scale.y )
 				return;
@@ -193,7 +192,7 @@ package totem.components.display.starling
 
 		public function setPosition( x : Number, y : Number ) : void
 		{
-
+			trace( "display ", x, y );
 		}
 
 		public function setRotation( value : Number ) : void

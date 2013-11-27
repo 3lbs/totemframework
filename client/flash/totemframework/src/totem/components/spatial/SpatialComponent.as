@@ -34,8 +34,6 @@ package totem.components.spatial
 
 		public static const UPDATE_TRANSFORMS_EVENT : String = "UpdateTransformEvenFt";
 
-		public var bounds : AABBox;
-
 		public var positionChange : Signal = new Signal( Number, Number );
 
 		public var radius : Number = 1;
@@ -46,11 +44,19 @@ package totem.components.spatial
 
 		public var transformUpdate : Signal = new Signal();
 
-		protected var _position : Vector2D;
+		protected var _position : Vector2D = new Vector2D();
 
 		protected var canDispatch : Boolean = false;
 
+		protected var dirtyPosition : Boolean = true;
+
+		protected var dirtyRotation : Boolean = true;
+
+		protected var dirtyScale : Boolean = true;
+
 		protected var properties : Dictionary;
+
+		private var _bounds : AABBox;
 
 		private var _rotation : Number = 0;
 
@@ -63,12 +69,6 @@ package totem.components.spatial
 		private var _x : Number = 0;
 
 		private var _y : Number = 0;
-
-		private var dirtyPosition : Boolean = true;
-
-		private var dirtyRotation : Boolean = true;
-
-		private var dirtyScale : Boolean = true;
 
 		private var displayRenderer : IDisplay2DRenderer;
 
@@ -101,6 +101,11 @@ package totem.components.spatial
 		{
 			_spatialManager = spatialDatabase;
 			_spatialManager.addSpatialObject( this );
+		}
+
+		public function get bounds() : AABBox
+		{
+			return _bounds.moveTo( position );
 		}
 
 		public function getProperty( prop : Object ) : Object
@@ -176,11 +181,8 @@ package totem.components.spatial
 
 		public function setPosition( x : Number, y : Number ) : void
 		{
-			_x = x;
-			_y = y;
-			
-			_position.x = _x;
-			_position.y = _y;
+			this.x = x;
+			this.y = y;
 
 			dirtyPosition = true;
 
@@ -221,8 +223,7 @@ package totem.components.spatial
 			if ( value == _x )
 				return;
 
-			_x = value;
-			_position.x = _x;
+			_position.x = _x = value;
 			dirtyPosition = true;
 			dispatchUpdate();
 		}
@@ -237,8 +238,7 @@ package totem.components.spatial
 			if ( value == _y )
 				return;
 
-			_y = value;
-			_position.y = _y;
+			_position.y = _y = value;
 			dirtyPosition = true;
 			dispatchUpdate();
 		}
@@ -252,7 +252,7 @@ package totem.components.spatial
 
 					if ( displayRenderer )
 					{
-						displayRenderer.setPosition( _x, _y );
+						displayRenderer.position = position;
 					}
 					else
 					{
@@ -299,7 +299,7 @@ package totem.components.spatial
 		{
 			super.onAdd();
 
-			bounds = new AABBox( new Vector2D( x, y ), radius, radius );
+			_bounds = new AABBox( new Vector2D( x, y ), radius, radius );
 
 			canDispatch = true;
 
