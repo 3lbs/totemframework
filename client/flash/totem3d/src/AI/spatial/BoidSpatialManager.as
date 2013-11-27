@@ -56,7 +56,7 @@ package AI.spatial
 			var entityDist : Number;
 			var neighborComponent : ISpatial3D;
 
-			while ( boidObjectList.hasNext())
+			/*while ( boidObjectList.hasNext())
 			{
 				neighborComponent = boidObjectList.next();
 
@@ -72,7 +72,7 @@ package AI.spatial
 						dist = entityDist;
 					}
 				}
-			}
+			}*/
 
 			boidObjectList.reset();
 
@@ -101,8 +101,8 @@ package AI.spatial
 			{
 				neighborComponent = boidObjectList.next();
 				// lets inline this with no sq root.  as fast as it gets
-				xSep = boidComponent.y - neighborComponent.y;
-				ySep = boidComponent.x - neighborComponent.x;
+				//xSep = boidComponent.y - neighborComponent.y;
+				//ySep = boidComponent.x - neighborComponent.x;
 				entityDist = ySep * ySep + xSep * xSep;
 
 				if ( entityDist < dist )
@@ -167,7 +167,7 @@ package AI.spatial
 			{
 				neighborComponent = boidObjectList.next();
 
-				if ( neighborComponent.getProperty( prop ) == type )
+				/*if ( neighborComponent.getProperty( prop ) == type )
 				{
 					// lets inline this with no sq root.  as fast as it gets
 					xSep = boidComponent.z - neighborComponent.z;
@@ -179,7 +179,7 @@ package AI.spatial
 						result = neighborComponent;
 						dist = entityDist;
 					}
-				}
+				}*/
 			}
 
 			boidObjectList.reset();
