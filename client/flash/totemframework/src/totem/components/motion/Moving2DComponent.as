@@ -14,21 +14,19 @@
 //
 //------------------------------------------------------------------------------
 
-package AI.steering
+package totem.components.motion
 {
 
-	import AI.params.MovingParam;
-
 	import flash.utils.Dictionary;
-
+	
+	import totem.components.spatial.SpatialComponent;
+	import totem.core.time.TimeManager;
 	import totem.math.AABBox;
 	import totem.math.MathUtils;
 	import totem.math.Matrix2D;
 	import totem.math.Vector2D;
 
-	import totem3d.components.spatial.Spatial3DComponent;
-
-	public class Moving2DComponent extends Spatial3DComponent
+	public class Moving2DComponent extends SpatialComponent implements IMoveSpatialObject2D
 	{
 
 		public static const BOUNDS_BOUNCE : String = "bounce";
@@ -132,7 +130,7 @@ package AI.steering
 		{
 			canDispatch = false;
 
-			setInitialValues( 0 );
+			setInitialValues( TimeManager.TICK_RATE	 );
 
 			// might move the regulator to here
 			calculateForces();
@@ -157,12 +155,12 @@ package AI.steering
 
 		public function rotateToPosition( a_target : Vector2D ) : void
 		{
-			rotationY = Math.atan2( a_target.y - y, a_target.x - x );
+			rotation = Math.atan2( a_target.y - y, a_target.x - x );
 		}
 
-		override public function setPosition( x : Number, y : Number, z : Number ) : void
+		override public function setPosition( x : Number, y : Number ) : void
 		{
-			super.setPosition( x, y, z );
+			super.setPosition( x, y );
 
 			newPos.x = x;
 			newPos.y = y;
@@ -184,20 +182,10 @@ package AI.steering
 			_velocity = value;
 		}
 
-		public function get worldBounds() : AABBox
-		{
-			return _worldBounds;
-		}
-
-		public function set worldBounds( value : AABBox ) : void
-		{
-			_worldBounds = value;
-		}
-
 		protected function bounceOnBounds() : void
 		{
 			// right wall
-			if ( x > worldBounds.width - radius )
+			if ( x > bounds.width - radius )
 			{
 				velocity.x *= -1;
 				velocity.x *= friction;
@@ -212,7 +200,7 @@ package AI.steering
 				{
 					velocity.y = 0;
 				}
-				x = worldBounds.width - radius;
+				x = bounds.width - radius;
 			}
 			// left wall
 			else if ( x < radius )
@@ -234,7 +222,7 @@ package AI.steering
 			}
 
 			// bottem wall
-			if ( y > worldBounds.height - radius )
+			if ( y > bounds.height - radius )
 			{
 				velocity.y *= -1;
 				velocity.x *= friction;
@@ -249,7 +237,7 @@ package AI.steering
 				{
 					velocity.y = 0;
 				}
-				y = worldBounds.height - radius;
+				y = bounds.height - radius;
 			}
 
 			// top wall
@@ -333,11 +321,11 @@ package AI.steering
 
 		protected function setInitialValues( a_timePassed : Number ) : void
 		{
-			_stepSize = a_timePassed; // * 0.001;
-			x = newPos.x;
-			y = newPos.y;
+			_stepSize = .06; // * 0.001;
+			//x = newPos.x;
+			//y = newPos.y;
 
-			// .. Update bounds ...
+			// .. Update bounds ...w
 			/*bounds.center.x = position.x
 			bounds.center.y = position.y;
 			bounds.left = bounds.center.x - bounds.halfWidth;
@@ -353,6 +341,7 @@ package AI.steering
 			bounds.bottomLeft.x = bounds.left;
 			bounds.bottomLeft.y = bounds.bottom;*/
 
+			trace( TimeManager.TICK_RATE, TimeManager.TICK_RATE_MS );
 			_oldVelocity.x = velocity.x;
 			_oldVelocity.y = velocity.y;
 		}
@@ -373,15 +362,15 @@ package AI.steering
 
 					if ( y < 0 && x > 0 )
 					{
-						rotationY = ang;
+						rotation = ang;
 					}
 					else if (( y < 0 && x < 0 ) || ( y > 0 && x < 0 ))
 					{
-						rotationY = ang + 3.141592653589793;
+						rotation = ang + 3.141592653589793;
 					}
 					else
 					{
-						rotationY = ang + 6.283185307179586;
+						rotation = ang + 6.283185307179586;
 					}
 				}
 			}

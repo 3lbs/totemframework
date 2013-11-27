@@ -34,11 +34,11 @@ package AI.steering.behaviors
 		
 		public static function calc( agent : Boid2DComponent, target : Vector2D, fleeDistSq : Number ) : Vector2D
 		{
-			if ( agent.actualPos.distanceSqTo ( target ) > fleeDistSq && fleeDistSq > 0 )
+			if ( agent.position.distanceSqTo ( target ) > fleeDistSq && fleeDistSq > 0 )
 			{
 				return new Vector2D ();
 			}
-			var desiredVel : Vector2D = ( agent.actualPos.subtractedBy ( target ).getNormalized () ).multipliedBy ( agent.maxSpeed );
+			var desiredVel : Vector2D = ( agent.position.subtractedBy ( target ).getNormalized () ).multipliedBy ( agent.maxSpeed );
 			return desiredVel.subtractedBy ( agent.velocity );
 		}
 		

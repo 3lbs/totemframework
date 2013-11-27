@@ -613,13 +613,11 @@ package totem.core.task
 
 			if ( !removeActiveTask( t, true ))
 			{
-				//logger.error( "Task '" + t + "' threw ERROR event but was not active in this TaskGroup" );
 				return;
 			}
 
 			if ( state != TaskState.ACTIVE )
 			{
-				//logger.error( "Task '" + t + "' threw ERROR event while TaskGroup was in illegal state: " + state );
 				t.onError.remove( swallowError );
 				return;
 			}

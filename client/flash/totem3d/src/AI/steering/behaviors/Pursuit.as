@@ -16,7 +16,7 @@ package AI.steering.behaviors
 		public function set evader( a_agent : Boid2DComponent ) : void
 		{
 			m_evader = a_agent;
-			m_target = a_agent.actualPos;
+			m_target = a_agent.position;
 		}
 		
 		public var seekDistSq : Number;
@@ -24,7 +24,7 @@ package AI.steering.behaviors
 		public function Pursuit( a_evader : Boid2DComponent, a_seekDistSq : Number = 0 )
 		{
 			m_evader = a_evader;
-			m_target = m_evader.actualPos;
+			m_target = m_evader.position;
 			seekDistSq = a_seekDistSq;
 			
 			super ( AISettings.pursuitWeight, AISettings.pursuitPriority );
@@ -32,7 +32,7 @@ package AI.steering.behaviors
 		
 		public override function calculate() : Vector2D
 		{
-			var toEvader : Vector2D = m_evader.actualPos.subtractedBy ( agent.actualPos );
+			var toEvader : Vector2D = m_evader.position.subtractedBy ( agent.actualPos );
 			
 			if ( toEvader.lengthSq > seekDistSq && seekDistSq > 0 )
 			{
@@ -43,21 +43,21 @@ package AI.steering.behaviors
 			
 			if ( ( toEvader.dotOf ( agent.heading ) > 0 ) && ( relativeHeading < -0.95 ) ) //acos(0.95)=18 degs
 			{
-				m_target = m_evader.actualPos;
+				m_target = m_evader.position;
 				return ( m_target.subtractedBy ( agent.actualPos ).getNormalized () ).multipliedBy ( agent.maxSpeed ).subtractedBy ( agent.velocity );
 			}
 			
 			var lookAheadTime : Number = toEvader.length / ( agent.maxSpeed + m_evader.velocity.length );
 			//lookAheadTime += turnAroundTime();
 			
-			m_target = m_evader.actualPos.addedTo ( m_evader.velocity.multipliedBy ( lookAheadTime ) );
+			m_target = m_evader.position.addedTo ( m_evader.velocity.multipliedBy ( lookAheadTime ) );
 			return ( m_target.subtractedBy ( agent.actualPos ).getNormalized () ).multipliedBy ( agent.maxSpeed ).subtractedBy ( agent.velocity );
 		}
 		
 		public static function calc( a_agent : Boid2DComponent, a_evader : Boid2DComponent, a_seekDistSq : Number = 0 ) : Vector2D
 		{
 			var target : Vector2D;
-			var toEvader : Vector2D = a_evader.actualPos.subtractedBy ( a_agent.actualPos );
+			var toEvader : Vector2D = a_evader.position.subtractedBy ( a_agent.position );
 			
 			if ( toEvader.lengthSq > a_seekDistSq && a_seekDistSq > 0 )
 			{
@@ -68,15 +68,15 @@ package AI.steering.behaviors
 			
 			if ( ( toEvader.dotOf ( a_agent.heading ) > 0 ) && ( relativeHeading < -0.95 ) ) //acos(0.95)=18 degs
 			{
-				target = a_evader.actualPos;
-				return ( target.subtractedBy ( a_agent.actualPos ).getNormalized () ).multipliedBy ( a_agent.maxSpeed ).subtractedBy ( a_agent.velocity );
+				target = a_evader.position;
+				return ( target.subtractedBy ( a_agent.position ).getNormalized () ).multipliedBy ( a_agent.maxSpeed ).subtractedBy ( a_agent.velocity );
 			}
 			
 			var lookAheadTime : Number = toEvader.length / ( a_agent.maxSpeed + a_evader.velocity.length );
 			//lookAheadTime += turnAroundTime();
 			
-			target = a_evader.actualPos.addedTo ( a_evader.velocity.multipliedBy ( lookAheadTime ) );
-			return ( target.subtractedBy ( a_agent.actualPos ).getNormalized () ).multipliedBy ( a_agent.maxSpeed ).subtractedBy ( a_agent.velocity );
+			target = a_evader.position.addedTo ( a_evader.velocity.multipliedBy ( lookAheadTime ) );
+			return ( target.subtractedBy ( a_agent.position ).getNormalized () ).multipliedBy ( a_agent.maxSpeed ).subtractedBy ( a_agent.velocity );
 		}
 		
 		private function turnAroundTime() : Number

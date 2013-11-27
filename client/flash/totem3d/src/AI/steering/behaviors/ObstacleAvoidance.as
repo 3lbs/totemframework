@@ -40,7 +40,7 @@ package AI.steering.behaviors
 			{
 				ob = obstacles[ i ];
 				
-				toTarget = ob.actualPos.subtractedBy ( agent.actualPos );
+				toTarget = ob.position.subtractedBy ( agent.actualPos );
 				
 				var range : Number = boxLength + ob.radius;
 				
@@ -55,7 +55,7 @@ package AI.steering.behaviors
 			while ( --i >= 0 )
 			{
 				ob = obstaclesInRange[ i ];
-				localPos = Transformations.pointToLocalSpace ( ob.actualPos, agent.heading, agent.side, agent.actualPos );
+				localPos = Transformations.pointToLocalSpace ( ob.position, agent.heading, agent.side, agent.actualPos );
 				
 				if ( localPos.x >= 0 )
 				{

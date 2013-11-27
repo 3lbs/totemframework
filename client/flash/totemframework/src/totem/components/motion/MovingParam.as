@@ -14,24 +14,32 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.components.display
+package totem.components.motion
 {
 
-	import totem.math.Vector2D;
 
-	public interface IDisplay2DRenderer
+	import totem.core.params.Transform2DParam;
+
+	public class MovingParam extends Transform2DParam
 	{
 
-		function set position( value : Vector2D ) : void;
+		public var boundsBehavior : String = Moving2DComponent.BOUNDS_NONE;
 
-		function setPosition( x : Number, y : Number ) : void;
+		public var damping : Number;
 
-		function setRotation( value : Number ) : void;
+		public var doesRotMatchHeading : Boolean;
 
-		function setScale( _scaleX : Number, _scaleY : Number ) : void;
+		public var friction : Number;
 
-		function translateX( value : Number ) : void
+		public var maxAccelleration : Number;
 
-		function translateY( value : Number ) : void
+		public var maxSpeed : Number;
+
+		public var maxTurnRate : Number;
+
+		public function MovingParam()
+		{
+		}
 	}
 }
+

@@ -17,25 +17,26 @@
 package totem3d.components.spatial
 {
 
-	import flash.geom.Vector3D;
-	import flash.utils.Dictionary;
-	
 	import AI.spatial.BoidSpatialManager;
-	
+
 	import flare.physics.collision.BoxCollisionPrimitive;
 	import flare.physics.collision.CollisionPrimitive;
-	
+
+	import flash.geom.Vector3D;
+	import flash.utils.Dictionary;
+
 	import org.osflash.signals.Signal;
-	
-	import totem.totem_internal;
-	import totem3d.core.param.Transform3DParam;
 	import totem.core.time.TickedComponent;
 	import totem.math.AABBox;
 	import totem.math.Vector2D;
-	
+
+	import totem.totem_internal;
+
 	import totem3d.components.Mesh3DComponent;
+	import totem3d.core.param.Transform3DParam;
 
 	use namespace totem_internal;
+
 	public class Spatial3DComponent extends TickedComponent implements ISpatial3D
 	{
 		public static const NAME : String = "spatialComponent";
@@ -111,48 +112,10 @@ package totem3d.components.spatial
 			properties = new Dictionary();
 		}
 
-		override public function destroy():void
-		{
-			super.destroy();
-			
-			removeItemFromManager();
-			
-			_spatialManager = null;
-			
-			_collisionPrimative = null;
-			
-			meshComponent = null;
-			
-			positionChange.removeAll();
-			positionChange = null;
-			
-			rotationChange.removeAll();
-			rotationChange = null;
-			
-			
-			scaleChange.removeAll();
-			scaleChange = null;
-			
-			properties = null;
-		}
-		
-		public function removeItemFromManager () : void
-		{
-			if ( _spatialManager )
-			{
-				_spatialManager.removeSpatialObject ( this );
-			}
-		}
-		
 		public function addSpatialManager( spatialDatabase : BoidSpatialManager ) : void
 		{
 			_spatialManager = spatialDatabase;
-			_spatialManager.addSpatialObject( this );
-		}
-		
-		public function getSpatialManager () : BoidSpatialManager
-		{
-			return _spatialManager;
+			//_spatialManager.addSpatialObject( this );
 		}
 
 		public function get collisionPrimative() : CollisionPrimitive
@@ -168,9 +131,46 @@ package totem3d.components.spatial
 			udpateCollisionPrimative();
 		}
 
+		override public function destroy() : void
+		{
+			super.destroy();
+
+			removeItemFromManager();
+
+			_spatialManager = null;
+
+			_collisionPrimative = null;
+
+			meshComponent = null;
+
+			positionChange.removeAll();
+			positionChange = null;
+
+			rotationChange.removeAll();
+			rotationChange = null;
+
+			scaleChange.removeAll();
+			scaleChange = null;
+
+			properties = null;
+		}
+
 		public function getProperty( prop : Object ) : Object
 		{
 			return properties[ prop ];
+		}
+
+		public function getSpatialManager() : BoidSpatialManager
+		{
+			return _spatialManager;
+		}
+
+		public function removeItemFromManager() : void
+		{
+			if ( _spatialManager )
+			{
+				//_spatialManager.removeSpatialObject ( this );
+			}
 		}
 
 		public function get rotationX() : Number
@@ -406,9 +406,9 @@ package totem3d.components.spatial
 
 			canDispatch = false;
 
-			/*positionChange.removeAll();
-			rotationChange.removeAll();
-			transformUpdate.removeAll();*/
+		/*positionChange.removeAll();
+		rotationChange.removeAll();
+		transformUpdate.removeAll();*/
 		}
 
 		protected function udpateCollisionPrimative() : void

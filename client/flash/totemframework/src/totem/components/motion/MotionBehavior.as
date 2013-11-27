@@ -14,24 +14,29 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.components.display
+package totem.components.motion
 {
 
+	import totem.events.RemovableEventDispatcher;
 	import totem.math.Vector2D;
 
-	public interface IDisplay2DRenderer
+	public class MotionBehavior extends RemovableEventDispatcher implements IMotion
 	{
 
-		function set position( value : Vector2D ) : void;
+		public var agent : IMoveSpatialObject2D;
 
-		function setPosition( x : Number, y : Number ) : void;
+		public function MotionBehavior()
+		{
+		}
 
-		function setRotation( value : Number ) : void;
+		public function calculate() : Vector2D
+		{
+			return null;
+		}
 
-		function setScale( _scaleX : Number, _scaleY : Number ) : void;
-
-		function translateX( value : Number ) : void
-
-		function translateY( value : Number ) : void
+		public function setComponent( agent : IMoveSpatialObject2D ) : void
+		{
+			this.agent = agent;
+		}
 	}
 }

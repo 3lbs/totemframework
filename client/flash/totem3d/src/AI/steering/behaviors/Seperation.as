@@ -38,8 +38,8 @@ package AI.steering.behaviors
 				if ( neighbor != agent )
 				{
 					
-					toAgent.x = agent.actualPos.x - neighbor.actualPos.x;
-					toAgent.y = agent.actualPos.y - neighbor.actualPos.y;
+					toAgent.x = agent.actualPos.x - neighbor.position.x;
+					toAgent.y = agent.actualPos.y - neighbor.position.y;
 					var len : Number = toAgent.length;
 					len = ( len == 0 ? 0.001 : len );
 					normalized.x = ( toAgent.x == 0 ? 0.001 : toAgent.x / len );

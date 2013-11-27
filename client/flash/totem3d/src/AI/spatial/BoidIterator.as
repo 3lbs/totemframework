@@ -17,15 +17,14 @@
 package AI.spatial
 {
 
-	import totem.components.spatial.ISpatial2D;
-	import totem.core.Destroyable;
+	import AI.boid.IBoid;
 	
-	import totem3d.components.spatial.ISpatial3D;
+	import totem.core.Destroyable;
 
 	public class BoidIterator extends Destroyable
 	{
 
-		protected var _array : Vector.<ISpatial3D>;
+		protected var _array : Vector.<IBoid>;
 
 		private var _index : int;
 
@@ -33,10 +32,10 @@ package AI.spatial
 
 		public function BoidIterator()
 		{
-			_array = new Vector.<ISpatial3D>();
+			_array = new Vector.<IBoid>();
 		}
 
-		public function add( value : ISpatial3D ) : ISpatial3D
+		public function add( value : IBoid ) : IBoid
 		{
 			_array.push( value );
 			reset();
@@ -51,7 +50,7 @@ package AI.spatial
 			_array = null;
 		}
 
-		public function hasItem( item : ISpatial3D ) : Boolean
+		public function hasItem( item : IBoid ) : Boolean
 		{
 			return _array.indexOf( item ) > -1;
 		}
@@ -61,7 +60,7 @@ package AI.spatial
 			return ( _index < _array.length - 1 );
 		}
 
-		public function next() : ISpatial3D
+		public function next() : IBoid
 		{
 			if ( !( _index < _array.length - 1 ))
 			{
@@ -71,7 +70,7 @@ package AI.spatial
 			return _array[ ++_index ];
 		}
 
-		public function remove() : ISpatial3D
+		public function remove() : IBoid
 		{
 			if ( _index < 0 )
 			{
@@ -81,13 +80,13 @@ package AI.spatial
 			return _array.splice( _index--, 1 )[ 0 ];
 		}
 
-		public function removeItem( item : ISpatial3D ) : ISpatial3D
+		public function removeItem( item : IBoid ) : IBoid
 		{
 			var idx : int = _array.indexOf( item );
 
 			if ( idx > -1 )
 			{
-				var value : ISpatial3D = _array.splice( _index--, 1 )[ 0 ];
+				var value : IBoid = _array.splice( _index--, 1 )[ 0 ];
 
 				reset();
 				setLength();
