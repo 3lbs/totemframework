@@ -1,29 +1,40 @@
-/*******************************************************************************
- * PushButton Engine
- * Copyright (C) 2009 PushButton Labs, LLC
- * For more information see http://www.pushbuttonengine.com
- *
- * This file is licensed under the terms of the MIT license, which is included
- * in the License.html file at the root directory of this SDK.
- ******************************************************************************/
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core.state
 {
+
+	import totem.core.IDestroyable;
+	import totem.core.TotemEntity;
 
 	/**
 	 * Base interface for a finite state machine.
 	 */
-	public interface IMachine
+	public interface IMachine extends IDestroyable
 	{
-		/**
-		 * Update the state machine. The current state is given the opportunity
-		 * to transition to another state.
-		 */
-		function tick() : void;
 
 		/**
 		 * Register a state under a name.
 		 */
 		function addState( name : String, state : IState ) : void;
+
+		/**
+		 * Get the name of the current state.
+		 */
+		function get currentStateName() : String;
 
 		/**
 		 * What state are we on this tick?
@@ -45,16 +56,17 @@ package totem.core.state
 		 */
 		function getStateName( state : IState ) : String;
 
+		function get owner() : TotemEntity
+
 		/**
 		 * Update the FSM to be in a new state. Current/previous states
 		 * are updated accordingly, and callbacks and events are dispatched.
 		 */
 		function setCurrentState( name : String ) : Boolean;
-
 		/**
-		 * Get the name of the current state.
+		 * Update the state machine. The current state is given the opportunity
+		 * to transition to another state.
 		 */
-		function get currentStateName() : String;
-
+		function tick() : void;
 	}
 }

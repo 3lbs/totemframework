@@ -37,7 +37,7 @@ package totem.components.motion
 
 			// might move the regulator to here
 
-			//steering && calculateSteering();
+			steering && calculateSteering();
 
 			calculateFinalVelocity();
 

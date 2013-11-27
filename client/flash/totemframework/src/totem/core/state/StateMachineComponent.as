@@ -17,39 +17,60 @@
 package totem.core.state
 {
 
+	import org.as3commons.collections.LinkedList;
+	import org.as3commons.collections.framework.ILinkedListIterator;
+	
 	import totem.core.time.TickedComponent;
 
 	public class StateMachineComponent extends TickedComponent
 	{
-		private var machine : Machine;
+		//private var machine : Machine;
 
-		public function StateMachineComponent( m : Machine )
+		private var initStates_ : Array;
+
+		private var stateMachines_ : LinkedList;
+
+		public function StateMachineComponent( ... initStates )
 		{
-			machine = m;
+			initStates_ = initStates;
 		}
 
 		override public function onTick() : void
 		{
-			machine.tick();
+			var iter : ILinkedListIterator = stateMachines_.iterator() as ILinkedListIterator;
+			var stateMachine : Machine;
 
-		/*var iter : InListIterator = stateMachines_.getIterator();
-		var stateMachine : StateMachine;
-
-		while ( stateMachine = iter.data())
-		{
-			stateMachine.update( dt );
-			iter.next();
-		}*/
+			while ( stateMachine = iter.current())
+			{
+				stateMachine.tick();
+			}
 		}
 
 		override protected function onAdd() : void
 		{
 			super.onAdd();
+
+			//var system : StateMachineSystem = getSystem( StateMachineSystem );
+			//system.register( this );
+
+			for ( var i : int = 0, len : int = initStates_.length; i < len; ++i )
+			{
+				stateMachines_.add( new Machine( initStates_[ i ]));
+			}
 		}
 
 		override protected function onRemove() : void
 		{
 			super.onRemove();
+
+			var iter : ILinkedListIterator = stateMachines_.iterator() as ILinkedListIterator;
+			var stateMachine : Machine;
+
+			while ( stateMachine = iter.current())
+			{
+				stateMachine.destroy();
+				iter.next();
+			}
 
 		/*var iter : InListIterator = stateMachines_.getIterator();
 		var stateMachine : StateMachine;
