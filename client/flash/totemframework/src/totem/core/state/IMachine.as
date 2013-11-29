@@ -47,7 +47,7 @@ package totem.core.state
 		function getPreviousState() : IState;
 
 		/**
-		 * Get the state registered under the provided name.
+		 * Get the state registered under the provided name.function get owner() : TotemEntity
 		 */
 		function getState( name : String ) : IState;
 

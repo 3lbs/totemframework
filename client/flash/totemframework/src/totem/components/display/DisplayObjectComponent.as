@@ -20,6 +20,8 @@ package totem.components.display
 
 	import flash.geom.Vector3D;
 	
+	import mx.binding.utils.ChangeWatcher;
+	
 	import totem.core.TotemComponent;
 	import totem.math.Vector2D;
 
@@ -29,6 +31,7 @@ package totem.components.display
 		public function DisplayObjectComponent( name : String = null )
 		{
 			super( name );
+			
 		}
 
 		public function set position( value : Vector2D ) : void

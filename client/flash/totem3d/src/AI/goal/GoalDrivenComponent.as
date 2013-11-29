@@ -39,6 +39,7 @@ package AI.goal
 
 			_pathPlanner = planner;
 			_machine = machine;
+			_machine.owner = owner;
 		}
 
 		public function get brain() : GoalThink
