@@ -21,7 +21,7 @@ package totem.display.components
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-
+	
 	import totem.events.RemovableEventDispatcher;
 
 	public class MovieClipButton extends RemovableEventDispatcher
@@ -279,6 +279,8 @@ package totem.display.components
 					break;
 				}
 			}
+			
+			event.stopImmediatePropagation();
 
 			dispatchEvent( event.clone());
 		}

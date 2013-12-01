@@ -31,6 +31,9 @@ package totem.components.motion
 
 		override public function onTick() : void
 		{
+
+			return;
+
 			canDispatch = false;
 
 			setInitialValues( TimeManager.TICK_RATE );
@@ -47,16 +50,11 @@ package totem.components.motion
 
 			canDispatch = true;
 			// update assets
-			
+
 			dirtyPosition = true;
-			
+
 			dispatchUpdate();
 			//updateChildren( a_timePassed );
-		}
-		
-		override protected function updatePosition():void
-		{
-			super.updatePosition();
 		}
 
 		public function setMotion( motion : IMotion ) : IMotion
@@ -71,8 +69,13 @@ package totem.components.motion
 			acc = steering.calculate();
 			velocity.x += acc.x;
 			velocity.y += acc.y;
-			
+
 			trace( "test = " + TimeManager.TICK_RATE_MS );
+		}
+
+		override protected function updatePosition() : void
+		{
+			super.updatePosition();
 		}
 	}
 }
