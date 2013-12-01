@@ -19,12 +19,15 @@ package totem.core.state
 
 	import org.as3commons.collections.LinkedList;
 	import org.as3commons.collections.framework.ILinkedListIterator;
-	
 	import totem.core.time.TickedComponent;
+
+	import totem.totem_internal;
 
 	public class StateMachineComponent extends TickedComponent
 	{
 		//private var machine : Machine;
+
+		use namespace totem_internal;
 
 		private var initStates_ : Array;
 

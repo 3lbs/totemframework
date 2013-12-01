@@ -21,16 +21,21 @@ package totem.core.state
 
 	import ladydebug.Logger;
 
-	import totem.core.Destroyable;
+	import org.swiftsuspenders.Injector;
 	import totem.core.TotemEntity;
+	import totem.core.TotemObject;
+
+	import totem.totem_internal;
 
 	/**
 	 * Implementation of IMachine; probably any custom FSM would be based on this.
 	 *
 	 * @see IMachine for API docs.
 	 */
-	public class Machine extends Destroyable implements IMachine
+	public class Machine extends TotemObject implements IMachine
 	{
+
+		use namespace totem_internal;
 
 		/**
 		 * What state will we start out in?
@@ -46,20 +51,24 @@ package totem.core.state
 
 		private var _enteredStateTime : Number = 0;
 
-		private var _owner : TotemEntity
-
 		private var _previousState : IState = null;
 
 		private var _setNewState : Boolean = false;
 
 		public function Machine( ... initStates )
 		{
-
+			super( null );
 		}
 
 		public function addState( name : String, state : IState ) : void
 		{
 			states[ name ] = state;
+
+			if ( initialzed )
+			{
+				var injector : Injector = totem_internal.getInjector();
+				injector.injectInto( state );
+			}
 		}
 
 		public function get currentState() : IState
@@ -114,17 +123,20 @@ package totem.core.state
 			return null;
 		}
 
-		public function get owner() : TotemEntity
+		[Inject]
+		public function injector( totemEntity : TotemEntity ) : void
 		{
-			return _owner;
+			owningGroup = totemEntity._owningGroup;
+			setInjector( totemEntity.getInjector().createChildInjector());
 		}
 
-		public function set owner( value : TotemEntity ) : void
+		[PostConstruct]
+		public function postConstruct() : void
 		{
-			if ( _owner )
-				return;
-
-			_owner = value;
+			for each ( var state : IState in states )
+			{
+				getInjector().injectInto( state );
+			}
 		}
 
 		public function setCurrentState( name : String ) : Boolean

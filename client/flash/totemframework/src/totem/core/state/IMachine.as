@@ -18,7 +18,6 @@ package totem.core.state
 {
 
 	import totem.core.IDestroyable;
-	import totem.core.TotemEntity;
 
 	/**
 	 * Base interface for a finite state machine.
@@ -56,7 +55,6 @@ package totem.core.state
 		 */
 		function getStateName( state : IState ) : String;
 
-		function get owner() : TotemEntity
 
 		/**
 		 * Update the FSM to be in a new state. Current/previous states
