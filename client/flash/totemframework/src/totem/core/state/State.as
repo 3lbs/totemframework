@@ -19,9 +19,10 @@ package totem.core.state
 
 	import org.casalib.util.StringUtil;
 
+	import totem.core.Destroyable;
 	import totem.utils.TypeUtility;
 
-	public class State implements IState
+	public class State extends Destroyable implements IState
 	{
 		/** @private */
 		internal var stateMachine : Machine;

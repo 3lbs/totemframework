@@ -18,13 +18,16 @@ package AI.goal
 {
 
 	import AI.pathfinding.PathPlanner;
-
+	
+	import totem.totem_internal;
 	import totem.core.state.Machine;
 	import totem.core.time.TickedComponent;
 
 	public class GoalDrivenComponent extends TickedComponent
 	{
 
+		use namespace totem_internal;
+		
 		public static const NAME : String = "GoalDrivenComponent";
 
 		protected var _currentBrain : GoalThink;
@@ -39,7 +42,6 @@ package AI.goal
 
 			_pathPlanner = planner;
 			_machine = machine;
-			_machine.owner = owner;
 		}
 
 		public function get brain() : GoalThink
@@ -68,6 +70,7 @@ package AI.goal
 		{
 			super.onAdd();
 
+			injector.injectInto( _machine );
 		}
 	}
 }

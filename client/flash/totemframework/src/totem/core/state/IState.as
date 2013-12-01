@@ -1,13 +1,23 @@
-/*******************************************************************************
- * PushButton Engine
- * Copyright (C) 2009 PushButton Labs, LLC
- * For more information see http://www.pushbuttonengine.com
- *
- * This file is licensed under the terms of the MIT license, which is included
- * in the License.html file at the root directory of this SDK.
- ******************************************************************************/
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core.state
 {
+
+	import totem.core.IDestroyable;
 
 	/**
 	 * A state in a state machine. It is given the opportunity each
@@ -15,12 +25,17 @@ package totem.core.state
 	 *
 	 * Callbacks happen AFTER the previous/current state has been updated.
 	 */
-	public interface IState
+	public interface IState extends IDestroyable
 	{
 		/**
 		 * Called when the machine enters this state.
 		 */
 		function enter( fsm : IMachine ) : void;
+
+		/**
+		 * Called when we transition out of this state.
+		 */
+		function exit( fsm : IMachine ) : void;
 
 		/**
 		 * Called every time the machine ticks and this is the current state.
@@ -29,10 +44,5 @@ package totem.core.state
 		 * its state.
 		 */
 		function tick( fsm : IMachine ) : void;
-
-		/**
-		 * Called when we transition out of this state.
-		 */
-		function exit( fsm : IMachine ) : void;
 	}
 }
