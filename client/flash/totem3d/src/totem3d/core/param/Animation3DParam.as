@@ -14,21 +14,31 @@
 //
 //------------------------------------------------------------------------------
 
-package AI.params
+package totem3d.core.param
 {
 
-	import totem.components.motion.MovingParam;
+	import totem.core.params.URLAssetParam;
 
-	public class BoidParam extends MovingParam
+	public class Animation3DParam extends URLAssetParam
 	{
 
-		public var neighborDistance : Number;
+		public var animationMode : int = 0;
 
-		public var searchDistance : Number;
+		public var frameSpeed : int = 1;
 
-		public function BoidParam()
+		public var from : Number = 0;
+
+		public var to : Number = 0;
+
+		public function Animation3DParam()
 		{
-			super();
+		}
+
+		[Transient]
+		public function get length() : int
+		{
+			return to - from;
 		}
 	}
 }
+

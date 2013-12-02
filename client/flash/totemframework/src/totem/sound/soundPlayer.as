@@ -14,21 +14,11 @@
 //
 //------------------------------------------------------------------------------
 
-package AI.params
+package totem.sound
 {
-
-	import totem.components.motion.MovingParam;
-
-	public class BoidParam extends MovingParam
+	public function soundPlayer() : SoundManager
 	{
-
-		public var neighborDistance : Number;
-
-		public var searchDistance : Number;
-
-		public function BoidParam()
-		{
-			super();
-		}
+		return SoundManager.getInstance();
 	}
 }
+

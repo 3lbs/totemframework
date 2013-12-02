@@ -14,31 +14,17 @@
 //
 //------------------------------------------------------------------------------
 
-package totem3d.core.param
+package totem.sound.groups
 {
 
-	import totem.core.params.URLAssetParam;
+	import totem.sound.TotemSoundGroup;
 
-	public class AnimationParam extends URLAssetParam
+	public class BGMGroup extends TotemSoundGroup
 	{
-
-		public var animationMode : int = 0;
-
-		public var frameSpeed : int = 1;
-
-		public var from : Number = 0;
-
-		public var to : Number = 0;
-
-		public function AnimationParam()
+		public function BGMGroup()
 		{
-		}
-
-		[Transient]
-		public function get length() : int
-		{
-			return to - from;
+			_groupID = TotemSoundGroup.BGM;
 		}
 	}
-}
 
+}

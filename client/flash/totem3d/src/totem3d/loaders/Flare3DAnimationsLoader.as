@@ -26,15 +26,15 @@ package totem3d.loaders
 
 	import totem3d.components.Animator3DComponent;
 	import totem3d.components.Mesh3DComponent;
-	import totem3d.core.param.AnimationParam;
+	import totem3d.core.param.Animation3DParam;
 
 	public class Flare3DAnimationsLoader extends GroupRequiredMonitor
 	{
-		private var _animationParams : Vector.<AnimationParam>;
+		private var _animationParams : Vector.<Animation3DParam>;
 
 		private var component : Animator3DComponent;
 
-		public function Flare3DAnimationsLoader( id : String = "", params : Vector.<AnimationParam> = null )
+		public function Flare3DAnimationsLoader( id : String = "", params : Vector.<Animation3DParam> = null )
 		{
 			super( id );
 
@@ -46,7 +46,7 @@ package totem3d.loaders
 			component = comp;
 		}
 
-		public function get animationParams() : Vector.<AnimationParam>
+		public function get animationParams() : Vector.<Animation3DParam>
 		{
 			return _animationParams;
 		}
@@ -59,7 +59,7 @@ package totem3d.loaders
 
 			var labels : Object = mesh.labels;
 
-			for each ( var ani : AnimationParam in _animationParams )
+			for each ( var ani : Animation3DParam in _animationParams )
 			{
 				if ( hasLabel( ani.id, labels ))
 					continue;
@@ -75,14 +75,14 @@ package totem3d.loaders
 		{
 			// TODO Auto-generated method stub
 
-			var animationList : Vector.<AnimationParam> = animationParams;
+			var animationList : Vector.<Animation3DParam> = animationParams;
 
 			var animationLoader : Flare3DMonitor;
 
 			var meshComponent : Mesh3DComponent = component.getSibling( Mesh3DComponent ) as Mesh3DComponent;
 			var mesh : Mesh3D = meshComponent.mesh as Mesh3D;
 
-			for each ( var param : AnimationParam in animationList )
+			for each ( var param : Animation3DParam in animationList )
 			{
 				animationLoader = getItemByID( param.id ) as Flare3DMonitor;
 

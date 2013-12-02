@@ -2,7 +2,7 @@ package totem3d.events
 {
 	import flash.events.Event;
 	
-	import totem3d.core.param.AnimationParam;
+	import totem3d.core.param.Animation3DParam;
 	
 	public class Animation3DEvent extends Event
 	{
@@ -12,9 +12,9 @@ package totem3d.events
 		
 		public static const LOAD_COMPLETE : String = "Animation3dEvent:LoadComplete";
 		
-		public var animations : Vector.<AnimationParam>;
+		public var animations : Vector.<Animation3DParam>;
 		
-		public function Animation3DEvent( type : String, data : Vector.<AnimationParam>, bubbles : Boolean = false, cancelable : Boolean = false )
+		public function Animation3DEvent( type : String, data : Vector.<Animation3DParam>, bubbles : Boolean = false, cancelable : Boolean = false )
 		{
 			animations = data;
 			super ( type, bubbles, cancelable );

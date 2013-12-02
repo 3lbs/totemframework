@@ -14,19 +14,14 @@
 //
 //------------------------------------------------------------------------------
 
-package AI.params
+package totem.core.params.display
 {
 
-	import totem.components.motion.MovingParam;
+	import totem.core.params.BaseParam;
 
-	public class BoidParam extends MovingParam
+	public class AnimationDataParam extends BaseParam
 	{
-
-		public var neighborDistance : Number;
-
-		public var searchDistance : Number;
-
-		public function BoidParam()
+		public function AnimationDataParam()
 		{
 			super();
 		}

@@ -14,21 +14,26 @@
 //
 //------------------------------------------------------------------------------
 
-package AI.params
+package totem.core.params.display
 {
 
-	import totem.components.motion.MovingParam;
+	import totem.core.params.BaseParam;
 
-	public class BoidParam extends MovingParam
+	public class MovieClipAnimationDataParam extends BaseParam
 	{
-
-		public var neighborDistance : Number;
-
-		public var searchDistance : Number;
-
-		public function BoidParam()
+		
+		public var atlasData : AtlasDataParam;
+		
+		public var animationDataList : Vector.<AnimationDataParam> = new Vector.<AnimationDataParam>();
+		
+		public function MovieClipAnimationDataParam()
 		{
 			super();
+			
+			atlasData = new AtlasDataParam();
+			animationDataList.push( new AnimationDataParam () );
+			animationDataList.push( new AnimationDataParam () );
+			animationDataList.push( new AnimationDataParam () );
 		}
 	}
 }

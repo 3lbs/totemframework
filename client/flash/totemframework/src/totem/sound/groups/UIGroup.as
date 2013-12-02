@@ -14,21 +14,17 @@
 //
 //------------------------------------------------------------------------------
 
-package AI.params
+package totem.sound.groups
 {
 
-	import totem.components.motion.MovingParam;
+	import totem.sound.TotemSoundGroup;
 
-	public class BoidParam extends MovingParam
+	public class UIGroup extends TotemSoundGroup
 	{
-
-		public var neighborDistance : Number;
-
-		public var searchDistance : Number;
-
-		public function BoidParam()
+		public function UIGroup()
 		{
-			super();
+			_groupID = TotemSoundGroup.UI;
 		}
 	}
+
 }

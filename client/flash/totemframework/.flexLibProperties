@@ -331,7 +331,6 @@
     <classEntry path="totem.pathfinder.astar.core.ICostTile"/>
     <classEntry path="totem.pathfinder.astar.core.IMap"/>
     <classEntry path="totem.pathfinder.astar.core.PathRequest"/>
-    <classEntry path="totem.sound.ISoundManager"/>
     <classEntry path="totem.structures.AbstractCollection"/>
     <classEntry path="totem.structures.ICollection"/>
     <classEntry path="totem.structures.IIterable"/>
@@ -418,6 +417,9 @@
     <classEntry path="totem.components.motion.MotionComponent"/>
     <classEntry path="totem.components.motion.IMotion"/>
     <classEntry path="totem.components.motion.MotionBehavior"/>
+    <classEntry path="totem.utils.ViewportUtil"/>
+    <classEntry path="totem.core.params.display.MovieClipAnimationDataParam"/>
+    <classEntry path="totem.core.params.display.AnimationDataParam"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
