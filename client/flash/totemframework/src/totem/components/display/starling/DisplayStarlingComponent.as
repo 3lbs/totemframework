@@ -41,7 +41,13 @@ package totem.components.display.starling
 		protected var _alpha : Number = 1;
 
 		protected var _inScene : Boolean = false;
+		
+		protected var _lastLayerIndex : int = -1;
+		
+		protected var _layerIndex : int = 0;
 
+		protected var _layerIndexDirty : Boolean = true;
+		
 		protected var _position : Vector2D = new Vector2D();
 
 		protected var _positionOffset : Vector2D = new Vector2D();
@@ -50,17 +56,37 @@ package totem.components.display.starling
 
 		protected var _scene : DisplayObjectContainer;
 
-		private var _transformDirty : Boolean = true;
-
 		protected var _transformMatrix : Matrix = new Matrix();
 
 		private var _displayObject : DisplayObject;
+
+		private var _transformDirty : Boolean = true;
+
+		private var _zIndex : int;
+
+		private var _zIndexDirty : Boolean;
 
 		public function DisplayStarlingComponent( name : String = null )
 		{
 			super( name );
 		}
 
+		public function get layerIndex() : int
+		{
+			return _layerIndex;
+		}
+		
+		/**
+		 * In what layer of the scene is this renderer drawn?
+		 */
+		public function set layerIndex( value : int ) : void
+		{
+			if ( _layerIndex == value )
+				return;
+			
+			_layerIndex = value;
+		}
+		
 		public function get alpha() : Number
 		{
 			return _alpha;
@@ -133,7 +159,6 @@ package totem.components.display.starling
 			if ( posX == _position.x && posY == _position.y )
 				return;
 
-			trace(value.toString());
 			_position.x = posX;
 			_position.y = posY;
 			_transformDirty = true;
@@ -299,6 +324,25 @@ package totem.components.display.starling
 			_transformDirty = true;
 		}
 
+		public function get zIndex() : int
+		{
+			return _zIndex;
+		}
+
+		/**
+		 * By default, layers are sorted based on the z-index, from small
+		 * to large.
+		 * @param value Z-index to set.
+		 */
+		public function set zIndex( value : int ) : void
+		{
+			if ( _zIndex == value )
+				return;
+
+			_zIndex = value;
+			_zIndexDirty = true;
+		}
+
 		protected function addToScene() : void
 		{
 			if ( _scene && _displayObject && !_inScene )
@@ -335,7 +379,7 @@ package totem.components.display.starling
 		override protected function onRetire() : void
 		{
 			super.onRetire();
-			
+
 			removeFromScene();
 		}
 

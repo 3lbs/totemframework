@@ -22,6 +22,12 @@ package totem.components.display
 	public interface IDisplay2DRenderer
 	{
 
+		function get layerIndex() : int
+
+		function set layerIndex( value : int ) : void;
+
+		function get position() : Vector2D;
+
 		function set position( value : Vector2D ) : void;
 
 		function setPosition( x : Number, y : Number ) : void;
@@ -33,5 +39,9 @@ package totem.components.display
 		function translateX( value : Number ) : void
 
 		function translateY( value : Number ) : void
+
+		function get zIndex() : int
+
+		function set zIndex( value : int ) : void
 	}
 }

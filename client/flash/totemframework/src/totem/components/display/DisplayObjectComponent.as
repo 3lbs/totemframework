@@ -20,8 +20,6 @@ package totem.components.display
 
 	import flash.geom.Vector3D;
 	
-	import mx.binding.utils.ChangeWatcher;
-	
 	import totem.core.TotemComponent;
 	import totem.math.Vector2D;
 
@@ -34,10 +32,26 @@ package totem.components.display
 			
 		}
 
+		public function get layerIndex() : int
+		{
+			return 0;
+		}
+		
+		public function set layerIndex( value : int ) : void
+		{
+			
+		}
+		
 		public function set position( value : Vector2D ) : void
 		{
 			
 		}
+		
+		public function get position () : Vector2D
+		{
+			return null;
+		}
+		
 		public function rotateX( value : Number, local : Boolean = true, pivotPoint : Vector3D = null ) : void
 		{
 
@@ -87,6 +101,16 @@ package totem.components.display
 		{
 			super.onRemove();
 
+		}
+		
+		public function get zIndex() : int
+		{
+			return 0;
+		}
+		
+		public function set zIndex( value : int ) : void
+		{
+			
 		}
 	}
 }

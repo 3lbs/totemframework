@@ -417,9 +417,6 @@
     <classEntry path="totem.components.motion.MotionComponent"/>
     <classEntry path="totem.components.motion.IMotion"/>
     <classEntry path="totem.components.motion.MotionBehavior"/>
-    <classEntry path="totem.utils.ViewportUtil"/>
-    <classEntry path="totem.core.params.display.MovieClipAnimationDataParam"/>
-    <classEntry path="totem.core.params.display.AnimationDataParam"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

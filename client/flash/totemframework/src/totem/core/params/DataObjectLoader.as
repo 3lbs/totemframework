@@ -19,7 +19,9 @@ package totem.core.params
 
 	import flash.events.Event;
 	import flash.utils.Dictionary;
-	
+
+	import org.as3commons.collections.LinkedList;
+
 	import totem.monitors.StartupDispatcherMonitor;
 
 	public class DataObjectLoader extends StartupDispatcherMonitor
@@ -63,13 +65,21 @@ package totem.core.params
 			return dataParamMap[ clazz ];
 		}
 
+		override public function start() : void
+		{
+			if ( !_monitors )
+				_monitors = new LinkedList();
+
+			super.start();
+
+		}
+
 		override protected function onComplete( eve : Event ) : void
 		{
 			var dispatcher : DataParamProxy = eve.target as DataParamProxy;
 
 			dataParamMap[ dispatcher.clazz ] = dispatcher.data;
 			super.onComplete( eve );
-
 
 			dispatcher.destroy();
 		}
