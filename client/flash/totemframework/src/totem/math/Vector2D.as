@@ -8,6 +8,8 @@ package totem.math
 	public class Vector2D extends Destroyable
 	{
 		internal static var disposed:Vector.<Vector2D>=new Vector.<Vector2D>();
+		
+		public static const ZERO_VECTOR : Vector2D = new Vector2D();
 
 		public static function create(x:Number=0, y:Number=0):Vector2D
 		{

@@ -19,7 +19,7 @@ package totem.core.mvc.modular.mvcs
 
 	import flash.display.DisplayObjectContainer;
 	import flash.events.IEventDispatcher;
-
+	
 	import totem.core.TotemGroup;
 	import totem.core.mvc.TotemContext;
 	import totem.core.mvc.modular.base.ModuleEventDispatcher;
@@ -44,10 +44,9 @@ package totem.core.mvc.modular.mvcs
 
 		override public function destroy() : void
 		{
-			super.destroy();
-			
-			ModuleEventDispatcher( _moduleEventDispatcher ).destroy();
+			_moduleEventDispatcher.destroy();
 			_moduleEventDispatcher = null;
+			super.destroy();
 		}
 
 		override public function initialize() : void

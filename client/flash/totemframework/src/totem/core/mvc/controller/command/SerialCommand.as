@@ -34,7 +34,7 @@ package totem.core.mvc.controller.command
 					
 					command.execute();
 					
-					if ( !command is AsyncCommand )
+					if ( !( command is AsyncCommand ) )
 						onCommandComplete( command );
 				}
 				else
@@ -64,7 +64,7 @@ package totem.core.mvc.controller.command
 				command.execute();
 				//commandManager.executeCommand( command );
 				
-				if ( !command is AsyncCommand )
+				if ( ! ( command is AsyncCommand ) )
 					onCommandComplete( true );
 			}
 		}

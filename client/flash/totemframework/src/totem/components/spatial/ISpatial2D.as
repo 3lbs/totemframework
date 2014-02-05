@@ -16,20 +16,19 @@
 
 package totem.components.spatial
 {
-
 	import totem.math.AABBox;
 
 	public interface ISpatial2D
 	{
+		
+		function get bounds () : AABBox;
 
-		function get bounds() : AABBox;
+		function get x() : Number;
 
-		function get x() : Number
+		function set x( value : Number ) : void;
 
-		function set x( value : Number ) : void
+		function get y() : Number;
 
-		function get y() : Number
-
-		function set y( value : Number ) : void
+		function set y( value : Number ) : void;
 	}
 }

@@ -64,6 +64,8 @@ package totem.components.motion
 		protected var newPos : Vector2D = new Vector2D();
 
 		private const BOUNCE_STOP_SPEED : Number = 50;
+		
+		public var radius : Number = 1;
 
 		private var _maxAcceleration : Number; // Speed per second to accelerate
 
@@ -95,7 +97,7 @@ package totem.components.motion
 			_worldBounds = new AABBox( new Vector2D(), 100, 100 );
 			_forces = new Array();
 		}
-
+		
 		public function addConstantForce( a_force : Vector2D, a_id : String ) : void
 		{
 			_constantForces[ a_id ] = a_force;

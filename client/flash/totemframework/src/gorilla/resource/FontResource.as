@@ -1,8 +1,23 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package gorilla.resource
 {
-	import flash.events.Event;
+
 	import flash.text.Font;
-	
 
 	public class FontResource extends SWFResource
 	{
@@ -11,29 +26,20 @@ package gorilla.resource
 			super();
 		}
 
-		public function getFont() : void
+		public function getFont( fontName : String ) : Font
 		{
+			var FontLibrary : Class = getAssetClass( fontName ) as Class;
 
+			if ( FontLibrary )
+				return new FontLibrary();
+
+			return null;
 		}
 
-		public function registerFont() : void
+		public function registerFont( fontName : String ) : void
 		{
-
+			var FontLibrary : Class = getAssetClass( fontName ) as Class;
+			Font.registerFont( FontLibrary );
 		}
-		
-		override protected function onLoadComplete( event : Event = null ) : void
-		{
-			super.onLoadComplete( event );
-			//var FontLibrary : Class = e.target.applicationDomain.getDefinition( "FontSwfDocumentClass" ) as Class;
-			//Font.registerFont( FontLibrary.SketchetikLight );
-			
-			//appDomain.Font.enumerateFonts();
-			
-			var fontLibrarty : Class = getAssetClass( "Impact" ) as Class;
-			
-			Font.registerFont( fontLibrarty );
-			
-		}
-
 	}
 }

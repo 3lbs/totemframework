@@ -97,5 +97,16 @@ package totem.data.type
 		{
 			return Point.distance( this, point0 );
 		}
+
+		public function empty() : void
+		{
+			x = 0;
+			y = 0;
+		}
+
+		public function toVector2d() : Vector2D
+		{
+			return Vector2D.create( x, y );
+		}
 	}
 }

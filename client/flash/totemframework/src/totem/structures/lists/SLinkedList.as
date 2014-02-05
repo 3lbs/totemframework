@@ -18,7 +18,7 @@ package totem.structures.lists
 {
 
 	import totem.structures.ICollection;
-	import totem.structures.IIterator;
+	import totem.structures.ITotemIterator;
 
 	public class SLinkedList extends AbstractList implements IList
 	{
@@ -232,7 +232,7 @@ package totem.structures.lists
 			}
 		}
 
-		public function get iterator() : IIterator
+		public function get iterator() : ITotemIterator
 		{
 			var iter : ListIterator = new ListIterator( this );
 			return iter;

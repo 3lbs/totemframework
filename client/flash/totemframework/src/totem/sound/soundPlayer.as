@@ -16,7 +16,7 @@
 
 package totem.sound
 {
-	public function soundPlayer() : SoundManager
+	public function get soundPlayer() : SoundManager
 	{
 		return SoundManager.getInstance();
 	}

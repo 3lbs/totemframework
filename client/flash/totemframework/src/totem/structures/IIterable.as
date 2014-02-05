@@ -19,6 +19,6 @@ package totem.structures
 
 	public interface IIterable
 	{
-		function get iterator() : IIterator;
+		function get iterator() : ITotemIterator;
 	}
 }

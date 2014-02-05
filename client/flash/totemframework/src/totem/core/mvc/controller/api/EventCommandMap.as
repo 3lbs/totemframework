@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 /*
  * Copyright (c) 2009 the original author or authors
  *
@@ -16,12 +32,11 @@ package totem.core.mvc.controller.api
 	import org.swiftsuspenders.Injector;
 	
 	import totem.totem_internal;
-	import totem.core.mvc.controller.command.AsyncCommand;
-	import totem.events.IRemovableEventDispatcher;
 	import totem.utils.DestroyUtil;
 	import totem.utils.TypeUtility;
 
 	use namespace totem_internal;
+
 	/**
 	 * An abstract <code>ICommandMap</code> implementation
 	 */
@@ -46,10 +61,6 @@ package totem.core.mvc.controller.api
 		 */
 		protected var verifiedCommandClasses : Dictionary;
 
-		//---------------------------------------------------------------------
-		//  Constructor
-		//---------------------------------------------------------------------
-
 		/**
 		 * Creates a new <code>CommandMap</code> object
 		 *
@@ -65,6 +76,74 @@ package totem.core.mvc.controller.api
 			this.verifiedCommandClasses = new Dictionary( false );
 		}
 
+		override public function destroy() : void
+		{
+			super.destroy();
+
+			unmapEvents();
+
+			eventDispatcher = null;
+
+			DestroyUtil.destroyDictionary( eventTypeMap );
+			eventTypeMap = null;
+
+			DestroyUtil.destroyDictionary( verifiedCommandClasses );
+			verifiedCommandClasses = null;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function execute( commandClass : Class, payload : Object = null, payloadClass : Class = null, named : String = '' ) : void
+		{
+			verifyCommandClass( commandClass );
+
+			var command : Object;
+
+			// hack for now was double injecting dont know what else to do
+			if ( payload != null || payloadClass != null )
+			{
+				payloadClass ||= TypeUtility.getClass( payload );
+				injector.map( payloadClass, named ).toValue( payload );
+
+				command = injector.getOrCreateNewInstance( commandClass );
+
+				injector.unmap( payloadClass, named );
+
+				command.execute();
+
+					//command not complete after execution
+					// should add asynccommand
+				/*if ( command is AsyncCommand && !command.isComplete )
+				{
+					command.onComplete.addOnce( onCommandComplete );
+				}*/
+			}
+			else
+			{
+				executeCommand( command );
+			}
+
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function hasEventCommand( eventType : String, commandClass : Class, eventClass : Class = null ) : Boolean
+		{
+			var eventClassMap : Dictionary = eventTypeMap[ eventType ];
+
+			if ( eventClassMap == null )
+				return false;
+
+			var callbacksByCommandClass : Dictionary = eventClassMap[ eventClass || Event ];
+
+			if ( callbacksByCommandClass == null )
+				return false;
+
+			return callbacksByCommandClass[ commandClass ] != null;
+		}
+
 		//---------------------------------------------------------------------
 		//  API
 		//---------------------------------------------------------------------
@@ -72,37 +151,6 @@ package totem.core.mvc.controller.api
 		override public function mapCommand( type : *, commandClass : Class, oneShot : Boolean = false ) : CommandMapping
 		{
 			return mapEvent( type, commandClass, null, oneShot );
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		protected function mapEvent( eventType : String, commandClass : Class, eventClass : Class = null, oneshot : Boolean = false ) : CommandMapping
-		{
-			verifyCommandClass( commandClass );
-			eventClass = eventClass || Event;
-
-			var commandMapping : CommandMapping = new CommandMapping();
-			
-			var eventClassMap : Dictionary = eventTypeMap[ eventType ] || ( eventTypeMap[ eventType ] = new Dictionary( false ));
-
-			var callbacksByCommandClass : Dictionary = eventClassMap[ eventClass ] || ( eventClassMap[ eventClass ] = new Dictionary( false ));
-
-			if ( callbacksByCommandClass[ commandClass ] != null )
-			{
-				//throw new Error( ContextError.E_COMMANDMAP_OVR + ' - eventType (' + eventType + ') and Command (' + commandClass + ')' );
-			}
-			var callback : Function = function( event : Event ) : void
-			{
-				routeEventToCommand( event, commandClass, commandMapping, oneshot, eventClass );
-			};
-			
-			commandMapping.callback = callback;
-			
-			eventDispatcher.addEventListener( eventType, callback, false, 0, true );
-			callbacksByCommandClass[ commandClass ] = commandMapping;
-			
-			return commandMapping;
 		}
 
 		/**
@@ -126,9 +174,9 @@ package totem.core.mvc.controller.api
 				return;
 
 			eventDispatcher.removeEventListener( eventType, commandMapping.callback, false );
-			
+
 			commandMapping.destroy();
-			
+
 			delete callbacksByCommandClass[ commandClass ];
 		}
 
@@ -156,56 +204,71 @@ package totem.core.mvc.controller.api
 		/**
 		 * @inheritDoc
 		 */
-		public function hasEventCommand( eventType : String, commandClass : Class, eventClass : Class = null ) : Boolean
+		protected function mapEvent( eventType : String, commandClass : Class, eventClass : Class = null, oneshot : Boolean = false ) : CommandMapping
 		{
-			var eventClassMap : Dictionary = eventTypeMap[ eventType ];
+			verifyCommandClass( commandClass );
+			eventClass = eventClass || Event;
 
-			if ( eventClassMap == null )
-				return false;
+			var commandMapping : CommandMapping = new CommandMapping();
 
-			var callbacksByCommandClass : Dictionary = eventClassMap[ eventClass || Event ];
+			var eventClassMap : Dictionary = eventTypeMap[ eventType ] || ( eventTypeMap[ eventType ] = new Dictionary( false ));
 
-			if ( callbacksByCommandClass == null )
-				return false;
-			
-			
-			return callbacksByCommandClass[ commandClass ] != null;
+			var callbacksByCommandClass : Dictionary = eventClassMap[ eventClass ] || ( eventClassMap[ eventClass ] = new Dictionary( false ));
+
+			if ( callbacksByCommandClass[ commandClass ] != null )
+			{
+				//throw new Error( ContextError.E_COMMANDMAP_OVR + ' - eventType (' + eventType + ') and Command (' + commandClass + ')' );
+			}
+			var callback : Function = function( event : Event ) : void
+			{
+				routeEventToCommand( event, commandClass, commandMapping, oneshot, eventClass );
+			};
+
+			commandMapping.callback = callback;
+
+			eventDispatcher.addEventListener( eventType, callback, false, 0, true );
+			callbacksByCommandClass[ commandClass ] = commandMapping;
+
+			return commandMapping;
 		}
 
 		/**
-		 * @inheritDoc
+		 * Event Handler
+		 *
+		 * @param event The <code>Event</code>
+		 * @param commandClass The Class to construct and execute
+		 * @param oneshot Should this command mapping be removed after execution?
+		 * @return <code>true</code> if the event was routed to a Command and the Command was executed,
+		 *         <code>false</code> otherwise
 		 */
-		public function execute( commandClass : Class, payload : Object = null, payloadClass : Class = null, named : String = '' ) : void
+		protected function routeEventToCommand( event : Event, commandClass : Class, mapper : CommandMapping, oneshot : Boolean, originalEventClass : Class ) : Boolean
 		{
-			verifyCommandClass( commandClass );
+			if ( !( event is originalEventClass ))
+				return false;
 
-			var command : Object;
-		
-			// hack for now was double injecting dont know what else to do
-			if ( payload != null || payloadClass != null )
+			if ( mapper && mapper.guardsList.length > 0 )
 			{
-				payloadClass ||= TypeUtility.getClass( payload );
-				injector.map( payloadClass, named ).toValue( payload );
+				var guards : Array = mapper.guardsList;
+				var l : int = guards.length;
+				var guard : IGuard;
+				var i : int;
 
-				command = injector.getOrCreateNewInstance( commandClass );
-
-				injector.unmap( payloadClass, named );
-				
-				command.execute();
-				
-				//command not complete after execution
-				// should add asynccommand
-				/*if ( command is AsyncCommand && !command.isComplete )
+				for ( i = 0; i < l; ++i )
 				{
-					command.onComplete.addOnce( onCommandComplete );
-				}*/
-			}
-			else
-			{
-				executeCommand( command );
-			}
+					guard = new guards[ i ]();
 
+					injector.injectInto( guard );
 
+					if ( !guard.allow())
+						return false;
+				}
+			}
+			execute( commandClass, event );
+
+			if ( oneshot )
+				unmapEvent( event.type, commandClass, originalEventClass );
+
+			return true;
 		}
 
 		//---------------------------------------------------------------------
@@ -224,61 +287,6 @@ package totem.core.mvc.controller.api
 				/*if ( !verifiedCommandClasses[ commandClass ])
 					throw new ContextError( ContextError.E_COMMANDMAP_NOIMPL + ' - ' + commandClass );*/
 			}
-		}
-
-		/**
-		 * Event Handler
-		 *
-		 * @param event The <code>Event</code>
-		 * @param commandClass The Class to construct and execute
-		 * @param oneshot Should this command mapping be removed after execution?
-		 * @return <code>true</code> if the event was routed to a Command and the Command was executed,
-		 *         <code>false</code> otherwise
-		 */
-		protected function routeEventToCommand( event : Event, commandClass : Class, mapper : CommandMapping, oneshot : Boolean, originalEventClass : Class ) : Boolean
-		{
-			if ( !( event is originalEventClass ))
-				return false;
-
-			
-			if ( mapper && mapper.guardsList.length > 0 )
-			{
-				var guards : Array = mapper.guardsList;
-				var l : int = guards.length;
-				var guard : IGuard;
-				var i : int;
-				
-				for ( i = 0; i<l; ++i )
-				{
-					guard = new guards[i]();
-					
-					injector.injectInto( guard );
-					
-					if ( !guard.allow() )
-						return false;
-				}
-			}
-			execute( commandClass, event );
-
-			if ( oneshot )
-				unmapEvent( event.type, commandClass, originalEventClass );
-
-			return true;
-		}
-
-		override public function destroy() : void
-		{
-			super.destroy();
-			
-			unmapEvents();
-			
-			eventDispatcher = null;
-
-			DestroyUtil.destroyDictionary( eventTypeMap );
-			eventTypeMap = null;
-
-			DestroyUtil.destroyDictionary( verifiedCommandClasses );
-			verifiedCommandClasses = null;
 		}
 	}
 }

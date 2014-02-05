@@ -170,7 +170,7 @@ package totem.events
 		/**
 			Registers a <code>IEventDispatcher</code> to be managed by ListenerManager.
 
-			@param eventDispatcher: The <code>IEventDispatcher</code> instance to manage.
+			@param eventDispatcher: The <code>IEventDispatcher</wacode> instance to manage.
 			@return A ListenerManager instance.
 		*/
 		public static function getManager( dispatcher : IEventDispatcher ) : ListenerManager
@@ -178,7 +178,7 @@ package totem.events
 			if ( ListenerManager._proxyMap == null )
 				ListenerManager._proxyMap = new Dictionary();
 
-			if ( !( dispatcher in ListenerManager._proxyMap ))
+			if ( !(ListenerManager._proxyMap[dispatcher] ))
 				ListenerManager._proxyMap[ dispatcher ] = new ListenerManager( new EventInfo( null, null, false ), dispatcher );
 
 			return ListenerManager._proxyMap[ dispatcher ];

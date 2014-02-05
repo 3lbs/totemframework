@@ -33,17 +33,14 @@ package totem.loaders
 
 		public function SWFDataLoader( url : String, id : String = "" )
 		{
-
 			this.id = id || url;
-
 			this.url = url;
-
 		}
 
 		override public function destroy() : void
 		{
+			swfResource = null;
 			super.destroy();
-
 		}
 
 		override public function start() : void

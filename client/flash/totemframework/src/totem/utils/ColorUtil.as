@@ -98,6 +98,15 @@ package totem.utils
 		}
 
 		/** Returns the red part of an (A)RGB color (0 - 255). */
+		
+		
+		public static function getRandomColor () : int
+		{
+			return Math.random() * 0xFFFFFF;
+		}
+		
+		
+		
 		public static function getRed( color : uint ) : int
 		{
 			return ( color >> 16 ) & 0xff;
@@ -105,6 +114,13 @@ package totem.utils
 
 		public function ColorUtil()
 		{
+		}
+
+		public static function hexToRGB( hex : Number ) : Object
+		{
+			var rgbObj : Object = { red: (( hex & 0xFF0000 ) >> 16 ), green: (( hex & 0x00FF00 ) >> 8 ), blue: (( hex & 0x0000FF ))};
+
+			return rgbObj;
 		}
 	}
 }

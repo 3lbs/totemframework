@@ -6,7 +6,6 @@ package totem.core.mvc.view
 	import flash.utils.Dictionary;
 	
 	import totem.totem_internal;
-	import totem.core.IDestroyable;
 	import totem.core.System;
 	import totem.core.mvc.TotemContext;
 	import totem.utils.TypeUtility;
@@ -197,10 +196,8 @@ package totem.core.mvc.view
 				for ( var dispatcher : * in _dispatchers )
 				{
 					IEventDispatcher( dispatcher ).removeEventListener( Event.ADDED_TO_STAGE, addedhandler, true );
-					IEventDispatcher( dispatcher ).removeEventListener( Event.REMOVED_FROM_STAGE, addedhandler, true );
+					IEventDispatcher( dispatcher ).removeEventListener( Event.REMOVED_FROM_STAGE, removedhandler, true );
 					IEventDispatcher( dispatcher ).removeEventListener( Event.ADDED, addedhandler, true );
-
-					IDestroyable( dispatcher ).destroy();
 
 					_dispatchers[ dispatcher ] = null;
 					delete _dispatchers[ dispatcher ];
@@ -211,6 +208,7 @@ package totem.core.mvc.view
 
 			injector.teardown();
 			injector = null;
+			
 		}
 
 		/**

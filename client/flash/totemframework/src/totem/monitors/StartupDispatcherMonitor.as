@@ -30,7 +30,7 @@ package totem.monitors
 
 		protected var _monitors : LinkedList;
 
-		protected var count : int;
+	//	protected var count : int;
 
 		public function StartupDispatcherMonitor( id : String = "" )
 		{
@@ -45,7 +45,7 @@ package totem.monitors
 			dispatcher.addEventListener( eventType, onComplete );
 			_monitors.add( dispatcher );
 
-			count += 1;
+		//	count += 1;
 
 			return dispatcher;
 		}

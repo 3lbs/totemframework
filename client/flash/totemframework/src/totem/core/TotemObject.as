@@ -1,10 +1,26 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core
 {
 
 	import org.swiftsuspenders.Injector;
-	
-	import totem.totem_internal;
 	import totem.data.InListNode;
+
+	import totem.totem_internal;
 
 	use namespace totem_internal;
 
@@ -22,7 +38,6 @@ package totem.core
 	 */
 	public class TotemObject extends InListNode implements IDestroyable // 
 	{
-		private var _name : String;
 
 		protected var _initialzed : Boolean = false;
 
@@ -32,14 +47,90 @@ package totem.core
 
 		totem_internal var _sets : Vector.<TotemSet>;
 
+		private var _name : String;
+
 		public function TotemObject( name : String )
 		{
 			_name = name;
 		}
 
+		/**
+		 * Called to destroy the SmashObject: remove it from sets and groups, and do
+		 * other end of life cleanup.
+		 */
+		override public function destroy() : void
+		{
+			// Remove from sets.
+			if ( _sets )
+			{
+				while ( _sets.length )
+					_sets[ _sets.length - 1 ].remove( this );
+			}
+
+			// Remove from owning group.
+			if ( _owningGroup )
+			{
+				_owningGroup.noteRemove( this );
+				_owningGroup = null;
+			}
+
+			super.destroy();
+		}
+
+		public function getInstance( InstanceClass : Class, name : String = "" ) : *
+		{
+			if ( !getInjector().satisfies( InstanceClass, name ))
+			{
+				throw new Error( "Instance of" + InstanceClass + " named \"" + name + "\" not found." );
+			}
+			return getInjector().getInstance( InstanceClass, name );
+		}
+
+		/**
+		 * Name of the SmashObject. Used for dynamic lookups and debugging.
+		 */
+		public function getName() : String
+		{
+			return _name;
+		}
+
+		public function getSystem( SystemClass : Class ) : *
+		{
+			return getInstance( SystemClass );
+		}
+
+		public function hasInstance( InstanceClass : Class, name : String = "" ) : Boolean
+		{
+			return getInjector().hasMapping( InstanceClass, name );
+		}
+
+		/**
+		 * Called to initialize the SmashObject. The SmashObject must be in a SmashGroup
+		 * before calling this (ie, set owningGroup).
+		 */
+		public function initialize() : void
+		{
+			if ( _initialzed )
+				throw new Error( "Totem Object is already initialzed!" );
+
+			// Error if not in a group.
+			if ( _owningGroup == null )
+				throw new Error( "Can't initialize a SmashObject without an owning SmashGroup!" );
+
+			_initialzed = true;
+		}
+
 		public function get initialzed() : Boolean
 		{
 			return _initialzed;
+		}
+
+		/**
+		 * What SmashSets reference this SmashObject?
+		 */
+		public function get sets() : Vector.<TotemSet>
+		{
+			return _sets;
 		}
 
 		totem_internal function getInjector() : Injector
@@ -51,39 +142,20 @@ package totem.core
 			return null;
 		}
 
-		totem_internal function setInjector( value : Injector ) : void
+		totem_internal function noteSetAdd( set : TotemSet ) : void
 		{
-			injector = value;
-		}
-		
-		public function getInstance( InstanceClass : Class, name : String = "" ) : *
-		{
-			if ( !getInjector().satisfies( InstanceClass, name ))
-			{
-				throw new Error( "Instance of" + InstanceClass + " named \"" + name + "\" not found." );
-			}
-			return getInjector().getInstance( InstanceClass, name );
+			if ( _sets == null )
+				_sets = new Vector.<TotemSet>();
+			_sets.push( set );
 		}
 
-		public function getSystem( SystemClass : Class ) : *
+		totem_internal function noteSetRemove( set : TotemSet ) : void
 		{
-			return getInstance( SystemClass );
-		}
+			var idx : int = _sets.indexOf( set );
 
-		/**
-		 * Name of the SmashObject. Used for dynamic lookups and debugging.
-		 */
-		public function getName() : String
-		{
-			return _name;
-		}
-
-		/**
-		 * What SmashSets reference this SmashObject?
-		 */
-		public function get sets() : Vector.<TotemSet>
-		{
-			return _sets;
+			if ( idx == -1 )
+				throw new Error( "Tried to remove SmashObject from a SmashSet it didn't know it was in!" );
+			_sets.splice( idx, 1 );
 		}
 
 		/**
@@ -110,63 +182,9 @@ package totem.core
 			_owningGroup.noteAdd( this );
 		}
 
-		totem_internal function noteSetAdd( set : TotemSet ) : void
+		totem_internal function setInjector( value : Injector ) : void
 		{
-			if ( _sets == null )
-				_sets = new Vector.<TotemSet>();
-			_sets.push( set );
-		}
-
-		totem_internal function noteSetRemove( set : TotemSet ) : void
-		{
-			var idx : int = _sets.indexOf( set );
-
-			if ( idx == -1 )
-				throw new Error( "Tried to remove SmashObject from a SmashSet it didn't know it was in!" );
-			_sets.splice( idx, 1 );
-		}
-
-		/**
-		 * Called to initialize the SmashObject. The SmashObject must be in a SmashGroup
-		 * before calling this (ie, set owningGroup).
-		 */
-		public function initialize() : void
-		{
-			if ( _initialzed )
-				throw new Error( "Totem Object is already initialzed!" );
-			
-			// Error if not in a group.
-			if ( _owningGroup == null )
-				throw new Error( "Can't initialize a SmashObject without an owning SmashGroup!" );
-
-			_initialzed = true;
-		}
-
-		/**
-		 * Called to destroy the SmashObject: remove it from sets and groups, and do
-		 * other end of life cleanup.
-		 */
-		override public function destroy() : void
-		{
-			super.destroy();
-			
-			this._isDestroyed = true;
-
-			// Remove from sets.
-			if ( _sets )
-			{
-				while ( _sets.length )
-					_sets[ _sets.length - 1 ].remove( this );
-			}
-
-			// Remove from owning group.
-			if ( _owningGroup )
-			{
-				_owningGroup.noteRemove( this );
-				_owningGroup = null;
-			}
-
-			_initialzed = false;
+			injector = value;
 		}
 	}
 }

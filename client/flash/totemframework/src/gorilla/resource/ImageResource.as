@@ -122,7 +122,7 @@ package gorilla.resource
 		{
 			super.destroy();
 			
-			_bitmapData.dispose();
+			//_bitmapData.dispose();
 			_bitmapData = null;
 		}
     }

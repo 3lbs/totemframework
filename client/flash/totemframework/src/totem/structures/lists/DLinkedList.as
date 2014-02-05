@@ -18,7 +18,7 @@ package totem.structures.lists
 {
 
 	import totem.structures.ICollection;
-	import totem.structures.IIterator;
+	import totem.structures.ITotemIterator;
 	import totem.utils.string.TabularText;
 
 	/**
@@ -294,7 +294,7 @@ package totem.structures.lists
 		/**
 		 * @inheritDoc
 		 */
-		public function get iterator() : IIterator
+		public function get iterator() : ITotemIterator
 		{
 			return new ListIterator( this );
 		}

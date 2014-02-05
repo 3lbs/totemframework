@@ -18,7 +18,8 @@ package totem.monitors
 {
 
 	import flash.events.Event;
-	
+	import totem.monitors.promise.wait;
+
 	import totem.totem_internal;
 
 	public class GroupMonitor extends AbstractMonitorProxy implements IListID
@@ -55,7 +56,7 @@ package totem.monitors
 			if ( !monitor )
 				return null;
 
-			monitor.addEventListener( eventType, onComplete );
+			monitor.addEventListener( eventType, onComplete, false, 100 );
 			_resources.push( monitor );
 
 			return monitor;
@@ -64,7 +65,6 @@ package totem.monitors
 		override public function destroy() : void
 		{
 			super.destroy();
-
 			data = null;
 
 			while ( _resources.length )
@@ -101,9 +101,13 @@ package totem.monitors
 
 			_failedCount = 0;
 
-			if ( !doStartResource())
+			if ( allResourceComplete())
 			{
 				finished();
+			}
+			else
+			{
+				doStartResource();
 			}
 		}
 
@@ -116,31 +120,58 @@ package totem.monitors
 			return _resources.length;
 		}
 
-		/*private function allResourceComplete() : Boolean
-		{
-			var isComplete : Boolean = true;
-
-			for each ( var proxy : IStartMonitor in _resources )
-			{
-				if ( !proxy.isComplete())
-				{
-					isComplete = false;
-				}
-			}
-
-			return isComplete;
-		}*/
-
-		private function doStartResource() : Boolean
+		private function allResourceComplete() : Boolean
 		{
 			if ( _resources == null || _resources.length == 0 || status == COMPLETE )
+			{
+				return true;
+			}
+			var proxy : IMonitor;
+			var i : int;
+
+			for ( i = 0; i < _resources.length; ++i )
+			{
+				proxy = _resources[ i ];
+
+				if ( !proxy.isComplete())
+				{
+					return false;
+				}
+
+			}
+
+			return true;
+
+		}
+
+		private function canStartResources() : Boolean
+		{
+			if ( _resources == null || _resources.length == 0 || status == COMPLETE )
+			{
 				return false;
+			}
+
+			var proxy : IMonitor;
+			var i : int;
+
+			for ( i = 0; i < _resources.length; ++i )
+			{
+				proxy = _resources[ i ];
+
+				if ( proxy.status == AbstractMonitorProxy.EMPTY )
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private function doStartResource() : void
+		{
 
 			var proxy : IMonitor;
 			var l : int = _resources.length;
 			var i : int;
-
-			var isBuilding : Boolean;
 
 			for ( i = 0; i < _resources.length; ++i )
 			{
@@ -153,7 +184,6 @@ package totem.monitors
 				else
 				{
 					// if something is  AbstractMonitorProxy.EMPTY || AbstractMonitorProxy.LOADING)
-					isBuilding = true;
 
 					if ( proxy.status == AbstractMonitorProxy.EMPTY )
 					{
@@ -166,24 +196,18 @@ package totem.monitors
 								{
 									runningProcess++;
 									AbstractMonitorProxy( proxy ).totem_internal::start();
-										//wait( 2, proxy.start );
 								}
 							}
 							else
 							{
 								runningProcess++;
 								AbstractMonitorProxy( proxy ).totem_internal::start();
-									//wait( 2, proxy.start );
 							}
 						}
-						else
-							// too many process runing dont check anymore
-							return true;
 					}
 
 				}
 			}
-			return isBuilding;
 		}
 
 		private function onComplete( eve : Event ) : void
@@ -199,10 +223,17 @@ package totem.monitors
 			runningProcess--;
 
 			// if no resources to start.. FINISH
-			if ( !doStartResource())
+			if ( !allResourceComplete())
 			{
-				finished();
+				doStartResource();
 			}
+			else
+			{
+				//finished();
+				// hackish solution had to be done due to recusive error
+				wait( 1, finished );
+			}
+
 		}
 	}
 }

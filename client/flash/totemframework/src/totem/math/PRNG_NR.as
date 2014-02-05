@@ -1,12 +1,24 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.math
 {
 
-	
-
 	public class PRNG_NR
 	{
-
-		private var _st : int;
 
 		private var _en : int;
 
@@ -18,7 +30,9 @@ package totem.math
 
 		private var _seed : uint;
 
-		private var randGen:PM_PRNG;
+		private var _st : int;
+
+		private var randGen : PM_PRNG;
 
 		public function PRNG_NR( st : int, en : int, seed : uint = 1 )
 		{
@@ -30,14 +44,9 @@ package totem.math
 			shuffle();
 		}
 
-		public function get seed():uint
+		public function destroy() : void
 		{
-			return _seed;
-		}
-
-		public function set seed(value:uint):void
-		{
-			_seed = value;
+			_randNums.length = 0;
 		}
 
 		public function getNum() : Number
@@ -49,6 +58,38 @@ package totem.math
 			var result : Number = _randNums[ _numPos ];
 			_numPos++;
 			return result;
+		}
+
+		public function get len() : int
+		{
+			return _len;
+		}
+
+		public function get seed() : uint
+		{
+			return _seed;
+		}
+
+		public function set seed( value : uint ) : void
+		{
+			_seed = value;
+		}
+
+		private function _sortRandom( a : *, b : * ) : int
+		{
+			return randGen.nextIntRange( 0, 1 ) ? 1 : -1;
+		}
+
+		private function randomize( inArray : Array ) : Array
+		{
+			var t : Array = new Array();
+			var r : Array = inArray.sort( _sortRandom, Array.RETURNINDEXEDARRAY );
+			var i : int = -1;
+
+			while ( ++i < inArray.length )
+				t.push( inArray[ r[ i ]]);
+
+			return t;
 		}
 
 		private function shuffle() : void
@@ -73,33 +114,6 @@ package totem.math
 			_randNums = randomize( _randNums );
 
 			trace( _randNums );
-		}
-
-		private function randomize( inArray : Array ) : Array
-		{
-			var t : Array = new Array();
-			var r : Array = inArray.sort( _sortRandom, Array.RETURNINDEXEDARRAY );
-			var i : int = -1;
-
-			while ( ++i < inArray.length )
-				t.push( inArray[ r[ i ]]);
-
-			return t;
-		}
-
-		private function _sortRandom( a : *, b : * ) : int
-		{
-			return randGen.nextIntRange( 0, 1 ) ? 1 : -1;
-		}
-
-		public function get len() : int
-		{
-			return _len;
-		}
-
-		public function destroy() : void
-		{
-			_randNums.length = 0;
 		}
 	}
 

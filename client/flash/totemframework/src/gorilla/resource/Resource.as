@@ -1,11 +1,18 @@
-/*******************************************************************************
- * PushButton Engine
- * Copyright (C) 2009 PushButton Labs, LLC
- * For more information see http://www.pushbuttonengine.com
- *
- * This file is licensed under the terms of the MIT license, which is included
- * in the License.html file at the root directory of this SDK.
- ******************************************************************************/
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2013 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
 package gorilla.resource
 {
 
@@ -31,12 +38,10 @@ package gorilla.resource
 	 * @eventType com.pblabs.engine.resource.ResourceEvent.LOADED_EVENT
 	 */
 	[Event( name = "LOADED_EVENT", type = "totem.resource.ResourceEvent" )]
-
 	/**
 	 * @eventType com.pblabs.engine.resource.ResourceEvent.FAILED_EVENT
 	 */
 	[Event( name = "FAILED_EVENT", type = "totem.resource.ResourceEvent" )]
-
 	/**
 	 * A resource contains data for a specific type of game asset. This base
 	 * class does not define what that type is, so subclasses should be created
@@ -54,11 +59,106 @@ package gorilla.resource
 	{
 		public var provider : IResourceProvider;
 
+		protected var _didFail : Boolean = false;
+
+		protected var _filename : String = null;
+
+		protected var _isLoaded : Boolean = false;
+
+		protected var _loader : Loader;
+
+		protected var _referenceCount : int = 0;
+
+		protected var _urlLoader : URLLoader;
+
 		protected var complete : ISignal = new Signal( Resource );
 
 		protected var failed : ISignal = new Signal( Resource );
 
 		private var _id : *;
+
+		public function completeCallback( resourceComplete : Function ) : void
+		{
+			complete.addOnce( resourceComplete );
+
+			if ( _isLoaded && !_didFail )
+			{
+				complete.dispatch( this );
+				failed.removeAll();
+			}
+
+		}
+
+		public function get data() : *
+		{
+			return null;
+		}
+
+		/**
+		 * Decrements the number of references to the resource. This should only ever be
+		 * called by the ResourceManager.
+		 */
+		public function decrementReferenceCount() : void
+		{
+			_referenceCount--;
+		}
+
+		public function destroy() : void
+		{
+			_urlLoader = null;
+
+			if ( _loader )
+			{
+				_loader.unloadAndStop();
+				_loader = null;
+			}
+
+			complete.removeAll();
+			complete = null;
+
+			failed.removeAll();
+			failed = null;
+
+			provider = null;
+		}
+
+		/**
+		 * Whether or not the resource failed to load. This is only valid after the resource
+		 * has loaded, so being false only verifies a successful load if IsLoaded is true.
+		 *
+		 * @see #IsLoaded
+		 */
+		public function get didFail() : Boolean
+		{
+			return _didFail;
+		}
+
+		/**
+		 * This method will be used by a Resource Provider to indicate that this
+		 * resource has failed loading
+		 */
+		public function fail( message : String ) : void
+		{
+			onFailed( message );
+		}
+
+		public function failedCallback( resourceFails : Function ) : void
+		{
+
+			if ( _isLoaded )
+			{
+				if ( _didFail )
+				{
+					failed.dispatch( this );
+					complete.removeAll();
+				}
+				failed.removeAll();
+			}
+			else
+			{
+				failed.addOnce( resourceFails );
+			}
+		}
 
 		/**
 		 * The filename the resource data was loaded from.
@@ -82,71 +182,29 @@ package gorilla.resource
 			_filename = value;
 		}
 
-		/**
-		 * Whether or not the resource has been loaded. This only marks whether loading has
-		 * been completed, not whether it succeeded. If this is true, DidFail can be checked
-		 * to see if loading was successful.
-		 *
-		 * @see #DidFail
-		 */
-		public function get isLoaded() : Boolean
+		public function get id() : *
 		{
-			return _isLoaded;
+			return _id;
+		}
+
+		public function set id( value : * ) : void
+		{
+
+			if ( id != null )
+			{
+				// you cant change the ID of a resouces
+				return;
+			}
+			_id = value;
 		}
 
 		/**
-		 * Whether or not the resource failed to load. This is only valid after the resource
-		 * has loaded, so being false only verifies a successful load if IsLoaded is true.
-		 *
-		 * @see #IsLoaded
+		 * Increments the number of references to the resource. This should only ever be
+		 * called by the ResourceManager.
 		 */
-		public function get didFail() : Boolean
+		public function incrementReferenceCount() : void
 		{
-			return _didFail;
-		}
-
-		/**
-		 * The number of places this resource is currently referenced from. When this reaches
-		 * zero, the resource will be unloaded.
-		 */
-		public function get referenceCount() : int
-		{
-			return _referenceCount;
-		}
-
-		/**
-		 * The Loader object that was used to load this resource.
-		 * This is set to null after onContentReady returns true.
-		 */
-		protected function get resourceLoader() : Loader
-		{
-			return _loader;
-		}
-
-		/**
-		 * Loads resource data from a file.
-		 *
-		 * @param filename The filename or url to load data from. A ResourceEvent will be
-		 * dispatched when the load completes - LOADED_EVENT on successful load, or
-		 * FAILED_EVENT if the load fails.
-		 */
-		public function load( filename : String ) : void
-		{
-			_filename = filename;
-
-			var loader : URLLoader = new URLLoader();
-			loader.dataFormat = URLLoaderDataFormat.BINARY;
-			loader.addEventListener( Event.COMPLETE, onDownloadComplete );
-			loader.addEventListener( IOErrorEvent.IO_ERROR, onDownloadError );
-			loader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onDownloadSecurityError );
-
-			var request : URLRequest = new URLRequest();
-			request.url = filename;
-
-			loader.load( request );
-
-			// Keep reference so the URLLoader isn't GC'ed.
-			_urlLoader = loader;
+			_referenceCount++;
 		}
 
 		/**
@@ -178,30 +236,50 @@ package gorilla.resource
 		}
 
 		/**
-		 * Increments the number of references to the resource. This should only ever be
-		 * called by the ResourceManager.
+		 * Whether or not the resource has been loaded. This only marks whether loading has
+		 * been completed, not whether it succeeded. If this is true, DidFail can be checked
+		 * to see if loading was successful.
+		 *
+		 * @see #DidFail
 		 */
-		public function incrementReferenceCount() : void
+		public function get isLoaded() : Boolean
 		{
-			_referenceCount++;
+			return _isLoaded;
 		}
 
 		/**
-		 * Decrements the number of references to the resource. This should only ever be
-		 * called by the ResourceManager.
+		 * Loads resource data from a file.
+		 *
+		 * @param filename The filename or url to load data from. A ResourceEvent will be
+		 * dispatched when the load completes - LOADED_EVENT on successful load, or
+		 * FAILED_EVENT if the load fails.
 		 */
-		public function decrementReferenceCount() : void
+		public function load( filename : String ) : void
 		{
-			_referenceCount--;
+			_filename = filename;
+
+			var loader : URLLoader = new URLLoader();
+			loader.dataFormat = URLLoaderDataFormat.BINARY;
+			loader.addEventListener( Event.COMPLETE, onDownloadComplete );
+			loader.addEventListener( IOErrorEvent.IO_ERROR, onDownloadError );
+			loader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onDownloadSecurityError );
+
+			var request : URLRequest = new URLRequest();
+			request.url = filename;
+
+			loader.load( request );
+
+			// Keep reference so the URLLoader isn't GC'ed.
+			_urlLoader = loader;
 		}
 
 		/**
-		 * This method will be used by a Resource Provider to indicate that this
-		 * resource has failed loading
+		 * The number of places this resource is currently referenced from. When this reaches
+		 * zero, the resource will be unloaded.
 		 */
-		public function fail( message : String ) : void
+		public function get referenceCount() : int
 		{
-			onFailed( message );
+			return _referenceCount;
 		}
 
 		/**
@@ -216,33 +294,6 @@ package gorilla.resource
 		protected function onContentReady( content : * ) : Boolean
 		{
 			return false;
-		}
-
-		/**
-		 * Called when loading and conditioning of the resource data is complete. This
-		 * must be called by, and only by, subclasses that override the initialize
-		 * method.
-		 *
-		 * @param event This can be ignored by subclasses.
-		 */
-		protected function onLoadComplete( event : Event = null ) : void
-		{
-			if ( onContentReady( event ? event.target.content : null ))
-			{
-				_isLoaded = true;
-				_urlLoader = null;
-				_loader = null;
-
-				complete.dispatch( this );
-				failed.removeAll();
-
-			}
-			else
-			{
-				onFailed( "Got false from onContentReady - the data wasn't accepted." );
-				return;
-			}
-
 		}
 
 		protected function onDownloadComplete( event : Event ) : void
@@ -274,85 +325,42 @@ package gorilla.resource
 			_loader = null;
 		}
 
-		protected var _filename : String = null;
-
-		protected var _isLoaded : Boolean = false;
-
-		protected var _didFail : Boolean = false;
-
-		protected var _urlLoader : URLLoader;
-
-		protected var _loader : Loader;
-
-		protected var _referenceCount : int = 0;
-
-		public function get data() : *
+		/**
+		 * Called when loading and conditioning of the resource data is complete. This
+		 * must be called by, and only by, subclasses that override the initialize
+		 * method.
+		 *
+		 * @param event This can be ignored by subclasses.
+		 */
+		protected function onLoadComplete( event : Event = null ) : void
 		{
-			return null;
-		}
-
-		public function failedCallback( resourceFails : Function ) : void
-		{
-			failed.addOnce( resourceFails );
-
-			if ( _isLoaded )
+			if ( onContentReady( event ? event.target.content : null ))
 			{
-				if ( _didFail )
-				{
-					failed.dispatch( this );
-					complete.removeAll();
-				}
-				failed.removeAll();
-			}
-		}
-
-		public function completeCallback( resourceComplete : Function ) : void
-		{
-			complete.addOnce( resourceComplete );
-
-			if ( _isLoaded && !_didFail )
-			{
-				complete.dispatch( this );
-				failed.removeAll();
-			}
-
-		}
-
-		public function destroy() : void
-		{
-			_urlLoader = null;
-
-			if ( _loader )
-			{
-				_loader.unloadAndStop();
+				_isLoaded = true;
+				_urlLoader = null;
 				_loader = null;
+
+				failed.removeAll();
+				complete.dispatch( this );
+
+
 			}
-			
-			complete.removeAll();
-			complete = null;
-
-			failed.removeAll();
-			failed = null;
-
-			provider = null;
-		}
-
-		public function get id() : *
-		{
-			return _id;
-		}
-
-		public function set id( value : * ) : void
-		{
-
-			if ( id != null )
+			else
 			{
-				// you cant change the ID of a resouces
+				onFailed( "Got false from onContentReady - the data wasn't accepted." );
 				return;
 			}
-			_id = value;
+
 		}
 
+		/**
+		 * The Loader object that was used to load this resource.
+		 * This is set to null after onContentReady returns true.
+		 */
+		protected function get resourceLoader() : Loader
+		{
+			return _loader;
+		}
 	}
 }
 

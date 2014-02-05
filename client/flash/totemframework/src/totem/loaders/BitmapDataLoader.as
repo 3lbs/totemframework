@@ -24,14 +24,14 @@ package totem.loaders
 	import gorilla.resource.Resource;
 	import gorilla.resource.ResourceManager;
 	
-	import totem.monitors.AbstractMonitorProxy;
+	import totem.monitors.RequiredProxy;
 
-	public class BitmapDataLoader extends AbstractMonitorProxy implements IBitmapDataLoader
+	public class BitmapDataLoader extends RequiredProxy implements IBitmapDataLoader
 	{
 
-		private var _bitmapData : BitmapData;
+		protected var filename : String;
 
-		private var filename : String;
+		private var _bitmapData : BitmapData;
 
 		public function BitmapDataLoader( url : String, id : Object = null )
 		{
@@ -45,11 +45,6 @@ package totem.loaders
 			return _bitmapData;
 		}
 
-		override public function unloadData() : void
-		{
-			ResourceManager.getInstance().unload( filename, ImageResource );
-		}
-		
 		override public function destroy() : void
 		{
 			super.destroy();
@@ -63,6 +58,11 @@ package totem.loaders
 			var resource : IResource = ResourceManager.getInstance().load( filename, ImageResource );
 			resource.completeCallback( onBitmapComplete );
 			resource.failedCallback( onFailed );
+		}
+
+		override public function unloadData() : void
+		{
+			ResourceManager.getInstance().unload( filename, ImageResource );
 		}
 
 		private function onBitmapComplete( resource : ImageResource ) : void

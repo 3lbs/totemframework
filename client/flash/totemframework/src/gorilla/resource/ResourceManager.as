@@ -18,11 +18,13 @@ package gorilla.resource
 {
 
 	import flash.utils.Dictionary;
-
+	
 	import gorilla.resource.providers.FallbackResourceProvider;
 	import gorilla.resource.providers.IResourceProvider;
-
+	
 	import ladydebug.Logger;
+	
+	import org.swiftsuspenders.dependencyproviders.FallbackDependencyProvider;
 
 	/**
 	 * The resource manager handles all tasks related to using asset files (images, xml, etc)
@@ -294,8 +296,12 @@ package gorilla.resource
 						( resourceProviders[ rp ] as IResourceProvider ).unloadResource( filename, resourceType );
 				}
 				
+				if ( FallbackResourceProvider.instance.isResourceKnown( filename, resourceType ) )
+					FallbackResourceProvider.instance.unloadResource( filename, resourceType );
+				
 				resource.destroy();
 				_resources[ resourceIdentifier ] = null;
+			
 				delete _resources[ resourceIdentifier ];
 				resource = null;
 			}

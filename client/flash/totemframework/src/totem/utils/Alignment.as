@@ -8,46 +8,48 @@ package totem.utils
 		/**
 		 * Specifies that alignment is at the bottom.
 		 */
-		public static const BOTTOM : String = "B";
+		public static const BOTTOM : String = "bottom";
 		/**
 		 * Specifies that alignment is in the bottom-left corner.
 		 */
-		public static const BOTTOM_LEFT : String = "BL";
+		public static const BOTTOM_LEFT : String = "bottom-left";
 		/**
 		 * Specifies that alignment is in the bottom-right corner.
 		 */
-		public static const BOTTOM_RIGHT : String = "BR";
+		public static const BOTTOM_RIGHT : String = "bottom-right";
 		/**
 		 * Specifies that alignment is in the bottom-center corner.
 		 */
-		public static const BOTTOM_CENTER : String = "BC";
+		public static const BOTTOM_CENTER : String = "bottom-center";
 		/**
 		 * Specifies that alignment is on the left.
 		 */
-		public static const LEFT : String = "L";
+		public static const LEFT : String = "left";
 		/**
 		 * Specifies that alignment is in the middle
 		 */
-		public static const CENTER : String = "C";
+		public static const CENTER : String = "center";
 		/**
 		 * Specifies that alignment is on the right.
 		 */
-		public static const RIGHT : String = "R";
+		public static const RIGHT : String = "right";
 		/**
 		 * Specifies that alignment is at the top.
 		 */
-		public static const TOP : String = "T";
+		public static const TOP : String = "top";
 		/**
 		 * Specifies that alignment is in the top-left corner.
 		 */
-		public static const TOP_LEFT : String = "TL";
+		public static const TOP_LEFT : String = "top-left";
 		/**
 		 * Specifies that alignment is in the top-right corner.
 		 */
-		public static const TOP_RIGHT : String = "TR";
+		public static const TOP_RIGHT : String = "top-right";
 		/**
 		 * Specifies that alignment is in the top-right corner.
 		 */
-		public static const TOP_CENTER : String = "TC";
+		public static const TOP_CENTER : String = "top-center";
+		
+		public static const MIDDLE : String = "middle";
 	}
 }

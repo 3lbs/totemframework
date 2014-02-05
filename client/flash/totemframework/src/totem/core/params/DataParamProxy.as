@@ -43,6 +43,8 @@ package totem.core.params
 		public function get clazz() : Class
 		{
 			return _class;
+			
+			
 		}
 
 		public function get data() : *

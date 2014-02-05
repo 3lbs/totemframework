@@ -44,7 +44,7 @@ package totem.pathfinder.astar.basic2d
 	import totem.pathfinder.astar.core.IAstarTile;
 	import totem.pathfinder.astar.core.IMap;
 	import totem.pathfinder.astar.core.PathRequest;
-	import totem.structures.IIterator;
+	import totem.structures.ITotemIterator;
 
 	/**
 	 * A simple Map implementation for the IMap interface
@@ -241,7 +241,7 @@ package totem.pathfinder.astar.basic2d
 		}
 
 		[Transient]
-		public function get iterator() : IIterator
+		public function get iterator() : ITotemIterator
 		{
 			return ( new Grid2DIterator( _map ));
 		}
@@ -327,13 +327,13 @@ package totem.pathfinder.astar.basic2d
 }
 
 import totem.pathfinder.astar.basic2d.IPositionTile;
-import totem.structures.IIterator;
+import totem.structures.ITotemIterator;
 
 
 /**
  * @private
  */
-final class Grid2DIterator implements IIterator
+final class Grid2DIterator implements ITotemIterator
 {
 
 	private var _count : int;

@@ -17,11 +17,11 @@
 package totem.structures
 {
 
-	public class ProtectedIterator implements IIterator
+	public class ProtectedIterator implements ITotemIterator
 	{
-		private var _iterator : IIterator;
+		private var _iterator : ITotemIterator;
 
-		public function ProtectedIterator( iterator : IIterator )
+		public function ProtectedIterator( iterator : ITotemIterator )
 		{
 			_iterator = iterator;
 		}

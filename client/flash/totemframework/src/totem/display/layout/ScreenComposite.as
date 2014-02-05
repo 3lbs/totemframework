@@ -19,13 +19,13 @@ package totem.display.layout
 
 	import flash.display.DisplayObjectContainer;
 
-	public class ScreenComposite extends TContainer implements IScreenComposite
+	public class ScreenComposite extends TContainer
 	{
 
 		public var depth : Number = 0;
 
 		/** @var Parent container */
-		public var parentNode : IScreenComposite;
+		public var parentNode : ScreenComposite;
 
 		protected var screens : Vector.<ScreenComposite> = new Vector.<ScreenComposite>();
 
@@ -66,8 +66,6 @@ package totem.display.layout
 
 		override public function destroy() : void
 		{
-			super.destroy();
-
 
 			while ( screens.length > 0 )
 				screens.pop().destroy();
@@ -77,19 +75,20 @@ package totem.display.layout
 
 			parentNode = null;
 
+			super.destroy();
 		}
 
-		public function getScreenByName( n : String ) : ScreenComposite
+		public function getScreenByName( value : String ) : ScreenComposite
 		{
 			var s : ScreenComposite;
 
 			for ( var i : int = 0; i < screens.length; ++i )
 			{
-				if ( screens[ i ].name == n )
+				if ( screens[ i ].name == value )
 				{
 					return screens[ i ];
 				}
-				s = screens[ i ].getScreenByName( n );
+				s = screens[ i ].getScreenByName( value );
 
 				if ( s )
 				{
@@ -149,7 +148,7 @@ package totem.display.layout
 				screens.splice( idx, 1 );
 
 				if ( screen.parent )
-					removeChild( screen );
+					screen.parent.removeChild( screen );
 
 				screen.onRemove();
 

@@ -22,6 +22,10 @@ package totem.components.display
 	public interface IDisplay2DRenderer
 	{
 
+		function get alpha() : Number;
+
+		function set alpha( value : Number ) : void;
+
 		function get layerIndex() : int
 
 		function set layerIndex( value : int ) : void;
@@ -36,12 +40,12 @@ package totem.components.display
 
 		function setScale( _scaleX : Number, _scaleY : Number ) : void;
 
-		function translateX( value : Number ) : void
+		function translateX( value : Number ) : void;
 
-		function translateY( value : Number ) : void
+		function translateY( value : Number ) : void;
 
-		function get zIndex() : int
+		function get zIndex() : int;
 
-		function set zIndex( value : int ) : void
+		function set zIndex( value : int ) : void;
 	}
 }

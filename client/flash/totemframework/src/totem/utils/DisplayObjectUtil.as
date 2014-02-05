@@ -42,12 +42,75 @@ package totem.utils
 	import flash.display.MovieClip;
 	import flash.display.PixelSnapping;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	public class DisplayObjectUtil
 	{
 
-		public static function alignInRect( displayObject : DisplayObject, rectangle : Rectangle, fillRect : Boolean = true, align : String = "C", applyTransform : Boolean = true ) : Matrix
+		public static function alignRectangle ( rect0 : Rectangle, rect1 : Rectangle, align : String = Alignment.CENTER, pt : Point = null ) : Point
+		{
+			pt ||= new Point();
+			
+			var w : Number = rect0.width;
+			var h : Number = rect0.height;
+
+			var wR : Number = rect1.width;
+			var hR : Number = rect1.height;
+
+			var tX : Number = 0.0;
+			var tY : Number = 0.0;
+
+			// X coordinate
+			switch ( align )
+			{
+				case Alignment.BOTTOM_LEFT:
+				case Alignment.TOP_LEFT:
+				case Alignment.LEFT:
+					tX = 0.0;
+					break;
+				case Alignment.TOP_RIGHT:
+				case Alignment.RIGHT:
+				case Alignment.BOTTOM_RIGHT:
+					tX = Math.abs( wR - w );
+					break;
+				case Alignment.CENTER:
+				case Alignment.BOTTOM_CENTER:
+				case Alignment.TOP_CENTER:
+					tX = 0.5 * Math.abs( wR - w );
+					break;
+				default:
+			}
+
+			// Y coordinate
+			switch ( align )
+			{
+				case Alignment.TOP:
+				case Alignment.TOP_LEFT:
+				case Alignment.TOP_RIGHT:
+				case Alignment.RIGHT:
+					tY = 0.0;
+					break;
+				case Alignment.BOTTOM:
+				case Alignment.BOTTOM_LEFT:
+				case Alignment.BOTTOM_RIGHT:
+				case Alignment.BOTTOM_CENTER:
+					tY = Math.abs( hR - h );
+					break;
+				case Alignment.CENTER:
+					tY = 0.5 * Math.abs( hR - h );
+					break;
+				default:
+			}
+
+			//matrix.scale( displayObject.scaleX, displayObject.scaleY );
+			pt.x = rect1.left + tX
+			pt.y = rect1.top + tY;
+			
+			return pt;
+		}
+			
+		public static function alignInRect( displayObject : DisplayObject, rectangle : Rectangle, align : String = Alignment.CENTER, applyTransform : Boolean = true ) : Matrix
 		{
 			var matrix : Matrix = new Matrix();
 
@@ -167,7 +230,7 @@ package totem.utils
 		 * either with a DisplayObject's transform property or with, for example, BitmapData.draw()
 		 */
 
-		public static function fitIntoRect( displayObject : DisplayObject, rectangle : Rectangle, fillRect : Boolean = true, align : String = "C", applyTransform : Boolean = true, imageRectSize : Boolean = false ) : Matrix
+		public static function fitIntoRect( displayObject : DisplayObject, rectangle : Rectangle, fillRect : Boolean = true, align : String = "C", applyTransform : Boolean = true ) : Matrix
 		{
 			var matrix : Matrix = new Matrix();
 

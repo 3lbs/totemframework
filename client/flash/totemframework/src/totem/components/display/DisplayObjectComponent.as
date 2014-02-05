@@ -31,7 +31,17 @@ package totem.components.display
 			super( name );
 			
 		}
+		
+		public function set alpha ( value : Number ) : void
+		{
+			
+		}
 
+		public function get alpha () : Number
+		{
+			return 0;
+		}
+		
 		public function get layerIndex() : int
 		{
 			return 0;

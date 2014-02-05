@@ -17,9 +17,9 @@
 package totem.structures.lists
 {
 
-	import totem.structures.IIterator;
+	import totem.structures.ITotemIterator;
 
-	public class ListIterator implements IIterator
+	public class ListIterator implements ITotemIterator
 	{
 		private var _index : int;
 

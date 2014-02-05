@@ -104,6 +104,7 @@ package totem.core
 				injector.teardown();
 				injector = null;
 			}
+			
 		}
 
 		public function destroyEntity( name : String ) : void
@@ -234,7 +235,7 @@ package totem.core
 				( instance as ITotemSystem ).initialize();
 			}
 
-			managerMap[ shortName ] = clazz;
+			managerMap[ shortName ] = instance;
 
 			return instance;
 		}

@@ -3,7 +3,7 @@
   <includeClasses>
     <classEntry path="application.App"/>
     <classEntry path="application.AppDatabaseService"/>
-    <classEntry path="application.AppParam"/>
+    <classEntry path="application.param.AppParam"/>
     <classEntry path="application.ApplicationConfig"/>
     <classEntry path="application.loadingscreen.AppLoadingScreen"/>
     <classEntry path="application.loadingscreen.Intro3lbsScreenTask"/>
@@ -80,9 +80,8 @@
     <classEntry path="totem.components.commands.CommandComponent"/>
     <classEntry path="totem.components.display.DisplayObjectComponent"/>
     <classEntry path="totem.components.display.IDisplay2DRenderer"/>
-    <classEntry path="totem.components.display.starling.DisplayStarlingComponent"/>
+    <classEntry path="totem.components.display.starling.DisplayStarlingRenderer"/>
     <classEntry path="totem.components.display.starling.MovieClipStarlingComponent"/>
-    <classEntry path="totem.components.input.InputController"/>
     <classEntry path="totem.components.input.TouchInputComponent"/>
     <classEntry path="totem.components.spatial.ISpatial2D"/>
     <classEntry path="totem.components.spatial.ISpatialManager"/>
@@ -213,11 +212,9 @@
     <classEntry path="totem.display.components.ToggleButton"/>
     <classEntry path="totem.display.controls.ClockTextField"/>
     <classEntry path="totem.display.controls.NumberAnimator"/>
-    <classEntry path="totem.display.layout.IScreenComposite"/>
     <classEntry path="totem.display.layout.ImageSprite"/>
     <classEntry path="totem.display.layout.ScreenComposite"/>
     <classEntry path="totem.display.layout.TContainer"/>
-    <classEntry path="totem.display.layout.TMovieClip"/>
     <classEntry path="totem.display.layout.TSprite"/>
     <classEntry path="totem.display.layout.starling.StarlingRootClass"/>
     <classEntry path="totem.display.layout.starling.TStarlingSprite"/>
@@ -334,7 +331,7 @@
     <classEntry path="totem.structures.AbstractCollection"/>
     <classEntry path="totem.structures.ICollection"/>
     <classEntry path="totem.structures.IIterable"/>
-    <classEntry path="totem.structures.IIterator"/>
+    <classEntry path="totem.structures.ITotemIterator"/>
     <classEntry path="totem.structures.NullIterator"/>
     <classEntry path="totem.structures.ProtectedIterator"/>
     <classEntry path="totem.structures.arrays.ArrayIterator"/>
@@ -417,6 +414,19 @@
     <classEntry path="totem.components.motion.MotionComponent"/>
     <classEntry path="totem.components.motion.IMotion"/>
     <classEntry path="totem.components.motion.MotionBehavior"/>
+    <classEntry path="totem.display.layout.SpriteImageLoader"/>
+    <classEntry path="totem.display.TTextField"/>
+    <classEntry path="totem.loaders.FontLoader"/>
+    <classEntry path="application.param.FontParam"/>
+    <classEntry path="application.AppStartupLoader"/>
+    <classEntry path="totem.ui.popup.BaseDialog"/>
+    <classEntry path="totem.math.BoxRectangle"/>
+    <classEntry path="totem.input.draganddrop.DragManager"/>
+    <classEntry path="totem.input.InputMonitor"/>
+    <classEntry path="totem.components.display.SceneEntityComponent"/>
+    <classEntry path="totem.components.display.ISceneRenderer"/>
+    <classEntry path="totem.components.display.SceneSpriteRenderer"/>
+    <classEntry path="totem.structures.grids.Grid2DIterator"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -47,6 +47,8 @@ package totem.monitors
 		protected function complete() : void
 		{
 			_status = COMPLETE;
+			
+			trace("completed ", this.id );
 			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 
@@ -90,6 +92,7 @@ package totem.monitors
 
 			Logger.error( this, "Complete Monitor Failed", "AbstartMonitorProxy" );
 			_status = FAILED;
+			
 			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 

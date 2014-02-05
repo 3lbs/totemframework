@@ -7,9 +7,10 @@
 
 package  totem.core.mvc.modular.core
 {
+	import totem.core.IDestroyable;
 	import totem.events.IRemovableEventDispatcher;
 	
-	public interface IModuleEventDispatcher extends IRemovableEventDispatcher
+	public interface IModuleEventDispatcher extends IDestroyable, IRemovableEventDispatcher
 	{
 	
 	}

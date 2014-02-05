@@ -19,8 +19,9 @@ package totem.ui.popup
 
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
-
+	
 	import totem.core.IDestroyable;
 	import totem.display.layout.TContainer;
 	import totem.utils.objectpool.SimpleObjectPool;
@@ -106,8 +107,18 @@ package totem.ui.popup
 		 */
 		public function center( displayObject : DisplayObject ) : void
 		{
-			displayObject.x = Math.round(( _width - displayObject.width ) * .5 );
-			displayObject.y = Math.round(( _height - displayObject.height ) * .5 );
+
+			var width : Number = displayObject.width;
+			var height : Number = displayObject.height;
+
+			if (( displayObject is BaseDialog ) && BaseDialog( displayObject ).dialogRect )
+			{
+				width = BaseDialog( displayObject ).dialogRect.width;
+				height = BaseDialog( displayObject ).dialogRect.height;
+			}
+
+			displayObject.x = Math.round(( _width - width ) * .5 );
+			displayObject.y = Math.round(( _height - height ) * .5 );
 		}
 
 		public function cleanPopUpData( data : PopUpData ) : void
@@ -268,7 +279,7 @@ package totem.ui.popup
 				return _popUpChannelMap[ channel ];
 			}
 
-			var list : ChannalData = new ChannalData();
+			var channelData : ChannalData = new ChannalData();
 
 			var backgroundScreen : TContainer = new TContainer();
 
@@ -276,12 +287,24 @@ package totem.ui.popup
 			backgroundScreen.contentHeight = _height;
 			backgroundScreen.backgroundColor = backgroundColor;
 			backgroundScreen.backgroundAlpha = backgroundAlpha;
+			backgroundScreen.addEventListener( MouseEvent.CLICK, handleMouseEvent );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_MOVE, handleMouseEvent );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseEvent );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_UP, handleMouseEvent );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_OVER, handleMouseEvent );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent );
 
-			list.backgroundScreen = backgroundScreen;
+			channelData.backgroundScreen = backgroundScreen;
 
-			_popUpChannelMap[ channel ] = list;
+			_popUpChannelMap[ channel ] = channelData;
 
-			return list;
+			return channelData;
+		}
+
+		private function handleMouseEvent( event : MouseEvent ) : void
+		{
+			event.stopImmediatePropagation();
+			event.stopPropagation();
 		}
 
 		private function handleTransitionComplete( transition : BasePopUpTransition ) : void

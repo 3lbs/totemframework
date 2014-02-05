@@ -53,7 +53,7 @@ package totem.core.mvc
 		override public function destroy() : void
 		{
 			super.destroy();
-
+			
 			_mainClass = null;
 			_stage = null;
 			_contextEventDispatcher = null;

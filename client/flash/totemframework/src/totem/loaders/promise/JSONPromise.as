@@ -73,6 +73,7 @@ package totem.loaders.promise
 		private function onJSONComplete( resource : JSONResource ) : void
 		{
 			_outcome.resolve( resource.JSONData );
+			ResourceManager.getInstance().unload( filename, JSONResource );
 		}
 
 		private function start() : void

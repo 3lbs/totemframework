@@ -19,21 +19,26 @@ package totem.display.layout
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.events.Event;
 	
 	import gorilla.resource.ImageResource;
 	import gorilla.resource.Resource;
 	import gorilla.resource.ResourceManager;
-	
 
 	public class ImageSprite extends TSprite
 	{
 		private var _content : Bitmap;
 
-		private var data : *;
+		private var _data : *;
 
 		public function ImageSprite()
 		{
 			super();
+		}
+
+		public function get data():*
+		{
+			return _data;
 		}
 
 		public function get content() : Bitmap
@@ -58,7 +63,7 @@ package totem.display.layout
 				BitmapData( data ).dispose();
 			}
 
-			data = null;
+			_data = null;
 
 			removeChildren();
 		}
@@ -67,7 +72,7 @@ package totem.display.layout
 		{
 			dispose();
 
-			this.data = data;
+			_data = data;
 
 			if ( data is BitmapData )
 			{
@@ -95,7 +100,7 @@ package totem.display.layout
 		{
 			image = resource.image;
 
-			//dispatchEvent( new Event( Event.
+			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 	}
 }

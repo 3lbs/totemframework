@@ -17,6 +17,7 @@
 package totem.events
 {
 
+	import flash.events.Event;
 
 	public class UIEvent extends ObjectEvent
 	{
@@ -30,6 +31,11 @@ package totem.events
 		public function UIEvent( type : String, data : Object = null, bubbles : Boolean = false, cancelable : Boolean = false )
 		{
 			super( type, data, bubbles, cancelable );
+		}
+
+		override public function clone() : Event
+		{
+			return new UIEvent( type, data, bubbles, cancelable );
 		}
 	}
 }

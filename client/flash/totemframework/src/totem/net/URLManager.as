@@ -18,7 +18,7 @@ package totem.net
 {
 
 	import flash.filesystem.File;
-	
+
 	import ladydebug.Logger;
 
 	public class URLManager
@@ -30,6 +30,11 @@ package totem.net
 		public static function instance( url : String ) : URLManager
 		{
 			return new URLManager( url + File.separator, new SingletonEnforcer());
+		}
+
+		public static function safeDelimetedURL( value : String, delimiter : String = "|" ) : String
+		{
+			return value.split( fileSeperator ).join( delimiter );
 		}
 
 		private var _file : File;

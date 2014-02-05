@@ -18,14 +18,15 @@ package totem.components.spatial
 {
 
 	import flash.utils.Dictionary;
-	
+
 	import org.osflash.signals.Signal;
-	
+
 	import totem.components.display.DisplayObjectComponent;
 	import totem.components.display.IDisplay2DRenderer;
 	import totem.core.params.Transform2DParam;
 	import totem.core.time.TickedComponent;
 	import totem.math.AABBox;
+	import totem.math.BoxRectangle;
 	import totem.math.Vector2D;
 
 	public class SpatialComponent extends TickedComponent implements ISpatial2D
@@ -34,9 +35,9 @@ package totem.components.spatial
 
 		public static const UPDATE_TRANSFORMS_EVENT : String = "UpdateTransformEvenFt";
 
-		public var positionChange : Signal = new Signal( Number, Number );
+		public var gridBounds : BoxRectangle;
 
-		public var radius : Number = 1;
+		public var positionChange : Signal = new Signal( Number, Number );
 
 		public var rotationChange : Signal = new Signal( Number );
 
@@ -69,6 +70,8 @@ package totem.components.spatial
 		private var _x : Number = 0;
 
 		private var _y : Number = 0;
+
+		private var area : Number;
 
 		private var displayRenderer : IDisplay2DRenderer;
 
@@ -105,7 +108,7 @@ package totem.components.spatial
 
 		public function get bounds() : AABBox
 		{
-			return _bounds.moveTo( position );
+			return bounds;
 		}
 
 		public function getProperty( prop : Object ) : Object
@@ -143,10 +146,11 @@ package totem.components.spatial
 
 		public function set rotation( value : Number ) : void
 		{
-			_rotation = value;
-			dirtyRotation = true;
-
-			dispatchUpdate();
+			if ( value != _rotation )
+			{
+				_rotation = value;
+				dirtyRotation = true;
+			}
 		}
 
 		public function get scaleX() : Number
@@ -160,7 +164,6 @@ package totem.components.spatial
 			{
 				_scaleX = value;
 				dirtyScale = true;
-				dispatchUpdate();
 			}
 		}
 
@@ -175,7 +178,6 @@ package totem.components.spatial
 			{
 				_scaleY = value;
 				dirtyScale = true;
-				dispatchUpdate();
 			}
 		}
 
@@ -185,8 +187,6 @@ package totem.components.spatial
 			this.y = y;
 
 			dirtyPosition = true;
-
-			dispatchUpdate();
 		}
 
 		public function setProperty( prop : Object, value : Object ) : void
@@ -196,11 +196,11 @@ package totem.components.spatial
 
 		public function setRotation( value : Number ) : void
 		{
-			_rotation = value;
-
-			dirtyRotation = true;
-
-			dispatchUpdate();
+			if ( value != _rotation )
+			{
+				_rotation = value;
+				dirtyRotation = true;
+			}
 		}
 
 		public function setScale( x : Number, y : Number, z : Number ) : void
@@ -209,8 +209,6 @@ package totem.components.spatial
 			_scaleY = y;
 
 			dirtyScale = true;
-
-			dispatchUpdate();
 		}
 
 		public function get x() : Number
@@ -225,7 +223,6 @@ package totem.components.spatial
 
 			_position.x = _x = value;
 			dirtyPosition = true;
-			dispatchUpdate();
 		}
 
 		public function get y() : Number
@@ -240,7 +237,6 @@ package totem.components.spatial
 
 			_position.y = _y = value;
 			dirtyPosition = true;
-			dispatchUpdate();
 		}
 
 		protected function dispatchUpdate( force : Boolean = false ) : void
@@ -299,8 +295,10 @@ package totem.components.spatial
 		{
 			super.onAdd();
 
-			_bounds = new AABBox( new Vector2D( x, y ), radius, radius );
+			//_bounds ||= BoxRectangle.create( x, y, width, height );
 
+			area = 10;
+			_bounds ||= AABBox.create( position, area, area );
 			canDispatch = true;
 
 			dispatchUpdate( true );

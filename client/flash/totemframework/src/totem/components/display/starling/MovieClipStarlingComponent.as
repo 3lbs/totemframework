@@ -23,7 +23,7 @@ package totem.components.display.starling
 	import totem.display.starling.Animation;
 	import totem.display.starling.AnimationMovieClip;
 
-	public class MovieClipStarlingComponent extends DisplayStarlingComponent
+	public class MovieClipStarlingComponent extends DisplayStarlingRenderer
 	{
 
 		public function MovieClipStarlingComponent()
@@ -51,18 +51,6 @@ package totem.components.display.starling
 		public function get movieClip():AnimationMovieClip
 		{
 			return displayObject as AnimationMovieClip;
-		}
-
-		override protected function addToScene():void
-		{
-			super.addToScene();
-
-		}
-
-		override protected function removeFromScene():void
-		{
-			super.removeFromScene();
-			registerForTicks=false;
 		}
 
 		override public function onTick():void
