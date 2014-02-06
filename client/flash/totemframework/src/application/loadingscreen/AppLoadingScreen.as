@@ -55,14 +55,18 @@ package application.loadingscreen
 			_loader = null;
 		}
 
+		public function get3lbsScreen() : Loader
+		{
+			return _loader;
+		}
+
 		protected function handleIntroLoaded( event : Event ) : void
 		{
-
-			MovieClipUtil.stopAllAnimation( _loader.content as MovieClip );
 
 			var introTask : Intro3lbsScreenTask = new Intro3lbsScreenTask( this );
 			introTask.onCompleted.add( handleComplete );
 			introTask.start();
+			MovieClipUtil.stopAllAnimation( _loader.content as MovieClip );
 
 			updateDisplay();
 		}
