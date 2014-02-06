@@ -427,6 +427,7 @@
     <classEntry path="totem.components.display.ISceneRenderer"/>
     <classEntry path="totem.components.display.SceneSpriteRenderer"/>
     <classEntry path="totem.structures.grids.Grid2DIterator"/>
+    <classEntry path="soundt.XTimer"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

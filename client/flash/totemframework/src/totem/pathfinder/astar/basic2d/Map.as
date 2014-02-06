@@ -41,6 +41,7 @@ package totem.pathfinder.astar.basic2d
 
 	import flash.geom.Point;
 	
+	import totem.core.Destroyable;
 	import totem.pathfinder.astar.core.IAstarTile;
 	import totem.pathfinder.astar.core.IMap;
 	import totem.pathfinder.astar.core.PathRequest;
@@ -50,7 +51,7 @@ package totem.pathfinder.astar.basic2d
 	 * A simple Map implementation for the IMap interface
 	 * @author Jeroen Beckers
 	 */
-	public class Map implements IMap
+	public class Map extends Destroyable implements IMap
 	{
 
 		/**
@@ -192,6 +193,15 @@ package totem.pathfinder.astar.basic2d
 			return null;
 		}
 
+		override public function destroy():void
+		{
+			super.destroy();
+			
+			while( _map.length )
+				_map.pop();
+			
+			_map.length = 0;
+		}
 		/**
 		 * Returns the heuristic that is currently being used
 		 */

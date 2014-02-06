@@ -47,8 +47,6 @@ package totem.monitors
 		protected function complete() : void
 		{
 			_status = COMPLETE;
-			
-			trace("completed ", this.id );
 			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 
