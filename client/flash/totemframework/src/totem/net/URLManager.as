@@ -78,7 +78,7 @@ package totem.net
 			if ( value && value.indexOf( _url ) > -1 )
 				return null;
 
-			return _file.resolvePath( value || "" ).url;
+			return _file.resolvePath( value ).url;
 		}
 
 		public function getURLDelimiter( value : String, delimiter : String = "|" ) : String

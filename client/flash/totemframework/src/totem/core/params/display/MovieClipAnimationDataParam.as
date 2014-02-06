@@ -26,6 +26,8 @@ package totem.core.params.display
 		
 		public var animationDataList : Vector.<AnimationDataParam> = new Vector.<AnimationDataParam>();
 		
+		public var texturesName : String;
+		
 		public function MovieClipAnimationDataParam()
 		{
 			super();

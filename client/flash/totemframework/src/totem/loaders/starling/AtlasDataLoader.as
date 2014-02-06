@@ -68,7 +68,7 @@ package totem.loaders.starling
 		override public function start() : void
 		{
 
-			_textureAtlas = AtlasTextureCache.getInstance().getTexture( id );
+			_textureAtlas = AtlasTextureCache.getInstance().getTextureAtlas( id );
 			_bitmapData = AtlasTextureCache.getInstance().getBitmapData( id );
 
 			if ( _textureAtlas )

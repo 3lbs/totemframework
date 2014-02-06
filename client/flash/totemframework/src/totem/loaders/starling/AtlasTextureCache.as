@@ -59,7 +59,7 @@ package totem.loaders.starling
 			return false;
 		}
 		
-		public function getTexture( url : String ) : TextureAtlas
+		public function getTextureAtlas( url : String ) : TextureAtlas
 		{
 			return _textures[ url ];
 		}
