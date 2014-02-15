@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -18,6 +18,7 @@ package totem.math
 {
 
 	import totem.core.Destroyable;
+	import totem.data.type.Point2d;
 
 	public class AABBox extends Destroyable
 	{
@@ -26,15 +27,14 @@ package totem.math
 		public static function create( center : Vector2D, width : Number, height : Number ) : AABBox
 		{
 			if ( disposed.length > 0 )
-				return disposed.shift().setTo( center, width, height );
+				return disposed.pop().setTo( center, width, height );
 			else
 				return new AABBox( center, width, height );
 		}
 
 		public static function grow( value : int ) : void
-
 		{
-			for ( var i : int = 0; i < value; ++i )
+			while ( value-- )
 			{
 				disposed.push( new AABBox( Vector2D.create().dispose(), 0, 0 ));
 			}
@@ -93,6 +93,16 @@ package totem.math
 			bottomRight = new Vector2D( right, bottom );
 			bottomLeft = new Vector2D( left, bottom );
 
+		}
+
+		public function contains( x : int, y : int ) : Boolean
+		{
+			return ( x > right || x < left || y > top || y < bottom );
+		}
+
+		public function containsPoint( pt : Point2d ) : Boolean
+		{
+			return contains( pt.x, pt.y );
 		}
 
 		override public function destroy() : void
@@ -180,7 +190,7 @@ package totem.math
 		{
 			this.center.x = center.x;
 			this.center.y = center.y;
-				
+
 			setSize( width, height );
 
 			return this;

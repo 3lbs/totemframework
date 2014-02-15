@@ -1,36 +1,51 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core.time
 {
+
 	import flash.utils.getTimer;
-	
-	import org.casalib.util.StageReference;
-	
+
 	import totem.time.Stopwatch;
 
 	public class TickRegulator
 	{
 
-		public static const NO_FREQUENCY : int = 0;
-
 		public static const FREQUENCY_HIGH : int = 2;
-
-		public static const FREQUENCY_MEDIUM : int = 4;
 
 		public static const FREQUENCY_LOW : int = 6;
 
+		public static const FREQUENCY_MEDIUM : int = 4;
+
+		public static const NO_FREQUENCY : int = 0;
+
 		private var _frequency : int;
+
+		private var _timestamp : Number;
+
+		private var stopWatch : Stopwatch;
 
 		private var tickCount : int = 1;
 
-		private var stopWatch:Stopwatch;
-
-		private var _timestamp : Number;
-		
 		public function TickRegulator( frequency : int = NO_FREQUENCY )
 		{
 			this.frequency = frequency;
-		
-			_timestamp = 1/60;
-			
+
+			_timestamp = 1 / 60;
+
 			stopWatch = new Stopwatch();
 			stopWatch.start();
 		}
@@ -49,7 +64,7 @@ package totem.core.time
 		{
 
 			return _timestamp;
-			
+
 			if ( _frequency == NO_FREQUENCY )
 			{
 				return stopWatch.time;
@@ -64,8 +79,8 @@ package totem.core.time
 			tickCount++;
 			return 0;
 		}
-		
-		private function get timer():int
+
+		private function get timer() : int
 		{
 			return getTimer();
 		}

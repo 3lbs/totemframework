@@ -20,13 +20,13 @@ package totem.monitors.startupmonitor
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-
+	
 	import org.swiftsuspenders.Injector;
-	import totem.core.IInject;
+	
+	import totem.totem_internal;
+	import totem.core.IInjectable;
 	import totem.core.mvc.TotemContext;
 	import totem.events.RemovableEventDispatcher;
-
-	import totem.totem_internal;
 
 	use namespace totem_internal;
 
@@ -83,7 +83,7 @@ package totem.monitors.startupmonitor
 				if ( r.isOkToLoad())
 				{
 
-					if ( r is IInject )
+					if ( r is IInjectable )
 					{
 						injector.injectInto( r );
 					}

@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 /*
 Copyright (c) 2011 Jeroen Beckers
 
@@ -27,24 +43,30 @@ THE SOFTWARE.
 package totem.pathfinder.astar.core
 {
 
+	import flash.geom.Point;
+	
+	import totem.pathfinder.astar.basic2d.IPositionTile;
+
 	/**
 	 * @author Jeroen Beckers
 	 */
-	public interface IMap 
+	public interface IMap
 	{
-		/**
-		 * Returns a Vector list of IAstarTiles that are neighbours of the given IAstarTile
-		 */
-		function getNeighbours(tile : IAstarTile) : Vector.<IAstarTile>;
-		
-		/**
-		 * Returns the heuristic for the given tile and the given pathrequest.
-		 */
-		function getHeuristic(tile:IAstarTile, req:PathRequest):Number;
-		
+
 		/**
 		 * Returns the distance for the given two tiles.
 		 */
-		function getDistance(start:IAstarTile, end:IAstarTile):Number;
+		function getDistance( start : IAstarTile, end : IAstarTile ) : Number;
+
+		/**
+		 * Returns the heuristic for the given tile and the given pathrequest.
+		 */
+		function getHeuristic( tile : IAstarTile, req : PathRequest ) : Number;
+		/**
+		 * Returns a Vector list of IAstarTiles that are neighbours of the given IAstarTile
+		 */
+		function getNeighbours( tile : IAstarTile ) : Vector.<IAstarTile>;
+
+		function getTileAt( position : Point ) : IPositionTile;
 	}
 }

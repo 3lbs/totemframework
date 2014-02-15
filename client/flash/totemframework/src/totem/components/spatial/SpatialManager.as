@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -18,11 +18,14 @@ package totem.components.spatial
 
 {
 
+	import flash.geom.Rectangle;
+	
 	import org.as3commons.collections.LinkedList;
+	
+	import totem.core.TotemSystem;
+	import totem.data.type.Point2d;
 
-	import totem.core.System;
-
-	public class SpatialManager extends System implements ISpatialManager
+	public class SpatialManager extends TotemSystem implements ISpatialManager
 	{
 
 		public var spatialList : LinkedList = new LinkedList();
@@ -40,6 +43,16 @@ package totem.components.spatial
 			spatialList.add( component );
 		}
 
+		public function clippingFrustum( x : int, y : int, rectangle : Rectangle ) : void
+		{
+
+		}
+
+		public function requestSpatial ( value : int ) : SpatialRequest
+		{
+			return null;
+		}
+		
 		public function getCostToClosestItem( type : String ) : Number
 		{
 			return 1;
@@ -48,6 +61,17 @@ package totem.components.spatial
 		public function getSpatialList() : Array
 		{
 			return spatialList.toArray();
+		}
+
+		public function hasSpatialComponent( component : ISpatial2D ) : Boolean
+		{
+			return spatialList.has( component );
+		}
+
+		public function objectUnderPoint( pt : Point2d ) : ISpatial2D
+		{
+
+			return null;
 		}
 
 		public function removeSpatialObject( component : ISpatial2D ) : void

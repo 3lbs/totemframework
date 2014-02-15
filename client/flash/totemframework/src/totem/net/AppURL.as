@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -20,13 +20,30 @@ package totem.net
 	public class AppURL
 	{
 
+		public static var ANIMATIONS : URLManager;
+
 		public static var APPLICATION : URLManager;
 
 		public static var ASSETS : URLManager;
 
 		public static var DATA : URLManager;
 
+		public static var IMAGES : URLManager;
+
+		public static var READER : URLManager;
+
+		public static var READER_ASSETS : URLManager;
+
 		public static var RESOURCE : URLManager;
+
+		public static var SOUNDS : URLManager;
+
+		public static var UNITS : URLManager;
+
+		public static function getURL( url : String, location : URLManager ) : String
+		{
+			return location.getURL( url );
+		}
 
 		public static function initialize( url : String ) : void
 		{
@@ -37,6 +54,18 @@ package totem.net
 			ASSETS = URLManager.instance( RESOURCE.getURL( "assets" ));
 
 			DATA = URLManager.instance( RESOURCE.getURL( "data" ));
+
+			UNITS = URLManager.instance( DATA.getURL( "units" ));
+
+			IMAGES = URLManager.instance( ASSETS.getURL( "images" ));
+
+			ANIMATIONS = URLManager.instance( ASSETS.getURL( "animations" ));
+
+			READER = URLManager.instance( RESOURCE.getURL( "reader" ));
+
+			READER_ASSETS = URLManager.instance( READER.getURL( "assets" ));
+
+			SOUNDS = URLManager.instance( ASSETS.getURL( "sounds" ));
 		}
 	}
 }

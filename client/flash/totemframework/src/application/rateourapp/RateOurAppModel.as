@@ -32,6 +32,7 @@ package application.rateourapp
 	
 	import totem.events.RemovableEventDispatcher;
 	import totem.monitors.startupmonitor.IStartupProxy;
+	import totem.utils.MobileUtil;
 
 	public class RateOurAppModel extends RemovableEventDispatcher implements IStartupProxy
 	{
@@ -95,11 +96,6 @@ package application.rateourapp
 			return false;
 		}
 
-		public function isAndroid() : Boolean
-		{
-			return Capabilities.manufacturer.indexOf( 'Android' ) > -1;
-		}
-
 		public function load() : void
 		{
 			var rateAppObject : String = getDatabase().getAppProp( RATE_APP_KEY );
@@ -118,7 +114,7 @@ package application.rateourapp
 		{
 			var appUrl : String = ApplicationConfig.APP_STORE_BASE_URI + appID;
 
-			if ( isAndroid())
+			if ( MobileUtil.isAndroid())
 			{
 				appUrl = ApplicationConfig.PLAY_STORE_BASE_URI + appID + ApplicationConfig.PLAY_REVIEW;
 			}

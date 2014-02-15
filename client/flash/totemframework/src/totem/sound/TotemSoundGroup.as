@@ -1,150 +1,175 @@
-package totem.sound 
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
+package totem.sound
 {
+
 	import org.casalib.util.NumberUtil;
 	
 	import totem.events.RemovableEventDispatcher;
-	import totem.math.MathUtils;
 
 	/**
 	 * CitrusSoundGroup represents a volume group with its groupID and has mute control as well.
 	 */
 	public class TotemSoundGroup extends RemovableEventDispatcher
 	{
-		
-		public static const BGM:String = "BGM";
-		public static const SFX:String = "SFX";
-		public static const UI:String = "UI";
-		
-		protected var _groupID:String;
-		
-		internal var _volume:Number = 1;
-		internal var _mute:Boolean = false;
-		
-		protected var _sounds:Vector.<TotemSound>;
-		
-		public function TotemSoundGroup() 
+
+		public static const BGM : String = "BGM";
+
+		public static const SFX : String = "SFX";
+
+		public static const UI : String = "UI";
+
+		protected var _groupID : String;
+
+		protected var _sounds : Vector.<TotemSound>;
+
+		internal var _mute : Boolean = false;
+
+		internal var _volume : Number = 1;
+
+		public function TotemSoundGroup()
 		{
 			_sounds = new Vector.<TotemSound>();
 		}
-		
-		protected function applyChanges():void
-		{
-			var s:TotemSound;
-			for each(s in _sounds)
-				s.refreshSoundTransform();
-		}
-		
-		internal function addSound(s:TotemSound):void
-		{
-			if (s.group && s.group.isadded(s))
-				(s.group as TotemSoundGroup).removeSound(s);
-			s.setGroup(this);
-			_sounds.push(s);
-			s.addEventListener(TotemSoundEvent.SOUND_LOADED, handleSoundLoaded);
-		}
-		
-		internal function isadded(sound:TotemSound):Boolean
-		{
-			var s:TotemSound;
-			for each(s in _sounds)
-				if (sound == s)
-					return true;
-			return false;
-		}
-		
-		public function getAllSounds():Vector.<TotemSound>
+
+		public function getAllSounds() : Vector.<TotemSound>
 		{
 			return _sounds.slice();
 		}
-		
-		public function preloadSounds():void
+
+		public function getRandomSound() : TotemSound
 		{
-			var s:TotemSound;
-			for each(s in _sounds)
-				if(!s.loaded)	
-					s.load();
+			var index : uint = NumberUtil.randomIntegerWithinRange( 0, _sounds.length - 1 );
+			return _sounds[ index ];
 		}
-		
-		internal function removeSound(s:TotemSound):void
+
+		public function getSound( name : String ) : TotemSound
 		{
-			var si:String;
-			var cs:TotemSound;
-			for (si in _sounds)
-			{
-				if (_sounds[si] == s)
-				{
-					cs = _sounds[si];
-					cs.setGroup(null);
-					cs.refreshSoundTransform();
-					cs.removeEventListener(TotemSoundEvent.SOUND_LOADED, handleSoundLoaded);
-					_sounds.splice(uint(si), 1);
-					break;
-				}
-			}
-		}
-		
-		public function getSound(name:String):TotemSound
-		{
-			var s:TotemSound;
-			for each(s in _sounds)
-				if (s.name == name)
+			var s : TotemSound;
+
+			for each ( s in _sounds )
+				if ( s.name == name )
 					return s;
 			return null;
 		}
-		
-		public function getRandomSound():TotemSound
+
+		public function get groupID() : String
 		{
-			var index:uint = NumberUtil.randomIntegerWithinRange(0, _sounds.length - 1);
-			return _sounds[index];
+			return _groupID;
 		}
-		
-		protected function handleSoundLoaded(e:TotemSoundEvent):void
+
+		public function get mute() : Boolean
 		{
-			var cs:TotemSound;
-			for each(cs in _sounds)
-			{
-				if (!cs.loaded)
-					return;
-			}
-			dispatchEvent(new TotemSoundEvent(TotemSoundEvent.ALL_SOUNDS_LOADED, e.sound, null));
+			return _mute;
 		}
-		
-		public function set mute(val:Boolean):void
+
+		public function set mute( val : Boolean ) : void
 		{
 			_mute = val;
 			applyChanges();
 		}
-		
-		public function get mute():Boolean
+
+		public function preloadSounds() : void
 		{
-			return _mute;
+			var s : TotemSound;
+
+			for each ( s in _sounds )
+				if ( !s.loaded )
+					s.load();
 		}
-		
-		public function set volume(val:Number):void
+
+		public function get volume() : Number
+		{
+			return _volume;
+		}
+
+		public function set volume( val : Number ) : void
 		{
 			_volume = val;
 			applyChanges();
 		}
-		
-		public function get volume():Number
+
+		protected function applyChanges() : void
 		{
-			return _volume;
+			var s : TotemSound;
+
+			for each ( s in _sounds )
+				s.resetSoundTransform( true );
 		}
-		
-		public function get groupID():String
+
+		protected function handleSoundLoaded( e : TotemSoundEvent ) : void
 		{
-			return _groupID;
+			var cs : TotemSound;
+
+			for each ( cs in _sounds )
+			{
+				if ( !cs.loaded )
+					return;
+			}
+			dispatchEvent( new TotemSoundEvent( TotemSoundEvent.ALL_SOUNDS_LOADED, e.sound, null ));
 		}
-		
-		internal function destroy():void
+
+		internal function addSound( s : TotemSound ) : void
 		{
-			var s:TotemSound;
-			for each(s in _sounds)
-				removeSound(s);
+			if ( s.group && s.group.isadded( s ))
+				( s.group as TotemSoundGroup ).removeSound( s );
+			s.setGroup( this );
+			_sounds.push( s );
+			s.addEventListener( TotemSoundEvent.SOUND_LOADED, handleSoundLoaded );
+		}
+
+		internal function destroy() : void
+		{
+			var s : TotemSound;
+
+			for each ( s in _sounds )
+				removeSound( s );
 			_sounds.length = 0;
 			removeEventListeners();
 		}
-		
+
+		internal function isadded( sound : TotemSound ) : Boolean
+		{
+			var s : TotemSound;
+
+			for each ( s in _sounds )
+				if ( sound == s )
+					return true;
+			return false;
+		}
+
+		internal function removeSound( s : TotemSound ) : void
+		{
+			var si : String;
+			var cs : TotemSound;
+
+			for ( si in _sounds )
+			{
+				if ( _sounds[ si ] == s )
+				{
+					cs = _sounds[ si ];
+					cs.setGroup( null );
+					cs.resetSoundTransform( true );
+					cs.removeEventListener( TotemSoundEvent.SOUND_LOADED, handleSoundLoaded );
+					_sounds.splice( uint( si ), 1 );
+					break;
+				}
+			}
+		}
 	}
 
 }

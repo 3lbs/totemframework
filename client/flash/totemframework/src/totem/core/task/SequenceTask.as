@@ -113,8 +113,6 @@ package totem.core.task
 		private function nextTask() : void
 		{
 
-			trace( allTasks.getSize(), currentIndex );
-
 			if ( allTasks.getSize() == currentIndex )
 			{
 				//logger.info( "Completed all tasks" );

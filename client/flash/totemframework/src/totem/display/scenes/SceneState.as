@@ -19,15 +19,15 @@ package totem.display.scenes
 
 	import totem.core.Destroyable;
 	import totem.display.layout.ScreenComposite;
-	import totem.monitors.IProgressMonitor;
+	import totem.monitors.progress.IProgressMonitor;
 
 	public class SceneState extends Destroyable implements ISceneState
 	{
-
+		
 		public static const NO_TRANSITION : String = "NoTransition";
-
+		
 		public static const TRANSITION_IMAGE : String = "UseImageForTransition";
-
+		
 		public static const TRANSITION_QUICK : String = "QuickTransitionNoImage";
 
 		public var canBeDestroyed : Boolean = true;
@@ -41,8 +41,6 @@ package totem.display.scenes
 		public var screen : ScreenComposite;
 
 		protected var _progressMonitor : IProgressMonitor;
-
-		protected var transition : String;
 
 		private var _name : String;
 
@@ -98,11 +96,6 @@ package totem.display.scenes
 		public function transitionComplete() : void
 		{
 
-		}
-
-		public function transitionType() : String
-		{
-			return transition;
 		}
 
 		protected function doInitialized() : void

@@ -23,7 +23,7 @@ package totem.core.mvc
 	import totem.core.ITotemSystem;
 	import totem.core.TotemEntity;
 	import totem.core.TotemGroup;
-	import totem.monitors.IProgressMonitor;
+	import totem.monitors.progress.IProgressMonitor;
 
 	public interface ITotemContext extends ITotemSystem
 	{
@@ -34,7 +34,7 @@ package totem.core.mvc
 
 		function destroyEntity( name : String ) : void;
 
-		function get eventDispatcher() : IEventDispatcher;
+		function get contextEventDispatcher() : IEventDispatcher;
 
 		function get mainClass() : DisplayObjectContainer;
 

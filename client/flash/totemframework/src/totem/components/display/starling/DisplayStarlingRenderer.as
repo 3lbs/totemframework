@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -21,27 +21,29 @@ package totem.components.display.starling
 
 	import starling.display.DisplayObject;
 
+	import totem.components.display.DisplayObjectSceneLayer;
 	import totem.components.display.IDisplay2DRenderer;
-	import totem.components.display.ISceneRenderer;
+	import totem.components.spatial.ISpatialObserver;
+	import totem.core.TotemEntity;
 	import totem.core.time.TickedComponent;
+	import totem.math.MathUtils;
 	import totem.math.Vector2D;
+	import totem.utils.TotemUtil;
 
-	public class DisplayStarlingRenderer extends TickedComponent implements IDisplay2DRenderer, ISceneRenderer
+	public class DisplayStarlingRenderer extends TickedComponent implements IDisplay2DRenderer, ISpatialObserver
 	{
 
 		public static const NAME : String = "DisplayStarlingRenderer";
 
+		public static function addToSceneLayer( entity : TotemEntity, sceneLayer : DisplayObjectSceneLayer ) : void
+		{
+			var displayRenderer : IDisplay2DRenderer = entity.getComponent( IDisplay2DRenderer );
+			displayRenderer.scene = sceneLayer;
+		}
+
 		public var snapToNearestPixels : Boolean = true;
 
 		protected var _alpha : Number = 1;
-
-		protected var _inScene : Boolean = false;
-
-		protected var _lastLayerIndex : int = -1;
-
-		protected var _layerIndex : int = 0;
-
-		protected var _layerIndexDirty : Boolean = true;
 
 		protected var _position : Vector2D = new Vector2D();
 
@@ -52,6 +54,10 @@ package totem.components.display.starling
 		protected var _transformMatrix : Matrix = new Matrix();
 
 		private var _displayObject : DisplayObject;
+
+		private var _rotation : Number = 0;
+
+		private var _scene : DisplayObjectSceneLayer;
 
 		private var _transformDirty : Boolean = true;
 
@@ -85,8 +91,7 @@ package totem.components.display.starling
 		{
 			super.destroy();
 
-			//removeFromScene();
-
+			scene = null;
 			_displayObject = null;
 		}
 
@@ -97,31 +102,11 @@ package totem.components.display.starling
 
 		public function set displayObject( value : DisplayObject ) : void
 		{
-			//removeFromScene();
-
 			_displayObject = value;
 
 			if ( getName() && owner && owner.getName())
 				_displayObject.name = owner.getName() + "." + getName();
 
-			// Add new scene.
-			//addToScene();
-		}
-
-		public function get layerIndex() : int
-		{
-			return _layerIndex;
-		}
-
-		/**
-		 * In what layer of the scene is this renderer drawn?
-		 */
-		public function set layerIndex( value : int ) : void
-		{
-			if ( _layerIndex == value )
-				return;
-
-			_layerIndex = value;
 		}
 
 		override public function onTick() : void
@@ -144,27 +129,7 @@ package totem.components.display.starling
 		 */
 		public function set position( value : Vector2D ) : void
 		{
-			var posX : Number;
-			var posY : Number;
-
-			if ( snapToNearestPixels )
-			{
-				posX = int( value.x );
-				posY = int( value.y );
-			}
-			else
-			{
-				posX = value.x;
-				posY = value.y;
-			}
-
-			if ( posX == _position.x && posY == _position.y )
-				return;
-
-			_position.x = posX;
-			_position.y = posY;
-			_transformDirty = true;
-			updateTransform();
+			setPosition( value.x, value.y );
 		}
 
 		public function get positionOffset() : Vector2D
@@ -198,12 +163,22 @@ package totem.components.display.starling
 		 */
 		public function set scale( value : Vector2D ) : void
 		{
-			if ( value.x == _scale.x && value.y == _scale.y )
-				return;
+			setScale( value.x, value.y );
+		}
 
-			_scale.x = value.x;
-			_scale.y = value.y;
-			_transformDirty = true;
+		public function set scene( value : DisplayObjectSceneLayer ) : void
+		{
+			// Remove from old scene if appropriate.
+			if ( _scene && _displayObject )
+				_scene.remove( this );
+
+			_scene = value;
+
+			// And add to new scene (clearing dirty state).
+			if ( _scene && _displayObject )
+			{
+				_scene.add( this );
+			}
 		}
 
 		public function setPosition( x : Number, y : Number ) : void
@@ -228,27 +203,26 @@ package totem.components.display.starling
 			_position.x = posX;
 			_position.y = posY;
 			_transformDirty = true;
-			updateTransform();
+			//updateTransform();
 		}
 
 		public function setRotation( value : Number ) : void
 		{
+			if ( value == _rotation )
+				return;
 
+			_rotation = value;
+			_transformDirty = true;
 		}
 
 		public function setScale( _scaleX : Number, _scaleY : Number ) : void
 		{
+			if ( _scaleX == _scale.x && _scaleY == _scale.y )
+				return;
 
-		}
-
-		public function translateX( value : Number ) : void
-		{
-
-		}
-
-		public function translateY( value : Number ) : void
-		{
-
+			_scale.x = _scaleX;
+			_scale.y = _scaleY;
+			_transformDirty = true;
 		}
 
 		/**
@@ -266,6 +240,8 @@ package totem.components.display.starling
 			//_transformMatrix.scale( tmpScaleX, tmpScaleY );
 			//_transformMatrix.translate( -_registrationPoint.x * tmpScaleX, -_registrationPoint.y * tmpScaleY );
 			//_transformMatrix.rotate( PBUtil.getRadiansFromDegrees( _rotation ) + _rotationOffset );
+
+			_transformMatrix.rotate( _rotation * MathUtils.DEG_TO_RAD );
 			_transformMatrix.translate( _position.x + _positionOffset.x, _position.y + _positionOffset.y );
 
 			displayObject.transformationMatrix = _transformMatrix;
@@ -358,6 +334,7 @@ package totem.components.display.starling
 		override protected function onActivate() : void
 		{
 			super.onActivate();
+			scene = _scene;
 		}
 
 		override protected function onAdd() : void
@@ -371,13 +348,14 @@ package totem.components.display.starling
 		override protected function onRemove() : void
 		{
 			super.onRemove();
-
+			destroy();
 		}
 
 		override protected function onRetire() : void
 		{
 			super.onRetire();
 
+			scene = null;
 		}
 	}
 }

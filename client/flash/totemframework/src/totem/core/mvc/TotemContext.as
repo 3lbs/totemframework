@@ -20,26 +20,27 @@ package totem.core.mvc
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.events.IEventDispatcher;
-
+	
 	import org.swiftsuspenders.Injector;
+	
+	import totem.totem_internal;
 	import totem.core.TotemGroup;
 	import totem.events.RemovableEventDispatcher;
-	import totem.monitors.IProgressMonitor;
-
-	import totem.totem_internal;
+	import totem.monitors.progress.IProgressMonitor;
+	import totem.monitors.progress.ProgressMonitor;
 
 	use namespace totem_internal;
 
 	public class TotemContext extends TotemGroup implements ITotemContext
 	{
 
-		protected var _contextEventDispatcher : RemovableEventDispatcher = new RemovableEventDispatcher();
+		totem_internal var _contextEventDispatcher : RemovableEventDispatcher = new RemovableEventDispatcher();
 
 		protected var _mainClass : DisplayObjectContainer;
 
 		protected var _stage : Stage;
 
-		protected var _progressMonitor : IProgressMonitor;
+		protected var _progressMonitor : ProgressMonitor;
 
 		public function TotemContext( name : String, mainclass : DisplayObjectContainer, group : TotemGroup )
 		{
@@ -59,7 +60,7 @@ package totem.core.mvc
 			_contextEventDispatcher = null;
 		}
 
-		public function get eventDispatcher() : IEventDispatcher
+		public function get contextEventDispatcher() : IEventDispatcher
 		{
 			return _contextEventDispatcher;
 		}

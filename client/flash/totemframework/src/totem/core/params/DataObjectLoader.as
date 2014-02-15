@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -60,9 +60,21 @@ package totem.core.params
 			_monitors = null;
 		}
 
-		public function getData( clazz : Class ) : *
+		public function getData( clazz : Class, name : String = "" ) : *
 		{
-			return dataParamMap[ clazz ];
+			return dataParamMap[ clazz || name ];
+		}
+
+		public function setData( data : Object, clazz : Class = null, name : String = "" ) : void
+		{
+			var id : * = clazz || name;
+
+			if ( dataParamMap[ id ])
+			{
+				return;
+			}
+
+			dataParamMap[ id ];
 		}
 
 		override public function start() : void

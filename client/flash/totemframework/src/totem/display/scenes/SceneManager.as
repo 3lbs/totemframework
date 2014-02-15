@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -19,19 +19,20 @@ package totem.display.scenes
 
 	import ladydebug.Logger;
 
-	import totem.core.System;
+	import totem.core.TotemSystem;
 	import totem.display.layout.ScreenComposite;
+	import totem.display.scenes.transition.GroupTransitionTask;
 
-	public class SceneManager extends System
+	public class SceneManager extends TotemSystem
 	{
 		private var _screenStateMachine : SceneStateMachine;
 
-		private var transitionTask : SceneTransitionTask;
+		private var transitionTask : GroupTransitionTask;
 
 		public function SceneManager( screen : ScreenComposite, loadingScreen : BaseLoadingScreen )
 		{
 			_screenStateMachine = new SceneStateMachine( screen );
-			transitionTask = new SceneTransitionTask( loadingScreen, screenStateMachine );
+			transitionTask = new GroupTransitionTask( loadingScreen, screenStateMachine );
 		}
 
 		public function addState( name : String, state : ISceneState ) : void
@@ -39,11 +40,11 @@ package totem.display.scenes
 			_screenStateMachine.addState( name, state );
 		}
 
-		public function changeScreen( screenName : String ) : void
+		public function changeScreen( screenName : String, transition : String ) : void
 		{
 			if ( _screenStateMachine.getState( screenName ) != null && _screenStateMachine.currentStateName != screenName )
 			{
-				transitionTask.setCurrentState( screenName )
+				transitionTask.setCurrentState( screenName, transition )
 			}
 			else
 			{

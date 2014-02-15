@@ -23,14 +23,13 @@ package totem.monitors
 	import org.as3commons.collections.LinkedList;
 	import org.as3commons.collections.framework.IIterator;
 
+	import totem.monitors.progress.IProgressProxy;
 	import totem.monitors.startupmonitor.IStartupProxy;
 
-	public class StartupDispatcherMonitor extends RequiredProxy
+	public class StartupDispatcherMonitor extends RequiredProxy implements IProgressProxy
 	{
 
 		protected var _monitors : LinkedList;
-
-	//	protected var count : int;
 
 		public function StartupDispatcherMonitor( id : String = "" )
 		{
@@ -45,7 +44,7 @@ package totem.monitors
 			dispatcher.addEventListener( eventType, onComplete );
 			_monitors.add( dispatcher );
 
-		//	count += 1;
+			//	count += 1;
 
 			return dispatcher;
 		}
@@ -83,7 +82,7 @@ package totem.monitors
 		public function get totalDispatchers() : int
 		{
 			return _monitors.size;
-		} 
+		}
 
 		protected function onComplete( eve : Event ) : void
 		{

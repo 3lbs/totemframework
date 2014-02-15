@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -20,19 +20,17 @@ package totem.core.state
 	import flash.utils.Dictionary;
 
 	import ladydebug.Logger;
-
-	import org.swiftsuspenders.Injector;
-	import totem.core.TotemEntity;
-	import totem.core.TotemObject;
+	import totem.core.Injectable;
 
 	import totem.totem_internal;
+	import totem.utils.DestroyUtil;
 
 	/**
 	 * Implementation of IMachine; probably any custom FSM would be based on this.
 	 *
 	 * @see IMachine for API docs.
 	 */
-	public class Machine extends TotemObject implements IMachine
+	public class Machine extends Injectable implements IMachine
 	{
 
 		use namespace totem_internal;
@@ -49,26 +47,24 @@ package totem.core.state
 
 		private var _currentState : IState = null;
 
-		private var _enteredStateTime : Number = 0;
-
 		private var _previousState : IState = null;
 
 		private var _setNewState : Boolean = false;
 
-		public function Machine( ... initStates )
+		public function Machine()
 		{
-			super( null );
 		}
 
-		public function addState( name : String, state : IState ) : void
+		public function addState( name : String, state : IState ) : IMachine
 		{
 			states[ name ] = state;
 
 			if ( initialzed )
 			{
-				var injector : Injector = totem_internal.getInjector();
-				injector.injectInto( state );
+				getInjector().injectInto( state );
 			}
+
+			return this;
 		}
 
 		public function get currentState() : IState
@@ -87,12 +83,15 @@ package totem.core.state
 				Logger.warn( this, "set currentStateName", "Could not transition to state '" + value + "'" );
 		}
 
-		/**
-		 * Virtual time at which we entered the state.
-		 */
-		public function get enteredStateTime() : Number
+		override public function destroy() : void
 		{
-			return _enteredStateTime;
+			super.destroy();
+
+			DestroyUtil.destroyDictionary( states );
+			states = null;
+
+			_currentState = null;
+			_previousState = null;
 		}
 
 		public function getCurrentState() : IState
@@ -123,16 +122,10 @@ package totem.core.state
 			return null;
 		}
 
-		[Inject]
-		public function injector( totemEntity : TotemEntity ) : void
+		override public function initialize() : void
 		{
-			owningGroup = totemEntity._owningGroup;
-			setInjector( totemEntity.getInjector().createChildInjector());
-		}
+			super.initialize();
 
-		[PostConstruct]
-		public function postConstruct() : void
-		{
 			for each ( var state : IState in states )
 			{
 				getInjector().injectInto( state );
@@ -141,23 +134,23 @@ package totem.core.state
 
 		public function setCurrentState( name : String ) : Boolean
 		{
-			var newState : IState = getState( name );
+			var _newState : IState = getState( name );
 
-			if ( !newState )
+			if ( !_newState )
 				return false;
 
 			var oldState : IState = _currentState;
 			_setNewState = true;
 
 			_previousState = _currentState;
-			_currentState = newState;
+			_currentState = _newState;
 
 			// Old state gets notified it is changing out.
 			if ( oldState )
 				oldState.exit( this );
 
 			// New state finds out it is coming in.    
-			newState.enter( this );
+			_newState.enter( this );
 
 			return true;
 		}

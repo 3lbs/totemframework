@@ -1,11 +1,27 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.loaders.starling
 {
 
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
-	
+
 	import starling.textures.TextureAtlas;
-	
+
 	import totem.core.Destroyable;
 
 	public class AtlasTextureCache extends Destroyable
@@ -13,20 +29,20 @@ package totem.loaders.starling
 
 		private static var _instances : Dictionary = new Dictionary();
 
-		private var _textures : Dictionary;
-
-		private var _usages : Dictionary;
-
-		private var _bitmapDatas : Dictionary;
-
-		public function AtlasTextureCache( singletonEnforcer : SingletonEnforcer )
+		public static function destroyInstance( key : * ) : Boolean
 		{
-			if ( !singletonEnforcer )
-				throw new Error( "Cannot instantiate a singleton class. Use static getInstance instead." );
+			var instance : AtlasTextureCache = _instances[ key ];
 
-			_textures = new Dictionary();
-			_bitmapDatas = new Dictionary();
-			_usages = new Dictionary();
+			if ( instance )
+			{
+				instance.destroy();
+
+				_instances[ key ] = null;
+				delete _instances[ key ];
+
+				return true;
+			}
+			return false;
 		}
 
 		public static function getInstance( key : * = "default" ) : AtlasTextureCache
@@ -42,43 +58,48 @@ package totem.loaders.starling
 			return instance;
 		}
 
-		
-		public static function destroyInstance ( key : * ) : Boolean
-		{	
-			var instance : AtlasTextureCache = _instances[ key ];
-			
-			if ( instance )
+		private var _bitmapDatas : Dictionary;
+
+		private var _textures : Dictionary;
+
+		public function AtlasTextureCache( singletonEnforcer : SingletonEnforcer )
+		{
+			if ( !singletonEnforcer )
+				throw new Error( "Cannot instantiate a singleton class. Use static getInstance instead." );
+
+			_textures = new Dictionary();
+			_bitmapDatas = new Dictionary();
+		}
+
+		public function clearIndex( url : String ) : Boolean
+		{
+			if ( _textures[ url ])
 			{
-				instance.destroy();
-				
-				_instances[ key ] = null;
-				delete _instances[key];
-				
+				_textures[ url ].dispose();
+				_textures[ url ] = null;
 				return true;
 			}
 			return false;
-		}
-		
-		public function getTextureAtlas( url : String ) : TextureAtlas
-		{
-			return _textures[ url ];
-		}
-
-		public function getBitmapData( url : String ) : BitmapData
-		{
-			return _bitmapDatas[ url ];
-		}
-
-		public function createIndex( url : String, texture : TextureAtlas, force : Boolean = false ) : void
-		{
-			if ( !_textures[ url ])
-				_textures[ url ] = texture;
 		}
 
 		public function createBitmapData( url : String, bitmapData : BitmapData, force : Boolean = false ) : void
 		{
 			if ( !_bitmapDatas[ url ] && bitmapData )
 				_bitmapDatas[ url ] = bitmapData;
+		}
+
+		public function createIndex( url : String, texture : TextureAtlas, force : Boolean = false ) : void
+		{
+			if ( _textures[ url ] && force )
+			{
+				_textures[ url ].dispose();
+				_textures[ url ] = null;
+			}
+
+			if ( !_textures[ url ] || force )
+			{
+				_textures[ url ] = texture;
+			}
 		}
 
 		override public function destroy() : void
@@ -93,9 +114,9 @@ package totem.loaders.starling
 				_textures[ key ] = null;
 				delete _textures[ key ];
 			}
-			
+
 			_textures = null;
-			
+
 			for ( key in _bitmapDatas )
 			{
 				var bd : BitmapData = _bitmapDatas[ key ];
@@ -109,6 +130,15 @@ package totem.loaders.starling
 
 		}
 
+		public function getBitmapData( url : String ) : BitmapData
+		{
+			return _bitmapDatas[ url ];
+		}
+
+		public function getTextureAtlas( url : String ) : TextureAtlas
+		{
+			return _textures[ url ];
+		}
 	}
 }
 

@@ -1,32 +1,102 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.components.input
 {
-	import org.osflash.signals.ISignal;
-	import org.osflash.signals.Signal;
-	
-	import totem.core.TotemComponent;
 
-	public class TouchInputComponent extends TotemComponent
+	import totem.core.TotemComponent;
+	import totem.core.input.InputMonitor;
+	import totem.observer.NotifBroadcaster;
+
+	public class TouchInputComponent extends TotemComponent implements IInputComponent
 	{
-		
-		private var _controllers : Vector.<InputController> = new Vector.<InputController>();
-		
-		public var actionChange : ISignal = new Signal();
-		
-		public function TouchInputComponent(name:String=null)
+		public static const NAME : String = "TouchInputCompoment";
+
+		private var _broadcaster : NotifBroadcaster = new NotifBroadcaster();
+
+		private var _controller : InputMonitor;
+
+		private var _enabled : Boolean;
+
+		public function TouchInputComponent( controller : InputMonitor, name : String = null )
 		{
-			super(name);
+			super( NAME || name );
+
+			this.controller = controller;
 		}
-		
-		
-		public function addAction () : void{
-			
-		}
-		
-		
-		public function addController ( controller : InputController ) : void
+
+		public function addController( controller : InputMonitor ) : void
 		{
-			if ( _controllers.lastIndexOf( controller ) < 0 )
-				_controllers.push( controller );
+			controller.touchBegin.add( handleTouchBegin );
+			controller.touchEnd.add( handleTouchEnd );
+			controller.touchMove.add( handleTouchMove )
+		}
+
+		public function get broadcaster() : NotifBroadcaster
+		{
+			return _broadcaster;
+		}
+
+		public function get controller() : InputMonitor
+		{
+			return _controller;
+		}
+
+		public function set controller( value : InputMonitor ) : void
+		{
+			_controller = value;
+
+			addController( _controller );
+		}
+
+		public function get enabled() : Boolean
+		{
+			return _enabled;
+		}
+
+		public function set enabled( value : Boolean ) : void
+		{
+			_enabled = value;
+
+		}
+
+		public function removeController() : void
+		{
+			_controller.touchBegin.remove( handleTouchBegin );
+			_controller.touchEnd.remove( handleTouchMove );
+			_controller.touchMove.remove( handleTouchMove );
+		}
+
+		protected function handleTouchBegin( globalX : Number, globalY : Number ) : void
+		{
+			trace( "stupid show" );
+		}
+
+		protected function handleTouchEnd( globalX : Number, globalY : Number ) : void
+		{
+			// TODO Auto Generated method stub
+
+			trace( "anyphse" );
+		}
+
+		protected function handleTouchMove( globalX : Number, globalY : Number ) : void
+		{
+			// TODO Auto Generated method stub
+
+			trace( "look at this" );
 		}
 	}
 }

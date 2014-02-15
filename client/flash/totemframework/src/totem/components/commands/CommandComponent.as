@@ -1,10 +1,23 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
 
 package totem.components.commands
 {
 
 	import flash.events.IEventDispatcher;
-	
-	import totem.totem_internal;
 	import totem.core.TotemComponent;
 	import totem.core.TotemEntity;
 	import totem.core.mvc.controller.api.ICommandMap;
@@ -14,67 +27,35 @@ package totem.components.commands
 	import totem.monitors.promise.Deferred;
 	import totem.monitors.promise.IPromise;
 
+	import totem.totem_internal;
+
 	use namespace totem_internal;
 
 	public class CommandComponent extends TotemComponent
 	{
-		public var eventDispatcher : IEventDispatcher;
-
 		private var _commandMap : ICommandMap;
 
-		private var deconstructCommand : SerialCommand;
-
-		private var monitor:Deferred;
+		private var monitor : Deferred;
 
 		public function CommandComponent( name : String = null )
 		{
 			super( name );
 		}
 
-		public function get commandMap():ICommandMap
+		public function addCommand( command : *, notifType : String ) : void
+		{
+
+		}
+
+		public function get commandMap() : ICommandMap
 		{
 			return _commandMap;
-		} 
-
-		override protected function onAdd() : void
-		{
-			super.onAdd();
-
-			_commandMap = new SignalCommandMap( getInjector());
-			
-			injector.map( ICommandMap ).toValue( commandMap );
-
-			owner.onAddSignal.addOnce( doInitialize );
-		}
-		
-		private function doInitialize( entity : TotemEntity ):void
-		{
-		}
-		
-		override protected function onRemove() : void
-		{
-			super.onRemove();
-			destroy();
 		}
 
-		override public function deconstruct() : IPromise
+		override public function destroy() : void
 		{
-			if ( deconstructCommand )
-			{
-				deconstructCommand.onComplete.addOnce( deconstructComplete );
-				excuteCommand( deconstructCommand );
-				return null;
-			}
-
-			return null;
-		}
-
-		private function deconstructComplete( command : Command ) : void
-		{
-			deconstructCommand = null;
-			
-			monitor.resolve( this );
-			monitor = null;
+			super.destroy();
+			commandMap.destroy();
 		}
 
 		public function excuteCommand( command : * ) : void
@@ -82,16 +63,21 @@ package totem.components.commands
 			commandMap.executeCommand( command );
 		}
 
-		public function addDeconstructCommand( command : Command ) : void
+		override protected function onAdd() : void
 		{
-			deconstructCommand ||= new SerialCommand();
-			deconstructCommand.append( command );
+			super.onAdd();
+
+			_commandMap = new SignalCommandMap( getInjector());
+
+			injector.map( ICommandMap ).toValue( commandMap );
+
+			//owner.onAddSignal.addOnce( doInitialize );
 		}
 
-		override public function destroy() : void
+		override protected function onRemove() : void
 		{
-			super.destroy();
-			commandMap.destroy();
+			super.onRemove();
+			destroy();
 		}
 	}
 }

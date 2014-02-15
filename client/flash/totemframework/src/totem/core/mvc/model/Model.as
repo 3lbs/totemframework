@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -30,6 +30,13 @@ package totem.core.mvc.model
 
 		public function Model()
 		{
+		}
+
+		override public function destroy() : void
+		{
+			super.destroy();
+
+			eventDispatcher = null;
 		}
 
 		protected function dispatchContext( e : Event ) : void

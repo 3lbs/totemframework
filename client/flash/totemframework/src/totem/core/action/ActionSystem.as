@@ -2,7 +2,7 @@ package totem.core.action
 {
 
 	import totem.totem_internal;
-	import totem.core.System;
+	import totem.core.TotemSystem;
 	import totem.core.time.ITicked;
 	import totem.core.time.TickedComponent;
 	import totem.core.time.TimeManager;
@@ -11,7 +11,7 @@ package totem.core.action
 
 	use namespace totem_internal;
 	
-	public class ActionSystem extends System implements ITicked
+	public class ActionSystem extends TotemSystem implements ITicked
 	{
 		
 		[Inject]

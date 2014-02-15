@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -55,16 +55,6 @@ package totem.display.starling
 			_currentTime = 0.0;
 			_currentFrame = 0;
 			_autoDiscardAnimations = autoDiscardAnimations;
-		}
-
-		public function get color() : uint
-		{
-			return _image.color;
-		}
-
-		public function set color( value : uint ) : void
-		{
-			_image.color = value;
 		}
 
 		public function addAnimation( animName : String, textures : Vector.<Texture>, fps : Number = 12, loop : Boolean = true ) : Animation
@@ -130,7 +120,7 @@ package totem.display.starling
 					{
 						var restTime : Number = _currentTime - _currentAnimation.totalTime;
 						_currentTime = _currentAnimation.totalTime;
-						dispatchEvent( new Event( Event.COMPLETE ));
+						dispatchEventWith( Event.COMPLETE );
 
 						// user might have changed movie clip settings, so we restart the method
 						advanceTime( restTime );
@@ -161,6 +151,16 @@ package totem.display.starling
 
 			if ( _currentFrame != previousFrame )
 				_image.texture = _currentAnimation.textures[ _currentFrame ];
+		}
+
+		public function get color() : uint
+		{
+			return _image.color;
+		}
+
+		public function set color( value : uint ) : void
+		{
+			_image.color = value;
 		}
 
 		/** The index of the frame that is currently displayed. */
@@ -262,7 +262,7 @@ package totem.display.starling
 		}
 
 		/** Starts playback. Beware that the clip has to be added to a juggler, too! */
-		public function play( animName : String = "" ) : void
+		public function play( animName : String = "", loop : int = -1, fps : int = -1 ) : void
 		{
 			if ( animName == "" && _currentAnimation )
 			{
@@ -274,6 +274,13 @@ package totem.display.starling
 				{
 					_currentFrame = 0; // reset to first frame
 					_currentAnimation = _animations[ animName ];
+
+					/*if ( fps > -1 )
+						_currentAnimation.fps = fps;
+
+					if ( loop > -1 )
+						_currentAnimation.loop = loop;*/
+
 					_image.texture = _currentAnimation.textures[ _currentFrame ];
 					_playing = true;
 				}

@@ -43,7 +43,8 @@ package ladydebug
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
-
+	
+	import totem.core.input.simple.KeyboardKey;
 	import totem.monitors.promise.wait;
 
 	use namespace ladydebug_internal;
@@ -689,7 +690,7 @@ package ladydebug
 				});*/
 			}
 			// KeyboardKey.TILDE.keyCode 
-			else if ( event.keyCode == 0 )
+			else if ( event.keyCode == KeyboardKey.ESCAPE.keyCode )
 			{
 				// Hide the console window, have to check here due to 
 				// propagation stop at end of function.

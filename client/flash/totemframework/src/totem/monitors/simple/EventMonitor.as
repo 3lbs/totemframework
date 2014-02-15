@@ -19,15 +19,16 @@ package totem.monitors.simple
 
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-
+	
 	import totem.events.RemovableEventDispatcher;
+	import totem.monitors.progress.IProgressProxy;
 	import totem.structures.lists.SLinkedList;
 
 	public class EventMonitor extends RemovableEventDispatcher
 	{
 		protected var _monitors : SLinkedList;
 
-		protected var count : int;
+		protected var completeCount : int;
 
 		public function EventMonitor( target : IEventDispatcher = null )
 		{
@@ -36,12 +37,13 @@ package totem.monitors.simple
 			_monitors = new SLinkedList();
 		}
 
-		public function addDispatcher( dispatcher : IEventDispatcher, eventType : String = Event.COMPLETE ) : void
+		public function addDispatcher( dispatcher : IProgressProxy, eventType : String = Event.COMPLETE ) : void
 		{
-			dispatcher.addEventListener( eventType, onComplete );
-			_monitors.append( dispatcher );
-
-			count += 1;
+			if ( dispatcher.isComplete() == false )
+			{
+				dispatcher.addEventListener( eventType, onComplete );
+				_monitors.append( dispatcher );
+			}
 		}
 
 		override public function destroy() : void
@@ -68,6 +70,8 @@ package totem.monitors.simple
 			_monitors.remove( dispatcher );
 
 			dispatchEvent( new Event( Event.CHANGE ));
+
+			completeCount += 1;
 
 			if ( _monitors.size == 0 )
 			{

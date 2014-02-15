@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,6 +17,8 @@
 package totem.components.display
 {
 
+	import starling.display.DisplayObject;
+	
 	import totem.math.Vector2D;
 
 	public interface IDisplay2DRenderer
@@ -26,9 +28,7 @@ package totem.components.display
 
 		function set alpha( value : Number ) : void;
 
-		function get layerIndex() : int
-
-		function set layerIndex( value : int ) : void;
+		function get displayObject() : DisplayObject;
 
 		function get position() : Vector2D;
 
@@ -40,12 +40,10 @@ package totem.components.display
 
 		function setScale( _scaleX : Number, _scaleY : Number ) : void;
 
-		function translateX( value : Number ) : void;
-
-		function translateY( value : Number ) : void;
-
 		function get zIndex() : int;
 
 		function set zIndex( value : int ) : void;
+		
+		function set scene ( scene : DisplayObjectSceneLayer ) : void;
 	}
 }

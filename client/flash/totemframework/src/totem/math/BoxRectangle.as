@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -18,6 +18,8 @@ package totem.math
 {
 
 	import flash.geom.Rectangle;
+
+	import totem.data.type.Point2d;
 
 	public class BoxRectangle extends Rectangle
 	{
@@ -29,14 +31,14 @@ package totem.math
 		public static function create( x : Number = 0, y : Number = 0, width : Number = 0, height : Number = 0 ) : BoxRectangle
 		{
 			if ( disposed.length > 0 )
-				return disposed.shift().SetTo( x, y, width, height );
+				return disposed.pop().reset( x, y, width, height );
 			else
 				return new BoxRectangle( x, y, width, height );
 		}
 
 		public static function grow( value : int ) : void
 		{
-			for ( var i : int = 0; i < value; ++i )
+			while ( value-- )
 			{
 				disposed.push( new BoxRectangle());
 			}
@@ -47,14 +49,6 @@ package totem.math
 			super( x, y, width, height );
 		}
 
-		public function SetTo( xa : Number, ya : Number, widtha : Number, heighta : Number ) : BoxRectangle
-		{
-
-			setTo( xa, ya, widtha, heighta );
-			return this;
-
-		}
-
 		public function area() : Number
 		{
 			return width * height;
@@ -62,11 +56,10 @@ package totem.math
 
 		override public function clone() : Rectangle
 		{
-			var newVector : BoxRectangle = BoxRectangle.create( x, y, width, height );
-			return newVector;
+			return BoxRectangle.create( x, y, width, height );
 		}
 
-		public function copy( v : BoxRectangle ) : BoxRectangle
+		public function copy( v : Rectangle ) : BoxRectangle
 		{
 			this.x = v.x;
 			this.y = v.y;
@@ -81,20 +74,20 @@ package totem.math
 			disposed = null;
 		}
 
-		public function dispose() : BoxRectangle
+		public function dispose() : void
 		{
 
 			this.setEmpty();
 
 			var a : BoxRectangle;
 
-			for each ( a in disposed )
-				if ( this == a )
-					return this;
+			var idx : int = disposed.indexOf( this );
+
+			if ( idx > -1 )
+				return;
 
 			disposed.push( this );
 
-			return this;
 		}
 
 		public function divide( scalar : Number ) : BoxRectangle
@@ -139,6 +132,24 @@ package totem.math
 		public function multiplyBy( scalar : Number ) : BoxRectangle
 		{
 			return BoxRectangle.create( x * scalar, y * scalar, width * scalar, height * scalar );
+		}
+
+		public function randomPosition( result : Point2d = null ) : Point2d
+		{
+			result ||= Point2d.create();
+
+			result.x = Math.floor( Math.random() * this.width ) + this.x;
+			result.y = Math.floor( Math.random() * this.height ) + this.y;
+
+			return result;
+		}
+
+		public function reset( xa : Number, ya : Number, widtha : Number, heighta : Number ) : BoxRectangle
+		{
+
+			setTo( xa, ya, widtha, heighta );
+			return this;
+
 		}
 	}
 }

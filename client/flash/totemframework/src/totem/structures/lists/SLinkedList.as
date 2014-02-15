@@ -234,8 +234,7 @@ package totem.structures.lists
 
 		public function get iterator() : ITotemIterator
 		{
-			var iter : ListIterator = new ListIterator( this );
-			return iter;
+			return new ListIterator( this );
 		}
 
 		public function join( separator : String = "," ) : String

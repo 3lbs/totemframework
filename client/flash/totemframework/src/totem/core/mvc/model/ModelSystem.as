@@ -5,9 +5,9 @@ package totem.core.mvc.model
 	import avmplus.getQualifiedClassName;
 	
 	import totem.core.ITotemSystem;
-	import totem.core.System;
+	import totem.core.TotemSystem;
 	
-	public class ModelSystem extends System
+	public class ModelSystem extends TotemSystem
 	{
 		
 		private var _models : Dictionary = new Dictionary();

@@ -16,7 +16,7 @@
 
 package totem.display.scenes
 {
-	import totem.monitors.IProgressMonitor;
+	import totem.monitors.progress.IProgressMonitor;
 
 	/**
 	 * A state in a state machine. It is given the opportunity each
@@ -36,8 +36,6 @@ package totem.display.scenes
 		 * Typically this function will call SetCurrentState on the FSM to update
 		 * its state.
 		 */
-		//function tick(fsm:IMachine):void;
-
 		/**
 		 * Called when we transition out of this state.
 		 */
@@ -49,8 +47,6 @@ package totem.display.scenes
 
 		function prepareToExit() : void;
 
-		function transitionType() : String;
-		
 		function get progressMonitor () : IProgressMonitor;
 	}
 }

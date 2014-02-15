@@ -19,12 +19,13 @@ package totem.core.mvc.modular.mvcs
 
 	import flash.display.DisplayObjectContainer;
 	import flash.events.IEventDispatcher;
-	
 	import totem.core.TotemGroup;
 	import totem.core.mvc.TotemContext;
 	import totem.core.mvc.modular.base.ModuleEventDispatcher;
 	import totem.core.mvc.modular.core.IModuleEventDispatcher;
 	import totem.events.RemovableEventDispatcher;
+
+	import totem.totem_internal;
 
 	public class TotemModuleContext extends TotemContext
 	{
@@ -39,7 +40,7 @@ package totem.core.mvc.modular.mvcs
 		[Inject]
 		public function set contextEventDispatcher( value : IEventDispatcher ) : void
 		{
-			_contextEventDispatcher = value as RemovableEventDispatcher;
+			totem_internal::_contextEventDispatcher = value as RemovableEventDispatcher;
 		}
 
 		override public function destroy() : void

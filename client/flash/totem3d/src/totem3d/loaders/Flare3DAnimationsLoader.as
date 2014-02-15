@@ -64,7 +64,7 @@ package totem3d.loaders
 				if ( hasLabel( ani.id, labels ))
 					continue;
 
-				var loader : Flare3DMonitor = new Flare3DMonitor( AppURL.ASSETS.getURLDelimiter( ani.url ), ani.id );
+				var loader : Flare3DMonitor = new Flare3DMonitor( AppURL.ASSETS.getURL( ani.url ), ani.id );
 				addDispatcher( loader );
 			}
 

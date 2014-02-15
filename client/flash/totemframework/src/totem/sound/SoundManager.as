@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -36,7 +36,7 @@ package totem.sound
 		public static function getInstance() : SoundManager
 		{
 			if ( !_instance )
-				_instance = new SoundManager( new SingletonEnforcer());
+				_instance = new SoundManager();
 
 			return _instance;
 		}
@@ -49,12 +49,9 @@ package totem.sound
 
 		protected var soundsDic : Dictionary;
 
-		public function SoundManager( singletonEnforcer : SingletonEnforcer )
+		public function SoundManager()
 		{
 
-			if ( !singletonEnforcer )
-				throw new Error( "Cannot instantiate a singleton class. Use static getInstance instead." );
-			
 			soundsDic = new Dictionary();
 			soundGroups = new Vector.<TotemSoundGroup>();
 
@@ -106,6 +103,7 @@ package totem.sound
 
 		override public function destroy() : void
 		{
+			super.destroy();
 			var csg : TotemSoundGroup;
 
 			for each ( csg in soundGroups )
@@ -256,7 +254,7 @@ package totem.sound
 				trace( this, "pauseSound() : sound", id, "doesn't exist." );
 		}
 
-		public function playSound( id : String ) : SoundInstance
+		public function playSound( id : String ) : TotemSoundInstance
 		{
 			if ( id in soundsDic )
 				return TotemSound( soundsDic[ id ]).play();
@@ -366,7 +364,7 @@ package totem.sound
 		{
 			if ( id in soundsDic )
 				soundsDic[ id ].panning = panning;
-			else                                                                                                                                    
+			else
 				trace( this, "setPanning() : sound", id, "doesn't exist." );
 		}
 
@@ -450,12 +448,12 @@ package totem.sound
 			if ( soundIsPlaying( id ))
 			{
 
-				var totemSound : TotemSound = TotemSound( soundsDic[ id ]);
-				var tweenvolObject : Object = { volume: totemSound.volume };
+				var citrusSound : TotemSound = TotemSound( soundsDic[ id ]);
+				var tweenvolObject : Object = { volume: citrusSound.volume };
 
 				eaze( tweenvolObject ).to( tweenDuration, { volume: volume }).onUpdate( function() : void
 				{
-					totemSound.volume = tweenvolObject.volume;
+					citrusSound.volume = tweenvolObject.volume;
 				}).onComplete( function() : void
 				{
 
@@ -463,7 +461,7 @@ package totem.sound
 						if ( callback.length == 0 )
 							callback();
 						else
-							callback( totemSound );
+							callback( citrusSound );
 				});
 			}
 			else
@@ -480,8 +478,4 @@ package totem.sound
 			dispatchEvent( new TotemSoundEvent( TotemSoundEvent.ALL_SOUNDS_LOADED, e.sound, null ));
 		}
 	}
-}
-
-class SingletonEnforcer
-{
 }

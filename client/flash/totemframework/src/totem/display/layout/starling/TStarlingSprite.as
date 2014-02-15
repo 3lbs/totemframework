@@ -30,8 +30,9 @@ package totem.display.layout.starling
 
 		public function TStarlingSprite()
 		{
-			touchable = false;
 			super();
+			
+			touchable = false;
 		}
 
 		/**

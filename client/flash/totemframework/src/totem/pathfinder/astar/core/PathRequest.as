@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -54,7 +54,7 @@ package totem.pathfinder.astar.core
 		{
 			if ( _disposed.length > 0 )
 			{
-				return _disposed.shift().setTo( start, end, map, priority );
+				return _disposed.pop().setTo( start, end, map, priority );
 			}
 
 			return new PathRequest( start, end, map, priority );
@@ -112,27 +112,29 @@ package totem.pathfinder.astar.core
 		 *
 		 * @param analyzer	The analyzer to add to the analyzer chain
 		 */
-		public function addAnalyzer( analyzer : Analyzer ) : void
+		public function addAnalyzer( analyzer : Analyzer ) : PathRequest
 		{
 			analyzer.setSubAnalyzer( _analyzer );
 			this._analyzer = analyzer;
+
+			return this;
 		}
 
 		override public function dispose() : void
 		{
 			super.dispose();
+
 			
-			/*this._analyzer = null;
+			this._analyzer = null;
 
 			this._start = null;
 			this._end = null;
-			this._map = null;*/
+			this._map = null;
 
 			var a : PathRequest;
-
-			for each ( a in _disposed )
-				if ( this == a )
-					return;
+			var idx : int = _disposed.indexOf( this );
+			if ( idx != -1 )
+				return;
 
 			_disposed.push( this );
 		}
@@ -244,5 +246,14 @@ package totem.pathfinder.astar.core
 			_analyzer = new Analyzer();
 			return this;
 		}
+		
+		override protected function clearListeners() : void
+		{
+			super.clearListeners();
+			
+			//dispose();
+			
+		}
+
 	}
 }

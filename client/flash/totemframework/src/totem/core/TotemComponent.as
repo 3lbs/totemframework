@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -28,11 +28,18 @@ package totem.core
 
 		public var owner : TotemEntity;
 
+		protected var _activated : Boolean;
+
 		private var _safetyFlag : Boolean;
 
 		public function TotemComponent( name : String = null )
 		{
 			super( name );
+		}
+
+		public function get activated() : Boolean
+		{
+			return _activated;
 		}
 
 		public function deconstruct() : IPromise
@@ -90,6 +97,8 @@ package totem.core
 		totem_internal function doActivate() : void
 		{
 			_safetyFlag = false;
+
+			_activated = true;
 			onActivate();
 
 			if ( _safetyFlag == false )
@@ -118,6 +127,7 @@ package totem.core
 		totem_internal function doRetire() : void
 		{
 			_safetyFlag = false;
+			_activated = false;
 			onRetire();
 
 			if ( _safetyFlag == false )

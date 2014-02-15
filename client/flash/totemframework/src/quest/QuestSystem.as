@@ -17,9 +17,9 @@
 package quest
 {
 
-	import totem.core.System;
+	import totem.core.TotemSystem;
 
-	public class QuestSystem extends System
+	public class QuestSystem extends TotemSystem
 	{
 
 		public static const NAME : String = "QuestSystem";

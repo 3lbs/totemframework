@@ -97,10 +97,12 @@ package totem.monitors.promise
 			var eventType : String;
 			for (eventType in _rejectHandlerMap) {
 				_eventDispatcher.removeEventListener(eventType, onRejectEvent);
+				_rejectHandlerMap[eventType] = null;
 				delete _rejectHandlerMap[eventType];
 			}
 			for (eventType in _resolveHandlerMap) {
 				_eventDispatcher.removeEventListener(eventType, onResolveEvent);
+				_resolveHandlerMap[eventType] = null;
 				delete _resolveHandlerMap[eventType];
 			}
 			

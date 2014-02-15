@@ -1,0 +1,28 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
+package totem.components.input
+{
+
+	import totem.observer.NotifBroadcaster;
+
+	public interface IInputComponent
+	{
+		function get broadcaster() : NotifBroadcaster;
+
+		function get enabled() : Boolean;
+	}
+}

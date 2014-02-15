@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,13 +17,10 @@
 package totem.components.motion
 {
 
-
 	import totem.core.params.Transform2DParam;
 
 	public class MovingParam extends Transform2DParam
 	{
-
-		public var boundsBehavior : String = Moving2DComponent.BOUNDS_NONE;
 
 		public var damping : Number;
 
@@ -36,6 +33,8 @@ package totem.components.motion
 		public var maxSpeed : Number;
 
 		public var maxTurnRate : Number;
+
+		public var neighborDistance : Number;
 
 		public function MovingParam()
 		{

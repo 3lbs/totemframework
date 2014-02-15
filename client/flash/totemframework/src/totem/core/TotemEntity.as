@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,34 +17,22 @@
 package totem.core
 {
 
-	import flash.events.Event;
-	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
-
-	import ladydebug.Logger;
-
-	import org.osflash.signals.ISignal;
-	import org.osflash.signals.Signal;
+	
 	import org.swiftsuspenders.Injector;
-	import totem.events.RemovableEventDispatcher;
+	
+	import totem.totem_internal;
 	import totem.monitors.promise.IPromise;
 	import totem.monitors.promise.SerialDeferred;
-
-	import totem.totem_internal;
+	import totem.observer.NotifBroadcaster;
 
 	use namespace totem_internal;
 
 	public class TotemEntity extends TotemObject
 	{
-		public var eventDispatcher : IEventDispatcher = new RemovableEventDispatcher();
-
-		public var onAddSignal : ISignal = new Signal( TotemEntity );
-
-		public var ticked : ISignal = new Signal( Number );
+		public var notifBroadcaster : NotifBroadcaster = new NotifBroadcaster();
 
 		private var components_ : Dictionary = new Dictionary();
-
-		private var tickEnabled : Boolean;
 
 		public function TotemEntity( name : String )
 		{
@@ -96,15 +84,7 @@ package totem.core
 		public function getComponent( ComponentClass : Class ) : *
 		{
 			var component : * = null;
-
-			try
-			{
-				component = getInstance( ComponentClass );
-			}
-			catch ( error : Error )
-			{
-				Logger.warn( this, "getComponent", "doesnt exsists: " + ComponentClass );
-			}
+			component = getInstance( ComponentClass );
 
 			return component;
 		}
@@ -113,17 +93,15 @@ package totem.core
 		{
 			super.initialize();
 
+			injector.map( NotifBroadcaster ).toValue( notifBroadcaster );
+			
 			for each ( var component : TotemComponent in components_ )
 			{
 				getInjector().injectInto( component );
 				component.doAdd();
 			}
 
-			onAddSignal.dispatch( this );
-
-			onAddSignal.removeAll();
-			onAddSignal = null;
-
+			notifBroadcaster.dispatchNotifWith( TotemNotification.ENTITY_INITIALIZED );
 		}
 
 		public function onActivate() : void
@@ -169,23 +147,11 @@ package totem.core
 				removeComponent( componentClass );
 			}
 
-			ticked.removeAll();
-
 			if ( injector )
 			{
 				injector.teardown();
 				injector = null;
 			}
-		}
-
-		internal function onTick( delta : Number ) : void
-		{
-			tickEnabled && ticked.dispatch( delta );
-		}
-
-		private function handleInitComplete() : void
-		{
-			eventDispatcher.dispatchEvent( new Event( Event.COMPLETE ));
 		}
 	}
 }

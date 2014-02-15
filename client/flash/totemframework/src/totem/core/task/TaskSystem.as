@@ -17,9 +17,9 @@
 package totem.core.task
 {
 
-	import totem.core.System;
+	import totem.core.TotemSystem;
 
-	public class TaskSystem extends System
+	public class TaskSystem extends TotemSystem
 	{
 		private var _tasks : TaskGroup;
 

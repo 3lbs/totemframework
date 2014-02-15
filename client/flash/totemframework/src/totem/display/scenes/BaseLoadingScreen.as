@@ -21,22 +21,28 @@ package totem.display.scenes
 
 	public class BaseLoadingScreen extends ScreenComposite
 	{
-		protected var nextScene : ISceneState;
+		private var _displayContent : Boolean;
 
 		public function BaseLoadingScreen()
 		{
 			super();
 		}
 
-		public function addLoadingScene( nextSceneState : ISceneState ) : void
+		public function clearScreen() : void
 		{
-			nextScene = nextSceneState;
+			removeLoadingScreen();
 		}
 
 		override public function destroy() : void
 		{
 			super.destroy();
 			removeLoadingScreen();
+		}
+
+		public function set displayContent( value : Boolean ) : void
+		{
+			_displayContent = value;
+
 		}
 
 		public function finished() : void
@@ -49,9 +55,8 @@ package totem.display.scenes
 
 		}
 
-		private function removeLoadingScreen() : void
+		protected function removeLoadingScreen() : void
 		{
-			nextScene = null;
 		}
 	}
 }

@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -28,15 +28,11 @@ package totem.data.type
 
 		public static function create( x : Number = 0, y : Number = 0 ) : Point2d
 		{
-
 			if ( disposed.length == 0 )
 			{
 				return new Point2d( x, y );
 			}
-			else
-			{
-				return disposed.pop().SetTo( x, y ) as Point2d;
-			}
+			return disposed.pop().reset( x, y ) as Point2d;
 		}
 
 		public static function destroy() : void
@@ -54,7 +50,7 @@ package totem.data.type
 
 		public static function grow( value : int ) : void
 		{
-			for ( var i : int = 0; i < value; ++i )
+			while ( value-- )
 			{
 				disposed.push( new Point2d());
 			}
@@ -63,13 +59,6 @@ package totem.data.type
 		public function Point2d( x : Number = 0, y : Number = 0 )
 		{
 			super( x, y );
-		}
-
-		public function SetTo( x, y ) : Point2d
-		{
-			this.x = x;
-			this.y = y;
-			return this;
 		}
 
 		public function addedTo( vector : Point2d ) : Point2d
@@ -82,13 +71,22 @@ package totem.data.type
 			return Point2d.create( x, y );
 		}
 
+		public function copy( pt : Point ) : Point2d
+		{
+			x = pt.x;
+			y = pt.y;
+
+			return this;
+		}
+
 		public function dispose() : void
 		{
 			var a : Point2d;
 
-			for each ( a in disposed )
-				if ( this == a )
-					return;
+			var idx : int = disposed.indexOf( this );
+
+			if ( idx > -1 )
+				return;
 
 			disposed.push( this );
 		}
@@ -102,6 +100,21 @@ package totem.data.type
 		{
 			x = 0;
 			y = 0;
+		}
+
+		public function multiply( scaler : Number ) : Point2d
+		{
+			this.x *= scaler;
+			this.y *= scaler;
+
+			return this;
+		}
+
+		public function reset( x, y ) : Point2d
+		{
+			this.x = x;
+			this.y = y;
+			return this;
 		}
 
 		public function toVector2d() : Vector2D

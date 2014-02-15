@@ -6,7 +6,7 @@ package totem.core.mvc.view
 	import flash.utils.Dictionary;
 	
 	import totem.totem_internal;
-	import totem.core.System;
+	import totem.core.TotemSystem;
 	import totem.core.mvc.TotemContext;
 	import totem.utils.TypeUtility;
 
@@ -23,7 +23,7 @@ package totem.core.mvc.view
 	 * @see com.soma.core.mediator.Mediator
 	 */
 
-	public class MediatorSystem extends System
+	public class MediatorSystem extends TotemSystem
 	{
 
 		/** @private */
@@ -176,7 +176,6 @@ package totem.core.mvc.view
 		 */
 		override public function destroy() : void
 		{
-			super.destroy();
 
 			_instance.stage.removeEventListener( Event.ADDED_TO_STAGE, addedhandler, true );
 			_instance.stage.removeEventListener( Event.REMOVED_FROM_STAGE, removedhandler, true );
@@ -206,9 +205,7 @@ package totem.core.mvc.view
 			
 			_dispatchers = null;
 
-			injector.teardown();
-			injector = null;
-			
+			super.destroy();
 		}
 
 		/**

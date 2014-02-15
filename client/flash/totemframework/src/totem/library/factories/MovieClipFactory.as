@@ -6,7 +6,7 @@ package totem.library.factories
 	
 	import gorilla.resource.SWFResource;
 	
-	import totem.animation.AnimationEvent;
+	import totem.components.animation.AnimatorEvent;
 	import totem.utils.objectpool.IObjectPoolFactory;
 
 	public class MovieClipFactory implements IObjectPoolFactory
@@ -33,7 +33,7 @@ package totem.library.factories
 			{
 				mc.stop();
 
-				mc.dispatchEvent( new AnimationEvent( AnimationEvent.ANIMATION_FINISHED_EVENT, null ));
+				mc.dispatchEvent( new AnimatorEvent( AnimatorEvent.ANIMATION_FINISHED_EVENT, null ));
 			})
 
 			return mc;

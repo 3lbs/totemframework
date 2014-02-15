@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,10 +17,8 @@
 package totem.core.state
 {
 
-	import org.casalib.util.StringUtil;
-
 	import totem.core.Destroyable;
-	import totem.utils.TypeUtility;
+	import totem.utils.UID;
 
 	public class State extends Destroyable implements IState
 	{
@@ -31,7 +29,7 @@ package totem.core.state
 
 		public function State( name : String = "" )
 		{
-			_name = name || TypeUtility.getObjectShortClassName( this ) + "_" + StringUtil.createRandomIdentifier( 3 );
+			_name = name || UID.create( this );
 		}
 
 		public function enter( fsm : IMachine ) : void

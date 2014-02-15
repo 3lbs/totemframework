@@ -50,47 +50,26 @@ package totem.net
 			_file = new File( _url );
 		}
 
-		public function getDeepURL( ... arg ) : String
-		{
-			var tFile : File = _file.clone();
-
-			if ( arg.length > 0 )
-			{
-				for ( var i : int = 0; i < arg.length; ++i )
-				{
-					tFile = tFile.resolvePath( arg[ i ]);
-				}
-			}
-
-			if ( !tFile.exists )
-				Logger.warn( this, "getDeepUrl", "URL doesnt exsits: " + tFile.nativePath );
-
-			return tFile.url;
-		}
-
 		public function getFileUrl( value : String ) : File
 		{
 			return _file.resolvePath( value );
 		}
 
-		public function getURL( value : String = "" ) : String
+		public function getURL( value : String = "", delimiter : String = "|" ) : String
 		{
 			if ( value && value.indexOf( _url ) > -1 )
 				return null;
+			
+			if ( value == "" )
+				return _file.nativePath + fileSeperator;
 
-			return _file.resolvePath( value ).url;
-		}
-
-		public function getURLDelimiter( value : String, delimiter : String = "|" ) : String
-		{
-			var tFile : File = _file.clone();
 			var results : String = value.replace( delimiter, fileSeperator );
-			tFile = tFile.resolvePath( results );
+			var tFile : File = _file.resolvePath( results );
 
 			if ( !tFile.exists )
-				Logger.warn( this, "getURLFromDelimtedString", "URL doesnt exsits: " + tFile.nativePath );
-
-			return tFile.url;
+				Logger.warn( this, "getURL", "URL doesnt exsits: " + tFile.nativePath );
+			
+			return tFile.nativePath;
 		}
 	}
 }

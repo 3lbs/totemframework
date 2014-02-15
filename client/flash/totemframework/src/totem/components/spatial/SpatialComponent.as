@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -19,35 +19,21 @@ package totem.components.spatial
 
 	import flash.utils.Dictionary;
 
-	import org.osflash.signals.Signal;
-
-	import totem.components.display.DisplayObjectComponent;
-	import totem.components.display.IDisplay2DRenderer;
 	import totem.core.params.Transform2DParam;
 	import totem.core.time.TickedComponent;
+	import totem.data.type.Point2d;
 	import totem.math.AABBox;
-	import totem.math.BoxRectangle;
 	import totem.math.Vector2D;
 
 	public class SpatialComponent extends TickedComponent implements ISpatial2D
 	{
 		public static const NAME : String = "spatialComponent";
 
-		public static const UPDATE_TRANSFORMS_EVENT : String = "UpdateTransformEvenFt";
-
-		public var gridBounds : BoxRectangle;
-
-		public var positionChange : Signal = new Signal( Number, Number );
-
-		public var rotationChange : Signal = new Signal( Number );
-
-		public var scaleChange : Signal = new Signal( Number, Number );
-
-		public var transformUpdate : Signal = new Signal();
-
 		protected var _position : Vector2D = new Vector2D();
 
-		protected var canDispatch : Boolean = false;
+		protected var _x : Number = 0;
+
+		protected var _y : Number = 0;
 
 		protected var dirtyPosition : Boolean = true;
 
@@ -59,6 +45,8 @@ package totem.components.spatial
 
 		private var _bounds : AABBox;
 
+		private var _depth : int;
+
 		private var _rotation : Number = 0;
 
 		private var _scaleX : Number = 1;
@@ -67,13 +55,11 @@ package totem.components.spatial
 
 		private var _spatialManager : ISpatialManager;
 
-		private var _x : Number = 0;
-
-		private var _y : Number = 0;
+		private var _type : int;
 
 		private var area : Number;
 
-		private var displayRenderer : IDisplay2DRenderer;
+		private var observers : Vector.<ISpatialObserver> = new Vector.<ISpatialObserver>();
 
 		public function SpatialComponent( name : String = "", data : Transform2DParam = null )
 		{
@@ -95,20 +81,37 @@ package totem.components.spatial
 			properties = new Dictionary();
 		}
 
-		public function addDisplayRenderer( renderer : IDisplay2DRenderer ) : void
-		{
-			displayRenderer = renderer;
-		}
-
-		public function addSpatialManager( spatialDatabase : ISpatialManager ) : void
+		public function addSpatialManager( spatialDatabase : ISpatialManager, active : Boolean ) : void
 		{
 			_spatialManager = spatialDatabase;
-			_spatialManager.addSpatialObject( this );
+
+			if ( active )
+				_spatialManager.addSpatialObject( this );
 		}
 
 		public function get bounds() : AABBox
 		{
-			return bounds;
+			return _bounds;
+		}
+
+		public function contains( x : int, y : int ) : Boolean
+		{
+			return false; // _bounds.contains( x, y );
+		}
+
+		public function containsPoint( pt : Point2d ) : Boolean
+		{
+			return false; // _bounds.containsPoint( pt );
+		}
+
+		public function get depth() : int
+		{
+			return _depth;
+		}
+
+		public function set depth( value : int ) : void
+		{
+			_depth = value;
 		}
 
 		public function getProperty( prop : Object ) : Object
@@ -183,8 +186,8 @@ package totem.components.spatial
 
 		public function setPosition( x : Number, y : Number ) : void
 		{
-			this.x = x;
-			this.y = y;
+			_x = _position.x = x;
+			_y = _position.y = y;
 
 			dirtyPosition = true;
 		}
@@ -209,6 +212,30 @@ package totem.components.spatial
 			_scaleY = y;
 
 			dirtyScale = true;
+		}
+
+		public function subscribe( component : ISpatialObserver ) : void
+		{
+			observers.push( component );
+		}
+
+		public function get type() : int
+		{
+			return _type;
+		}
+
+		public function set type( value : int ) : void
+		{
+			_type = value;
+		}
+
+		public function unsubscribe( component : ISpatialObserver ) : void
+		{
+			var idx : int = observers.indexOf( component );
+
+			if ( idx != -1 )
+				observers.splice( idx, 1 );
+
 		}
 
 		public function get x() : Number
@@ -239,56 +266,38 @@ package totem.components.spatial
 			dirtyPosition = true;
 		}
 
-		protected function dispatchUpdate( force : Boolean = false ) : void
+		protected function dispatchUpdate() : void
 		{
-			if ( canDispatch || force == true )
+
+			if ( !dirtyPosition && !dirtyRotation && !dirtyScale )
+				return;
+
+			var i : int;
+			var length : int = observers.length;
+
+			for ( i = 0; i < length; ++i )
 			{
 				if ( dirtyPosition == true )
-				{
-
-					if ( displayRenderer )
-					{
-						displayRenderer.position = position;
-					}
-					else
-					{
-						positionChange.dispatch( _x, _y );
-					}
-
-					dirtyPosition = false;
-				}
+					observers[ i ].setPosition( _x, _y );
 
 				if ( dirtyRotation == true )
-				{
-
-					if ( displayRenderer )
-					{
-						displayRenderer.setRotation( _rotation );
-					}
-					else
-					{
-						rotationChange.dispatch( _rotation );
-					}
-
-					dirtyRotation = false;
-				}
+					observers[ i ].setRotation( _rotation );
 
 				if ( dirtyScale == true )
-				{
-
-					if ( displayRenderer )
-					{
-						displayRenderer.setScale( _scaleX, _scaleY );
-					}
-					else
-					{
-						rotationChange.dispatch( _scaleX, _scaleY );
-					}
-
-					dirtyScale = false;
-				}
+					observers[ i ].setScale( _scaleX, _scaleY );
 			}
 
+			dirtyPosition = dirtyScale = dirtyRotation = false;
+		}
+
+		override protected function onActivate() : void
+		{
+			super.onActivate();
+
+			if ( _spatialManager )
+			{
+				_spatialManager.addSpatialObject( this );
+			}
 		}
 
 		override protected function onAdd() : void
@@ -299,29 +308,33 @@ package totem.components.spatial
 
 			area = 10;
 			_bounds ||= AABBox.create( position, area, area );
-			canDispatch = true;
 
-			dispatchUpdate( true );
+			dirtyPosition = true;
+
+			dispatchUpdate();
 		}
 
 		override protected function onRemove() : void
 		{
 			super.onRemove();
 
-			canDispatch = false;
+			if ( _spatialManager )
+			{
+				_spatialManager.removeSpatialObject( this );
+				_spatialManager = null;
+			}
 
-			positionChange.removeAll();
-			rotationChange.removeAll();
-			transformUpdate.removeAll();
+			observers.length = 0;
 		}
 
-		private function updateTransformsEvent( component : DisplayObjectComponent ) : void
+		override protected function onRetire() : void
 		{
-			dirtyPosition = true;
-			dirtyRotation = true;
-			dirtyScale = true;
+			super.onRetire();
 
-			dispatchUpdate( true );
+			if ( _spatialManager )
+			{
+				_spatialManager.removeSpatialObject( this );
+			}
 		}
 	}
 }

@@ -28,7 +28,7 @@ package totem.core.state
 		/**
 		 * Register a state under a name.
 		 */
-		function addState( name : String, state : IState ) : void;
+		function addState( name : String, state : IState ) : IMachine;
 
 		/**
 		 * Get the name of the current state.

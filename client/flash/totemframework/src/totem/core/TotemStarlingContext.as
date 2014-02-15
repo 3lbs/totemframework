@@ -86,7 +86,7 @@ package totem.core
 		protected function handleStageInitComplete( event : Event ) : void
 		{
 			var starlingEngineBuilder : StarlingEngineBuilder = event.target as StarlingEngineBuilder;
-
+			
 			starlingEngine = starlingEngineBuilder.starlingEngine;
 			starlingEngine.antiAliasing = 1;
 			starlingEngine.enableErrorChecking = true;

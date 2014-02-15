@@ -34,20 +34,17 @@ package application.loadingscreen
 
 		private var introScreen : AppLoadingScreen;
 
-		public function Intro3lbsScreenTask( screen : AppLoadingScreen )
+		public function Intro3lbsScreenTask( screen : AppLoadingScreen, delay : int = 3000 )
 		{
 			super( NAME );
 
 			introScreen = screen;
 			introScreen.visible = false;
 
-			var delay : Number = 3000;
-
 			addTask( new DelayTask( 100 ));
 			addTask( new FadeFromTask( introScreen, 0x000000, .3 ));
 			addTask( new FunctionTask( stopAllMovie ));
-			addTask( new DelayTask( 3000 ));
-			//addTask( new WaitTask() );
+			addTask( new DelayTask( delay ));
 			addTask( new FadeToTask( introScreen, 0x000000, .3 ));
 			addTask( new DelayTask( 100 ));
 

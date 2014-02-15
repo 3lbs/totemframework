@@ -36,7 +36,7 @@ package totem.core
 	 * 4. Use the object!
 	 * 5. When you're done, call destroy(). (foo.destroy();)
 	 */
-	public class TotemObject extends InListNode implements IDestroyable // 
+	public class TotemObject extends InListNode implements IDestroyable
 	{
 
 		protected var _initialzed : Boolean = false;
@@ -73,6 +73,9 @@ package totem.core
 				_owningGroup.noteRemove( this );
 				_owningGroup = null;
 			}
+			
+			injector.teardown();
+			injector = null;
 
 			super.destroy();
 		}

@@ -34,10 +34,14 @@ package application.loadingscreen
 
 		private var _loader : Loader;
 
-		public function AppLoadingScreen( w : Number, h : Number )
+		private var delay : int;
+
+		public function AppLoadingScreen( w : Number, h : Number, delay : int )
 		{
+
 			super();
 
+			this.delay = delay;
 			contentWidth = w;
 			contentHeight = h;
 
@@ -63,7 +67,7 @@ package application.loadingscreen
 		protected function handleIntroLoaded( event : Event ) : void
 		{
 
-			var introTask : Intro3lbsScreenTask = new Intro3lbsScreenTask( this );
+			var introTask : Intro3lbsScreenTask = new Intro3lbsScreenTask( this, delay );
 			introTask.onCompleted.add( handleComplete );
 			introTask.start();
 			MovieClipUtil.stopAllAnimation( _loader.content as MovieClip );
