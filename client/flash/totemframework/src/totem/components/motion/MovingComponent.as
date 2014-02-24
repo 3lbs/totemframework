@@ -64,11 +64,11 @@ package totem.components.motion
 
 			if ( data )
 			{
-				_maxAcceleration = data.maxAccelleration;
-				_maxSpeed = data.maxSpeed;
-				maxTurnRate = data.maxTurnRate;
-				friction = data.friction;
-				damping = data.damping;
+				//_maxAcceleration = data.maxAccelleration;
+				//_maxSpeed = data.maxSpeed;
+				//maxTurnRate = data.maxTurnRate;
+				//friction = data.friction;
+				//damping = data.damping;
 				doesRotMatchHeading = data.doesRotMatchHeading;
 			}
 

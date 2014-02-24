@@ -47,6 +47,8 @@ package totem.components.spatial
 
 		private var _depth : int;
 
+		private var _height : int;
+
 		private var _rotation : Number = 0;
 
 		private var _scaleX : Number = 1;
@@ -57,7 +59,7 @@ package totem.components.spatial
 
 		private var _type : int;
 
-		private var area : Number;
+		private var _width : int;
 
 		private var observers : Vector.<ISpatialObserver> = new Vector.<ISpatialObserver>();
 
@@ -81,11 +83,11 @@ package totem.components.spatial
 			properties = new Dictionary();
 		}
 
-		public function addSpatialManager( spatialDatabase : ISpatialManager, active : Boolean ) : void
+		public function addSpatialManager( spatialDatabase : ISpatialManager ) : void
 		{
 			_spatialManager = spatialDatabase;
 
-			if ( active )
+			if ( activated )
 				_spatialManager.addSpatialObject( this );
 		}
 
@@ -122,6 +124,16 @@ package totem.components.spatial
 		public function getSpatialManager() : ISpatialManager
 		{
 			return _spatialManager;
+		}
+
+		public function get height() : int
+		{
+			return _height;
+		}
+
+		public function set height( value : int ) : void
+		{
+			_height = value;
 		}
 
 		override public function onTick() : void
@@ -229,6 +241,11 @@ package totem.components.spatial
 			_type = value;
 		}
 
+		public function get uid() : String
+		{
+			return owner.getName();
+		}
+
 		public function unsubscribe( component : ISpatialObserver ) : void
 		{
 			var idx : int = observers.indexOf( component );
@@ -236,6 +253,16 @@ package totem.components.spatial
 			if ( idx != -1 )
 				observers.splice( idx, 1 );
 
+		}
+
+		public function get width() : int
+		{
+			return _width;
+		}
+
+		public function set width( value : int ) : void
+		{
+			_width = value;
 		}
 
 		public function get x() : Number
@@ -306,8 +333,7 @@ package totem.components.spatial
 
 			//_bounds ||= BoxRectangle.create( x, y, width, height );
 
-			area = 10;
-			_bounds ||= AABBox.create( position, area, area );
+			_bounds ||= AABBox.create( position, _width, _height );
 
 			dirtyPosition = true;
 

@@ -14,17 +14,11 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.components.motion
+package totem.core.api
 {
 
-	import AI.steering.ISteering;
-	
-	import totem.components.spatial.ISpatial2D;
-
-	public interface ISteeringObject extends ISpatial2D
+	public interface IUID
 	{
-		function get steering() : ISteering;
-
-		function get velocity() : Number;
+		function get uid() : String;
 	}
 }

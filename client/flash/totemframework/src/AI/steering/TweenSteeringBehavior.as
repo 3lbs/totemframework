@@ -17,16 +17,22 @@
 package AI.steering
 {
 
-	import AI.steering.motion.IMotion;
-
 	import flash.utils.Dictionary;
-
+	
+	import AI.steering.motion.IMotion;
+	import AI.steering.motion.MLinear;
+	
 	import totem.components.motion.ISteeringObject;
 	import totem.core.Destroyable;
 	import totem.core.time.TimeManager;
 	import totem.math.Vector2D;
 
-	public class TweenSteeringBehavior extends Destroyable
+	/**
+	 *
+	 * @author eddie
+	 *
+	 */
+	public class TweenSteeringBehavior extends Destroyable implements ISteering
 	{
 
 		private var _distance : Number;
@@ -43,6 +49,8 @@ package AI.steering
 
 		private var _timeElapsed : Number;
 
+		private var defalutEaseType : Class = MLinear;
+
 		private var steeringComponent : ISteeringObject;
 
 		public function TweenSteeringBehavior( component : ISteeringObject )
@@ -50,18 +58,21 @@ package AI.steering
 			steeringComponent = component;
 		}
 
-		//Vec2DDistance(Pos(), pos) / (MaxSpeed() * FrameRate);
-
-		/*
-		var result:Number =  EasingUtil.call(easingFunction, timeElapsed, _duration, _easingMod1, _easingMod2);
-
-		target[property] = result * (endValue - startValue) + startValue;
-		*/
 
 		override public function destroy() : void
 		{
 			super.destroy();
 
+			_motion = null;
+
+			_motionMap = null;
+
+			_startPosition.dispose();
+			_startPosition = null;
+
+			steeringComponent = null;
+
+			_targetPoint = null;
 		}
 
 		public function isComplete() : Boolean
@@ -69,8 +80,10 @@ package AI.steering
 			return _targetPoint == null;
 		}
 
-		public function moveTo( vector : Vector2D, easeType : Class ) : void
+		public function moveTo( vector : Vector2D, easeType : Class = null ) : void
 		{
+			
+			easeType ||= defalutEaseType;
 
 			if ( !_motionMap[ easeType ])
 			{
@@ -82,14 +95,21 @@ package AI.steering
 
 			_targetPoint = vector;
 
-			 _startPosition.copy( steeringComponent.position );
+			_startPosition.copy( steeringComponent.position );
 
 			_distance = _startPosition.distanceTo( _targetPoint );
 
-			_duration = ( _distance / 24 ); // * ( TimeManager.TICK_RATE );
+			_duration = ( _distance / steeringComponent.velocity ); // * ( TimeManager.TICK_RATE );
 
 			_timeElapsed = 0.0;
 
+		}
+
+		public function stop() : void
+		{
+			_targetPoint = null;
+
+			_motion = null;
 		}
 
 		public function update() : Boolean
@@ -105,29 +125,18 @@ package AI.steering
 				steeringComponent.x = _result * ( _targetPoint.x - _startPosition.x ) + _startPosition.x;
 				steeringComponent.y = _result * ( _targetPoint.y - _startPosition.y ) + _startPosition.y;
 
-				//_car.x = _result * ( _endPoint.x - _startPosition.x ) + _startPosition.x;
-				//_car.y = _result * ( _endPoint.y - _startPosition.y ) + _startPosition.y;
-				
-				
-				/*steeringComponent.x = ( _targetPoint.x - position.x ) * .01;
-				steeringComponent.y = ( _targetPoint.y - position.y ) * .01;*/
-
 				if ( _timeElapsed >= _duration )
 				{
 					steeringComponent.x = _targetPoint.x;
 					steeringComponent.y = _targetPoint.y;
 					_targetPoint = null;
 				}
+
 				return true;
 			}
 			return false;
 		}
 
-		private function onComplete() : void
-		{
-			_targetPoint = null;
-
-		}
 	}
 }
 

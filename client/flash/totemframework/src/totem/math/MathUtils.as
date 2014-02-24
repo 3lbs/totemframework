@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -103,6 +103,11 @@ package totem.math
 		public static function rand( min : int, max : int ) : int
 		{
 			return min + Math.floor( Math.random() * ( max - min + 1 ));
+		}
+
+		public static function randomPostiveOrNegativeNumber() : int
+		{
+			return ( int( Math.random() * 2 ) - 1 | 1 );
 		}
 
 		public static function simplifyRadian( radian : Number ) : Number

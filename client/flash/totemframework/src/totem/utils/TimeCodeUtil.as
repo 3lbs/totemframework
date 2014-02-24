@@ -36,7 +36,7 @@ package totem.utils
 
 		public static const SECONDS : uint = 0;
 
-		public static function convertTimeCodeToMilliseconds( code : String ) : Object
+		public static function convertTimeCodeToMilliseconds( code : String ) : Number
 		{
 
 			var whitespace : RegExp = /[\s\r\n]*/gim;
@@ -48,8 +48,7 @@ package totem.utils
 			var reg : RegExp = /\d/g;
 			units = units.replace( reg, '' );
 
-			reg = /\D/g;
-			var inTime : Number = Number( _inTime.replace( reg, '' ));
+			var inTime : Number = parseFloat( code );
 
 			var totalTime : Number = 0;
 
@@ -77,12 +76,7 @@ package totem.utils
 				}
 			}
 
-			var timeObject : Object = new Object();
-
-			timeObject.time = totalTime;
-			timeObject.unit = units;
-
-			return timeObject;
+			return totalTime;
 
 		}
 		

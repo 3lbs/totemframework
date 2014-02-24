@@ -44,14 +44,29 @@ package totem.math
 			}
 		}
 
+		private var _center : Vector2D;
+
+		private var _position : Vector2D;
+
 		public function BoxRectangle( x : Number = 0, y : Number = 0, width : Number = 0, height : Number = 0 )
 		{
+			_position = new Vector2D( x, y );
 			super( x, y, width, height );
 		}
 
 		public function area() : Number
 		{
 			return width * height;
+		}
+
+		public function get center() : Vector2D
+		{
+			_center ||= new Vector2D();
+
+			_center.x = width * 0.5;
+			_center.y = height * 0.5;
+
+			return _center;
 		}
 
 		override public function clone() : Rectangle
@@ -132,6 +147,13 @@ package totem.math
 		public function multiplyBy( scalar : Number ) : BoxRectangle
 		{
 			return BoxRectangle.create( x * scalar, y * scalar, width * scalar, height * scalar );
+		}
+
+		public function get position() : Vector2D
+		{
+			_position.x = x;
+			_position.y = y;
+			return _position;
 		}
 
 		public function randomPosition( result : Point2d = null ) : Point2d

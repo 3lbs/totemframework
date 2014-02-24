@@ -107,7 +107,14 @@ package totem.display.starling
 			}
 
 			if ( !_playing || passedTime == 0.0 || _currentTime == _currentAnimation.totalTime )
+			{
+				if( _currentTime == _currentAnimation.totalTime && _playing )
+				{
+					_playing = false;
+					dispatchEventWith( Event.COMPLETE );
+				}
 				return;
+			}
 
 			_currentTime += passedTime;
 			finalFrame = _currentAnimation.textures.length - 1;

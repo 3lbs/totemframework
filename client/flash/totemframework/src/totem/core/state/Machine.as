@@ -64,6 +64,8 @@ package totem.core.state
 				getInjector().injectInto( state );
 			}
 
+			State( state ).stateMachine = this;
+
 			return this;
 		}
 
@@ -122,6 +124,17 @@ package totem.core.state
 			return null;
 		}
 
+		public function goToPreviousState() : Boolean
+		{
+			if ( _previousState )
+			{
+				var name : String = getStateName( _previousState );
+				setCurrentState( name );
+				return true;
+			}
+			return false;
+		}
+
 		override public function initialize() : void
 		{
 			super.initialize();
@@ -132,12 +145,22 @@ package totem.core.state
 			}
 		}
 
+		public function reset() : void
+		{
+			_currentState = null;
+			_previousState = null;
+		}
+
 		public function setCurrentState( name : String ) : Boolean
 		{
 			var _newState : IState = getState( name );
 
 			if ( !_newState )
+			{
+				throw new Error( "State named:", name );
 				return false;
+
+			}
 
 			var oldState : IState = _currentState;
 			_setNewState = true;

@@ -17,33 +17,44 @@
 package totem.core.state
 {
 
-	import totem.core.time.TickedComponent;
-
 	import totem.totem_internal;
+	import totem.core.time.TickedComponent;
 
 	public class StateMachineComponent extends TickedComponent
 	{
 
 		use namespace totem_internal;
 
-		private var stateMachine : Machine;
+		private var _stateMachine : Machine;
 
 		public function StateMachineComponent( machine : Machine )
 		{
-			stateMachine = machine;
+			_stateMachine = machine;
+		}
+
+		public function get stateMachine():Machine
+		{
+			return _stateMachine;
 		}
 
 		override public function onTick() : void
 		{
-			stateMachine.tick();
+			if ( activated )
+				_stateMachine.tick();
 		}
 
 		override protected function onAdd() : void
 		{
 			super.onAdd();
-			
-			stateMachine.setInjector( getInjector().createChildInjector() );
-			stateMachine.initialize();
+
+			_stateMachine.setInjector( getInjector().createChildInjector());
+			_stateMachine.initialize();
+		}
+		
+		override protected function onRetire():void
+		{
+			super.onRetire();
+			_stateMachine.reset();
 		}
 
 		override protected function onRemove() : void

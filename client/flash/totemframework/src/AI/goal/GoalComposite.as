@@ -8,7 +8,8 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
@@ -21,12 +22,22 @@ package AI.goal
 	public class GoalComposite extends Goal
 	{
 
-		public function GoalComposite( type : String, owner : TweenComponent )
+		public function GoalComposite( owner : TweenComponent )
 		{
-			super( type, owner );
+			super( owner );
 		}
 
-		public function processSubgoals() : int
+		override public function get interruptible() : Boolean
+		{
+			if ( subgoals.length > 0 )
+			{
+				if ( subgoals[ 0 ].interruptible == false )
+					return false;
+			}
+			return _interruptible;
+		}
+
+		protected function processSubgoals() : int
 		{
 			var goal : Goal;
 

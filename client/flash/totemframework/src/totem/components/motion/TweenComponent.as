@@ -17,6 +17,7 @@
 package totem.components.motion
 {
 
+	import AI.steering.ISteering;
 	import AI.steering.TweenSteeringBehavior;
 
 	import totem.components.spatial.SpatialComponent;
@@ -26,11 +27,17 @@ package totem.components.motion
 
 		public static const NAME : String = "TweenComponent";
 
-		private var _steering : TweenSteeringBehavior;
+		private var _previousSteering : ISteering;
+
+		private var _steering : ISteering;
+
+		private var _velocity : Number;
 
 		public function TweenComponent( data : MovingParam )
 		{
 			super( NAME, data );
+
+			_velocity = data.velocity;
 
 			_steering = new TweenSteeringBehavior( this );
 		}
@@ -42,6 +49,22 @@ package totem.components.motion
 			super.destroy();
 		}
 
+		public function goToPreviousBehavior() : Boolean
+		{
+			if ( _previousSteering )
+			{
+				
+				_steering.stop();
+				
+				_steering = null;
+				_steering = _previousSteering;
+
+				return true;
+			}
+
+			return false;
+		}
+
 		override public function onTick() : void
 		{
 			if ( _steering.update())
@@ -51,9 +74,27 @@ package totem.components.motion
 			}
 		}
 
-		public function get steering() : TweenSteeringBehavior
+		public function setBehavior( behavior : ISteering ) : ISteering
+		{
+			if ( _steering )
+			{
+				_steering.stop();
+				_previousSteering = _steering;
+			}
+
+			_steering = behavior;
+			
+			return _steering;
+		}
+
+		public function get steering() : ISteering
 		{
 			return _steering;
+		}
+
+		public function get velocity() : Number
+		{
+			return _velocity;
 		}
 	}
 }

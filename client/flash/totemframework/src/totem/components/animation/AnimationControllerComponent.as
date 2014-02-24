@@ -22,16 +22,15 @@ package totem.components.animation
 	
 	import totem.core.TotemComponent;
 	import totem.core.params.animation.AnimationDataParam;
-	import totem.observer.NotifBroadcaster;
 
 	public class AnimationControllerComponent extends TotemComponent
 	{
 
 		public var onAnimationComplete : ISignal = new Signal( AnimationControllerComponent );
 
-		public var onUpdatePosition : ISignal = new Signal( AnimationControllerComponent );
-
 		private var _animationSet : AnimationSet;
+
+		private var _playing : Boolean;
 
 		private var animationComponent : IAnimator;
 
@@ -44,29 +43,56 @@ package totem.components.animation
 
 		public function addAnimator( animator : IAnimator ) : void
 		{
-			animationComponent = animator;
-		}
+			if ( animationComponent )
+			{
+				animationComponent.broadcaster.removeNotifListener( AnimatorEvent.ANIMATION_FINISHED_EVENT, handleAnimationComplete );
+			}
 
-		public function get broadcaster() : NotifBroadcaster
-		{
-			return animationComponent.broadcaster;
+			animationComponent = animator;
+			animationComponent.broadcaster.addNotifListener( AnimatorEvent.ANIMATION_FINISHED_EVENT, handleAnimationComplete );
 		}
 
 		public function playAnimation( state : String, type : AnimatorEnum = null ) : void
 		{
+
 			var data : AnimationDataParam = _animationSet.getRandomAnimationForState( state );
-			animationComponent.playAnimation( data.name, type );
+			play( data.name, type );
 		}
-		
-		public function stopAnimation () : void
+
+		public function playAnimationByName( name : String, type : AnimatorEnum = null ) : void
 		{
-			animationComponent.stopAnimation();
+			play( name, type );
+		}
+
+		public function get playing() : Boolean
+		{
+			return _playing;
 		}
 
 		public function setAnimationData( animations : AnimationSet, fps : int ) : void
 		{
 			this.fps = fps;
 			_animationSet = animations;
+		}
+
+		public function stopAnimation() : void
+		{
+			_playing = false;
+			animationComponent.stopAnimation();
+		}
+
+		private function handleAnimationComplete() : void
+		{
+			_playing = false;
+			
+			onAnimationComplete.dispatch( this );
+		}
+
+		private function play( ani : String, type : AnimatorEnum = null ) : void
+		{
+
+			_playing = true;
+			animationComponent.playAnimation( ani, type );
 		}
 	}
 }

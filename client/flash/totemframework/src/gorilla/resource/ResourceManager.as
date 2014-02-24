@@ -23,8 +23,6 @@ package gorilla.resource
 	import gorilla.resource.providers.IResourceProvider;
 	
 	import ladydebug.Logger;
-	
-	import org.swiftsuspenders.dependencyproviders.FallbackDependencyProvider;
 
 	/**
 	 * The resource manager handles all tasks related to using asset files (images, xml, etc)

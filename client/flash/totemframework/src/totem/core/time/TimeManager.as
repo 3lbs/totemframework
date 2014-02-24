@@ -551,8 +551,8 @@ package totem.core.time
 			// If we are in a tick, defer the add.
 			if ( duringAdvance )
 			{
-				throw new Error( "Unimplemented!" );
-				//group.callLater(addObject, [ object, priority, list]);
+				//throw new Error( "Unimplemented!" );
+				callLater(addObject, [ object, priority, list]);
 				return;
 			}
 

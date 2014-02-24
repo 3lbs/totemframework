@@ -18,11 +18,11 @@ package AI.goal
 {
 
 	import flash.events.Event;
-	
-	import totem.components.motion.TweenComponent;
-	import totem.events.RemovableEventDispatcher;
 
-	public class Goal extends RemovableEventDispatcher
+	import totem.components.motion.TweenComponent;
+	import totem.core.Destroyable;
+
+	public class Goal
 	{
 		public static const ACTIVE : int = 10;
 
@@ -34,19 +34,18 @@ package AI.goal
 
 		public var owner : TweenComponent;
 
-		public var type : String;
+		protected var _interruptible : Boolean = true;
 
 		protected var subgoals : Vector.<Goal>;
 
 		private var _status : int;
 
-		public function Goal( type : String, owner : TweenComponent )
+		public function Goal( owner : TweenComponent )
 		{
-			this.type = type;
 			this.owner = owner;
 
 			status = INACTIVE;
-			
+
 			subgoals = new Vector.<Goal>();
 		}
 
@@ -70,36 +69,18 @@ package AI.goal
 			if ( !goal )
 				return;
 
-			subgoals.unshift( goal );
+			subgoals.push( goal );
 		}
 
-		override public function destroy() : void
-		{
-			super.destroy();
-
-			removeAllSubgoals();
-
-			while ( subgoals.length )
-				subgoals.pop().destroy();
-
-			subgoals = null;
-			owner = null;
-		}
-
-		public function getType() : String
-		{
-			return type;
-		}
-
-		public function handleMessage( event : Event ) : Boolean
-		{
-
-			return false;
-		}
 
 		public function hasFailed() : Boolean
 		{
 			return status == FAILED;
+		}
+
+		public function get interruptible() : Boolean
+		{
+			return _interruptible;
 		}
 
 		public function isActive() : Boolean
@@ -132,10 +113,9 @@ package AI.goal
 
 		public function removeAllSubgoals() : void
 		{
-			for ( var i : int = 0; i < subgoals.length; ++i )
-			{
-				subgoals[ i ].terminate();
-			}
+			while ( subgoals.length )
+				subgoals.pop().terminate();
+
 			subgoals.length = 0;
 		}
 
@@ -151,7 +131,10 @@ package AI.goal
 
 		public function terminate() : void
 		{
-			//destroy();
+			removeAllSubgoals();
+			
+			subgoals = null;
+			owner = null;
 		}
 
 		protected function forwardMessageToFirstSubGoal( event : Event ) : Boolean

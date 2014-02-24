@@ -89,10 +89,10 @@ package totem.loaders.starling
 			var stage3DPromise : Stage3DPromise = new Stage3DPromise( stage );
 			stage3DPromise.completes( handleStageLoaded );
 
-			Starling.handleLostContext = true;
+			Starling.handleLostContext = false;
 
 			if ( MobileUtil.isAndroid())
-				Starling.handleLostContext = true;
+				Starling.handleLostContext = false;
 		}
 
 		private function handleRootCreated( event : Event ) : void

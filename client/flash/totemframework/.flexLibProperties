@@ -74,7 +74,6 @@
     <classEntry path="totem.animation.AnimatorComponent"/>
     <classEntry path="totem.animation.AnimatorType"/>
     <classEntry path="totem.animation.PointAnimator"/>
-    <classEntry path="totem.components.DataComponent"/>
     <classEntry path="totem.components.effects.ParticleEffectComponent"/>
     <classEntry path="totem.components.commands.CommandComponent"/>
     <classEntry path="totem.components.display.IDisplay2DRenderer"/>
@@ -463,6 +462,12 @@
     <classEntry path="totem.utils.EaseFuncUtil"/>
     <classEntry path="totem.sound.SoundAssetParam"/>
     <classEntry path="totem.sound.SoundParam"/>
+    <classEntry path="totem.core.api.IUID"/>
+    <classEntry path="totem.core.time.scheduler.ScheduleComponent"/>
+    <classEntry path="totem.core.time.scheduler.ISchedule"/>
+    <classEntry path="totem.core.time.scheduler.ScheduleManager"/>
+    <classEntry path="AI.steering.ISteering"/>
+    <classEntry path="totem.utils.PercentUtil"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -21,13 +21,12 @@ package AI.goal
 
 	public class GoalThink extends GoalComposite
 	{
-		public static const TYPE : String = "Brain";
 
 		protected var evaluators : Vector.<IGoalEvaluator>;
 
 		public function GoalThink( owner : TweenComponent )
 		{
-			super( TYPE, owner );
+			super( owner );
 
 			evaluators = new Vector.<IGoalEvaluator>();
 		}
@@ -47,9 +46,13 @@ package AI.goal
 
 		public function addGoal( goal : Goal ) : GoalThink
 		{
+			if ( subgoals.length > 0 && !interruptible )
+				return this;
+
 			if ( notPresent( goal ))
 			{
 				removeAllSubgoals();
+				
 				addSubgoal( goal );
 			}
 
@@ -93,9 +96,9 @@ package AI.goal
 			}
 		}
 
-		override public function destroy() : void
+		override public function terminate():void
 		{
-			super.destroy();
+			super.terminate();
 
 			evaluators.length = 0;
 

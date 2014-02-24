@@ -18,13 +18,13 @@ package totem.core
 {
 
 	import flash.utils.Dictionary;
-	
+
 	import org.swiftsuspenders.Injector;
-	
-	import totem.totem_internal;
 	import totem.monitors.promise.IPromise;
 	import totem.monitors.promise.SerialDeferred;
 	import totem.observer.NotifBroadcaster;
+
+	import totem.totem_internal;
 
 	use namespace totem_internal;
 
@@ -94,7 +94,7 @@ package totem.core
 			super.initialize();
 
 			injector.map( NotifBroadcaster ).toValue( notifBroadcaster );
-			
+
 			for each ( var component : TotemComponent in components_ )
 			{
 				getInjector().injectInto( component );

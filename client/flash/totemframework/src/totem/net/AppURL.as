@@ -17,6 +17,8 @@
 package totem.net
 {
 
+	import localization.LocalizationManager;
+
 	public class AppURL
 	{
 
@@ -61,9 +63,11 @@ package totem.net
 
 			ANIMATIONS = URLManager.instance( ASSETS.getURL( "animations" ));
 
-			READER = URLManager.instance( RESOURCE.getURL( "reader" ));
+			var readerRaw : URLManager = URLManager.instance( RESOURCE.getURL( "reader" ));
 
-			READER_ASSETS = URLManager.instance( READER.getURL( "assets" ));
+			READER_ASSETS = URLManager.instance( readerRaw.getURL( "assets" ));
+
+			READER = URLManager.instance( readerRaw.getURL( LocalizationManager.getCurrentLocale().split("-").join("_")));
 
 			SOUNDS = URLManager.instance( ASSETS.getURL( "sounds" ));
 		}

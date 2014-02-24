@@ -22,19 +22,11 @@ package totem.components.motion
 	public class MovingParam extends Transform2DParam
 	{
 
-		public var damping : Number;
-
 		public var doesRotMatchHeading : Boolean;
 
-		public var friction : Number;
+		public var velocity : Number;
 
-		public var maxAccelleration : Number;
-
-		public var maxSpeed : Number;
-
-		public var maxTurnRate : Number;
-
-		public var neighborDistance : Number;
+		public var velocityTweeker : Number;
 
 		public function MovingParam()
 		{

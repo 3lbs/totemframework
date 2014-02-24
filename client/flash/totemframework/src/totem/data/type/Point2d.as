@@ -61,6 +61,14 @@ package totem.data.type
 			super( x, y );
 		}
 
+		public function addTo( pt : Point2d ) : Point2d
+		{
+			x += pt.x;
+			y += pt.y;
+
+			return this;
+		}
+
 		public function addedTo( vector : Point2d ) : Point2d
 		{
 			return Point2d.create( x + vector.x, y + vector.y );

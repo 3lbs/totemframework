@@ -29,8 +29,6 @@ package totem.components.spatial
 
 		function clippingFrustum( x : int, y : int, rectangle : Rectangle ) : void;
 
-		function getCostToClosestItem( type : String ) : Number;
-
 		function hasSpatialComponent( component : ISpatial2D ) : Boolean;
 
 		function objectUnderPoint( pt : Point2d ) : ISpatial2D;

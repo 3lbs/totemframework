@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -54,7 +54,6 @@ package totem.core.state
 		 * If this state is registered with us, give back the name it is under.
 		 */
 		function getStateName( state : IState ) : String;
-
 
 		/**
 		 * Update the FSM to be in a new state. Current/previous states

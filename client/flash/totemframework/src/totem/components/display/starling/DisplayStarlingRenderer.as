@@ -18,9 +18,9 @@ package totem.components.display.starling
 {
 
 	import flash.geom.Matrix;
-
+	
 	import starling.display.DisplayObject;
-
+	
 	import totem.components.display.DisplayObjectSceneLayer;
 	import totem.components.display.IDisplay2DRenderer;
 	import totem.components.spatial.ISpatialObserver;
@@ -28,7 +28,6 @@ package totem.components.display.starling
 	import totem.core.time.TickedComponent;
 	import totem.math.MathUtils;
 	import totem.math.Vector2D;
-	import totem.utils.TotemUtil;
 
 	public class DisplayStarlingRenderer extends TickedComponent implements IDisplay2DRenderer, ISpatialObserver
 	{

@@ -17,10 +17,13 @@
 package totem.components.spatial
 {
 
+	import totem.core.IDestroyable;
+	import totem.core.api.IUID;
 	import totem.data.type.Point2d;
 	import totem.math.AABBox;
+	import totem.math.Vector2D;
 
-	public interface ISpatial2D
+	public interface ISpatial2D extends IUID, IDestroyable
 	{
 
 		function get bounds() : AABBox;
@@ -28,6 +31,12 @@ package totem.components.spatial
 		function contains( x : int, y : int ) : Boolean;
 
 		function containsPoint( pt : Point2d ) : Boolean;
+
+		function get depth() : int;
+
+		function set depth( value : int ) : void;
+
+		function getSpatialManager() : ISpatialManager;
 
 		function get type() : int;
 
@@ -39,11 +48,6 @@ package totem.components.spatial
 
 		function set y( value : Number ) : void;
 		
-		function get depth () : int;
-		
-		function set depth ( value : int ) : void;
-		
-		function getSpatialManager() : ISpatialManager;
-		
+		function get position() : Vector2D;
 	}
 }

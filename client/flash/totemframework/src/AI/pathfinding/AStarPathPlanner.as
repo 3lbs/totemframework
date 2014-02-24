@@ -17,7 +17,9 @@
 package AI.pathfinding
 {
 
+	import totem.data.type.Point2d;
 	import totem.monitors.promise.IPromise;
+	import totem.pathfinder.astar.basic2d.IPositionTile;
 	import totem.pathfinder.astar.core.Analyzer;
 	import totem.pathfinder.astar.core.Astar;
 	import totem.pathfinder.astar.core.IAstarTile;
@@ -32,6 +34,8 @@ package AI.pathfinding
 
 		private var _map : IMap;
 
+		private var _pt : Point2d;
+
 		public function AStarPathPlanner( astar : Astar, map : IMap )
 		{
 			_aStar = astar;
@@ -42,6 +46,20 @@ package AI.pathfinding
 		public function addAnalyzer( analyzer : Analyzer ) : void
 		{
 			_analyzers.push( analyzer );
+		}
+
+		public function getTile( x, y ) : IPositionTile
+		{
+
+			if ( _map )
+			{
+				_pt ||= new Point2d( x, y );
+				_pt.x = x;
+				_pt.y = y;
+
+				return _map.getTileAt( _pt );
+			}
+			return null;
 		}
 
 		public function get map() : IMap

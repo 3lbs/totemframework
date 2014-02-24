@@ -14,17 +14,20 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.components.motion
+package totem.core.time.scheduler
 {
 
-	import AI.steering.ISteering;
-	
-	import totem.components.spatial.ISpatial2D;
+	import totem.core.IDestroyable;
 
-	public interface ISteeringObject extends ISpatial2D
+	public interface ISchedule extends IDestroyable
 	{
-		function get steering() : ISteering;
 
-		function get velocity() : Number;
+		function completeCallback() : void;
+
+		function get duration() : Number;
+
+		function getElaspedTime() : Number;
+
+		function get startTime() : Number;
 	}
 }

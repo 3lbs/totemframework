@@ -49,6 +49,11 @@ package totem.core.state
 		{
 		}
 
+		protected final function goToPreviousState() : Boolean
+		{
+			return stateMachine.goToPreviousState();
+		}
+
 		protected final function gotoState( value : String ) : void
 		{
 			stateMachine.setCurrentState( value );

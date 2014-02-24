@@ -14,17 +14,21 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.components.motion
+package AI.steering
 {
 
-	import AI.steering.ISteering;
-	
-	import totem.components.spatial.ISpatial2D;
+	import totem.core.IDestroyable;
+	import totem.math.Vector2D;
 
-	public interface ISteeringObject extends ISpatial2D
+	public interface ISteering extends IDestroyable
 	{
-		function get steering() : ISteering;
 
-		function get velocity() : Number;
+		function isComplete() : Boolean;
+
+		function moveTo( vector : Vector2D, easeType : Class = null ) : void;
+
+		function stop() : void;
+
+		function update() : Boolean;
 	}
 }

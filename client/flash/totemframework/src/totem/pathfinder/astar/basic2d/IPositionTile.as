@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 /*
 Copyright (c) 2011 Jeroen Beckers
 
@@ -24,10 +40,13 @@ package totem.pathfinder.astar.basic2d
 {
 
 	import flash.geom.Point;
+
+	import totem.pathfinder.astar.core.IAstarTile;
+
 	/**
 	 * @author Jeroen
 	 */
-	public interface IPositionTile 
+	public interface IPositionTile extends IAstarTile
 	{
 		function getPosition() : Point;
 	}
