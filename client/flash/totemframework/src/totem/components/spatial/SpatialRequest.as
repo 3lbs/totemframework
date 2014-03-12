@@ -24,7 +24,7 @@ package totem.components.spatial
 
 		internal static var disposed : Vector.<SpatialRequest> = new Vector.<SpatialRequest>();
 
-		public static function create( value : int  ) : SpatialRequest
+		public static function create( value : int ) : SpatialRequest
 		{
 			if ( disposed.length > 0 )
 			{
@@ -46,7 +46,7 @@ package totem.components.spatial
 
 		private var _type : int;
 
-		public function SpatialRequest(  value : int  )
+		public function SpatialRequest( value : int )
 		{
 			super();
 			_type = value;
@@ -77,10 +77,10 @@ package totem.components.spatial
 
 		public function hasType( t : int ) : Boolean
 		{
-			return _type & t;
+			return ( _type & t ) == t;
 		}
 
-		public function reset(  value : int ) : SpatialRequest
+		public function reset( value : int ) : SpatialRequest
 		{
 			_spatialList.length = 0;
 

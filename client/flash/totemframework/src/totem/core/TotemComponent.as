@@ -56,11 +56,14 @@ package totem.core
 		// you might want to do get var OWNER instead of going through the mapping
 		public function getOwner() : TotemEntity
 		{
-			return getInstance( TotemEntity );
+			return owner;
 		}
 
 		public function getSibling( ComponentClass : Class ) : *
 		{
+			if ( owner.hasComponent( ComponentClass ))
+				return owner.getComponent( ComponentClass );
+
 			return getInstance( ComponentClass );
 		}
 

@@ -18,7 +18,7 @@ package totem.components.display
 {
 
 	import starling.display.DisplayObject;
-	
+
 	import totem.math.Vector2D;
 
 	public interface IDisplay2DRenderer
@@ -34,16 +34,24 @@ package totem.components.display
 
 		function set position( value : Vector2D ) : void;
 
+		function get positionOffset() : Vector2D;
+
+		function set positionOffset( value : Vector2D ) : void;
+
+		function set scene( scene : DisplayObjectSceneLayer ) : void;
+
 		function setPosition( x : Number, y : Number ) : void;
 
 		function setRotation( value : Number ) : void;
 
 		function setScale( _scaleX : Number, _scaleY : Number ) : void;
 
+		function get visible() : Boolean;
+
+		function set visible( value : Boolean ) : void;
+
 		function get zIndex() : int;
 
 		function set zIndex( value : int ) : void;
-		
-		function set scene ( scene : DisplayObjectSceneLayer ) : void;
 	}
 }

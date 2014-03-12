@@ -24,6 +24,10 @@ package totem.components.motion
 
 		public var doesRotMatchHeading : Boolean;
 
+		public var offsetX : Number = 0;
+
+		public var offsetY : Number = 0;
+
 		public var velocity : Number;
 
 		public var velocityTweeker : Number;

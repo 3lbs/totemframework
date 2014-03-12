@@ -18,9 +18,9 @@ package totem.components.display.starling
 {
 
 	import flash.geom.Matrix;
-	
+
 	import starling.display.DisplayObject;
-	
+
 	import totem.components.display.DisplayObjectSceneLayer;
 	import totem.components.display.IDisplay2DRenderer;
 	import totem.components.spatial.ISpatialObserver;
@@ -59,6 +59,8 @@ package totem.components.display.starling
 		private var _scene : DisplayObjectSceneLayer;
 
 		private var _transformDirty : Boolean = true;
+
+		private var _visible : Boolean;
 
 		private var _zIndex : int;
 
@@ -180,6 +182,16 @@ package totem.components.display.starling
 			}
 		}
 
+		public function setOffset( value : Vector2D ) : void
+		{
+			if ( value.equal( _positionOffset ))
+				return;
+
+			_positionOffset.x = value.x;
+			_positionOffset.y = value.y;
+			_transformDirty = true;
+		}
+
 		public function setPosition( x : Number, y : Number ) : void
 		{
 			var posX : Number;
@@ -236,7 +248,7 @@ package totem.components.display.starling
 				return;
 
 			_transformMatrix.identity();
-			//_transformMatrix.scale( tmpScaleX, tmpScaleY );
+			_transformMatrix.scale( _scale.x, _scale.y );
 			//_transformMatrix.translate( -_registrationPoint.x * tmpScaleX, -_registrationPoint.y * tmpScaleY );
 			//_transformMatrix.rotate( PBUtil.getRadiansFromDegrees( _rotation ) + _rotationOffset );
 
@@ -248,6 +260,23 @@ package totem.components.display.starling
 			displayObject.alpha = alpha;
 
 			_transformDirty = false;
+		}
+
+		public function get visible() : Boolean
+		{
+			return _visible;
+		}
+
+		public function set visible( value : Boolean ) : void
+		{
+			_visible = value;
+
+			alpha = ( !_visible ) ? 0 : 1;
+
+			if ( displayObject )
+			{
+				displayObject.visible = _visible;
+			}
 		}
 
 		/**
@@ -334,6 +363,7 @@ package totem.components.display.starling
 		{
 			super.onActivate();
 			scene = _scene;
+			visible = true;
 		}
 
 		override protected function onAdd() : void

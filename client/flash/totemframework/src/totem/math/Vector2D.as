@@ -159,11 +159,6 @@ package totem.math
 			x = length * Math.cos( value );
 			y = length * Math.sin( value );
 		}
-		
-		private function update () : void
-		{
-			//_angle = angle;
-		}
 
 		/**
 		 * Use to determine the angle between this and another Vector.
@@ -173,7 +168,10 @@ package totem.math
 		 */
 		public function angleTo( vector : Vector2D ) : Number
 		{
-			return Math.acos( dotOf( vector ) / ( length * vector.length ));
+			var dx : Number = vector.x - x;
+			var dy : Number = vector.y - y;
+			return Math.atan2( dy, dx );
+			//return Math.acos( dotOf( vector ) / ( length * vector.length ));
 		}
 
 		/**
@@ -623,6 +621,11 @@ package totem.math
 			{
 				y = topLeft.y + ( y - botRight.y );
 			}
+		}
+
+		private function update() : void
+		{
+			//_angle = angle;
 		}
 	}
 }

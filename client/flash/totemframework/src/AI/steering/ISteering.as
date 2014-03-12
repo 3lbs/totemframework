@@ -25,10 +25,12 @@ package AI.steering
 
 		function isComplete() : Boolean;
 
-		function moveTo( vector : Vector2D, easeType : Class = null ) : void;
+		function moveTo( vector : Vector2D, easeType : Class = null ) : Number;
 
 		function stop() : void;
 
 		function update() : Boolean;
+		
+		function set pointDirection ( value : Boolean ) : void;
 	}
 }

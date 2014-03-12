@@ -67,7 +67,7 @@ package totem.events
 		*/
 		override public function dispatchEvent( event : Event ) : Boolean
 		{
-			if ( this.willTrigger( event.type ))
+			if ( this.willTrigger( event.type ))      
 				return super.dispatchEvent( event );
 
 			return true;

@@ -17,8 +17,13 @@
 package totem.components.spatial
 {
 
+	import totem.math.Vector2D;
+
 	public interface ISpatialObserver
 	{
+
+		function setOffset( value : Vector2D ) : void;
+
 		function setPosition( x : Number, y : Number ) : void;
 
 		function setRotation( _rotation : Number ) : void;

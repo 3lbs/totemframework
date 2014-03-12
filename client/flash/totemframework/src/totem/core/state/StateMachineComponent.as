@@ -25,22 +25,29 @@ package totem.core.state
 
 		use namespace totem_internal;
 
-		private var _stateMachine : Machine;
+		protected var _stateMachine : Machine;
 
 		public function StateMachineComponent( machine : Machine )
 		{
 			_stateMachine = machine;
 		}
 
-		public function get stateMachine():Machine
-		{
-			return _stateMachine;
-		}
-
 		override public function onTick() : void
 		{
 			if ( activated )
 				_stateMachine.tick();
+		}
+
+		public function get stateMachine() : Machine
+		{
+			return _stateMachine;
+		}
+
+		override protected function onActivate() : void
+		{
+			super.onActivate();
+
+			_stateMachine.reset();
 		}
 
 		override protected function onAdd() : void
@@ -50,17 +57,17 @@ package totem.core.state
 			_stateMachine.setInjector( getInjector().createChildInjector());
 			_stateMachine.initialize();
 		}
-		
-		override protected function onRetire():void
-		{
-			super.onRetire();
-			_stateMachine.reset();
-		}
 
 		override protected function onRemove() : void
 		{
 			super.onRemove();
 
+		}
+
+		override protected function onRetire() : void
+		{
+			super.onRetire();
+			_stateMachine.reset();
 		}
 	}
 }

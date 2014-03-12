@@ -32,6 +32,8 @@ package totem.core
 	{
 		public var notifBroadcaster : NotifBroadcaster = new NotifBroadcaster();
 
+		private var alternativeMapping : Dictionary = new Dictionary();
+
 		private var components_ : Dictionary = new Dictionary();
 
 		public function TotemEntity( name : String )
@@ -84,9 +86,21 @@ package totem.core
 		public function getComponent( ComponentClass : Class ) : *
 		{
 			var component : * = null;
+
+			if ( components_[ ComponentClass ])
+				return components_[ ComponentClass ];
+
+			if ( alternativeMapping[ ComponentClass ])
+				return alternativeMapping[ ComponentClass ]
+
 			component = getInstance( ComponentClass );
 
 			return component;
+		}
+
+		public function hasComponent( ComponentClass : Class ) : Boolean
+		{
+			return components_[ ComponentClass ] != null || alternativeMapping[ ComponentClass ] != null;
 		}
 
 		override public function initialize() : void
@@ -102,6 +116,11 @@ package totem.core
 			}
 
 			notifBroadcaster.dispatchNotifWith( TotemNotification.ENTITY_INITIALIZED );
+		}
+
+		public function mapInterface( component : *, ComponentClass : Class ) : void
+		{
+			alternativeMapping[ ComponentClass ] = component;
 		}
 
 		public function onActivate() : void

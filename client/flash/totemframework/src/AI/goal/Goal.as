@@ -20,7 +20,6 @@ package AI.goal
 	import flash.events.Event;
 
 	import totem.components.motion.TweenComponent;
-	import totem.core.Destroyable;
 
 	public class Goal
 	{
@@ -35,6 +34,8 @@ package AI.goal
 		public var owner : TweenComponent;
 
 		protected var _interruptible : Boolean = true;
+
+		protected var _terminated : Boolean;
 
 		protected var subgoals : Vector.<Goal>;
 
@@ -63,15 +64,24 @@ package AI.goal
 			}
 		}
 
-		public function addSubgoal( goal : Goal ) : void
+		public function addSubgoal( goal : Goal ) : Goal
 		{
 
 			if ( !goal )
-				return;
+				return null;
 
 			subgoals.push( goal );
+
+			return goal;
 		}
 
+		public function get currentGoal() : Goal
+		{
+			if ( subgoals && subgoals.length > 0 )
+				return subgoals[ 0 ];
+
+			return null;
+		}
 
 		public function hasFailed() : Boolean
 		{
@@ -81,6 +91,11 @@ package AI.goal
 		public function get interruptible() : Boolean
 		{
 			return _interruptible;
+		}
+
+		public function set interruptible( value : Boolean ) : void
+		{
+			_interruptible = value;
 		}
 
 		public function isActive() : Boolean
@@ -131,8 +146,10 @@ package AI.goal
 
 		public function terminate() : void
 		{
+
+			_terminated = true;
 			removeAllSubgoals();
-			
+
 			subgoals = null;
 			owner = null;
 		}

@@ -14,31 +14,30 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.components.motion
+package totem.core.params.display
 {
+	import totem.core.params.GameItemParam;
 
-	import totem.components.spatial.ISpatial2D;
-	import totem.math.Vector2D;
-
-	public interface IMovingObject extends ISpatial2D
+	public class AssetParam extends GameItemParam
 	{
-		
-		//function get rotation() : Number;
-		
-		/**
-		 * Rotation setter.
-		 */
-		//function set rotation( value : Number ) : void;
-		
-		function get velocity() : Vector2D;
-		
-		
-		
-		function get maxAcceleration() : Number;
-		
-		function set maxAcceleration( value : Number ) : void;
-		
-		function get maxSpeed() : Number;
-		
+
+		public var assetName : String;
+
+		public var atlasData : AtlasDataParam;
+
+		public var height : Number = 0;
+
+		public var offsetX : Number = 0;
+
+		public var offsetY : Number = 0;
+
+		public var width : Number = 0;
+
+		public function AssetParam()
+		{
+			atlasData = new AtlasDataParam();
+			
+			super();
+		}
 	}
 }

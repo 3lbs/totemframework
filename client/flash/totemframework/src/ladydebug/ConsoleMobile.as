@@ -253,6 +253,8 @@ package ladydebug
 			debugTextField.mouseEnabled = true;
 			debugTextField.multiline = false;
 			debugTextField.height = 20;
+			debugTextField.x = 10;
+			debugTextField.y = 20;
 
 			var myformat : TextFormat = new TextFormat();
 			myformat.color = 0xFF6600;

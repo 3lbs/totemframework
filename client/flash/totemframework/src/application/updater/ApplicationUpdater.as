@@ -14,31 +14,18 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.components.motion
+package application.updater
 {
 
-	import totem.components.spatial.ISpatial2D;
-	import totem.math.Vector2D;
+	import flash.filesystem.File;
 
-	public interface IMovingObject extends ISpatial2D
+	public class ApplicationUpdater
 	{
-		
-		//function get rotation() : Number;
-		
-		/**
-		 * Rotation setter.
-		 */
-		//function set rotation( value : Number ) : void;
-		
-		function get velocity() : Vector2D;
-		
-		
-		
-		function get maxAcceleration() : Number;
-		
-		function set maxAcceleration( value : Number ) : void;
-		
-		function get maxSpeed() : Number;
-		
+		public function ApplicationUpdater()
+		{
+
+			File.cacheDirectory;
+
+		}
 	}
 }

@@ -14,31 +14,38 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.components.motion
+package totem.time
 {
 
-	import totem.components.spatial.ISpatial2D;
-	import totem.math.Vector2D;
+	import flash.utils.getTimer;
 
-	public interface IMovingObject extends ISpatial2D
+	import totem.core.Destroyable;
+
+	public class DurationTimer extends Destroyable
 	{
-		
-		//function get rotation() : Number;
-		
-		/**
-		 * Rotation setter.
-		 */
-		//function set rotation( value : Number ) : void;
-		
-		function get velocity() : Vector2D;
-		
-		
-		
-		function get maxAcceleration() : Number;
-		
-		function set maxAcceleration( value : Number ) : void;
-		
-		function get maxSpeed() : Number;
-		
+		private var _duration : Number;
+
+		private var _startTime : int;
+
+		public function DurationTimer()
+		{
+			super();
+		}
+
+		public function isComplete() : Boolean
+		{
+			return timer > _duration;
+		}
+
+		public function start( time : int ) : void
+		{
+			_duration = time + timer;
+			_startTime = timer;
+		}
+
+		private function get timer() : int
+		{
+			return getTimer();
+		}
 	}
 }

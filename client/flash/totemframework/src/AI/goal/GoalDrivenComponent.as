@@ -18,7 +18,7 @@ package AI.goal
 {
 
 	import AI.pathfinding.AStarPathPlanner;
-	import totem.core.state.Machine;
+	import totem.components.commands.StaticCommandMap;
 	import totem.core.time.TickedComponent;
 
 	import totem.totem_internal;
@@ -30,20 +30,18 @@ package AI.goal
 
 		public static const NAME : String = "GoalDrivenComponent";
 
-		protected var _currentBrain : GoalThink;
+		protected var _commandMap : StaticCommandMap;
 
-		protected var _machine : Machine;
+		protected var _currentBrain : GoalThink;
 
 		protected var _pathPlanner : AStarPathPlanner;
 
-		private var _enabled : Boolean = true;
-
-		public function GoalDrivenComponent( machine : Machine, planner : AStarPathPlanner )
+		public function GoalDrivenComponent( machine : StaticCommandMap, planner : AStarPathPlanner )
 		{
 			super( NAME );
 
 			_pathPlanner = planner;
-			_machine = machine;
+			_commandMap = machine;
 		}
 
 		public function get brain() : GoalThink
@@ -56,24 +54,14 @@ package AI.goal
 			_currentBrain = value;
 		}
 
-		public function get enabled() : Boolean
+		public function machine() : StaticCommandMap
 		{
-			return _enabled;
-		}
-
-		public function set enabled( value : Boolean ) : void
-		{
-			_enabled = value;
-		}
-
-		public function machine() : Machine
-		{
-			return _machine;
+			return _commandMap;
 		}
 
 		override public function onTick() : void
 		{
-			if ( _currentBrain && activated && _enabled )
+			if ( _currentBrain && activated )
 			{
 				_currentBrain.process();
 			}
@@ -87,9 +75,9 @@ package AI.goal
 		override protected function onAdd() : void
 		{
 			super.onAdd();
-
-			_machine.setInjector( getInjector().createChildInjector());
-			_machine.initialize();
+			
+			_commandMap.setInjector( getInjector().createChildInjector());
+			_commandMap.initialize();
 		}
 
 		override protected function onRemove() : void
@@ -99,10 +87,20 @@ package AI.goal
 
 			_pathPlanner = null;
 
-			_machine.destroy();
+			_commandMap.destroy();
 
-			_machine = null;
+			_commandMap = null;
 
+		}
+
+		override protected function onRetire() : void
+		{
+			super.onRetire();
+
+			if ( _currentBrain )
+			{
+				_currentBrain.removeAllSubgoals();
+			}
 		}
 	}
 }

@@ -17,11 +17,12 @@
 package totem.components.animation
 {
 
-	import flash.events.Event;
-	
 	import dragonBones.Armature;
+	import dragonBones.Bone;
 	import dragonBones.events.AnimationEvent;
-	
+
+	import flash.events.Event;
+
 	import totem.core.time.TimeManager;
 
 	public class SkeletonAnimatorComponent extends AnimatorComponent implements IAnimator
@@ -39,6 +40,17 @@ package totem.components.animation
 
 			this.armature = armature;
 			this.armature.addEventListener( AnimationEvent.COMPLETE, handleAnimationComplete );
+
+			//this.armature.addEventListener( AnimationEvent.MOVEMENT_CHANGE, aramtureEventHandler );
+
+			//this.armature.addEventListener( AnimationEvent.START, aramtureEventHandler );
+
+			//this.armature.addEventListener( AnimationEvent.LOOP_COMPLETE, handleAimationLoopComplete );
+		}
+
+		public function getBone( name : String ) : Bone
+		{
+			return armature.getBone( name );
 		}
 
 		override public function onTick() : void
@@ -50,7 +62,7 @@ package totem.components.animation
 		override public function pauseAnimation() : void
 		{
 			_paused = true;
-			
+
 			stopAnimation();
 		}
 
@@ -64,10 +76,33 @@ package totem.components.animation
 		{
 			armature.animation.stop();
 		}
-		
-		private function handleAnimationComplete( event : Event ) : void
+
+		protected function handleAimationLoopComplete( event : AnimationEvent ) : void
+		{
+			//broadcaster.dispatchNotifWith( AnimatorEvent.ANIMATION_LOOPED_COMPLETE );
+		}
+
+		protected function handleAnimationComplete( event : Event ) : void
 		{
 			broadcaster.dispatchNotifWith( AnimatorEvent.ANIMATION_FINISHED_EVENT );
+		}
+
+		override protected function onActivate() : void
+		{
+			super.onActivate();
+		}
+
+		override protected function onAdd() : void
+		{
+			super.onAdd();
+
+		}
+
+		override protected function onRetire() : void
+		{
+			super.onRetire();
+
+			stopAnimation();
 		}
 	}
 }

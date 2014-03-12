@@ -39,6 +39,9 @@ package totem.components.animation
 		 * @eventType ANIMATION_FINISHED_EVENT
 		 */
 		public static const ANIMATION_FINISHED_EVENT : String = "ANIMATION_FINISHED_EVENT";
+		
+		
+		public static const ANIMATION_LOOPED_COMPLETE : String = "ANIMATION_LOOP_COMPLETE";
 
 		/**
 		 * This event is dispatched by an Animator when the animation has finished one iteration

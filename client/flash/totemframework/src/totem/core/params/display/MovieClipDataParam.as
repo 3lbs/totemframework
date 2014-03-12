@@ -19,16 +19,10 @@ package totem.core.params.display
 {
 	import totem.core.params.animation.AnimationDataParam;
 
-	public class MovieClipDataParam
+	public class MovieClipDataParam  extends AssetParam
 	{
 
-		public var assetName : String;
-
-		public var atlasData : AtlasDataParam;
-
 		public var fps : int;
-
-		public var gameid : String;
 
 		public var name : String;
 

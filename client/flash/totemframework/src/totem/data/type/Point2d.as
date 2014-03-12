@@ -48,6 +48,11 @@ package totem.data.type
 			return Math.sqrt( dx * dx + dy * dy );
 		}
 
+		public static function fromPoint( point : Point ) : Point2d
+		{
+			return create( point.x, point.y );
+		}
+
 		public static function grow( value : int ) : void
 		{
 			while ( value-- )
@@ -87,16 +92,17 @@ package totem.data.type
 			return this;
 		}
 
-		public function dispose() : void
+		public function dispose() : Point2d
 		{
 			var a : Point2d;
 
 			var idx : int = disposed.indexOf( this );
 
 			if ( idx > -1 )
-				return;
+				return this;
 
 			disposed.push( this );
+			return this;
 		}
 
 		public function distance( point0 : Point2d ) : Number

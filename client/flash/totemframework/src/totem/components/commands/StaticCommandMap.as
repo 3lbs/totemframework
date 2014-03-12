@@ -18,15 +18,14 @@ package totem.components.commands
 {
 
 	import flash.utils.Dictionary;
-	
+
 	import org.swiftsuspenders.Injector;
-	
+	import totem.core.Injectable;
+
 	import totem.totem_internal;
-	import totem.core.Destroyable;
-	import totem.core.TotemEntity;
 	import totem.utils.DestroyUtil;
 
-	public class StaticCommandMap extends Destroyable
+	public class StaticCommandMap extends Injectable
 	{
 
 		use namespace totem_internal;
@@ -35,10 +34,8 @@ package totem.components.commands
 
 		private var injector : Injector;
 
-
-		public function StaticCommandMap( injector : Injector )
+		public function StaticCommandMap()
 		{
-			this.injector = injector;;
 		}
 
 		override public function destroy() : void
@@ -51,29 +48,36 @@ package totem.components.commands
 			injector = null;
 		}
 
-		public function executeCommand( clazz : Class ) : void
+		public function executeCommand( clazz : Class, ... args ) : void
 		{
-			if ( hasCommand( clazz ))
+			var command : StaticCommand;
+
+			if (( command = commands[ clazz ]) != null )
 			{
-				var command : StaticCommand = commands[ clazz ];
-
-				if ( !command.isBusy())
-				{
-					command.execute();
-				}
+				command.execute.apply( null, args );
 			}
-		}
-
-		public function hasCommand( clazz : Class ) : Boolean
-		{
-			return commands[ clazz ] != null;
 		}
 
 		public function mapCommand( command : StaticCommand, clazz : Class ) : void
 		{
 			commands[ clazz ] = command;
-			injector.injectInto( command );
-			command.intialize();
+
+			if ( injector )
+			{
+				injector.injectInto( command );
+				command.intialize();
+			}
+		}
+
+		override public function setInjector( injector : Injector ) : void
+		{
+			super.setInjector( injector );
+
+			for each ( var command : StaticCommand in commands )
+			{
+				injector.injectInto( command );
+				command.intialize();
+			}
 		}
 	}
 }

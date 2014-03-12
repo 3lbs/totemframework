@@ -69,6 +69,8 @@ package totem.core
 
 		protected function handleResizeEvent( event : Event ) : void
 		{
+			
+			trace("resue handes tage resize!!!!");
 		}
 
 		protected function handleStageChange( event : Event ) : void

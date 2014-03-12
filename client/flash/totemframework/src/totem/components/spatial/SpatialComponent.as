@@ -29,6 +29,8 @@ package totem.components.spatial
 	{
 		public static const NAME : String = "spatialComponent";
 
+		public var defaultOffset : Vector2D = new Vector2D();
+
 		protected var _position : Vector2D = new Vector2D();
 
 		protected var _x : Number = 0;
@@ -43,11 +45,13 @@ package totem.components.spatial
 
 		protected var properties : Dictionary;
 
-		private var _bounds : AABBox;
+		private var _bounds : AABBox; // = new AABBox();
 
 		private var _depth : int;
 
 		private var _height : int;
+
+		private var _positionOffset : Vector2D = new Vector2D();
 
 		private var _rotation : Number = 0;
 
@@ -61,7 +65,11 @@ package totem.components.spatial
 
 		private var _width : int;
 
+		private var dirtyOffset : Boolean;
+
 		private var observers : Vector.<ISpatialObserver> = new Vector.<ISpatialObserver>();
+
+		private var tempOffset : Vector2D = new Vector2D();
 
 		public function SpatialComponent( name : String = "", data : Transform2DParam = null )
 		{
@@ -76,9 +84,14 @@ package totem.components.spatial
 
 				_scaleX = data.scaleX;
 				_scaleY = data.scaleY;
+
+				_width = data.width;
+				_height = data.height;
 			}
 
 			_position = new Vector2D( x, y );
+
+			_bounds = new AABBox( _position );
 
 			properties = new Dictionary();
 		}
@@ -98,12 +111,12 @@ package totem.components.spatial
 
 		public function contains( x : int, y : int ) : Boolean
 		{
-			return false; // _bounds.contains( x, y );
+			return _bounds.contains( x, y );
 		}
 
 		public function containsPoint( pt : Point2d ) : Boolean
 		{
-			return false; // _bounds.containsPoint( pt );
+			return _bounds.containsPoint( pt );
 		}
 
 		public function get depth() : int
@@ -133,7 +146,14 @@ package totem.components.spatial
 
 		public function set height( value : int ) : void
 		{
+
+			if ( value == _height )
+				return;
+
 			_height = value;
+
+			dirtyPosition = true;
+			updateTransfrom();
 		}
 
 		override public function onTick() : void
@@ -144,6 +164,20 @@ package totem.components.spatial
 		public function get position() : Vector2D
 		{
 			return _position;
+		}
+
+		public function get positionOffset() : Vector2D
+		{
+			return _positionOffset;
+		}
+
+		public function set positionOffset( value : Vector2D ) : void
+		{
+			_positionOffset.x = value.x;
+			_positionOffset.y = value.y;
+
+			dirtyOffset = true;
+			updateTransfrom();
 		}
 
 		public function removeItemFromManager() : void
@@ -165,6 +199,7 @@ package totem.components.spatial
 			{
 				_rotation = value;
 				dirtyRotation = true;
+				updateTransfrom();
 			}
 		}
 
@@ -178,7 +213,9 @@ package totem.components.spatial
 			if ( value != _scaleX )
 			{
 				_scaleX = value;
+
 				dirtyScale = true;
+				updateTransfrom();
 			}
 		}
 
@@ -193,6 +230,7 @@ package totem.components.spatial
 			{
 				_scaleY = value;
 				dirtyScale = true;
+				updateTransfrom();
 			}
 		}
 
@@ -202,6 +240,7 @@ package totem.components.spatial
 			_y = _position.y = y;
 
 			dirtyPosition = true;
+			updateTransfrom();
 		}
 
 		public function setProperty( prop : Object, value : Object ) : void
@@ -215,6 +254,7 @@ package totem.components.spatial
 			{
 				_rotation = value;
 				dirtyRotation = true;
+				updateTransfrom();
 			}
 		}
 
@@ -224,6 +264,7 @@ package totem.components.spatial
 			_scaleY = y;
 
 			dirtyScale = true;
+			updateTransfrom();
 		}
 
 		public function subscribe( component : ISpatialObserver ) : void
@@ -262,7 +303,13 @@ package totem.components.spatial
 
 		public function set width( value : int ) : void
 		{
+			if ( value == _width )
+				return;
+
 			_width = value;
+
+			dirtyPosition = true;
+			updateTransfrom();
 		}
 
 		public function get x() : Number
@@ -276,7 +323,9 @@ package totem.components.spatial
 				return;
 
 			_position.x = _x = value;
+
 			dirtyPosition = true;
+			updateTransfrom();
 		}
 
 		public function get y() : Number
@@ -290,13 +339,15 @@ package totem.components.spatial
 				return;
 
 			_position.y = _y = value;
+
 			dirtyPosition = true;
+			updateTransfrom();
 		}
 
 		protected function dispatchUpdate() : void
 		{
 
-			if ( !dirtyPosition && !dirtyRotation && !dirtyScale )
+			if ( !dirtyPosition && !dirtyRotation && !dirtyScale && !dirtyOffset )
 				return;
 
 			var i : int;
@@ -312,9 +363,12 @@ package totem.components.spatial
 
 				if ( dirtyScale == true )
 					observers[ i ].setScale( _scaleX, _scaleY );
+
+				if ( dirtyOffset == true )
+					observers[ i ].setOffset( _positionOffset );
 			}
 
-			dirtyPosition = dirtyScale = dirtyRotation = false;
+			dirtyOffset = dirtyPosition = dirtyScale = dirtyRotation = false;
 		}
 
 		override protected function onActivate() : void
@@ -325,17 +379,19 @@ package totem.components.spatial
 			{
 				_spatialManager.addSpatialObject( this );
 			}
+
+			updateTransfrom();
+
+			dispatchUpdate();
 		}
 
 		override protected function onAdd() : void
 		{
 			super.onAdd();
 
-			//_bounds ||= BoxRectangle.create( x, y, width, height );
-
-			_bounds ||= AABBox.create( position, _width, _height );
-
 			dirtyPosition = true;
+
+			updateTransfrom();
 
 			dispatchUpdate();
 		}
@@ -360,6 +416,24 @@ package totem.components.spatial
 			if ( _spatialManager )
 			{
 				_spatialManager.removeSpatialObject( this );
+			}
+
+			_x = 0;
+			_y = 0;
+		}
+
+		protected function updateTransfrom() : void
+		{
+
+			if ( dirtyPosition == true )
+			{
+				tempOffset.copy( position ).addTo( defaultOffset ).addTo( positionOffset );
+				_bounds.moveTo( tempOffset );
+			}
+
+			if ( dirtyScale == true )
+			{
+				_bounds.setSize( _width * _scaleX, _height * _scaleY );
 			}
 		}
 	}

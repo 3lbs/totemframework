@@ -86,7 +86,6 @@
     <classEntry path="totem.core.Destroyable"/>
     <classEntry path="totem.core.IDestroyable"/>
     <classEntry path="totem.core.IInjectable"/>
-    <classEntry path="totem.core.ITotemComponent"/>
     <classEntry path="totem.core.ITotemSystem"/>
     <classEntry path="totem.core.Injectable"/>
     <classEntry path="totem.core.TotemSystem"/>
@@ -468,6 +467,10 @@
     <classEntry path="totem.core.time.scheduler.ScheduleManager"/>
     <classEntry path="AI.steering.ISteering"/>
     <classEntry path="totem.utils.PercentUtil"/>
+    <classEntry path="totem.time.DurationTimer"/>
+    <classEntry path="totem.core.params.display.AssetParam"/>
+    <classEntry path="totem.core.params.GameItemParam"/>
+    <classEntry path="application.updater.ApplicationUpdater"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

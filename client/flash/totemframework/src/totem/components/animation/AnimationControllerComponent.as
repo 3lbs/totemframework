@@ -19,14 +19,16 @@ package totem.components.animation
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-	
+
 	import totem.core.TotemComponent;
 	import totem.core.params.animation.AnimationDataParam;
 
 	public class AnimationControllerComponent extends TotemComponent
 	{
 
-		public var onAnimationComplete : ISignal = new Signal( AnimationControllerComponent );
+		public var onAnimationComplete : ISignal = new Signal();
+
+		public var onLoopComplete : ISignal = new Signal();
 
 		private var _animationSet : AnimationSet;
 
@@ -50,18 +52,19 @@ package totem.components.animation
 
 			animationComponent = animator;
 			animationComponent.broadcaster.addNotifListener( AnimatorEvent.ANIMATION_FINISHED_EVENT, handleAnimationComplete );
+			animationComponent.broadcaster.addNotifListener( AnimatorEvent.ANIMATION_LOOPED_COMPLETE, handleLoopCopmlete );
 		}
 
-		public function playAnimation( state : String, type : AnimatorEnum = null ) : void
+		public function playAnimation( name : String, type : AnimatorEnum = null ) : void
+		{
+			play( name, type );
+		}
+
+		public function playAnimationCommandMap( state : String, type : AnimatorEnum = null ) : void
 		{
 
 			var data : AnimationDataParam = _animationSet.getRandomAnimationForState( state );
 			play( data.name, type );
-		}
-
-		public function playAnimationByName( name : String, type : AnimatorEnum = null ) : void
-		{
-			play( name, type );
 		}
 
 		public function get playing() : Boolean
@@ -84,8 +87,13 @@ package totem.components.animation
 		private function handleAnimationComplete() : void
 		{
 			_playing = false;
-			
-			onAnimationComplete.dispatch( this );
+
+			onAnimationComplete.dispatch();
+		}
+
+		private function handleLoopCopmlete() : void
+		{
+			//onLoopComplete.dispatch();
 		}
 
 		private function play( ani : String, type : AnimatorEnum = null ) : void

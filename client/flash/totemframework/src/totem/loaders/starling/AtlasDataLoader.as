@@ -41,9 +41,9 @@ package totem.loaders.starling
 
 		private var url : String;
 
-		public function AtlasDataLoader( url : String, generateMipMap : Boolean = false, cacheBitmapData : Boolean = false, id : String = "" )
+		public function AtlasDataLoader( url : String, generateMipMap : Boolean = false, cacheBitmapData : Boolean = false )
 		{
-			this.id = id || url;
+			//this.id = id || url;
 
 			this.url = url;
 
@@ -68,8 +68,8 @@ package totem.loaders.starling
 		override public function start() : void
 		{
 
-			_textureAtlas = AtlasTextureCache.getInstance().getTextureAtlas( id );
-			_bitmapData = AtlasTextureCache.getInstance().getBitmapData( id );
+			_textureAtlas = AtlasTextureCache.getInstance().getTextureAtlas( url );
+			_bitmapData = AtlasTextureCache.getInstance().getBitmapData( url );
 
 			if ( _textureAtlas )
 			{
@@ -98,11 +98,11 @@ package totem.loaders.starling
 				_textureAtlas = textureLoader.textureAtlas;
 				_bitmapData = textureLoader.bitmapData;
 
-				AtlasTextureCache.getInstance().createIndex( id, _textureAtlas );
+				AtlasTextureCache.getInstance().createIndex( url, _textureAtlas );
 			}
 
 			if ( _bitmapData && cacheBitmapData )
-				AtlasTextureCache.getInstance().createBitmapData( id, _bitmapData );
+				AtlasTextureCache.getInstance().createBitmapData( url, _bitmapData );
 
 			super.finished();
 		}

@@ -8,32 +8,22 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2014 
+//   3lbs Copyright 2013 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
 
-package totem.components.commands
+package totem.core.params
 {
 
-	import totem.core.Destroyable;
-
-	public class StaticCommand extends Destroyable
+	public class GameItemParam
 	{
 
-		public function StaticCommand()
-		{
-			super();
-		}
+		public var gameid : String;
 
-		public function execute() : void
+		public function GameItemParam()
 		{
-		}
-
-		public function intialize() : void
-		{
-
 		}
 	}
 }

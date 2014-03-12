@@ -72,8 +72,11 @@ package totem.components.commands
 		{
 			super.onAdd();
 
-			commandMap = new StaticCommandMap( getInjector() );
+			commandMap = new StaticCommandMap();
 
+			commandMap.setInjector( getInjector().createChildInjector());
+			commandMap.initialize();
+			
 			applyDefferedCommands();
 			
 			

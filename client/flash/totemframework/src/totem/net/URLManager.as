@@ -18,7 +18,7 @@ package totem.net
 {
 
 	import flash.filesystem.File;
-
+	
 	import ladydebug.Logger;
 
 	public class URLManager
@@ -67,9 +67,12 @@ package totem.net
 			var tFile : File = _file.resolvePath( results );
 
 			if ( !tFile.exists )
+			{
+				trace( "getURL",  "URL doesnt exsits",  tFile.nativePath );
 				Logger.warn( this, "getURL", "URL doesnt exsits: " + tFile.nativePath );
+			}
 			
-			return tFile.nativePath;
+			return tFile.url;
 		}
 	}
 }

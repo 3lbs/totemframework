@@ -51,7 +51,7 @@ package totem.net
 		{
 			APPLICATION = URLManager.instance( url );
 
-			RESOURCE = URLManager.instance( APPLICATION.getURL( "resources" ));
+			RESOURCE = URLManager.instance( APPLICATION.getURL( "res" ));
 
 			ASSETS = URLManager.instance( RESOURCE.getURL( "assets" ));
 
@@ -67,7 +67,7 @@ package totem.net
 
 			READER_ASSETS = URLManager.instance( readerRaw.getURL( "assets" ));
 
-			READER = URLManager.instance( readerRaw.getURL( LocalizationManager.getCurrentLocale().split("-").join("_")));
+			READER = URLManager.instance( readerRaw.getURL( LocalizationManager.getCurrentLocale().split( "-" ).join( "_" )));
 
 			SOUNDS = URLManager.instance( ASSETS.getURL( "sounds" ));
 		}

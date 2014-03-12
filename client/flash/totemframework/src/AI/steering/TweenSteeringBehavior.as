@@ -17,11 +17,12 @@
 package AI.steering
 {
 
-	import flash.utils.Dictionary;
-	
 	import AI.steering.motion.IMotion;
 	import AI.steering.motion.MLinear;
-	
+
+	import flash.geom.Point;
+	import flash.utils.Dictionary;
+
 	import totem.components.motion.ISteeringObject;
 	import totem.core.Destroyable;
 	import totem.core.time.TimeManager;
@@ -43,6 +44,8 @@ package AI.steering
 
 		private var _motionMap : Dictionary = new Dictionary();
 
+		private var _pointAngle : Boolean;
+
 		private var _startPosition : Vector2D = new Vector2D();
 
 		private var _targetPoint : Vector2D;
@@ -52,12 +55,13 @@ package AI.steering
 		private var defalutEaseType : Class = MLinear;
 
 		private var steeringComponent : ISteeringObject;
+		
+		private static const PI2 : Number = ( 180 / Math.PI );
 
 		public function TweenSteeringBehavior( component : ISteeringObject )
 		{
 			steeringComponent = component;
 		}
-
 
 		override public function destroy() : void
 		{
@@ -80,9 +84,9 @@ package AI.steering
 			return _targetPoint == null;
 		}
 
-		public function moveTo( vector : Vector2D, easeType : Class = null ) : void
+		public function moveTo( vector : Vector2D, easeType : Class = null ) : Number
 		{
-			
+
 			easeType ||= defalutEaseType;
 
 			if ( !_motionMap[ easeType ])
@@ -103,6 +107,29 @@ package AI.steering
 
 			_timeElapsed = 0.0;
 
+			var angle : Number = _targetPoint.angleTo( _startPosition ) * PI2;
+			
+			steeringComponent.rotation = 0;
+			
+			if ( _pointAngle )
+			{
+				var rot : int = angle;
+				
+				if ( angle  > 90 )
+					rot -= 180;
+				else if ( angle < -90 )
+					rot += 180 ;
+				
+				steeringComponent.rotation = rot;
+			}
+			
+
+			return angle;
+		}
+
+		public function set pointDirection( value : Boolean ) : void
+		{
+			_pointAngle = value;
 		}
 
 		public function stop() : void
@@ -136,7 +163,6 @@ package AI.steering
 			}
 			return false;
 		}
-
 	}
 }
 

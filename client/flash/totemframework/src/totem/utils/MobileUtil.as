@@ -177,7 +177,7 @@ package totem.utils
 			if ( !_STAGE )
 				_STAGE = StageReference.getStage();
 
-			return _viewRect ||= ( isIOS() || isAndroid() ? new Rectangle( 0, 0, _STAGE.stageWidth, _STAGE.stageHeight ) : new Rectangle( 0, 0, _STAGE.stageWidth, _STAGE.stageHeight ));
+			return _viewRect ||= ( isIOS() || isAndroid() ? new Rectangle( 0, 0, _STAGE.fullScreenWidth, _STAGE.fullScreenHeight ) : new Rectangle( 0, 0, _STAGE.stageWidth, _STAGE.stageHeight ));
 		}
 		
 		public static function getViewWidth () : Number

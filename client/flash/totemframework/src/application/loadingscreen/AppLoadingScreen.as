@@ -23,9 +23,10 @@ package application.loadingscreen
 	import flash.net.URLRequest;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
-
+	
 	import totem.core.task.Task;
 	import totem.display.scenes.BaseLoadingScreen;
+	import totem.net.AppURL;
 	import totem.utils.MovieClipUtil;
 
 	public class AppLoadingScreen extends BaseLoadingScreen
@@ -83,7 +84,8 @@ package application.loadingscreen
 			FRAME_RATE = stage.frameRate;
 			stage.frameRate = 30;
 
-			var _urlRequest : URLRequest = new URLRequest( "../resources/assets/intro3lbsmachine_portrait.swf" );
+			//var _urlRequest : URLRequest = new URLRequest( "/res/assets/intro3lbsmachine_portrait.swf" );
+			var _urlRequest : URLRequest = new URLRequest(AppURL.ASSETS.getURL( "intro3lbsmachine_portrait.swf" )  );
 			_loader = new Loader();
 			var _lc : LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain, null );
 

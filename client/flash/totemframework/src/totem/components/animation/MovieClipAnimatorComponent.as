@@ -85,7 +85,6 @@ package totem.components.animation
 
 		private function handleAnimationComplete( event : Event ) : void
 		{
-			trace("did i dispatch");
 			broadcaster.dispatchNotifWith( AnimatorEvent.ANIMATION_FINISHED_EVENT );
 		}
 	}

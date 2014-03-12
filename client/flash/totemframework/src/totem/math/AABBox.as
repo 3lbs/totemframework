@@ -74,19 +74,19 @@ package totem.math
 		 * @param bottom
 		 *
 		 */
-		public function AABBox( center : Vector2D, width : Number, height : Number )
+		public function AABBox( _center : Vector2D = null, width : Number = 0, height : Number = 0 )
 		{
-			this.center = new Vector2D( center.x, center.y );
+			this.center = ( _center ) ? _center.clone() : new Vector2D( _center.x, _center.y );
 
 			this.width = width;
 			this.height = height;
 			halfWidth = width / 2;
 			halfHeight = height / 2;
 
-			left = center.x - halfWidth;
-			right = center.x + halfWidth;
-			top = center.y - halfHeight;
-			bottom = center.y + halfHeight;
+			left = _center.x - halfWidth;
+			right = _center.x + halfWidth;
+			top = _center.y - halfHeight;
+			bottom = _center.y + halfHeight;
 
 			topLeft = new Vector2D( left, top );
 			topRight = new Vector2D( right, top );
@@ -97,7 +97,7 @@ package totem.math
 
 		public function contains( x : int, y : int ) : Boolean
 		{
-			return ( x > right || x < left || y > top || y < bottom );
+			return !(( x > right ) || ( x < left ) || ( y < top ) || ( y > bottom ));
 		}
 
 		public function containsPoint( pt : Point2d ) : Boolean
@@ -194,6 +194,13 @@ package totem.math
 			setSize( width, height );
 
 			return this;
+		}
+		
+		public function toRectangle () : BoxRectangle
+		{
+			var rectangle : BoxRectangle = new BoxRectangle( left, top, width, height );
+			
+			return rectangle;
 		}
 	}
 }

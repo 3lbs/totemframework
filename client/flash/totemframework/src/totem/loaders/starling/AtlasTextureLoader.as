@@ -52,7 +52,7 @@ package totem.loaders.starling
 	
 				var file : File = new File( filename );
 				var imageFile : File = file.parent.resolvePath( imageLoc );
-				imageURL = imageFile.nativePath;
+				imageURL = imageFile.url;
 			}
 
 			filename = imageURL;

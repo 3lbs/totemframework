@@ -38,6 +38,14 @@ package totem.components.spatial
 
 		function getSpatialManager() : ISpatialManager;
 
+		function get position() : Vector2D;
+
+		function get positionOffset() : Vector2D;
+
+		function set positionOffset( value : Vector2D ) : void;
+
+		function set rotation( value : Number ) : void;
+
 		function get type() : int;
 
 		function get x() : Number;
@@ -47,7 +55,5 @@ package totem.components.spatial
 		function get y() : Number;
 
 		function set y( value : Number ) : void;
-		
-		function get position() : Vector2D;
 	}
 }
