@@ -34,15 +34,25 @@ package totem.components.display.starling
 
 		public static const NAME : String = "DisplayStarlingRenderer";
 
-		public static function addToSceneLayer( entity : TotemEntity, sceneLayer : DisplayObjectSceneLayer ) : void
+		public static function addToSceneLayer( entity : TotemEntity, sceneLayer : DisplayObjectSceneLayer, zIndex : int = -5 ) : void
 		{
 			var displayRenderer : IDisplay2DRenderer = entity.getComponent( IDisplay2DRenderer );
+
+			if ( zIndex > -5 )
+			{
+				DisplayStarlingRenderer( displayRenderer ).zIndex = zIndex;
+			}
+
 			displayRenderer.scene = sceneLayer;
 		}
 
 		public var snapToNearestPixels : Boolean = true;
 
 		protected var _alpha : Number = 1;
+
+		protected var _displayObject : DisplayObject;
+
+		protected var _offset : Vector2D = new Vector2D();
 
 		protected var _position : Vector2D = new Vector2D();
 
@@ -52,17 +62,15 @@ package totem.components.display.starling
 
 		protected var _transformMatrix : Matrix = new Matrix();
 
-		private var _displayObject : DisplayObject;
-
 		private var _rotation : Number = 0;
 
 		private var _scene : DisplayObjectSceneLayer;
 
 		private var _transformDirty : Boolean = true;
 
-		private var _visible : Boolean;
+		private var _visible : Boolean = true;
 
-		private var _zIndex : int;
+		private var _zIndex : Number;
 
 		private var _zIndexDirty : Boolean;
 
@@ -108,6 +116,16 @@ package totem.components.display.starling
 			if ( getName() && owner && owner.getName())
 				_displayObject.name = owner.getName() + "." + getName();
 
+		}
+
+		public function get offset() : Vector2D
+		{
+			return _offset;
+		}
+
+		public function set offset( value : Vector2D ) : void
+		{
+			_offset = value;
 		}
 
 		override public function onTick() : void
@@ -253,10 +271,10 @@ package totem.components.display.starling
 			//_transformMatrix.rotate( PBUtil.getRadiansFromDegrees( _rotation ) + _rotationOffset );
 
 			_transformMatrix.rotate( _rotation * MathUtils.DEG_TO_RAD );
-			_transformMatrix.translate( _position.x + _positionOffset.x, _position.y + _positionOffset.y );
+			_transformMatrix.translate( _position.x + _positionOffset.x + _offset.x, _position.y + _positionOffset.y + _offset.y );
 
 			displayObject.transformationMatrix = _transformMatrix;
-			displayObject.visible = ( alpha > 0 );
+			displayObject.visible = _visible;
 			displayObject.alpha = alpha;
 
 			_transformDirty = false;
@@ -340,7 +358,7 @@ package totem.components.display.starling
 			_transformDirty = true;
 		}
 
-		public function get zIndex() : int
+		public function get zIndex() : Number
 		{
 			return _zIndex;
 		}
@@ -350,7 +368,7 @@ package totem.components.display.starling
 		 * to large.
 		 * @param value Z-index to set.
 		 */
-		public function set zIndex( value : int ) : void
+		public function set zIndex( value : Number ) : void
 		{
 			if ( _zIndex == value )
 				return;

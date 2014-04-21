@@ -27,6 +27,28 @@ package AI.goal
 			super( owner );
 		}
 
+		override public function canComplete() : Boolean
+		{
+
+			var l : int = _gaurds.length;
+
+			while ( l-- )
+			{
+				if ( _gaurds[ l ].gaurded())
+				{
+					return false;
+				}
+			}
+
+			if ( subgoals.length > 0 )
+			{
+				if ( !subgoals[ 0 ].canComplete())
+					return false;
+			}
+
+			return true;
+		}
+
 		override public function get interruptible() : Boolean
 		{
 			if ( subgoals.length > 0 )

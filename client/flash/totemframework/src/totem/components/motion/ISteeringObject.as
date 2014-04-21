@@ -26,5 +26,7 @@ package totem.components.motion
 		function get steering() : ISteering;
 
 		function get velocity() : Number;
+		
+		function set velocity ( value : Number ) : void;
 	}
 }

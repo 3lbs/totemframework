@@ -68,7 +68,7 @@ package totem.components.spatial
 			return spatialList.has( component );
 		}
 
-		public function objectUnderPoint( pt : Point2d ) : ISpatial2D
+		public function objectsUnderPoint( pt : Point2d, result : Vector.<ISpatial2D>  ) : Vector.<ISpatial2D>
 		{
 
 			return null;

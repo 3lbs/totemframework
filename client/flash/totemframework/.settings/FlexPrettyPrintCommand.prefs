@@ -1,7 +1,7 @@
-#Tue Jan 29 15:00:08 PST 2013
+#Mon Apr 07 22:07:09 PDT 2014
 ASRearr_AddDefaultHeaderForProperties=1
 ASRearr_AddDefaultHeaderForStaticProperties=1
-ASRearr_BlankLinesBeforeElement=
+ASRearr_BlankLinesBeforeElement=Constructor\=2,
 ASRearr_CopyrightHeader=style\=1|width\=80|blankLines\=2|fillChar\=-|text\=   Copyright 2012\n   All rights reserved.|linesBefore\=1|
 ASRearr_ElementFunctionVisibilityOrder=public\:true,protected\:true,internal\:true,private\:true,
 ASRearr_ElementOrder=Import,Include,Namespace Definition,Default Namespace,Namespace Use,Static Property,Static Function,Static Initializer,Constructor,Property,Function,
@@ -28,7 +28,7 @@ ASRearr_ModifierOrder_Property=<Namespace>,override,native,public,private,protec
 ASRearr_MoveImportsOutsideClass=true
 ASRearr_RemoveExistingCopyrightHeaders=false
 ASRearr_RemoveExistingSectionHeaders=false
-ASRearr_SectionHeaderMap=\#\r\n\#Tue Jan 29 15\:00\:08 PST 2013\r\n
+ASRearr_SectionHeaderMap=\#\r\n\#Mon Apr 07 22\:07\:09 PDT 2014\r\n
 ASRearr_SortGettersAndSettersWithAssociatedProperties=true
 ASRearr_SortGettersAndSettersWithAssociatedStaticProperties=true
 ASRearr_UseCopyrightGeneration=false

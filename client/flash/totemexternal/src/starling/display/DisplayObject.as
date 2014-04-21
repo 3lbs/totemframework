@@ -124,6 +124,8 @@ package starling.display
      */
     public class DisplayObject extends EventDispatcher
     {
+        private static const TWO_PI:Number = Math.PI * 2.0;
+        
         // members
         
         private var mX:Number;
@@ -145,7 +147,6 @@ package starling.display
         private var mTransformationMatrix:Matrix;
         private var mOrientationChanged:Boolean;
         private var mFilter:FragmentFilter;
-        private var mLastDispatchedStageEventType:String;
         
         /** Helper objects. */
         private static var sAncestors:Vector.<DisplayObject> = new <DisplayObject>[];
@@ -378,30 +379,24 @@ package starling.display
         
         private final function normalizeAngle(angle:Number):Number
         {
-            // move into range [-180 deg, +180 deg]
-            while (angle < -Math.PI) angle += Math.PI * 2.0;
-            while (angle >  Math.PI) angle -= Math.PI * 2.0;
+            // move to equivalent value in range [0 deg, 360 deg] without a loop
+            angle = angle % TWO_PI;
+
+            // move to [-180 deg, +180 deg]
+            if (angle < -Math.PI) angle += TWO_PI;
+            if (angle >  Math.PI) angle -= TWO_PI;
+
             return angle;
         }
         
-        // stage event optimization
+        // stage event handling
         
         public override function dispatchEvent(event:Event):void
         {
-            // These events must always be dispatched alternately. E.g. it must not be allowed
-            // that an object receives two "REMOVED_FROM_STAGE" events in direct succession.
-            
-            var eventType:String = event.type;
-            
-            if ((eventType == Event.ADDED_TO_STAGE || eventType == Event.REMOVED_FROM_STAGE))
-            {
-                if (mLastDispatchedStageEventType == eventType)
-                    return;
-                else
-                    mLastDispatchedStageEventType = eventType;
-            }
-            
-            super.dispatchEvent(event);
+            if (event.type == Event.REMOVED_FROM_STAGE && stage == null)
+                return; // special check to avoid double-dispatch of RfS-event.
+            else
+                super.dispatchEvent(event);
         }
         
         // enter frame event optimization
@@ -468,7 +463,7 @@ package starling.display
          *  In that case, Starling will apply the matrix, but not update the corresponding 
          *  properties.</p>
          * 
-         *  @returns CAUTION: not a copy, but the actual object! */
+         *  <p>CAUTION: not a copy, but the actual object!</p> */
         public function get transformationMatrix():Matrix
         {
             if (mOrientationChanged)
@@ -522,30 +517,27 @@ package starling.display
         
         public function set transformationMatrix(matrix:Matrix):void
         {
+            const PI_Q:Number = Math.PI / 4.0;
+
             mOrientationChanged = false;
             mTransformationMatrix.copyFrom(matrix);
             mPivotX = mPivotY = 0;
             
             mX = matrix.tx;
             mY = matrix.ty;
-            mScaleX = Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b);
-            mSkewY  = Math.acos(matrix.a / mScaleX);
             
-            if (!isEquivalent(matrix.b, mScaleX * Math.sin(mSkewY)))
-            {
-                mScaleX *= -1;
-                mSkewY = Math.acos(matrix.a / mScaleX);
-            }
-            
-            mScaleY = Math.sqrt(matrix.c * matrix.c + matrix.d * matrix.d);
-            mSkewX  = Math.acos(matrix.d / mScaleY);
-            
-            if (!isEquivalent(matrix.c, -mScaleY * Math.sin(mSkewX)))
-            {
-                mScaleY *= -1;
-                mSkewX = Math.acos(matrix.d / mScaleY);
-            }
-            
+            mSkewX = Math.atan(-matrix.c / matrix.d);
+            mSkewY = Math.atan( matrix.b / matrix.a);
+
+            // NaN check ("isNaN" causes allocation)
+            if (mSkewX != mSkewX) mSkewX = 0.0;
+            if (mSkewY != mSkewY) mSkewY = 0.0;
+
+            mScaleY = (mSkewX > -PI_Q && mSkewX < PI_Q) ?  matrix.d / Math.cos(mSkewX)
+                                                        : -matrix.c / Math.sin(mSkewX);
+            mScaleX = (mSkewY > -PI_Q && mSkewY < PI_Q) ?  matrix.a / Math.cos(mSkewY)
+                                                        :  matrix.b / Math.sin(mSkewY);
+
             if (isEquivalent(mSkewX, mSkewY))
             {
                 mRotation = mSkewX;

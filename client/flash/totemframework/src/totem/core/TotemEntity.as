@@ -118,7 +118,7 @@ package totem.core
 			notifBroadcaster.dispatchNotifWith( TotemNotification.ENTITY_INITIALIZED );
 		}
 
-		public function mapInterface( component : *, ComponentClass : Class ) : void
+		public function mapInterface( component : TotemComponent, ComponentClass : Class ) : void
 		{
 			alternativeMapping[ ComponentClass ] = component;
 		}
@@ -157,6 +157,12 @@ package totem.core
 
 			components_[ ComponentClass ] = null;
 			delete components_[ ComponentClass ];
+
+			if ( alternativeMapping[ ComponentClass ])
+			{
+				alternativeMapping[ ComponentClass ] = null;
+				delete alternativeMapping[ ComponentClass ];
+			}
 		}
 
 		protected function doDeconstruct() : void
@@ -165,7 +171,7 @@ package totem.core
 			{
 				removeComponent( componentClass );
 			}
-
+			
 			if ( injector )
 			{
 				injector.teardown();

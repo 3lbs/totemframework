@@ -26,7 +26,7 @@ package totem.loaders
 
 	import totem.monitors.AbstractMonitorProxy;
 
-	public class FontLoader extends AbstractMonitorProxy
+	public class FontsLoader extends AbstractMonitorProxy
 	{
 
 		public static function hasFont( value : String ) : Boolean
@@ -52,7 +52,7 @@ package totem.loaders
 
 		private var url : String;
 
-		public function FontLoader( url : String, fontNames : Array, id : String = "" )
+		public function FontsLoader( url : String, fontNames : Array, id : String = "" )
 		{
 			this.fontNames = fontNames;
 			this.id = id || url;

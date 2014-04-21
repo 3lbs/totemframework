@@ -53,9 +53,9 @@ package totem.components.motion
 		{
 			if ( _previousSteering )
 			{
-				
+
 				_steering.stop();
-				
+
 				_steering = null;
 				_steering = _previousSteering;
 
@@ -70,8 +70,8 @@ package totem.components.motion
 			if ( _steering.update())
 			{
 				dirtyPosition = true;
-				dispatchUpdate();
 			}
+			dispatchUpdate();
 		}
 
 		public function setBehavior( behavior : ISteering ) : ISteering
@@ -83,7 +83,7 @@ package totem.components.motion
 			}
 
 			_steering = behavior;
-			
+
 			return _steering;
 		}
 
@@ -95,6 +95,11 @@ package totem.components.motion
 		public function get velocity() : Number
 		{
 			return _velocity;
+		}
+
+		public function set velocity( value : Number ) : void
+		{
+			_velocity = value;
 		}
 	}
 }

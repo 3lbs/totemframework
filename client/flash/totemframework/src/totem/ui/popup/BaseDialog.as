@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,25 +17,36 @@
 package totem.ui.popup
 {
 
-	import flash.geom.Rectangle;
-	
 	import totem.display.layout.TSprite;
+	import totem.math.BoxRectangle;
 
 	public class BaseDialog extends TSprite
 	{
+
+		public var completed : Boolean = true;
+
+		public var dialogRect : BoxRectangle;
+
 		private var _initalized : Boolean;
 
-		public var dialogRect : Rectangle;
-		
 		public function BaseDialog()
 		{
-			//addEventListener( Event.ADDED_TO_STAGE, onInit );
 			initialize();
 		}
 
 		public function close() : void
 		{
 
+		}
+
+		override public function set scaleX( value : Number ) : void
+		{
+			if ( dialogRect )
+			{
+				dialogRect.multiply( value );
+			}
+
+			super.scaleX = value;
 		}
 
 		protected function initialize() : void

@@ -51,7 +51,9 @@ package totem.components.display
 		/**
 		 * All the renderers in this layer.
 		 */
-		public var rendererList : Array = new Array();
+		public var rendererList : Vector.<IDisplay2DRenderer> = new Vector.<IDisplay2DRenderer>();
+
+		public var update : Boolean;
 
 		/**
 		 * Set to true when we need to resort the layer.
@@ -61,7 +63,7 @@ package totem.components.display
 		public function DisplayObjectSceneLayer( name : String, layer : Number = 0 )
 		{
 			super();
-			
+
 			drawOrderFunction = defaultSortFunction;
 
 			depth = layer;
@@ -82,7 +84,8 @@ package totem.components.display
 
 			rendererList.push( dor );
 			addChild( dor.displayObject );
-			markDirty();
+			needSort = true;
+			onRender();
 		}
 
 		override public function destroy() : void
@@ -105,7 +108,7 @@ package totem.components.display
 
 		public function onRender() : void
 		{
-			if ( needSort )
+			if ( needSort || update )
 			{
 				updateOrder();
 				needSort = false;
@@ -130,26 +133,45 @@ package totem.components.display
 			rendererList.sort( drawOrderFunction );
 
 			// Apply the order.
-			var updated : int = 0;
+			//var updated : int = 0;
 
-			for ( var i : int = 0; i < rendererList.length; i++ )
+			var i : int = 0;
+			var l : int = rendererList.length;
+			var d : DisplayObject;
+
+			for ( ; i < l; ++i )
 			{
-				var d : DisplayObject = rendererList[ i ].displayObject;
+				d = rendererList[ i ].displayObject;
 
 				if ( getChildAt( i ) == d )
 					continue;
 
-				updated++;
+				//updated++;
 				setChildIndex( d, i );
+
 			}
 
 			// This is useful if you suspect you're changing order too much.
-			//trace("Reordered " + updated + " items.");
+
+			//trace("Reordered " + updated + " items," + " ,layer: " + name );
 		}
 
 		protected function handleAddToStage( eve : Event ) : void
 		{
 			removeEventListener( Event.ADDED_TO_STAGE, handleAddToStage );
+		}
+
+		private function sortFunction( objx : IDisplay2DRenderer, objy : IDisplay2DRenderer ) : Number
+		{
+			if ( objx.zIndex > objy.zIndex )
+			{
+				return 1;
+			}
+			else if ( objx.zIndex < objy.zIndex )
+			{
+				return -1;
+			}
+			return 0;
 		}
 	}
 }

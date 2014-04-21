@@ -18,10 +18,11 @@ package totem.loaders.starling
 {
 
 	import flash.utils.Dictionary;
-
+	
 	import starling.textures.Texture;
-
+	
 	import totem.core.Destroyable;
+	import totem.core.params.TextureItem;
 
 	public class TextureCacheManager extends Destroyable
 	{
@@ -58,6 +59,7 @@ package totem.loaders.starling
 
 		private var _textures : Dictionary;
 
+		
 		public function TextureCacheManager( singletonEnforcer : SingletonEnforcer )
 		{
 			if ( !singletonEnforcer )

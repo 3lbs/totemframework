@@ -17,9 +17,10 @@
 package totem.components.animation
 {
 
+	import org.casalib.util.NumberUtil;
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-
+	
 	import totem.core.TotemComponent;
 	import totem.core.params.animation.AnimationDataParam;
 
@@ -34,7 +35,7 @@ package totem.components.animation
 
 		private var _playing : Boolean;
 
-		private var animationComponent : IAnimator;
+		private var animationComponent : AnimatorComponent;
 
 		private var fps : int;
 
@@ -43,16 +44,16 @@ package totem.components.animation
 			super();
 		}
 
-		public function addAnimator( animator : IAnimator ) : void
+		public function addAnimator( animator : AnimatorComponent ) : void
 		{
 			if ( animationComponent )
 			{
-				animationComponent.broadcaster.removeNotifListener( AnimatorEvent.ANIMATION_FINISHED_EVENT, handleAnimationComplete );
+				//animationComponent.broadcaster.removeNotifListener( AnimatorEvent.ANIMATION_FINISHED_EVENT, handleAnimationComplete );
 			}
 
 			animationComponent = animator;
-			animationComponent.broadcaster.addNotifListener( AnimatorEvent.ANIMATION_FINISHED_EVENT, handleAnimationComplete );
-			animationComponent.broadcaster.addNotifListener( AnimatorEvent.ANIMATION_LOOPED_COMPLETE, handleLoopCopmlete );
+			animationComponent.animationComplete.add( handleAnimationComplete );
+			animationComponent.animationLoopComplete.add( handleLoopCopmlete );
 		}
 
 		public function playAnimation( name : String, type : AnimatorEnum = null ) : void
@@ -60,11 +61,31 @@ package totem.components.animation
 			play( name, type );
 		}
 
-		public function playAnimationCommandMap( state : String, type : AnimatorEnum = null ) : void
+		public function playAnimationCommandMap( state : String, random : Boolean = false, type : AnimatorEnum = null ) : void
 		{
 
 			var data : AnimationDataParam = _animationSet.getRandomAnimationForState( state );
-			play( data.name, type );
+
+			if ( random )
+			{
+				_playing = true;
+				var frame : int = NumberUtil.randomIntegerWithinRange( data.start, data.end ) - 1;
+				animationComponent.goToAndPlay( data.name, frame, type );
+			}
+			else
+			{
+				play( data.name, type );
+			}
+
+		}
+
+		public function playAnimationRandomFrame( name : String, type : AnimatorEnum = null ) : void
+		{
+			var animationData : AnimationDataParam = _animationSet.getAnimationData( name );
+			var frame : int = NumberUtil.randomIntegerWithinRange( animationData.start, animationData.end );
+
+			animationComponent.goToAndPlay( name, frame, type );
+
 		}
 
 		public function get playing() : Boolean
@@ -93,12 +114,11 @@ package totem.components.animation
 
 		private function handleLoopCopmlete() : void
 		{
-			//onLoopComplete.dispatch();
+			onLoopComplete.dispatch();
 		}
 
 		private function play( ani : String, type : AnimatorEnum = null ) : void
 		{
-
 			_playing = true;
 			animationComponent.playAnimation( ani, type );
 		}

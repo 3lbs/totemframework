@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -18,11 +18,12 @@ package totem.monitors
 {
 
 	import flash.events.Event;
-	
+
 	import ladydebug.Logger;
-	
-	import totem.totem_internal;
 	import totem.events.RemovableEventDispatcher;
+	import totem.monitors.promise.wait;
+
+	import totem.totem_internal;
 
 	public class AbstractMonitorProxy extends RemovableEventDispatcher implements IMonitor
 	{
@@ -42,12 +43,6 @@ package totem.monitors
 		public function AbstractMonitorProxy( id : String = "" )
 		{
 			_id = id;
-		}
-
-		protected function complete() : void
-		{
-			_status = COMPLETE;
-			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 
 		public function get id() : *
@@ -90,7 +85,7 @@ package totem.monitors
 
 			Logger.error( this, "Complete Monitor Failed", "AbstartMonitorProxy" );
 			_status = FAILED;
-			
+
 			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 
@@ -99,13 +94,19 @@ package totem.monitors
 			if ( _status == COMPLETE )
 				return;
 
-			complete();
+			wait( 10, complete );
 		}
 
 		totem_internal function start() : void
 		{
 			_status = LOADING;
 			start();
+		}
+
+		private function complete() : void
+		{
+			_status = COMPLETE;
+			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 	}
 }

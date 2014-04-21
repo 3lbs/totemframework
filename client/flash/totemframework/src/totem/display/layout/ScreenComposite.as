@@ -38,6 +38,7 @@ package totem.display.layout
 		{
 			if ( hasScreen( screen ))
 			{
+				throw new Error("Scene has been added", screen );
 				return;
 			}
 

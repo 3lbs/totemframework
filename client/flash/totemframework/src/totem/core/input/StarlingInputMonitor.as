@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,32 +17,31 @@
 package totem.core.input
 {
 
-	import org.osflash.signals.ISignal;
-	import org.osflash.signals.Signal;
-	
 	import starling.display.DisplayObject;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	
-	import totem.core.Destroyable;
 
-	public class InputMonitor extends Destroyable
+	public class StarlingInputMonitor extends BaseInputMonitor
 	{
-
-		public var touchBegin : ISignal = new Signal( Number, Number );
-
-		public var touchEnd : ISignal = new Signal( Number, Number )
-
-		public var touchMove : ISignal = new Signal( Number, Number );
 
 		private var _touchTarget : DisplayObject;
 
-		public function InputMonitor( target : DisplayObject )
+		private var panGesture : PanTGesture;
+
+		private var touches : Vector.<Touch> = new Vector.<Touch>();
+
+		private var zoomGesture : ZoomTGesture;
+
+		public function StarlingInputMonitor( target : DisplayObject )
 		{
-			super();
+			super( target );
 
 			touchTarget = target;
+
+			panGesture = new PanTGesture();
+
+			zoomGesture = new ZoomTGesture();
 		}
 
 		override public function destroy() : void
@@ -50,6 +49,35 @@ package totem.core.input
 			_touchTarget.removeEventListener( TouchEvent.TOUCH, _handleTouch );
 			_touchTarget = null;
 			super.destroy();
+		}
+
+		override public function set enabled( value : Boolean ) : void
+		{
+			super.enabled = value;
+
+			if ( enabled )
+			{
+
+				if ( _touchTarget )
+				{
+					_touchTarget.addEventListener( TouchEvent.TOUCH, _handleTouch );
+				}
+			}
+			else
+			{
+				if ( _touchTarget )
+				{
+					_touchTarget.removeEventListener( TouchEvent.TOUCH, _handleTouch );
+				}
+			}
+		}
+
+		override public function subscribe( input : IMobileInput ) : void
+		{
+			super.subscribe( input );
+
+			panGesture.subscribe( input );
+			zoomGesture.subscribe( input );
 		}
 
 		/**
@@ -67,7 +95,9 @@ package totem.core.input
 			if ( s != _touchTarget )
 			{
 				if ( _touchTarget )
+				{
 					_touchTarget.removeEventListener( TouchEvent.TOUCH, _handleTouch );
+				}
 
 				s.addEventListener( TouchEvent.TOUCH, _handleTouch );
 				_touchTarget = s;
@@ -77,25 +107,56 @@ package totem.core.input
 
 		private function _handleTouch( e : TouchEvent ) : void
 		{
+
+			if ( !_enabled )
+				return;
+
 			var t : Touch = e.getTouch( _touchTarget );
+
+			//trace( t );
+
+			e.touches
+
+			touches.length = 0;
 
 			if ( t )
 			{
+
+				// pan gesture
+				// zoom gesture3
+
+				// tap gesture
+
 				switch ( t.phase )
 				{
 					case TouchPhase.BEGAN:
 
-						touchBegin.dispatch( t.globalX, t.globalY );
+						e.getTouches( _touchTarget, TouchPhase.BEGAN, touches );
+						panGesture.touchBegin( touches );
+						zoomGesture.touchBegin( touches );
+
 						e.stopImmediatePropagation();
 						break;
 					case TouchPhase.ENDED:
-						touchEnd.dispatch( t.globalX, t.globalY );
+
+						e.getTouches( _touchTarget, TouchPhase.ENDED, touches );
+						panGesture.touchEnd( touches );
+						zoomGesture.touchEnd( touches );
+
+						if ( !panGesture.complete() && !zoomGesture.complete())
+						{
+							_observers.handleSingleTouch( t.globalX, t.globalY );
+						}
+
 						e.stopImmediatePropagation();
 						break;
 
 					case TouchPhase.MOVED:
 
-						touchMove.dispatch( t.globalX, t.globalY );
+						e.getTouches( _touchTarget, TouchPhase.MOVED, touches );
+						panGesture.touchMove( touches );
+						zoomGesture.touchMove( touches );
+
 						e.stopImmediatePropagation();
 						break;
 				}

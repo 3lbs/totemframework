@@ -23,7 +23,7 @@ package totem.core.params.display
 
 		public var assetName : String;
 
-		public var atlasData : AtlasDataParam;
+		public var atlasID : String;
 
 		public var height : Number = 0;
 
@@ -35,8 +35,6 @@ package totem.core.params.display
 
 		public function AssetParam()
 		{
-			atlasData = new AtlasDataParam();
-			
 			super();
 		}
 	}

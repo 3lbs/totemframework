@@ -36,6 +36,8 @@ package AI.steering
 	public class TweenSteeringBehavior extends Destroyable implements ISteering
 	{
 
+		private static const PI2 : Number = ( 180 / Math.PI );
+
 		private var _distance : Number;
 
 		private var _duration : Number;
@@ -52,11 +54,11 @@ package AI.steering
 
 		private var _timeElapsed : Number;
 
+		private var angle : Number = 0;
+
 		private var defalutEaseType : Class = MLinear;
 
 		private var steeringComponent : ISteeringObject;
-		
-		private static const PI2 : Number = ( 180 / Math.PI );
 
 		public function TweenSteeringBehavior( component : ISteeringObject )
 		{
@@ -77,6 +79,11 @@ package AI.steering
 			steeringComponent = null;
 
 			_targetPoint = null;
+		}
+
+		public function get direction() : Number
+		{
+			return angle;
 		}
 
 		public function isComplete() : Boolean
@@ -107,22 +114,21 @@ package AI.steering
 
 			_timeElapsed = 0.0;
 
-			var angle : Number = _targetPoint.angleTo( _startPosition ) * PI2;
-			
+			angle = _targetPoint.angleTo( _startPosition ) * PI2;
+
 			steeringComponent.rotation = 0;
-			
+
 			if ( _pointAngle )
 			{
 				var rot : int = angle;
-				
-				if ( angle  > 90 )
+
+				if ( angle > 90 )
 					rot -= 180;
 				else if ( angle < -90 )
-					rot += 180 ;
-				
+					rot += 180;
+
 				steeringComponent.rotation = rot;
 			}
-			
 
 			return angle;
 		}

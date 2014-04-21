@@ -72,16 +72,14 @@ package totem.components.display
 
 		private var _sceneViewBoundsCache : Rectangle = new Rectangle();
 
+		private var _totalLayers : uint;
+
 		private var _width : Number;
 
 		private var centerVector : Vector2D;
 
 		private var centeredLimitBounds : Rectangle = new Rectangle();
 
-		/**
-		 *
-		 *
-		 */
 		public function DisplayObjectScene()
 		{
 			super();
@@ -103,29 +101,46 @@ package totem.components.display
 
 			_transformDirty = true;
 
+			_totalLayers = _layers.length;
+
 			return layer;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function centerOnPt( pt : Vector2D ) : void
+		public function centerOnPt( x : Number, y : Number ) : void
 		{
 
-			SceneAlignment.calculate( _tempPoint, sceneAlignment, _width / zoom, _height / zoom );
+			/*SceneAlignment.calculate( _tempPoint, sceneAlignment, _width / zoom, _height / zoom );
 
 			centerVector ||= new Vector2D();
 
-			centerVector.x = -pt.x - _tempPoint.x;
-			centerVector.y = -pt.y - _tempPoint.y;
+			centerVector.x = -x - _tempPoint.x;
+			centerVector.y = -y - _tempPoint.y;
 
 			centerVector.x += ( _tempPoint.x / zoom );
-			centerVector.y += ( _tempPoint.x / zoom );
+			centerVector.y += ( _tempPoint.x / zoom );*/
 
-			position = centerVector;
+			position = centerOnVector( x, y, centerVector );
 
 			_transformDirty = true;
 
+		}
+
+		public function centerOnVector( x : Number, y : Number, result : Vector2D = null ) : Vector2D
+		{
+			SceneAlignment.calculate( _tempPoint, sceneAlignment, _width / zoom, _height / zoom );
+
+			result ||= new Vector2D();
+
+			result.x = -x - _tempPoint.x;
+			result.y = -y - _tempPoint.y;
+
+			result.x += ( _tempPoint.x / zoom );
+			result.y += ( _tempPoint.x / zoom );
+
+			return result;
 		}
 
 		override public function destroy() : void
@@ -219,15 +234,22 @@ package totem.components.display
 
 				//centeredLimitBounds = new Rectangle( trackLimitRectangle.x + _width * 0.5, trackLimitRectangle.y + _height * 0.5, trackLimitRectangle.width - _width, trackLimitRectangle.height - _height );
 
-				centeredLimitBounds.x = trackLimitRectangle.x + _width * 0.5;
+				/*centeredLimitBounds.x = trackLimitRectangle.x + _width * 0.5;
 				centeredLimitBounds.y = trackLimitRectangle.y + _height * 0.5;
 				centeredLimitBounds.width = trackLimitRectangle.width - _width;
-				centeredLimitBounds.height = trackLimitRectangle.height - _height;
+				centeredLimitBounds.height = trackLimitRectangle.height - _height;*/
+
+				centeredLimitBounds.x = trackLimitRectangle.x + ( _width * 0.5 ) / zoom;
+				centeredLimitBounds.y = trackLimitRectangle.y + ( _height * 0.5 ) / zoom;
+				centeredLimitBounds.width = trackLimitRectangle.width - ( _width / zoom );
+				centeredLimitBounds.height = trackLimitRectangle.height - ( _height / zoom );
 
 				position = new Vector2D( TotemUtil.clamp( position.x, -centeredLimitBounds.right, -centeredLimitBounds.left ), TotemUtil.clamp( position.y, -centeredLimitBounds.bottom, -centeredLimitBounds.top ));
 			}
 
 			updateTransform();
+
+			updateLayers();
 
 		/*trace( "noid", sceneViewBounds );
 		trace( "pos", _rootPosition.x, _rootPosition.y );
@@ -305,6 +327,8 @@ package totem.components.display
 				_layers.slice( idx, 1 );
 				_rootSprite.removeChild( layer );
 
+				_totalLayers = _layers.length;
+
 				sortLayers();
 				_transformDirty = true;
 			}
@@ -365,10 +389,11 @@ package totem.components.display
 
 			var layerIndex : int = 0;
 
-			for ( var layer : int = 0; layer < _layers.length; layer++ )
+			var i : int = 0;
+
+			for ( ; i < _totalLayers; ++i )
 			{
-				var screen : DisplayObjectSceneLayer = _layers[ layer ] as DisplayObjectSceneLayer;
-				_rootSprite.setChildIndex( screen, layerIndex );
+				_rootSprite.setChildIndex( _layers[ i ], layerIndex );
 				layerIndex++;
 			}
 		}
@@ -401,6 +426,16 @@ package totem.components.display
 			return _rootSprite.localToGlobal( inPos, resultPoint );
 		}
 
+		public function updateLayers() : void
+		{
+			var i : int = 0;
+
+			for ( i = 0; i < _totalLayers; ++i )
+			{
+				_layers[ i ].onRender();
+			}
+		}
+
 		public function updateTransform() : void
 		{
 			if ( !parent )
@@ -426,9 +461,6 @@ package totem.components.display
 			updateSceneViewBounds();
 
 			updatePositionDispatcher.dispatch( _rootSprite.x, _rootSprite.y, _sceneViewBoundsCache );
-
-			for each ( var l : DisplayObjectSceneLayer in _layers )
-				l.onRender();
 
 		}
 

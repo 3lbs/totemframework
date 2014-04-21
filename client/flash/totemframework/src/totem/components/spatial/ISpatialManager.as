@@ -31,7 +31,7 @@ package totem.components.spatial
 
 		function hasSpatialComponent( component : ISpatial2D ) : Boolean;
 
-		function objectUnderPoint( pt : Point2d ) : ISpatial2D;
+		function objectsUnderPoint( pt : Point2d, result : Vector.<ISpatial2D>  ) : Vector.<ISpatial2D>;
 
 		function removeSpatialObject( object : ISpatial2D ) : void;
 		

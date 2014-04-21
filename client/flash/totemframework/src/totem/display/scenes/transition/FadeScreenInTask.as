@@ -27,6 +27,8 @@ package totem.display.scenes.transition
 	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
 	
+	import starling.utils.Color;
+	
 	import totem.core.task.Task;
 	import totem.display.scenes.BaseLoadingScreen;
 	import totem.display.scenes.SceneState;
@@ -107,7 +109,7 @@ package totem.display.scenes.transition
 			}
 			else
 			{
-				g.beginFill( 0 );
+				g.beginFill( Color.BLACK );
 				g.drawRect( 0, 0, loadingScreen.contentWidth, loadingScreen.contentHeight );
 			}
 

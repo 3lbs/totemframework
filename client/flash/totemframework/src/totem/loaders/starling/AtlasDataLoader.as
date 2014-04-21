@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -23,8 +23,8 @@ package totem.loaders.starling
 
 	import totem.loaders.XMLDataLoader;
 	import totem.monitors.GroupMonitor;
-	import totem.monitors.IRequireMonitor;
 	import totem.monitors.IMonitor;
+	import totem.monitors.IRequireMonitor;
 
 	public class AtlasDataLoader extends GroupMonitor
 	{
@@ -39,13 +39,17 @@ package totem.loaders.starling
 
 		private var generateMipMap : Boolean;
 
+		private var imageURL : String;
+
 		private var url : String;
 
-		public function AtlasDataLoader( url : String, generateMipMap : Boolean = false, cacheBitmapData : Boolean = false )
+		public function AtlasDataLoader( url : String, imageURL : String = "", id : String = "", generateMipMap : Boolean = false, cacheBitmapData : Boolean = false )
 		{
-			//this.id = id || url;
+			this.id = id || url;
 
 			this.url = url;
+
+			this.imageURL = imageURL;
 
 			this.cacheBitmapData = cacheBitmapData;
 
@@ -68,8 +72,8 @@ package totem.loaders.starling
 		override public function start() : void
 		{
 
-			_textureAtlas = AtlasTextureCache.getInstance().getTextureAtlas( url );
-			_bitmapData = AtlasTextureCache.getInstance().getBitmapData( url );
+			_textureAtlas = AtlasTextureCache.getInstance().getTextureAtlas( id );
+			_bitmapData = AtlasTextureCache.getInstance().getBitmapData( id );
 
 			if ( _textureAtlas )
 			{
@@ -78,7 +82,7 @@ package totem.loaders.starling
 			}
 
 			var xmlLoader : IMonitor = addDispatcher( new XMLDataLoader( url ));
-			var atlasLoader : IRequireMonitor = addDispatcher( new AtlasTextureLoader( url, null, generateMipMap, ATLAS_ID )) as IRequireMonitor;
+			var atlasLoader : IRequireMonitor = addDispatcher( new AtlasTextureLoader( url, imageURL, generateMipMap, ATLAS_ID )) as IRequireMonitor;
 			atlasLoader.requires( xmlLoader );
 
 			super.start();
@@ -92,17 +96,19 @@ package totem.loaders.starling
 		override protected function finished() : void
 		{
 			var textureLoader : AtlasTextureLoader = getItemByID( ATLAS_ID );
-			
+
 			if ( textureLoader )
 			{
 				_textureAtlas = textureLoader.textureAtlas;
 				_bitmapData = textureLoader.bitmapData;
 
-				AtlasTextureCache.getInstance().createIndex( url, _textureAtlas );
+				AtlasTextureCache.getInstance().createIndex( id, _textureAtlas );
 			}
 
 			if ( _bitmapData && cacheBitmapData )
-				AtlasTextureCache.getInstance().createBitmapData( url, _bitmapData );
+			{
+				AtlasTextureCache.getInstance().createBitmapData( id, _bitmapData );
+			}
 
 			super.finished();
 		}

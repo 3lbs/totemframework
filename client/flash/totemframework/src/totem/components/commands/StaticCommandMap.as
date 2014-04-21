@@ -50,15 +50,38 @@ package totem.components.commands
 
 		public function executeCommand( clazz : Class, ... args ) : void
 		{
-			var command : StaticCommand;
+			var command : *;
 
 			if (( command = commands[ clazz ]) != null )
 			{
-				command.execute.apply( null, args );
+
+				if ( !args )
+				{
+					command.execute.call();
+					return;
+				}
+
+				switch ( args.length )
+				{
+					case 0:
+						command.execute.call();
+						break;
+					case 1:
+						command.execute( args[ 0 ]);
+						break;
+					case 2:
+						command.execute( args[ 0 ], args[ 1 ]);
+						break;
+					case 3:
+						command.execute( args[ 0 ], args[ 1 ], args[ 2 ]);
+						break;
+					default:
+						command.execute.apply( null, args );
+				}
 			}
 		}
 
-		public function mapCommand( command : StaticCommand, clazz : Class ) : void
+		public function mapCommand( command : *, clazz : Class ) : void
 		{
 			commands[ clazz ] = command;
 
@@ -73,10 +96,9 @@ package totem.components.commands
 		{
 			super.setInjector( injector );
 
-			for each ( var command : StaticCommand in commands )
+			for each ( var command : Object in commands )
 			{
 				injector.injectInto( command );
-				command.intialize();
 			}
 		}
 	}

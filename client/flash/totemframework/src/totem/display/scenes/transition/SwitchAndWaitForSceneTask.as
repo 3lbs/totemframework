@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -24,14 +24,20 @@ package totem.display.scenes.transition
 	{
 		private var machine : SceneStateMachine;
 
-		private var screenState : String;
+		private var screenStateName : String;
 
 		public function SwitchAndWaitForSceneTask( machine : SceneStateMachine, screen : String = "" )
 		{
 			super();
 
 			this.machine = machine;
-			screenState = screen;
+			screenStateName = screen;
+		}
+
+		override public function destroy() : void
+		{
+			machine = null;
+			super.destroy();
 		}
 
 		public function setState( state : String ) : Boolean
@@ -39,7 +45,7 @@ package totem.display.scenes.transition
 			if ( machine.currentStateName == state )
 				return false;
 
-			screenState = state;
+			screenStateName = state;
 			return true;
 		}
 
@@ -51,8 +57,8 @@ package totem.display.scenes.transition
 
 		override protected function doStart() : void
 		{
-			machine.transitionDispatcher.addOnce( complete );
-			machine.setCurrentState( screenState );
+			machine.buildComplete.addOnce( complete );
+			machine.setCurrentState( screenStateName );
 		}
 	}
 }

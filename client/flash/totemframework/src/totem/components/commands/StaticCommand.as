@@ -29,11 +29,8 @@ package totem.components.commands
 
 		public function execute() : void
 		{
-		}
-
-		public function intialize() : void
-		{
 
 		}
+
 	}
 }

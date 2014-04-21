@@ -17,8 +17,6 @@
 package totem.display.scenes.transition
 {
 
-	import flash.display.BitmapData;
-	
 	import totem.core.task.SequenceTask;
 	import totem.display.scenes.BaseLoadingScreen;
 	import totem.display.scenes.SceneStateMachine;
@@ -85,6 +83,9 @@ package totem.display.scenes.transition
  
 			loadingScreen.removeChildren();
 			stateMachine.parentScreen.removeScreen( loadingScreen );
+			
+			stateMachine.parentScreen.stage.invalidate();
+			
 			return super.complete();
 		}
 	}

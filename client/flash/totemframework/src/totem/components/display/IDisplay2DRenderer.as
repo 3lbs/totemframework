@@ -50,8 +50,8 @@ package totem.components.display
 
 		function set visible( value : Boolean ) : void;
 
-		function get zIndex() : int;
+		function get zIndex() : Number;
 
-		function set zIndex( value : int ) : void;
+		function set zIndex( value : Number ) : void;
 	}
 }

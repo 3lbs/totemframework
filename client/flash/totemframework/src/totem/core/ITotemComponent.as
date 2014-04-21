@@ -8,19 +8,22 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
 
-package totem.display.components
+package totem.core
 {
 
-	public class ToggleButton
+	public interface ITotemComponent extends IDestroyable
 	{
-		public function ToggleButton()
-		{
-		}
+
+		function get activated() : Boolean;
+
+		function getOwner() : TotemEntity;
+
+		function getSibling( ComponentClass : Class ) : *;
 	}
 }

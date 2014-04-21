@@ -31,12 +31,12 @@ package AI.goal
 			characterBias = bias;
 		}
 
-		public function calculateDesirability( entity : TweenComponent ) : Number
+		public function calculateDesirability( spatial : TweenComponent ) : Number
 		{
 			return 0;
 		}
 
-		public function setGoal( entity : TweenComponent ) : void
+		public function setGoal( spatial : TweenComponent ) : void
 		{
 
 		}

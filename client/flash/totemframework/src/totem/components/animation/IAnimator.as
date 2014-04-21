@@ -17,12 +17,12 @@
 package totem.components.animation
 {
 
-	import totem.observer.NotifBroadcaster;
+	import totem.components.display.IDisplay2DRenderer;
 
-	public interface IAnimator
+	public interface IAnimator extends IDisplay2DRenderer
 	{
 
-		function get broadcaster() : NotifBroadcaster;
+		function goToAndPlay( animName : String, frame : int, type : AnimatorEnum = null ) : void;
 
 		function pauseAnimation() : void;
 

@@ -170,7 +170,7 @@ package gorilla.resource
 			_lc.allowCodeImport = true;
 
 			// have to put on stage because of flex movie
-			StageReference.getStage().addChild( safeloader );
+			//StageReference.getStage().addChild( safeloader );
 
 			safeloader.loadBytes( data, _lc );
 

@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -16,10 +16,6 @@
 
 package totem.core.params
 {
-
-	import org.casalib.util.StringUtil;
-	
-	import totem.utils.TypeUtility;
 
 	/**
 	 *
@@ -36,8 +32,8 @@ package totem.core.params
 		 */
 		public function BaseParam()
 		{
-			_name = TypeUtility.getObjectShortClassName( this ) + "_" + StringUtil.createRandomIdentifier( 3 );
-			_id = _name + StringUtil.createRandomIdentifier( 4 );
+			//_name = TypeUtility.getObjectShortClassName( this ) + "_" + StringUtil.createRandomIdentifier( 3 );
+			//_id = _name + StringUtil.createRandomIdentifier( 4 );
 		}
 
 		/**

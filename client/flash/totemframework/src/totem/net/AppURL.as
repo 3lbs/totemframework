@@ -17,6 +17,8 @@
 package totem.net
 {
 
+	import flash.filesystem.File;
+
 	import localization.LocalizationManager;
 
 	public class AppURL
@@ -29,6 +31,8 @@ package totem.net
 		public static var ASSETS : URLManager;
 
 		public static var DATA : URLManager;
+
+		public static var FONTS : URLManager;
 
 		public static var IMAGES : URLManager;
 
@@ -49,6 +53,7 @@ package totem.net
 
 		public static function initialize( url : String ) : void
 		{
+
 			APPLICATION = URLManager.instance( url );
 
 			RESOURCE = URLManager.instance( APPLICATION.getURL( "res" ));
@@ -70,6 +75,8 @@ package totem.net
 			READER = URLManager.instance( readerRaw.getURL( LocalizationManager.getCurrentLocale().split( "-" ).join( "_" )));
 
 			SOUNDS = URLManager.instance( ASSETS.getURL( "sounds" ));
+
+			FONTS = URLManager.instance( ASSETS.getURL( "fonts" ));
 		}
 	}
 }

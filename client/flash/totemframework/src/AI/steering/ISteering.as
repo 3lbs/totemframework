@@ -31,6 +31,8 @@ package AI.steering
 
 		function update() : Boolean;
 		
+		function get direction () : Number;
+		
 		function set pointDirection ( value : Boolean ) : void;
 	}
 }

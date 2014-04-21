@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -38,15 +38,24 @@ package totem.display.components
 					check = child;
 				}
 			}
+
+			DISABLE_STATE_FRAME = 2;
 		}
 
 		override public function set selected( value : Boolean ) : void
 		{
+
+			if ( !enabled )
+			{
+				return;
+			}
+
 			_selected = value ? SELECTED_SOFT : UN_SELECTED;
 
 			if ( check )
 			{
 				check.visible = selected;
+
 			}
 		}
 	}

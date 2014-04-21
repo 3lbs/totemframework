@@ -22,7 +22,6 @@ package application.task
 	import flash.display.DisplayObjectContainer;
 
 	import totem.core.task.Task;
-	import totem.utils.MovieClipUtil;
 
 	public class FadeToTask extends Task
 	{
@@ -65,7 +64,6 @@ package application.task
 
 			if ( displayObject )
 			{
-				MovieClipUtil.stopAllAnimation( displayObject );
 				TweenMax.to( displayObject, time, { tint: color, onComplete: complete });
 			}
 			else

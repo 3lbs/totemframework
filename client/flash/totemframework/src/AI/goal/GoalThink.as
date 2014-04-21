@@ -81,7 +81,7 @@ package AI.goal
 
 			for ( i = 0; i < l; ++i )
 			{
-				desirablity = evaluators[ i ].calculateDesirability( owner );
+				desirablity = evaluators[ i ].calculateDesirability( ownerSpatial );
 
 				if ( desirablity >= best )
 				{
@@ -92,7 +92,7 @@ package AI.goal
 
 			if ( mostDesirable )
 			{
-				mostDesirable.setGoal( owner );
+				mostDesirable.setGoal( ownerSpatial );
 			}
 		}
 

@@ -231,7 +231,7 @@ package totem.monitors
 			{
 				//finished();
 				// hackish solution had to be done due to recusive error
-				wait( 1, finished );
+				wait( 100, finished );
 			}
 
 		}

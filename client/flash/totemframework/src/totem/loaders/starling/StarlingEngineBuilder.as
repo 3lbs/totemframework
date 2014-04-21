@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -19,14 +19,14 @@ package totem.loaders.starling
 
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.display3D.Context3DProfile;
 	import flash.geom.Rectangle;
-
+	
 	import org.casalib.util.StageReference;
-
+	
 	import starling.core.Starling;
 	import starling.events.Event;
-
-	import totem.loaders.stage3d.Stage3DPromise;
+	
 	import totem.loaders.stage3d.Stage3DProxy;
 	import totem.monitors.AbstractMonitorProxy;
 	import totem.utils.MobileUtil;
@@ -36,8 +36,6 @@ package totem.loaders.starling
 
 		public static const NAME : String = "StarlingBuilder";
 
-		public var stage3Dproxy : Stage3DProxy;
-
 		public var starlingEngine : Starling;
 
 		private var rootClass : Class;
@@ -45,6 +43,8 @@ package totem.loaders.starling
 		private var stage : Stage;
 
 		private var stage3D : Stage3D;
+
+		private var stage3Dproxy : Stage3DProxy;
 
 		private var viewPort : Rectangle;
 
@@ -79,20 +79,22 @@ package totem.loaders.starling
 			rootClass = null;
 
 			starlingEngine = null;
-			
+
 			stage3Dproxy = null;
 		}
 
 		override public function start() : void
 		{
 
-			var stage3DPromise : Stage3DPromise = new Stage3DPromise( stage );
-			stage3DPromise.completes( handleStageLoaded );
+			//var stage3DPromise : Stage3DPromise = new Stage3DPromise( stage );
+			//stage3DPromise.completes( handleStageLoaded );
 
 			Starling.handleLostContext = false;
 
 			if ( MobileUtil.isAndroid())
-				Starling.handleLostContext = false;
+				Starling.handleLostContext = true;
+			
+			handleStageLoaded( null );
 		}
 
 		private function handleRootCreated( event : Event ) : void
@@ -105,15 +107,17 @@ package totem.loaders.starling
 		{
 
 			stage3Dproxy = stage3D;
-			starlingEngine = new Starling( rootClass, stage, viewPort, stage3Dproxy.stage3D, "auto", "baseline" ) as Starling;
-			starlingEngine.enableErrorChecking = true;
+
+			var profile : String = ( MobileUtil.isHD()) ? Context3DProfile.BASELINE_EXTENDED : Context3DProfile.BASELINE;
+
+			starlingEngine = new Starling( rootClass, stage, viewPort, null, "auto", profile ) as Starling;
+
 			starlingEngine.addEventListener( starling.events.Event.ROOT_CREATED, handleRootCreated );
 		}
 	}
 }
 
 import starling.display.Sprite;
-import starling.events.Event;
 
 /**
  * RootClass is the root of Starling, it is never destroyed and only accessed through <code>_starling.stage</code>.

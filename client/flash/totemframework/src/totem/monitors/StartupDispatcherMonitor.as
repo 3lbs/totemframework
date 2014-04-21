@@ -19,11 +19,12 @@ package totem.monitors
 
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-
+	
 	import org.as3commons.collections.LinkedList;
 	import org.as3commons.collections.framework.IIterator;
-
+	
 	import totem.monitors.progress.IProgressProxy;
+	import totem.monitors.promise.wait;
 	import totem.monitors.startupmonitor.IStartupProxy;
 
 	public class StartupDispatcherMonitor extends RequiredProxy implements IProgressProxy
@@ -93,7 +94,7 @@ package totem.monitors
 
 			if ( _monitors.size == 0 )
 			{
-				finished();
+				wait( 100, finished );
 			}
 		}
 	}

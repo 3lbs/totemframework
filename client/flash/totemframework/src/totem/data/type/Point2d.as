@@ -18,7 +18,7 @@ package totem.data.type
 {
 
 	import flash.geom.Point;
-
+	
 	import totem.math.Vector2D;
 
 	public class Point2d extends Point
@@ -66,6 +66,14 @@ package totem.data.type
 			super( x, y );
 		}
 
+		public function subBy( vector : Point2d ) : Point2d
+		{
+			x -= vector.x;
+			y -= vector.y;
+			
+			return this;
+		}
+		
 		public function addTo( pt : Point2d ) : Point2d
 		{
 			x += pt.x;
@@ -74,9 +82,9 @@ package totem.data.type
 			return this;
 		}
 
-		public function addedTo( vector : Point2d ) : Point2d
+		public function addedTo( pt : Point2d ) : Point2d
 		{
-			return Point2d.create( x + vector.x, y + vector.y );
+			return Point2d.create( x + pt.x, y + pt.y );
 		}
 
 		override public function clone() : Point
@@ -124,7 +132,7 @@ package totem.data.type
 			return this;
 		}
 
-		public function reset( x, y ) : Point2d
+		public function reset( x : Number = 0, y : Number = 0 ) : Point2d
 		{
 			this.x = x;
 			this.y = y;

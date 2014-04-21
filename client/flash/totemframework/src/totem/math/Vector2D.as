@@ -20,6 +20,7 @@ package totem.math
 	import flash.geom.Point;
 
 	import totem.core.Destroyable;
+	import totem.data.type.Point2d;
 
 	public class Vector2D extends Destroyable
 	{
@@ -95,9 +96,9 @@ package totem.math
 			return Vector2D.create( xPart, yPart );
 		}
 
-		public var x : Number;
+		public var x : Number = 0;
 
-		public var y : Number;
+		public var y : Number = 0;
 
 		// -- PRIVATE --
 
@@ -114,10 +115,11 @@ package totem.math
 		private var v2 : Vector2D;
 
 		//Constructor -------------------------------------------------
-		public function Vector2D( X : Number = 0, Y : Number = 0 )
+		public function Vector2D( px : Number = 0, py : Number = 0 )
 		{
-			x = X;
-			y = Y;
+			x = px;
+
+			y = py;
 
 			//to avoid slowdowns when creating new Vectors, length
 			//is calculated when requested rather than on creation
@@ -156,6 +158,9 @@ package totem.math
 
 		public function set angle( value : Number ) : void
 		{
+			if ( isNaN( value ))
+				return;
+
 			x = length * Math.cos( value );
 			y = length * Math.sin( value );
 		}
@@ -544,9 +549,9 @@ package totem.math
 		 * @return A Point Object
 		 *
 		 */
-		public function toPoint() : Point
+		public function toPoint() : Point2d
 		{
-			return new Point( x, y );
+			return new Point2d( x, y );
 		}
 
 		/**

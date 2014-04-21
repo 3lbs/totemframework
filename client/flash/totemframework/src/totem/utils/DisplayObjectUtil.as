@@ -230,7 +230,7 @@ package totem.utils
 		 * either with a DisplayObject's transform property or with, for example, BitmapData.draw()
 		 */
 
-		public static function fitIntoRect( displayObject : DisplayObject, rectangle : Rectangle, fillRect : Boolean = true, align : String = "C", applyTransform : Boolean = true ) : Matrix
+		public static function fitIntoRect( displayObject : DisplayObject, rectangle : Rectangle, fillRect : Boolean = true, align : String = Alignment.CENTER, applyTransform : Boolean = true ) : Matrix
 		{
 			var matrix : Matrix = new Matrix();
 
@@ -314,6 +314,7 @@ package totem.utils
 
 		public static function getVisibleBounds( source : DisplayObject, bitmapDataArea : BitmapData = null ) : Rectangle
 		{
+			
 			//var matrix:Matrix = new Matrix()
 			//matrix.tx = -source.getBounds(null).x;
 			//matrix.ty = -source.getBounds(null).y;

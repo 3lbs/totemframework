@@ -97,7 +97,12 @@ package totem.math
 
 		public function contains( x : int, y : int ) : Boolean
 		{
-			return !(( x > right ) || ( x < left ) || ( y < top ) || ( y > bottom ));
+			if (( x > right ) || ( x < left ) || ( y < top ) || ( y > bottom ))
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		public function containsPoint( pt : Point2d ) : Boolean
@@ -195,12 +200,17 @@ package totem.math
 
 			return this;
 		}
-		
-		public function toRectangle () : BoxRectangle
+
+		public function toRectangle() : BoxRectangle
 		{
 			var rectangle : BoxRectangle = new BoxRectangle( left, top, width, height );
-			
+
 			return rectangle;
+		}
+
+		public function toString() : String
+		{
+			return ( "center: " + center.toString() + ", dimen: l = " + left + ", r = " + right + ", t = " + top +  ", b = " + bottom )
 		}
 	}
 }

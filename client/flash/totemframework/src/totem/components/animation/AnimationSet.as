@@ -25,6 +25,8 @@ package totem.components.animation
 	public class AnimationSet extends Destroyable
 	{
 
+		private var _animations : Dictionary = new Dictionary();
+
 		private var animationStates : Dictionary = new Dictionary();
 
 		public function AnimationSet()
@@ -34,11 +36,14 @@ package totem.components.animation
 
 		public function addAnimationData( data : AnimationDataParam ) : void
 		{
+
+			_animations[ data.name ] = data;
+
 			for each ( var state : String in data.states )
 			{
 				if ( !state )
 					continue;
-				
+
 				if ( !animationStates[ state ])
 				{
 					animationStates[ state ] = new Vector.<AnimationDataParam>();
@@ -49,7 +54,17 @@ package totem.components.animation
 			}
 		}
 
-		public function getAnimationData( state : String, name : String ) : AnimationDataParam
+		public function getAnimationData( name : String ) : AnimationDataParam
+		{
+			if ( !_animations[ name ])
+			{
+				throw new Error( "doesnt have animation" );
+			}
+
+			return _animations[ name ];
+		}
+
+		public function getAnimationState( state : String, name : String ) : AnimationDataParam
 		{
 			var animations : Vector.<AnimationDataParam> = animationStates[ state ];
 

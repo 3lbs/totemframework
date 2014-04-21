@@ -36,6 +36,8 @@ package AI.goal
 
 		protected var _pathPlanner : AStarPathPlanner;
 
+		protected var processBrain : Boolean;
+
 		public function GoalDrivenComponent( machine : StaticCommandMap, planner : AStarPathPlanner )
 		{
 			super( NAME );
@@ -54,14 +56,14 @@ package AI.goal
 			_currentBrain = value;
 		}
 
-		public function machine() : StaticCommandMap
+		public function commandMap() : StaticCommandMap
 		{
 			return _commandMap;
 		}
 
 		override public function onTick() : void
 		{
-			if ( _currentBrain && activated )
+			if ( _currentBrain && processBrain )
 			{
 				_currentBrain.process();
 			}
@@ -72,10 +74,17 @@ package AI.goal
 			return _pathPlanner;
 		}
 
+		override protected function onActivate() : void
+		{
+			super.onActivate();
+
+			processBrain = true;
+		}
+
 		override protected function onAdd() : void
 		{
 			super.onAdd();
-			
+
 			_commandMap.setInjector( getInjector().createChildInjector());
 			_commandMap.initialize();
 		}
@@ -96,6 +105,8 @@ package AI.goal
 		override protected function onRetire() : void
 		{
 			super.onRetire();
+
+			processBrain = false;
 
 			if ( _currentBrain )
 			{

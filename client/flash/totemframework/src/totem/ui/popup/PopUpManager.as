@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -22,8 +22,14 @@ package totem.ui.popup
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
 	
+	import ladydebug.Logger;
+	
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
+	
 	import totem.core.IDestroyable;
 	import totem.display.layout.TContainer;
+	import totem.ui.StopPropagationController;
 	import totem.utils.objectpool.SimpleObjectPool;
 
 	public class PopUpManager
@@ -50,6 +56,10 @@ package totem.ui.popup
 
 		public var defaultPopupTransition : Class;
 
+		public var popupDispatcher : ISignal = new Signal( Boolean );
+
+		private var _closedCallback : Function;
+
 		private var _container : DisplayObjectContainer;
 
 		/**
@@ -68,10 +78,14 @@ package totem.ui.popup
 
 		private var _popUpsMap : Dictionary = new Dictionary();
 
+		private var _scale : Number = 1;
+
 		/**
 		 * Stage width.
 		 */
 		private var _width : uint;
+
+		private var propagationController : StopPropagationController;
 
 		/**
 		 * PopUpManager constructor.
@@ -93,8 +107,10 @@ package totem.ui.popup
 				throw new Error( "The container must already be added to the display list." );
 
 			_container = container;
-			_width = _container.stage.fullScreenWidth;
-			_height = _container.stage.fullScreenHeight;
+			_width = _container.width;
+			_height = _container.height;
+
+			propagationController = new StopPropagationController( _container );
 
 			_popUpPool = new SimpleObjectPool( createPopUpData, null, 8 );
 
@@ -151,6 +167,8 @@ package totem.ui.popup
 			if ( _popUpsMap[ displayObject ])
 				return;
 
+			Logger.info( this, "createPopUp", " please 0" );
+
 			var popupData : PopUpData = _popUpPool.checkOut() as PopUpData;
 			popupData.popUp = displayObject;
 			popupData.channel = channel;
@@ -160,6 +178,8 @@ package totem.ui.popup
 			channelList.list.push( popupData );
 
 			_popUpsMap[ displayObject ] = popupData;
+
+			Logger.info( this, "createPopUp", " please" );
 
 			showNextPopup( channel );
 		}
@@ -183,6 +203,11 @@ package totem.ui.popup
 			if ( displayObject )
 				return _popUpsMap.hasKey( displayObject );
 			return _popUpsMap.size > 0;
+		}
+
+		public function isActive() : Boolean
+		{
+			return numPopUps > 0;
 		}
 
 		/**
@@ -220,7 +245,7 @@ package totem.ui.popup
 		 *
 		 * @param displayObject The popup to remove.
 		 */
-		public function removePopUp( displayObject : DisplayObject ) : void
+		public function removePopUp( displayObject : DisplayObject, callback : Function = null ) : void
 		{
 			if ( !_popUpsMap[ displayObject ])
 				return;
@@ -229,9 +254,6 @@ package totem.ui.popup
 
 			_popUpsMap[ displayObject ] = null;
 			delete _popUpsMap[ displayObject ];
-
-			if ( _popUpCallback != null )
-				_popUpCallback();
 
 			var transition : BasePopUpTransition = popUpData.transition;
 
@@ -244,15 +266,35 @@ package totem.ui.popup
 				transition.channel = channel;
 				transition.completeTransition.addOnce( handleTransitionComplete );
 				transition.animateOut();
+
+				_closedCallback = callback;
 			}
 			else
 			{
+				if ( _popUpCallback != null )
+					_popUpCallback();
+
 				_container.removeChild( displayObject );
+
+				propagationController.enabled = false;
 
 				var channelData : ChannalData = getChannel( channel );
 				channelData.isBusy = false;
 				showNextPopup( channel );
+
+				if ( callback )
+					callback();
 			}
+		}
+
+		public function get scale() : Number
+		{
+			return _scale;
+		}
+
+		public function set scale( value : Number ) : void
+		{
+			_scale = value;
 		}
 
 		/**
@@ -287,12 +329,14 @@ package totem.ui.popup
 			backgroundScreen.contentHeight = _height;
 			backgroundScreen.backgroundColor = backgroundColor;
 			backgroundScreen.backgroundAlpha = backgroundAlpha;
-			backgroundScreen.addEventListener( MouseEvent.CLICK, handleMouseEvent );
-			backgroundScreen.addEventListener( MouseEvent.MOUSE_MOVE, handleMouseEvent );
-			backgroundScreen.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseEvent );
-			backgroundScreen.addEventListener( MouseEvent.MOUSE_UP, handleMouseEvent );
-			backgroundScreen.addEventListener( MouseEvent.MOUSE_OVER, handleMouseEvent );
-			backgroundScreen.addEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent );
+			/*backgroundScreen.addEventListener( MouseEvent.CLICK, handleMouseEvent, false, -1 );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_MOVE, handleMouseEvent, false, -1 );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseEvent, false, -1 );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_UP, handleMouseEvent, false, -1 );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_OVER, handleMouseEvent, false, -1 );
+			backgroundScreen.addEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent, false, -1 );
+			backgroundScreen.addEventListener( MouseEvent.ROLL_OVER, handleMouseEvent, false, -1 );
+			backgroundScreen.addEventListener( MouseEvent.ROLL_OUT, handleMouseEvent, false, -1 );*/
 
 			channelData.backgroundScreen = backgroundScreen;
 
@@ -301,11 +345,11 @@ package totem.ui.popup
 			return channelData;
 		}
 
-		private function handleMouseEvent( event : MouseEvent ) : void
+		/*private function handleMouseEvent( event : MouseEvent ) : void
 		{
 			event.stopImmediatePropagation();
 			event.stopPropagation();
-		}
+		}*/
 
 		private function handleTransitionComplete( transition : BasePopUpTransition ) : void
 		{
@@ -314,11 +358,24 @@ package totem.ui.popup
 
 			_container.removeChild( displayObject );
 
-			if ( displayObject is IDestroyable )
-				IDestroyable( displayObject ).destroy();
+			propagationController.enabled = false;
+
+			if ( _closedCallback )
+			{
+				_closedCallback();
+				_closedCallback = null;
+			}
+			else
+			{
+				if ( displayObject is IDestroyable )
+					IDestroyable( displayObject ).destroy();
+			}
 
 			var channelData : ChannalData = getChannel( transition.channel );
 			channelData.isBusy = false;
+
+			if ( _popUpCallback != null )
+				_popUpCallback();
 
 			showNextPopup( transition.channel );
 
@@ -340,17 +397,24 @@ package totem.ui.popup
 
 				if ( !channel.backgroundScreen.parent )
 				{
+
+					Logger.info( this, "backgroundScreen", " please" );
 					channel.backgroundScreen.visible = true;
 					_container.addChild( channel.backgroundScreen );
 				}
 
+				displayObject.scaleX = displayObject.scaleY = scale;
 				_container.addChild( displayObject );
 				center( displayObject );
 
+				propagationController.enabled = true;
+				
 				if ( transition )
 				{
 					transition.animateIn();
 				}
+
+				Logger.info( this, "showNextPopup", " please please" );
 
 				if ( _popUpCallback != null )
 					_popUpCallback();
@@ -362,6 +426,8 @@ package totem.ui.popup
 					_container.removeChild( channel.backgroundScreen );
 			}
 
+
+			popupDispatcher.dispatch( isActive());
 		}
 	}
 }

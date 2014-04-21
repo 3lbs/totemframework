@@ -201,7 +201,7 @@ package totem.core.input.dragDrop
 				avatar.y = HELPER_POINT.y + avatarOffsetY;
 					//PopUpManager.addPopUp(avatar, false, false);
 			}
-			Starling.current.stage.addEventListener( TouchEvent.TOUCH, stage_touchHandler );
+			//Starling.current.stage.addEventListener( TouchEvent.TOUCH, stage_touchHandler );
 			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler, false, 0, true );
 			_dragSource.dispatchEvent( new DragDropEvent( DragDropEvent.DRAG_START, data, false ));
 
@@ -234,7 +234,7 @@ package totem.core.input.dragDrop
 				avatar.touchable = avatarOldTouchable;
 				avatar = null;
 			}
-			Starling.current.stage.removeEventListener( TouchEvent.TOUCH, stage_touchHandler );
+			//Starling.current.stage.removeEventListener( TouchEvent.TOUCH, stage_touchHandler );
 			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler );
 			_dragSource = null;
 			_dragData = null;
@@ -276,7 +276,7 @@ package totem.core.input.dragDrop
 		/**
 		 * @private
 		 */
-		protected static function stage_touchHandler( event : TouchEvent ) : void
+		/*protected static function stage_touchHandler( event : TouchEvent ) : void
 		{
 			const stage : Stage = Starling.current.stage;
 			const touches : Vector.<Touch> = event.getTouches( stage, null, HELPER_TOUCHES_VECTOR );
@@ -328,7 +328,7 @@ package totem.core.input.dragDrop
 				completeDrag( isDropped );
 			}
 			HELPER_TOUCHES_VECTOR.length = 0;
-		}
+		}*/
 
 		/**
 		 * @private

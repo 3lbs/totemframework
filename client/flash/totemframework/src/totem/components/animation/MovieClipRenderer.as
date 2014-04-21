@@ -18,11 +18,11 @@ package totem.components.animation
 {
 
 	import starling.events.Event;
-	
+
 	import totem.core.time.TimeManager;
 	import totem.display.starling.AnimationMovieClip;
 
-	public class MovieClipAnimatorComponent extends AnimatorComponent
+	public class MovieClipRenderer extends AnimatorComponent
 	{
 
 		public static const NAME : String = "MovieClipAnimatorComponent";
@@ -31,11 +31,27 @@ package totem.components.animation
 
 		private var _paused : Boolean;
 
-		public function MovieClipAnimatorComponent( mc : AnimationMovieClip )
+		public function MovieClipRenderer( mc : AnimationMovieClip )
 		{
 			super( NAME );
 
 			movieClip = mc;
+
+			displayObject = mc;
+		}
+
+		override public function goToAndPlay( animName : String, frame : int, type : AnimatorEnum = null ) : void
+		{
+			var loop : int = -1;
+
+			if ( type != null )
+			{
+				loop = ( type == AnimatorEnum.LOOP ) ? 1 : 0;
+			}
+
+			movieClip.play( animName, loop );
+
+			movieClip.currentFrame = frame;
 		}
 
 		public function get movieClip() : AnimationMovieClip
@@ -73,7 +89,9 @@ package totem.components.animation
 			var loop : int = -1;
 
 			if ( type != null )
+			{
 				loop = ( type == AnimatorEnum.LOOP ) ? 1 : 0;
+			}
 
 			movieClip.play( animName, loop );
 		}
@@ -85,7 +103,7 @@ package totem.components.animation
 
 		private function handleAnimationComplete( event : Event ) : void
 		{
-			broadcaster.dispatchNotifWith( AnimatorEvent.ANIMATION_FINISHED_EVENT );
+			animationComplete.dispatch();
 		}
 	}
 }

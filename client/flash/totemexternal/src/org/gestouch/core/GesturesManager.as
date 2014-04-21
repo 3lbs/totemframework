@@ -1,16 +1,18 @@
 package org.gestouch.core
 {
-	import flash.errors.IllegalOperationError;
-	import org.gestouch.gestures.Gesture;
-	import org.gestouch.input.NativeInputAdapter;
-
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Stage;
+	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
+
+	import org.gestouch.extensions.native.NativeTouchHitTester;
+	import org.gestouch.gestures.Gesture;
+	import org.gestouch.input.NativeInputAdapter;
+
 
 	/**
 	 * @author Pavel fljot
@@ -18,7 +20,6 @@ package org.gestouch.core
 	public class GesturesManager
 	{
 		protected const _frameTickerShape:Shape = new Shape();
-		protected var _inputAdapters:Vector.<IInputAdapter> = new Vector.<IInputAdapter>();
 		protected var _gesturesMap:Dictionary = new Dictionary(true);
 		protected var _gesturesForTouchMap:Dictionary = new Dictionary();
 		protected var _gesturesForTargetMap:Dictionary = new Dictionary(true);
@@ -48,6 +49,7 @@ package org.gestouch.core
 			_stage = stage;
 			
 			Gestouch.inputAdapter ||= new NativeInputAdapter(stage);
+			Gestouch.addTouchHitTester(new NativeTouchHitTester(stage));
 		}
 		
 		
@@ -104,7 +106,7 @@ package org.gestouch.core
 					}
 					else
 					{
-						targetAsDO.addEventListener(Event.ADDED_TO_STAGE, gestureTarget_addedToStageHandler);
+						targetAsDO.addEventListener(Event.ADDED_TO_STAGE, gestureTarget_addedToStageHandler, false,0, true);
 					}
 				}
 			}
@@ -175,13 +177,13 @@ package org.gestouch.core
 						otherGesture.targetAdapter.contains(target)
 						)
 					{
-						var gestureDelegate:IGestureDelegate = gesture.delegate;
-						var otherGestureDelegate:IGestureDelegate = otherGesture.delegate;
 						// conditions for gestures relations
 						if (gesture.canPreventGesture(otherGesture) &&
 							otherGesture.canBePreventedByGesture(gesture) &&
-							(!gestureDelegate || !gestureDelegate.gesturesShouldRecognizeSimultaneously(gesture, otherGesture)) &&
-							(!otherGestureDelegate || !otherGestureDelegate.gesturesShouldRecognizeSimultaneously(otherGesture, gesture)))
+							(gesture.gesturesShouldRecognizeSimultaneouslyCallback == null ||
+							 !gesture.gesturesShouldRecognizeSimultaneouslyCallback(gesture, otherGesture)) &&
+							(otherGesture.gesturesShouldRecognizeSimultaneouslyCallback == null ||
+							 !otherGesture.gesturesShouldRecognizeSimultaneouslyCallback(otherGesture, gesture)))
 						{
 							otherGesture.setState_internal(GestureState.FAILED);
 						}
@@ -242,7 +244,8 @@ package org.gestouch.core
 					{
 						gesture = gesturesForTarget[i];
 						if (gesture.enabled &&
-							(!gesture.delegate || gesture.delegate.gestureShouldReceiveTouch(gesture, touch)))
+							(gesture.gestureShouldReceiveTouchCallback == null ||
+							 gesture.gestureShouldReceiveTouchCallback(gesture, touch)))
 						{
 							//TODO: optimize performance! decide between unshift() vs [i++] = gesture + reverse()
 							gesturesForTouch.unshift(gesture);

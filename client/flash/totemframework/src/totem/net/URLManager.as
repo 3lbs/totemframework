@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -18,7 +18,7 @@ package totem.net
 {
 
 	import flash.filesystem.File;
-	
+
 	import ladydebug.Logger;
 
 	public class URLManager
@@ -29,7 +29,7 @@ package totem.net
 
 		public static function instance( url : String ) : URLManager
 		{
-			return new URLManager( url + File.separator, new SingletonEnforcer());
+			return new URLManager( url, new SingletonEnforcer());
 		}
 
 		public static function safeDelimetedURL( value : String, delimiter : String = "|" ) : String
@@ -50,6 +50,11 @@ package totem.net
 			_file = new File( _url );
 		}
 
+		public function get file() : File
+		{
+			return _file;
+		}
+
 		public function getFileUrl( value : String ) : File
 		{
 			return _file.resolvePath( value );
@@ -59,19 +64,19 @@ package totem.net
 		{
 			if ( value && value.indexOf( _url ) > -1 )
 				return null;
-			
+
 			if ( value == "" )
-				return _file.nativePath + fileSeperator;
+				return _file.url + fileSeperator;
 
 			var results : String = value.replace( delimiter, fileSeperator );
 			var tFile : File = _file.resolvePath( results );
 
 			if ( !tFile.exists )
 			{
-				trace( "getURL",  "URL doesnt exsits",  tFile.nativePath );
+				trace( "getURL", "URL doesnt exsits", tFile.nativePath );
 				Logger.warn( this, "getURL", "URL doesnt exsits: " + tFile.nativePath );
 			}
-			
+
 			return tFile.url;
 		}
 	}

@@ -1,6 +1,5 @@
 package org.gestouch.core
 {
-	import flash.display.InteractiveObject;
 	import flash.display.Stage;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
@@ -90,8 +89,8 @@ package org.gestouch.core
 		}
 		
 		
-		gestouch_internal function onTouchBegin(touchID:uint, x:Number, y:Number, nativeTarget:InteractiveObject = null):Boolean
-		{			
+		gestouch_internal function onTouchBegin(touchID:uint, x:Number, y:Number, possibleTarget:Object = null):Boolean
+		{
 			if (touchID in _touchesMap)
 				return false;// touch with specified ID is already registered and being tracked
 			
@@ -119,7 +118,7 @@ package org.gestouch.core
 			var altTarget:Object;
 			for each (var hitTester:ITouchHitTester in _hitTesters)
 			{
-				target = hitTester.hitTest(location, nativeTarget);
+				target = hitTester.hitTest(location, possibleTarget);
 				if (target)
 				{
 					if ((target is Stage))
@@ -161,9 +160,14 @@ package org.gestouch.core
 			if (!touch)
 				return;// touch with specified ID isn't registered
 			
-			touch.updateLocation(x, y, getTimer());
-			
-			_gesturesManager.onTouchMove(touch);
+			if (touch.updateLocation(x, y, getTimer()))
+			{
+				// NB! It appeared that native TOUCH_MOVE event is dispatched also when
+				// the location is the same, but size has changed. We are only interested
+				// in location at the moment, so we shall ignore irrelevant calls.
+				
+				_gesturesManager.onTouchMove(touch);
+			}
 		}
 		
 		

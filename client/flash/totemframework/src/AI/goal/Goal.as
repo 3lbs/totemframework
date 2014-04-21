@@ -31,7 +31,9 @@ package AI.goal
 
 		public static const INACTIVE : int = 20;
 
-		public var owner : TweenComponent;
+		public var ownerSpatial : TweenComponent;
+
+		protected var _gaurds : Vector.<Gaurd> = new Vector.<Gaurd>();
 
 		protected var _interruptible : Boolean = true;
 
@@ -43,7 +45,7 @@ package AI.goal
 
 		public function Goal( owner : TweenComponent )
 		{
-			this.owner = owner;
+			this.ownerSpatial = owner;
 
 			status = INACTIVE;
 
@@ -73,6 +75,32 @@ package AI.goal
 			subgoals.push( goal );
 
 			return goal;
+		}
+
+		public function canComplete() : Boolean
+		{
+
+			var l : int = _gaurds.length;
+
+			while ( l-- )
+			{
+				if ( _gaurds[ l ].gaurded())
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		public function completeGaurds( ... args ) : Goal
+		{
+			for each ( var gaurd : Gaurd in args )
+			{
+				_gaurds.push( gaurd );
+
+			}
+			return this;
 		}
 
 		public function get currentGoal() : Goal
@@ -151,7 +179,11 @@ package AI.goal
 			removeAllSubgoals();
 
 			subgoals = null;
-			owner = null;
+			ownerSpatial = null;
+
+			_gaurds.length = 0;
+			_gaurds = null;
+
 		}
 
 		protected function forwardMessageToFirstSubGoal( event : Event ) : Boolean

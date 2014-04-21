@@ -689,7 +689,6 @@ package totem.core.task
 
 		override public function destroy() : void
 		{
-			super.destroy();
 
 			onStart.removeAll();
 			onStart = null;
@@ -723,6 +722,8 @@ package totem.core.task
 
 			_parent = null;
 			_state = null;
+			
+			super.destroy();
 		}
 	}
 

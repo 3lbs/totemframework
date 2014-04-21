@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -21,11 +21,13 @@ package totem.display.components
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-	
+
 	import totem.events.RemovableEventDispatcher;
 
 	public class MovieClipButton extends RemovableEventDispatcher
 	{
+
+		protected var DISABLE_STATE_FRAME : int = 2;
 
 		protected var DOWN_STATE_FRAME : int = 3;
 
@@ -40,12 +42,14 @@ package totem.display.components
 
 		private var _data : Object;
 
+		private var _enabled : Boolean = true;
+
 		/** @var Reference to TextField */
 		private var _label : TextField;
 
-		private var _name : String;
+		private var _labelText : String;
 
-		private var enabled : Boolean;
+		private var _name : String;
 
 		private var isDown : Boolean;
 
@@ -56,23 +60,8 @@ package totem.display.components
 			_movieClip.buttonMode = true;
 			_movieClip.useHandCursor = true;
 
-			// Detect button & label
-			for ( var i : int = 0; i < mc.numChildren; i++ )
-			{
-				var child : DisplayObject = mc.getChildAt( i );
+			findLabel();
 
-				// Label
-				if ( child is TextField )
-				{
-					_label = child as TextField;
-
-					_label.text = "";
-					_label.mouseEnabled = false;
-					_label.selectable = false;
-				}
-			}
-
-			enable();
 			// Add event listeners
 			attachButtonListeners();
 		}
@@ -115,6 +104,8 @@ package totem.display.components
 
 			_movieClip = null;
 
+			_data = null;
+
 			_label = null;
 		}
 
@@ -144,10 +135,39 @@ package totem.display.components
 			gotoAndStop( UP_STATE_FRAME );
 		}
 
+		public function get enabled() : Boolean
+		{
+			return _enabled;
+		}
+
+		public function set enabled( value : Boolean ) : void
+		{
+			if ( _enabled == value )
+				return;
+
+			_enabled = value;
+
+			if ( _enabled )
+			{
+				attachButtonListeners();
+				_movieClip.mouseEnabled = true;
+				gotoAndStop( UP_STATE_FRAME );
+			}
+			else
+			{
+				detachButtontListeners();
+				gotoAndStop( DISABLE_STATE_FRAME );
+				_movieClip.mouseEnabled = false;
+			}
+		}
+
 		public function gotoAndStop( frame : int ) : void
 		{
-			_movieClip.gotoAndStop( frame );
-			refresh();
+			if ( frame <= _movieClip.totalFrames )
+			{
+				_movieClip.gotoAndStop( frame );
+				refresh();
+			}
 		}
 
 		/**
@@ -191,6 +211,9 @@ package totem.display.components
 		 */
 		public function setText( t : String ) : void
 		{
+
+			_labelText = t;
+
 			if ( _label )
 			{
 				_label.text = t;
@@ -251,6 +274,26 @@ package totem.display.components
 			_movieClip.removeEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent );
 		}
 
+		protected function findLabel() : void
+		{
+			// Detect button & label
+			for ( var i : int = 0; i < _movieClip.numChildren; ++i )
+			{
+				var child : DisplayObject = _movieClip.getChildAt( i );
+
+				// Label
+				if ( child is TextField )
+				{
+					_label = child as TextField;
+
+					_label.text = "";
+					_label.mouseEnabled = false;
+					_label.selectable = false;
+				}
+			}
+
+		}
+
 		/**
 		 * Mouse handler function.
 		 */
@@ -258,10 +301,13 @@ package totem.display.components
 		{
 			if ( !enabled )
 			{
+				//event.updateAfterEvent();
+				//event.stopImmediatePropagation();
+				event.stopPropagation();
 				return;
 			}
 
-			switch ( event.type )
+			/*switch ( event.type )
 			{
 				case MouseEvent.ROLL_OVER:
 				case MouseEvent.MOUSE_OVER:
@@ -278,11 +324,14 @@ package totem.display.components
 					gotoAndStop( UP_STATE_FRAME );
 					break;
 				}
-			}
-			
-			event.stopImmediatePropagation();
+			}*/
 
 			dispatchEvent( event.clone());
+
+			//event.updateAfterEvent();
+			//event.stopImmediatePropagation();
+			event.stopPropagation();
+
 		}
 
 		/**
@@ -290,11 +339,14 @@ package totem.display.components
 		 */
 		protected function refresh() : void
 		{
-			if ( _label )
+
+			findLabel();
+
+			if ( _label && _labelText )
 			{
-				setText( _label.text );
+				setText( _labelText );
 			}
-			
+
 		}
 
 		protected function resetContent() : void

@@ -17,22 +17,31 @@
 package totem.components.animation
 {
 
-	import totem.core.time.TickedComponent;
-	import totem.observer.NotifBroadcaster;
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
 
-	public class AnimatorComponent extends TickedComponent implements IAnimator
+	import totem.components.display.starling.DisplayStarlingRenderer;
+
+	public class AnimatorComponent extends DisplayStarlingRenderer implements IAnimator
 	{
 
-		public var _broadcaster : NotifBroadcaster = new NotifBroadcaster();
+		public var animationComplete : ISignal = new Signal();
+
+		public var animationLoopComplete : ISignal = new Signal();
 
 		public function AnimatorComponent( name : String )
 		{
 			super( name );
 		}
 
-		public function get broadcaster() : NotifBroadcaster
+		override public function destroy() : void
 		{
-			return _broadcaster;
+			super.destroy();
+			stopAnimation();
+		}
+
+		public function goToAndPlay( animName : String, frame : int, type : AnimatorEnum = null ) : void
+		{
 		}
 
 		public function pauseAnimation() : void
@@ -53,21 +62,18 @@ package totem.components.animation
 		override protected function onRemove() : void
 		{
 			super.onRemove();
+			
+			animationComplete.removeAll();
+			
+			animationLoopComplete.removeAll();
+			
 			stopAnimation();
-			broadcaster.destroy();
 		}
 
 		override protected function onRetire() : void
 		{
 			super.onRetire();
 			stopAnimation();
-		}
-		
-		override public function destroy () : void
-		{
-			super.destroy();
-			stopAnimation();
-			broadcaster.destroy();
 		}
 	}
 }

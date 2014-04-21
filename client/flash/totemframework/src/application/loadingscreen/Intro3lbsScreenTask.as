@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,16 +17,12 @@
 package application.loadingscreen
 {
 
-	import flash.display.Loader;
-	import flash.display.MovieClip;
-	
 	import application.task.DelayTask;
 	import application.task.FadeFromTask;
 	import application.task.FadeToTask;
-	import application.task.FunctionTask;
+	import application.task.PlayMovieTask;
 	
 	import totem.core.task.SequenceTask;
-	import totem.utils.MovieClipUtil;
 
 	public class Intro3lbsScreenTask extends SequenceTask
 	{
@@ -34,7 +30,7 @@ package application.loadingscreen
 
 		private var introScreen : AppLoadingScreen;
 
-		public function Intro3lbsScreenTask( screen : AppLoadingScreen, delay : int = 3000 )
+		public function Intro3lbsScreenTask( screen : AppLoadingScreen, delay : int = 0 )
 		{
 			super( NAME );
 
@@ -43,8 +39,8 @@ package application.loadingscreen
 
 			addTask( new DelayTask( 100 ));
 			addTask( new FadeFromTask( introScreen, 0x000000, .3 ));
-			addTask( new FunctionTask( stopAllMovie ));
-			addTask( new DelayTask( delay ));
+			addTask( new PlayMovieTask( introScreen.get3lbsScreen(), delay ) );
+			//addTask( new DelayTask( delay ));
 			addTask( new FadeToTask( introScreen, 0x000000, .3 ));
 			addTask( new DelayTask( 100 ));
 
@@ -55,12 +51,6 @@ package application.loadingscreen
 			super.destroy();
 
 			introScreen = null;
-		}
-
-		private function stopAllMovie() : void
-		{
-			var _loader : Loader = introScreen.get3lbsScreen();
-			MovieClipUtil.stopAllAnimation( _loader.content as MovieClip );
 		}
 	}
 }

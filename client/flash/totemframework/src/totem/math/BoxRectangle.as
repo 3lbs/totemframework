@@ -18,7 +18,7 @@ package totem.math
 {
 
 	import flash.geom.Rectangle;
-
+	
 	import totem.data.type.Point2d;
 
 	public class BoxRectangle extends Rectangle
@@ -46,11 +46,11 @@ package totem.math
 
 		private var _center : Vector2D;
 
-		private var _position : Vector2D;
+		private var _position : Point2d;
 
 		public function BoxRectangle( x : Number = 0, y : Number = 0, width : Number = 0, height : Number = 0 )
 		{
-			_position = new Vector2D( x, y );
+			_position = new Point2d( x, y );
 			super( x, y, width, height );
 		}
 
@@ -143,13 +143,13 @@ package totem.math
 			this.height *= scalar;
 			return this;
 		}
-
+		
 		public function multiplyBy( scalar : Number ) : BoxRectangle
 		{
 			return BoxRectangle.create( x * scalar, y * scalar, width * scalar, height * scalar );
 		}
 
-		public function get position() : Vector2D
+		public function get position() : Point2d
 		{
 			_position.x = x;
 			_position.y = y;

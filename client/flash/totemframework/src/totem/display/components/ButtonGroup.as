@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -19,7 +19,7 @@ package totem.display.components
 
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
-	
+
 	import totem.events.RemovableEventDispatcher;
 
 	public class ButtonGroup extends RemovableEventDispatcher
@@ -38,7 +38,7 @@ package totem.display.components
 		{
 			buttonGroup.push( button );
 			button.addEventListener( MouseEvent.CLICK, handleButtonTrigged );
-			
+
 			return button;
 		}
 
@@ -97,12 +97,15 @@ package totem.display.components
 
 		private function handleButtonTrigged( eve : MouseEvent ) : void
 		{
-			if ( eve.target == _currentSelectButton )
+
+			var button : IButton = eve.target as IButton;
+
+			if ( button == _currentSelectButton || !button.enabled )
 				return;
 
 			_currentSelectButton = eve.target as IButton;
 			setButtonState( _currentSelectButton );
-			
+
 			dispatchEvent( new ButtonEvent( ButtonEvent.TRIGGERED, _currentSelectButton.data ));
 		}
 
@@ -113,9 +116,12 @@ package totem.display.components
 
 			for ( i = 0; i < buttonGroup.length; ++i )
 			{
-				buttonGroup[ i ].selected = ( buttonGroup[ i ] === button ) ? true : false;
+				if ( buttonGroup[ i ].enabled )
+				{
+					buttonGroup[ i ].selected = ( buttonGroup[ i ] === button ) ? true : false;
+				}
 			}
-			
+
 		}
 	}
 }

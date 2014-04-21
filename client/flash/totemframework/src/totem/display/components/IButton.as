@@ -33,5 +33,9 @@ package totem.display.components
 		function get selected() : Boolean;
 
 		function set selected( value : Boolean ) : void;
+		
+		function get enabled () : Boolean;
+		
+		function set enabled ( value : Boolean ) : void;
 	}
 }

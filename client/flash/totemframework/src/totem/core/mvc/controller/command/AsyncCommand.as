@@ -29,10 +29,6 @@ package totem.core.mvc.controller.command
 			
 		}
 		
-		override public function execute() : void
-		{
-		}
-		
 		public function get isComplete() : Boolean
 		{
 			return _isComplete;

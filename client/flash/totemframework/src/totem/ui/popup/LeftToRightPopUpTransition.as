@@ -19,24 +19,28 @@ package totem.ui.popup
 
 	import com.greensock.TweenMax;
 	import com.greensock.easing.Back;
-
+	
 	import flash.display.DisplayObject;
+	
+	import ladydebug.Logger;
 
 	public class LeftToRightPopUpTransition extends BasePopUpTransition
 	{
 		public function LeftToRightPopUpTransition( displayObject : DisplayObject )
 		{
 			super( displayObject );
+			
+			Logger.info( this, "LeftToRightPopUpTransition", " constructor" );
 		}
 
 		override public function animateIn() : void
 		{
-			TweenMax.from( popUp, .5, { alpha: .3, x: popUp.x - 150, ease: Back.easeOut });
+			TweenMax.from( popUp, .8, { alpha: .3, x: popUp.x - 150, ease: Back.easeOut });
 		}
 
 		override public function animateOut() : void
 		{
-			TweenMax.to( popUp, .3, { alpha: 0, x: popUp.x + 150, ease: Back.easeOut, onComplete: complete });
+			TweenMax.to( popUp, .8, { alpha: 0, x: popUp.x + 150, ease: Back.easeOut, onComplete: complete });
 		}
 	}
 }

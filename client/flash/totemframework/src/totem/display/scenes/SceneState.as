@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,17 +17,20 @@
 package totem.display.scenes
 {
 
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
+	
 	import totem.core.Destroyable;
 	import totem.display.layout.ScreenComposite;
 	import totem.monitors.progress.IProgressMonitor;
 
 	public class SceneState extends Destroyable implements ISceneState
 	{
-		
+
 		public static const NO_TRANSITION : String = "NoTransition";
-		
+
 		public static const TRANSITION_IMAGE : String = "UseImageForTransition";
-		
+
 		public static const TRANSITION_QUICK : String = "QuickTransitionNoImage";
 
 		public var canBeDestroyed : Boolean = true;
@@ -40,6 +43,7 @@ package totem.display.scenes
 
 		public var screen : ScreenComposite;
 
+		
 		protected var _progressMonitor : IProgressMonitor;
 
 		private var _name : String;
@@ -51,8 +55,14 @@ package totem.display.scenes
 
 		override public function destroy() : void
 		{
-			super.destroy();
 			screen = null;
+
+			if ( _progressMonitor )
+			{
+				_progressMonitor = null;
+			}
+			
+			super.destroy();
 		}
 
 		public function enter( fsm : SceneStateMachine ) : void

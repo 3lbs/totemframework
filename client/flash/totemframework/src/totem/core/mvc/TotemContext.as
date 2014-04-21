@@ -28,6 +28,7 @@ package totem.core.mvc
 	import totem.events.RemovableEventDispatcher;
 	import totem.monitors.progress.IProgressMonitor;
 	import totem.monitors.progress.ProgressMonitor;
+	import totem.monitors.promise.wait;
 
 	use namespace totem_internal;
 
@@ -102,7 +103,8 @@ package totem.core.mvc
 			if ( _mainClass.stage )
 			{
 				_stage = _mainClass.stage;
-				initializeApplication();
+				//initializeApplication();
+				wait( 10, initializeApplication );
 			}
 		}
 
@@ -119,7 +121,7 @@ package totem.core.mvc
 		protected function initializeApplication() : void
 		{
 			initialize();
-			start();
+			wait( 100, start );
 		}
 	}
 }

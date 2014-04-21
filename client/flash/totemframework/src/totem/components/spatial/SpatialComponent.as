@@ -18,18 +18,22 @@ package totem.components.spatial
 {
 
 	import flash.utils.Dictionary;
-
+	
+	import starling.display.Quad;
+	
+	import totem.components.display.IDisplay2DRenderer;
 	import totem.core.params.Transform2DParam;
 	import totem.core.time.TickedComponent;
 	import totem.data.type.Point2d;
 	import totem.math.AABBox;
 	import totem.math.Vector2D;
+	import totem.utils.ColorUtil;
 
 	public class SpatialComponent extends TickedComponent implements ISpatial2D
 	{
 		public static const NAME : String = "spatialComponent";
 
-		public var defaultOffset : Vector2D = new Vector2D();
+		public var boundsOffset : Vector2D = new Vector2D();
 
 		protected var _position : Vector2D = new Vector2D();
 
@@ -51,6 +55,8 @@ package totem.components.spatial
 
 		private var _height : int;
 
+		private var _locked : Boolean;
+
 		private var _positionOffset : Vector2D = new Vector2D();
 
 		private var _rotation : Number = 0;
@@ -64,6 +70,8 @@ package totem.components.spatial
 		private var _type : int;
 
 		private var _width : int;
+
+		private var boundImage : Quad;
 
 		private var dirtyOffset : Boolean;
 
@@ -116,6 +124,12 @@ package totem.components.spatial
 
 		public function containsPoint( pt : Point2d ) : Boolean
 		{
+			/*trace( pt.toString() );
+			trace( _bounds.toString () );
+			trace(  _bounds.containsPoint( pt ) );
+			
+			if ( _bounds.containsPoint( pt ) == false )
+				trace("stop");*/
 			return _bounds.containsPoint( pt );
 		}
 
@@ -152,8 +166,20 @@ package totem.components.spatial
 
 			_height = value;
 
+			_bounds.setSize( _width, _height )
+				
 			dirtyPosition = true;
 			updateTransfrom();
+		}
+
+		public function get locked() : Boolean
+		{
+			return _locked;
+		}
+
+		public function set locked( value : Boolean ) : void
+		{
+			_locked = value;
 		}
 
 		override public function onTick() : void
@@ -270,6 +296,7 @@ package totem.components.spatial
 		public function subscribe( component : ISpatialObserver ) : void
 		{
 			observers.push( component );
+			dirtyPosition = dirtyOffset = dirtyRotation = dirtyScale = true;
 		}
 
 		public function get type() : int
@@ -308,6 +335,8 @@ package totem.components.spatial
 
 			_width = value;
 
+			_bounds.setSize( _width, _height );
+				
 			dirtyPosition = true;
 			updateTransfrom();
 		}
@@ -391,6 +420,8 @@ package totem.components.spatial
 
 			dirtyPosition = true;
 
+			_bounds.setSize( _width, _height );
+			
 			updateTransfrom();
 
 			dispatchUpdate();
@@ -427,14 +458,37 @@ package totem.components.spatial
 
 			if ( dirtyPosition == true )
 			{
-				tempOffset.copy( position ).addTo( defaultOffset ).addTo( positionOffset );
+				tempOffset.copy( position ).addTo( boundsOffset ); //.addTo( positionOffset );
 				_bounds.moveTo( tempOffset );
+
+				//drawHitArea();
+
 			}
 
-			if ( dirtyScale == true )
+		}
+
+		private function drawHitArea() : void
+		{
+
+			if ( !activated )
+				return;
+
+			var displayComponent : IDisplay2DRenderer = getSibling( IDisplay2DRenderer );
+
+			if ( !boundImage )
 			{
-				_bounds.setSize( _width * _scaleX, _height * _scaleY );
+				boundImage = new Quad( _bounds.width, _bounds.height, ColorUtil.AQUA );
+				displayComponent.displayObject.parent.addChild( boundImage );
 			}
+
+			if ( boundImage )
+			{
+				var p : Vector2D = _bounds.center; //.subtractedBy( defaultOffset ); //.subtract( positionOffset );
+				
+				boundImage.x = p.x; // - (width * 0.5);
+				boundImage.y = p.y ; //- ( height * 0.5 );
+			}
+
 		}
 	}
 }

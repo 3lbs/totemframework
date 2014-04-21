@@ -18,25 +18,26 @@ package totem.display.scenes
 {
 
 	import flash.utils.Dictionary;
-
+	
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-
+	
 	import totem.core.mvc.model.Model;
 	import totem.display.layout.ScreenComposite;
+	import totem.monitors.promise.wait;
 
 	public class SceneStateMachine extends Model
 	{
+
+		public var buildComplete : ISignal = new Signal();
 
 		public var parentScreen : ScreenComposite;
 
 		public var states : Dictionary = new Dictionary();
 
-		public var transitionDispatcher : ISignal = new Signal();
+		private var _currentState : SceneState = null;
 
-		private var _currentState : ISceneState = null;
-
-		private var _previousState : ISceneState = null;
+		private var _previousState : SceneState = null;
 
 		public function SceneStateMachine( screen : ScreenComposite )
 		{
@@ -61,31 +62,31 @@ package totem.display.scenes
 			return "";
 		}
 
-		public function getCurrentState() : ISceneState
+		public function getCurrentState() : SceneState
 		{
 			return _currentState;
 		}
 
-		public function getPreviousState() : ISceneState
+		public function getPreviousState() : SceneState
 		{
 			return _previousState;
 		}
 
-		public function getState( name : String ) : ISceneState
+		public function getState( name : String ) : SceneState
 		{
-			return states[ name ] as ISceneState;
+			return states[ name ];
 		}
 
-		public function removeState( state : ISceneState ) : ISceneState
+		public function removeState( state : SceneState ) : SceneState
 		{
 			return removeStateByName( state.name );
 		}
 
-		public function removeStateByName( name : String ) : ISceneState
+		public function removeStateByName( name : String ) : SceneState
 		{
 			if ( states[ name ])
 			{
-				var state : ISceneState = states[ name ];
+				var state : SceneState = states[ name ];
 				states[ name ] = null;
 				delete states[ name ];
 
@@ -96,7 +97,7 @@ package totem.display.scenes
 
 		public function setCurrentState( name : String, force : Boolean = false ) : ISceneState
 		{
-			var newState : ISceneState = getState( name );
+			var newState : SceneState = getState( name );
 
 			if ( !newState )
 				return null;
@@ -108,9 +109,14 @@ package totem.display.scenes
 			if ( _previousState )
 				_previousState.exit( this );
 
-			_currentState.enter( this );
+			wait( 100, enterNextState );
 
 			return _currentState;
+		}
+
+		private function enterNextState() : void
+		{
+			_currentState.enter( this );
 		}
 	}
 }

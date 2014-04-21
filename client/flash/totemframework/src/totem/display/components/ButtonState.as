@@ -21,9 +21,6 @@ package totem.display.components
 	public class ButtonState extends Destroyable
 	{
 
-		public var DOWN_STATE_FRAME : int = 3;
-
-		public var OVER_STATE_FRAME : int = 2;
 
 		public var UP_STATE_FRAME : int = 1;
 
@@ -41,8 +38,6 @@ package totem.display.components
 		public function firstFrame( frame : int ) : void
 		{
 			UP_STATE_FRAME = frame;
-			OVER_STATE_FRAME = UP_STATE_FRAME + 1;
-			DOWN_STATE_FRAME = OVER_STATE_FRAME + 1;
 		}
 		
 		override public function destroy():void

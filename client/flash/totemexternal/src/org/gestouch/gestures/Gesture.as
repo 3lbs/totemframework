@@ -3,7 +3,6 @@ package org.gestouch.gestures
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.core.GestureState;
 	import org.gestouch.core.GesturesManager;
-	import org.gestouch.core.IGestureDelegate;
 	import org.gestouch.core.IGestureTargetAdapter;
 	import org.gestouch.core.Touch;
 	import org.gestouch.core.gestouch_internal;
@@ -15,6 +14,8 @@ package org.gestouch.gestures
 	import flash.system.Capabilities;
 	import flash.utils.Dictionary;
 	
+	use namespace gestouch_internal;
+	
 	
 	/**
 	 * Dispatched when the state of the gesture changes.
@@ -23,13 +24,6 @@ package org.gestouch.gestures
 	 * @see #state
 	 */
 	[Event(name="gestureStateChange", type="org.gestouch.events.GestureEvent")]
-	/**
-	 * Dispatched when the state of the gesture changes to GestureState.IDLE.
-	 * 
-	 * @eventType org.gestouch.events.GestureEvent
-	 * @see #state
-	 */
-	[Event(name="gestureIdle", type="org.gestouch.events.GestureEvent")]
 	/**
 	 * Dispatched when the state of the gesture changes to GestureState.POSSIBLE.
 	 * 
@@ -59,6 +53,30 @@ package org.gestouch.gestures
 		 */
 		public static var DEFAULT_SLOP:uint = Math.round(20 / 252 * flash.system.Capabilities.screenDPI);
 		
+		/**
+		 * If a gesture should receive a touch.
+		 * Callback signature: function(gesture:Gesture, touch:Touch):Boolean
+		 * 
+		 * @see Touch
+		 */
+		public var gestureShouldReceiveTouchCallback:Function;
+		/**
+		 * If a gesture should be recognized (transition from state POSSIBLE to state RECOGNIZED or BEGAN).
+		 * Returning <code>false</code> causes the gesture to transition to the FAILED state.
+		 * 
+		 * Callback signature: function(gesture:Gesture):Boolean
+		 * 
+		 * @see state
+		 * @see GestureState
+		 */
+		public var gestureShouldBeginCallback:Function;
+		/**
+		 * If two gestures should be allowed to recognize simultaneously.
+		 * 
+		 * Callback signature: function(gesture:Gesture, otherGesture:Gesture):Boolean
+		 */
+		public var gesturesShouldRecognizeSimultaneouslyCallback:Function;
+		
 		
 		protected const _gesturesManager:GesturesManager = Gestouch.gesturesManager;
 		/**
@@ -72,10 +90,6 @@ package org.gestouch.gestures
 		 */
 		protected var _gesturesToFail:Dictionary = new Dictionary(true);
 		protected var _pendingRecognizedState:GestureState;
-		
-		private var eventListeners:Dictionary = new Dictionary();
-		
-		use namespace gestouch_internal;
 		
 		
 		public function Gesture(target:Object = null)
@@ -163,32 +177,17 @@ package org.gestouch.gestures
 		}
 		
 		
-		private var _delegateWeekStorage:Dictionary;
-		public function get delegate():IGestureDelegate
-		{
-			for (var key:Object in _delegateWeekStorage)
-			{
-				return key as IGestureDelegate;
-			}
-			return null;
-		}
-		public function set delegate(value:IGestureDelegate):void
-		{
-			for (var key:Object in _delegateWeekStorage)
-			{
-				delete _delegateWeekStorage[key];
-			}
-			if (value)
-			{
-				(_delegateWeekStorage ||= new Dictionary(true))[value] = true;
-			}
-		}
-		
-		
-		protected var _state:GestureState = GestureState.IDLE;
+		protected var _state:GestureState = GestureState.POSSIBLE;
 		public function get state():GestureState
 		{
 			return _state;
+		}
+		
+		
+		protected var _idle:Boolean = true;
+		gestouch_internal function get idle():Boolean
+		{
+			return _idle;
 		}
 		
 		
@@ -222,43 +221,6 @@ package org.gestouch.gestures
 		//
 		//--------------------------------------------------------------------------
 		
-		override public function addEventListener(type:String, listener:Function, 
-												  useCapture:Boolean = false, priority:int = 0,
-												  useWeakReference:Boolean = false):void
-		{
-			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
-			
-			const listenerProps:Array = eventListeners[listener] as Array;
-			if (listenerProps)
-			{
-				listenerProps.push(type, useCapture);
-			}
-			else
-			{
-				eventListeners[listener] = [type, useCapture];
-			}
-		}
-		
-		
-		public function removeAllEventListeners():void
-		{
-			for (var listener:Object in eventListeners)
-			{
-				const listenerProps:Array = eventListeners[listener] as Array;
-				
-				var n:uint = listenerProps.length;
-				for (var i:uint = 0; i < n;)
-				{
-					super.removeEventListener(listenerProps[i++] as String, listener as Function, listenerProps[i++] as Boolean);
-				}
-				
-				delete eventListeners[listener];
-			}
-			
-//			eventListeners = new Dictionary(true);
-		}
-		
-		
 		[Abstract]
 		/**
 		 * Reflects gesture class (for better perfomance).
@@ -286,15 +248,16 @@ package org.gestouch.gestures
 		 */
 		public function reset():void
 		{
-			var state:GestureState = this.state;//caching getter
+			if (idle)
+				return;// Do nothing as we are idle and there is nothing to reset
 			
-			if (state == GestureState.IDLE)
-				return;// Do nothing as we're in IDLE and nothing to reset
+			const state:GestureState = this.state;//caching getter
 			
 			_location.x = 0;
 			_location.y = 0;
 			_touchesMap = {};
 			_touchesCount = 0;
+			_idle = true;
 			
 			for (var key:* in _gesturesToFail)
 			{
@@ -320,7 +283,7 @@ package org.gestouch.gestures
 				// state == GestureState.ENDED ||
 				// state == GestureState.FAILED ||
 				// state == GestureState.CANCELLED)
-				setState(GestureState.IDLE);
+				setState(GestureState.POSSIBLE);
 			}
 		}
 		
@@ -334,21 +297,21 @@ package org.gestouch.gestures
 		{
 			//TODO
 			reset();
-			removeAllEventListeners();
 			target = null;
-			delegate = null;
+			gestureShouldReceiveTouchCallback = null;
+			gestureShouldBeginCallback = null;
+			gesturesShouldRecognizeSimultaneouslyCallback = null;
 			_gesturesToFail = null;
-			eventListeners = null;
 		}
 		
 		
-		public function canBePreventedByGesture(preventingGesture:Gesture):Boolean
+		gestouch_internal function canBePreventedByGesture(preventingGesture:Gesture):Boolean
 		{
 			return true;
 		}
 		
 		
-		public function canPreventGesture(preventedGesture:Gesture):Boolean
+		gestouch_internal function canPreventGesture(preventedGesture:Gesture):Boolean
 		{
 			return true;
 		}
@@ -420,7 +383,7 @@ package org.gestouch.gestures
 		 */
 		protected function ignoreTouch(touch:Touch):void
 		{
-			if (_touchesMap.hasOwnProperty(touch.id))
+			if (touch.id in _touchesMap)
 			{
 				delete _touchesMap[touch.id];
 				_touchesCount--;
@@ -434,7 +397,7 @@ package org.gestouch.gestures
 			{
 				setState(GestureState.FAILED);
 			}
-			else if (state != GestureState.IDLE)
+			else
 			{
 				ignoreTouch(touch);
 			}
@@ -503,6 +466,12 @@ package org.gestouch.gestures
 					_state + " to state " + newState  + ".");
 			}
 			
+			if (newState != GestureState.POSSIBLE)
+			{
+				// in case instantly switch state in touchBeganHandler()
+				_idle = false;
+			}
+			
 			
 			if (newState == GestureState.BEGAN || newState == GestureState.RECOGNIZED)
 			{
@@ -514,7 +483,7 @@ package org.gestouch.gestures
 				for (key in _gesturesToFail)
 				{
 					gestureToFail = key as Gesture;
-					if (gestureToFail.state != GestureState.IDLE &&
+					if (!gestureToFail.idle &&
 						gestureToFail.state != GestureState.POSSIBLE &&
 						gestureToFail.state != GestureState.FAILED)
 					{
@@ -548,7 +517,7 @@ package org.gestouch.gestures
 				}
 				
 				
-				if (delegate && !delegate.gestureShouldBegin(this))
+				if (gestureShouldBeginCallback != null && !gestureShouldBeginCallback(this))
 				{
 					setState(GestureState.FAILED);
 					return false;
@@ -637,9 +606,9 @@ package org.gestouch.gestures
 			
 			onTouchBegin(touch);
 			
-			if (_touchesCount == 1 && state == GestureState.IDLE)
+			if (_touchesCount == 1 && state == GestureState.POSSIBLE)
 			{
-				setState(GestureState.POSSIBLE);
+				_idle = false;
 			}
 		}
 		
@@ -701,11 +670,9 @@ package org.gestouch.gestures
 				// at this point all gestures-to-fail are either in IDLE or in FAILED states
 				setState(_pendingRecognizedState);
 			}
-			else if (event.newState != GestureState.IDLE && event.newState != GestureState.POSSIBLE)
+			else if (event.newState != GestureState.POSSIBLE)
 			{
-				// NB: _other_ gesture may switch to IDLE state if it was in FAILED when
-				// _this_ gesture initially attempted to switch to one of recognized state.
-				// ...and that's OK (we ignore that)
+				//TODO: need to re-think this over
 				
 				setState(GestureState.FAILED);
 			}

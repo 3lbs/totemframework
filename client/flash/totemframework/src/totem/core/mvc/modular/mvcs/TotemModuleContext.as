@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -30,7 +30,7 @@ package totem.core.mvc.modular.mvcs
 	public class TotemModuleContext extends TotemContext
 	{
 
-		private var _moduleEventDispatcher : IModuleEventDispatcher;
+		private var _moduleEventDispatcher : IModuleEventDispatcher = new ModuleEventDispatcher();
 
 		public function TotemModuleContext( name : String, mainclass : DisplayObjectContainer, group : TotemGroup )
 		{
@@ -54,7 +54,6 @@ package totem.core.mvc.modular.mvcs
 		{
 			super.initialize();
 
-			_moduleEventDispatcher = new ModuleEventDispatcher();
 			injector.map( IModuleEventDispatcher ).toValue( _moduleEventDispatcher );
 		}
 

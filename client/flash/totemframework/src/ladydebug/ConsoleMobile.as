@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -43,7 +43,7 @@ package ladydebug
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
-	
+
 	import totem.core.input.simple.KeyboardKey;
 	import totem.monitors.promise.wait;
 
@@ -117,6 +117,8 @@ package ladydebug
 		protected var tabCompletionCurrentStart : int = 0;
 
 		protected var tabCompletionPrefix : String = "";
+
+		private var _initalized : Boolean;
 
 		private var debugCommandMap : Vector.<DebugCommand>;
 
@@ -213,6 +215,12 @@ package ladydebug
 
 		public function initialize( stage : Stage ) : void
 		{
+
+			if ( _initalized )
+				return;
+
+			_initalized = true;
+
 			name = "Console";
 			this.ownerStage = stage;
 

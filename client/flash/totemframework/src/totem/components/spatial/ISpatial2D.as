@@ -17,13 +17,13 @@
 package totem.components.spatial
 {
 
-	import totem.core.IDestroyable;
+	import totem.core.ITotemComponent;
 	import totem.core.api.IUID;
 	import totem.data.type.Point2d;
 	import totem.math.AABBox;
 	import totem.math.Vector2D;
 
-	public interface ISpatial2D extends IUID, IDestroyable
+	public interface ISpatial2D extends IUID, ITotemComponent
 	{
 
 		function get bounds() : AABBox;
@@ -37,6 +37,8 @@ package totem.components.spatial
 		function set depth( value : int ) : void;
 
 		function getSpatialManager() : ISpatialManager;
+
+		function get locked() : Boolean;
 
 		function get position() : Vector2D;
 

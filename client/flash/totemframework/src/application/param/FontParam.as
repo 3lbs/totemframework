@@ -22,7 +22,7 @@ package application.param
 
 		public var fontSWFURL : String;
 
-		public var fonts : Array;
+		public var fontNames : Array;
 
 		public function FontParam()
 		{

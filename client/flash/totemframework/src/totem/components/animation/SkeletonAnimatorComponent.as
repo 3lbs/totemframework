@@ -45,7 +45,7 @@ package totem.components.animation
 
 			//this.armature.addEventListener( AnimationEvent.START, aramtureEventHandler );
 
-			//this.armature.addEventListener( AnimationEvent.LOOP_COMPLETE, handleAimationLoopComplete );
+			this.armature.addEventListener( AnimationEvent.LOOP_COMPLETE, handleAimationLoopComplete );
 		}
 
 		public function getBone( name : String ) : Bone
@@ -79,12 +79,12 @@ package totem.components.animation
 
 		protected function handleAimationLoopComplete( event : AnimationEvent ) : void
 		{
-			//broadcaster.dispatchNotifWith( AnimatorEvent.ANIMATION_LOOPED_COMPLETE );
+			animationLoopComplete.dispatch();
 		}
 
 		protected function handleAnimationComplete( event : Event ) : void
 		{
-			broadcaster.dispatchNotifWith( AnimatorEvent.ANIMATION_FINISHED_EVENT );
+			animationComplete.dispatch();
 		}
 
 		override protected function onActivate() : void

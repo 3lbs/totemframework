@@ -18,7 +18,7 @@ package totem.components.input
 {
 
 	import totem.core.TotemComponent;
-	import totem.core.input.InputMonitor;
+	import totem.core.input.StarlingInputMonitor;
 	import totem.observer.NotifBroadcaster;
 
 	public class TouchInputComponent extends TotemComponent implements IInputComponent
@@ -27,22 +27,22 @@ package totem.components.input
 
 		private var _broadcaster : NotifBroadcaster = new NotifBroadcaster();
 
-		private var _controller : InputMonitor;
+		private var _controller : StarlingInputMonitor;
 
 		private var _enabled : Boolean;
 
-		public function TouchInputComponent( controller : InputMonitor, name : String = null )
+		public function TouchInputComponent( controller : StarlingInputMonitor, name : String = null )
 		{
 			super( NAME || name );
 
 			this.controller = controller;
 		}
 
-		public function addController( controller : InputMonitor ) : void
+		public function addController( controller : StarlingInputMonitor ) : void
 		{
-			controller.touchBegin.add( handleTouchBegin );
-			controller.touchEnd.add( handleTouchEnd );
-			controller.touchMove.add( handleTouchMove )
+			//controller.touchBegin.add( handleTouchBegin );
+			//controller.touchEnd.add( handleTouchEnd );
+			//controller.touchMove.add( handleTouchMove )
 		}
 
 		public function get broadcaster() : NotifBroadcaster
@@ -50,12 +50,12 @@ package totem.components.input
 			return _broadcaster;
 		}
 
-		public function get controller() : InputMonitor
+		public function get controller() : StarlingInputMonitor
 		{
 			return _controller;
 		}
 
-		public function set controller( value : InputMonitor ) : void
+		public function set controller( value : StarlingInputMonitor ) : void
 		{
 			_controller = value;
 
@@ -75,9 +75,9 @@ package totem.components.input
 
 		public function removeController() : void
 		{
-			_controller.touchBegin.remove( handleTouchBegin );
-			_controller.touchEnd.remove( handleTouchMove );
-			_controller.touchMove.remove( handleTouchMove );
+			//_controller.touchBegin.remove( handleTouchBegin );
+			//_controller.touchEnd.remove( handleTouchMove );
+			//_controller.touchMove.remove( handleTouchMove );
 		}
 
 		protected function handleTouchBegin( globalX : Number, globalY : Number ) : void

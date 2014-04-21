@@ -19,7 +19,7 @@ package totem.core.time.scheduler
 
 	import org.as3commons.collections.LinkedList;
 	import org.as3commons.collections.framework.core.LinkedListIterator;
-
+	
 	import totem.core.TotemSystem;
 	import totem.core.time.ITicked;
 	import totem.time.date.globalTime;

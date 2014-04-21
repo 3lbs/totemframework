@@ -22,7 +22,6 @@ package application.task
 	import flash.display.DisplayObjectContainer;
 	
 	import totem.core.task.Task;
-	import totem.utils.MovieClipUtil;
 
 	public class FadeFromTask extends Task
 	{
@@ -50,7 +49,6 @@ package application.task
 
 		override protected function complete() : Boolean
 		{
-			MovieClipUtil.playAllAnimation( displayObject );
 			return super.complete();
 		}
 		
@@ -72,7 +70,6 @@ package application.task
 			if ( displayObject )
 			{
 				displayObject.visible = true;
-				MovieClipUtil.stopAllAnimation( displayObject );
 				TweenMax.from( displayObject, time, { tint: color, onComplete: complete });
 			}
 			else

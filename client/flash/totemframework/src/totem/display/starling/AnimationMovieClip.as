@@ -277,8 +277,10 @@ package totem.display.starling
 			}
 			else
 			{
+				
 				if ( _animations[ animName ])
 				{
+					_currentTime = 0.0;
 					_currentFrame = 0; // reset to first frame
 					_currentAnimation = _animations[ animName ];
 

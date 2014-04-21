@@ -71,13 +71,18 @@ package totem.time
 		
 		private var _elapsedTime:int;
 		private var _startTime:int;
-		private var _isStopped:Boolean;
+		private var _isStopped:Boolean = true;
 		
 		
 		//-----------------------------------------------------------------------------------------
 		// Public Methods
 		//-----------------------------------------------------------------------------------------
 		
+		public function get isStopped():Boolean
+		{
+			return _isStopped;
+		}
+
 		/**
 		 * Starts the Stopwatch and resets any previous elapsed time.
 		 */

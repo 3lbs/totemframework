@@ -24,7 +24,7 @@ package totem.core.params.animation
 
 		public var fps : int;
 
-		public var url : String;
+		public var atlasID : String;
 
 		private var _animationData : Vector.<AnimationDataParam> = new Vector.<AnimationDataParam>();
 
