@@ -159,6 +159,11 @@ package totem.math
 				return result;
 			}
 		}
+		
+		public static function radianOf (deg:Number):Number
+		{
+			return deg/180*Math.PI;
+		}
 	}
 }
 

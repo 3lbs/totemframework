@@ -87,7 +87,6 @@
     <classEntry path="localization.LocalizationManager"/>
     <classEntry path="localization.injectLocalize"/>
     <classEntry path="localization.localize"/>
-    <classEntry path="quest.Quest"/>
     <classEntry path="quest.QuestParam"/>
     <classEntry path="quest.QuestSystem"/>
     <classEntry path="quest.SubQuest"/>
@@ -534,6 +533,10 @@
     <classEntry path="totem.core.input.TGesture"/>
     <classEntry path="totem.core.input.ZoomTGesture"/>
     <classEntry path="totem.core.input.PanTGesture"/>
+    <classEntry path="totem.core.input.NativeMouseSwipeMonitor"/>
+    <classEntry path="minimvc.MiniContext"/>
+    <classEntry path="minimvc.MiniController"/>
+    <classEntry path="minimvc.MiniMediator"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -18,11 +18,11 @@ package totem.core.state
 {
 
 	import flash.utils.Dictionary;
-
+	
 	import ladydebug.Logger;
-	import totem.core.Injectable;
-
+	
 	import totem.totem_internal;
+	import totem.core.Injectable;
 	import totem.utils.DestroyUtil;
 
 	/**
@@ -100,7 +100,12 @@ package totem.core.state
 		{
 			// DefaultState - we get it if no state is set.
 			if ( !_currentState )
+			{
+				if ( !defaultState )
+					return null;
+
 				setCurrentState( defaultState );
+			}
 
 			return _currentState;
 		}
@@ -183,8 +188,10 @@ package totem.core.state
 			_setNewState = false;
 
 			// DefaultState - we get it if no state is set.
-			if ( !_currentState )
+			if ( !_currentState && defaultState )
+			{
 				setCurrentState( defaultState );
+			}
 
 			if ( _currentState )
 				_currentState.tick( this );

@@ -18,7 +18,7 @@ package totem.math
 {
 
 	import flash.geom.Point;
-
+	
 	import totem.core.Destroyable;
 	import totem.data.type.Point2d;
 
@@ -178,7 +178,28 @@ package totem.math
 			return Math.atan2( dy, dx );
 			//return Math.acos( dotOf( vector ) / ( length * vector.length ));
 		}
-
+		
+		
+		public function angleBetween(vector2:Vector2D):Number
+		{	
+			//get normalised vectors
+			var norm1:Vector2D = this.getNormalized();
+			var norm2:Vector2D = vector2.getNormalized();
+			
+			//dot product of vectors to find angle
+			var product:Number = norm1.dotOf(norm2);
+			product = Math.min(1, product);
+			var angle:Number = Math.acos(product);
+			
+			//slides of vector
+			if (this.vectorProduct(vector2) < 0) angle *= -1
+			return angle;
+		}
+		
+		public function vectorProduct(vector2:Vector2D):Number 
+		{
+			return this.x * vector2.y - this.y * vector2.x;
+		}
 		/**
 		 * Easy way to make a copy of this Vector
 		 * @return a New Vector object with the same properties as this Vector

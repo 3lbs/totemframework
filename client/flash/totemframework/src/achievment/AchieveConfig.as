@@ -8,25 +8,28 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
 
-package quest
+package achievment
 {
 
-	import totem.core.TotemSystem;
-
-	public class QuestSystem extends TotemSystem
+	public class AchieveConfig
 	{
 
-		public static const NAME : String = "QuestSystem";
+		public static const STATE_ACTIVE : int = 2;
 
-		public function QuestSystem( name : String = NAME )
+		public static const STATE_COMPLETED : int = 3;
+
+		public static const STATE_HIDDEN : int = 0;
+
+		public static const STATE_VISIBLE : int = 1;
+
+		public function AchieveConfig()
 		{
-			super( name );
 		}
 	}
 }

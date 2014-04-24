@@ -59,13 +59,13 @@ package totem.ui
 		 */
 		protected function attachButtonListeners() : Boolean
 		{
-			_container.addEventListener( MouseEvent.ROLL_OVER, handleMouseEvent, false, -1 );
-			_container.addEventListener( MouseEvent.ROLL_OUT, handleMouseEvent, false, -1 );
-			_container.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseEvent, false, -1 );
-			_container.addEventListener( MouseEvent.MOUSE_UP, handleMouseEvent, false, -1 );
-			_container.addEventListener( MouseEvent.CLICK, handleMouseEvent, false, -1 );
-			_container.addEventListener( MouseEvent.MOUSE_OVER, handleMouseEvent, false, -1 );
-			_container.addEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent, false, -1 );
+			_container.addEventListener( MouseEvent.ROLL_OVER, handleMouseEvent, false, int.MIN_VALUE );
+			_container.addEventListener( MouseEvent.ROLL_OUT, handleMouseEvent, false, int.MIN_VALUE );
+			_container.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseEvent, false, int.MIN_VALUE );
+			_container.addEventListener( MouseEvent.MOUSE_UP, handleMouseEvent, false, int.MIN_VALUE );
+			_container.addEventListener( MouseEvent.CLICK, handleMouseEvent, false, int.MIN_VALUE );
+			_container.addEventListener( MouseEvent.MOUSE_OVER, handleMouseEvent, false, int.MIN_VALUE );
+			_container.addEventListener( MouseEvent.MOUSE_OUT, handleMouseEvent, false, int.MIN_VALUE );
 
 			return true;
 		}

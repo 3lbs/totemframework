@@ -14,21 +14,26 @@
 //
 //------------------------------------------------------------------------------
 
-package quest
+package achievment
 {
 
-	import flash.events.IEventDispatcher;
-
-	import totem.events.RemovableEventDispatcher;
-
-	public class Quest extends RemovableEventDispatcher
+	public class AchieveParam
 	{
 
-		public var parent : Quest;
+		public var catagory : String;
 
-		public function Quest( target : IEventDispatcher = null )
+		public var dependency : String;
+
+		public var display : String;
+
+		public var name : String;
+
+		public var properties : Array;
+
+		public var title : String;
+
+		public function AchieveParam()
 		{
-			super( target );
 		}
 	}
 }
