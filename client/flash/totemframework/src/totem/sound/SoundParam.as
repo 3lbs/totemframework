@@ -20,9 +20,21 @@ package totem.sound
 	public class SoundParam
 	{
 
-		public var event : String;
+		public var group : String = "SFX";
 
-		public var soundid : String;
+		public var loops : int;
+
+		public var mute : Boolean;
+
+		public var panning : Number = 0;
+
+		public var permanent : Boolean;
+
+		public var sound : Object;
+
+		public var soundID : String;
+
+		public var volume : Number = 1;
 
 		public function SoundParam()
 		{

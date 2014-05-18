@@ -83,15 +83,19 @@ package totem.sound
 		 * <li>group : the groupID of a group, no groups are set by default. default groups ID's are CitrusSoundGroup.SFX (sound effects) and CitrusSoundGroup.BGM (background music)</li>
 		 * </ul>
 		 */
-		public function addSound( id : String, params : Object = null ) : void
+		public function addSound( id : String, params : SoundParam ) : void
 		{
 			if ( !params.hasOwnProperty( "sound" ))
 				throw new Error( "SoundManager addSound() sound:" + id + "can't be added with no sound definition in the params." );
 
 			if ( id in soundsDic )
+			{
 				trace( this, id, "already exists." );
+			}
 			else
+			{
 				soundsDic[ id ] = new TotemSound( id, params );
+			}
 		}
 
 		public function crossFade( fadeOutId : String, fadeInId : String, tweenDuration : Number = 2 ) : void
@@ -103,7 +107,6 @@ package totem.sound
 
 		override public function destroy() : void
 		{
-			super.destroy();
 			var csg : TotemSoundGroup;
 
 			for each ( csg in soundGroups )
@@ -118,6 +121,8 @@ package totem.sound
 			_instance = null;
 
 			removeEventListeners();
+
+			super.destroy();
 		}
 
 		/**
@@ -448,12 +453,12 @@ package totem.sound
 			if ( soundIsPlaying( id ))
 			{
 
-				var citrusSound : TotemSound = TotemSound( soundsDic[ id ]);
-				var tweenvolObject : Object = { volume: citrusSound.volume };
+				var totemSound : TotemSound = TotemSound( soundsDic[ id ]);
+				var tweenvolObject : Object = { volume: totemSound.volume };
 
 				eaze( tweenvolObject ).to( tweenDuration, { volume: volume }).onUpdate( function() : void
 				{
-					citrusSound.volume = tweenvolObject.volume;
+					totemSound.volume = tweenvolObject.volume;
 				}).onComplete( function() : void
 				{
 
@@ -461,7 +466,7 @@ package totem.sound
 						if ( callback.length == 0 )
 							callback();
 						else
-							callback( citrusSound );
+							callback( totemSound );
 				});
 			}
 			else

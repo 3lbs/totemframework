@@ -154,7 +154,7 @@ package application
 		public function removeData( data : * ) : void
 		{
 			//entityManager.startTransaction();
-			EntityManager.instance.remove( data );
+			EntityManager.instance.remove( data );			
 			//entityManager.endTransaction();
 		}
 

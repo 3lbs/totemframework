@@ -23,9 +23,9 @@ package totem.sound
 	import flash.media.Sound;
 	import flash.media.SoundTransform;
 	import flash.net.URLRequest;
-	
-	import totem.totem_internal;
 	import totem.events.RemovableEventDispatcher;
+
+	import totem.totem_internal;
 
 	public class TotemSound extends RemovableEventDispatcher
 	{
@@ -84,7 +84,7 @@ package totem.sound
 		 */
 		internal var soundInstances : Vector.<TotemSoundInstance>;
 
-		public function TotemSound( name : String, params : Object = null )
+		public function TotemSound( name : String, params : SoundParam )
 		{
 
 			_name = name;
@@ -126,10 +126,12 @@ package totem.sound
 
 		public function set group( val : * ) : void
 		{
-			//_group = CitrusEngine.getInstance().sound.getGroup( val );
+			_group = SoundManager.getInstance().getGroup( val );
 
 			if ( _group )
+			{
 				_group.addSound( this );
+			}
 		}
 
 		public function get instances() : Vector.<TotemSoundInstance>
@@ -342,7 +344,7 @@ package totem.sound
 			unload();
 			trace( "CitrusSound Error Loading: ", this.name );
 			_ioerror = true;
-			dispatchEvent( new TotemSoundEvent( TotemSoundEvent.SOUND_ERROR, this, null ) );
+			dispatchEvent( new TotemSoundEvent( TotemSoundEvent.SOUND_ERROR, this, null ));
 		}
 
 		protected function onProgress( event : ProgressEvent ) : void
@@ -356,27 +358,22 @@ package totem.sound
 			}
 		}
 
-		protected function setParams( params : Object ) : void
+		protected function setParams( params : SoundParam ) : void
 		{
-			for ( var param : String in params )
-			{
-				try
-				{
-					if ( params[ param ] == "true" )
-						this[ param ] = true;
-					else if ( params[ param ] == "false" )
-						this[ param ] = false;
-					else
-						this[ param ] = params[ param ];
-				}
-				catch ( e : Error )
-				{
-					trace( e.message );
+			group = params.group;
 
-					if ( !hideParamWarnings )
-						trace( "Warning: The parameter " + param + " does not exist on " + this );
-				}
-			}
+			loops = params.loops;
+
+			mute = params.mute;
+
+			panning = params.panning;
+
+			permanent = params.permanent;
+
+			volume = params.volume;
+
+			sound = params.sound;
+
 		}
 
 		internal function destroy() : void

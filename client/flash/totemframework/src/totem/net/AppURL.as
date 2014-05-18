@@ -17,12 +17,12 @@
 package totem.net
 {
 
-	import flash.filesystem.File;
-
 	import localization.LocalizationManager;
 
 	public class AppURL
 	{
+
+		public static var ACHIEVEMENTS : URLManager;
 
 		public static var ANIMATIONS : URLManager;
 
@@ -63,6 +63,8 @@ package totem.net
 			DATA = URLManager.instance( RESOURCE.getURL( "data" ));
 
 			UNITS = URLManager.instance( DATA.getURL( "units" ));
+
+			ACHIEVEMENTS = URLManager.instance( DATA.getURL( "achievements" ));
 
 			IMAGES = URLManager.instance( ASSETS.getURL( "images" ));
 

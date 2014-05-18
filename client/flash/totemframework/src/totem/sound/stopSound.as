@@ -16,20 +16,9 @@
 
 package totem.sound
 {
-
-	public class SoundAssetParam
+	public function stopSound( id : String )
 	{
 
-		public var group : String;
-
-		public var name : String;
-
-		public var soundid : String;
-
-		public var url : String;
-
-		public function SoundAssetParam()
-		{
-		}
+		SoundManager.getInstance().stopSound( id );
 	}
 }

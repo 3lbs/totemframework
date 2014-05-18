@@ -14,15 +14,21 @@
 //
 //------------------------------------------------------------------------------
 
-package achievment
+package achievements
 {
 
-	public class PropertyParam
+	public class AchieveConfig
 	{
 
-		public var name : String;
+		public static const STATE_ACTIVE : int = 2;
 
-		public function PropertyParam()
+		public static const STATE_COMPLETED : int = 3;
+
+		public static const STATE_HIDDEN : int = 0;
+
+		public static const STATE_VISIBLE : int = 1;
+
+		public function AchieveConfig()
 		{
 		}
 	}

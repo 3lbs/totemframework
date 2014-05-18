@@ -111,7 +111,20 @@ package totem.components.display.starling
 
 		public function set displayObject( value : DisplayObject ) : void
 		{
+			
+			if ( _scene && _displayObject )
+			{
+				_scene.remove( this );
+			}
+			
 			_displayObject = value;
+
+			if ( _scene && _displayObject )
+			{
+				_scene.add( this );
+			}
+			
+			_transformDirty = true;
 
 			if ( getName() && owner && owner.getName())
 				_displayObject.name = owner.getName() + "." + getName();
@@ -189,7 +202,9 @@ package totem.components.display.starling
 		{
 			// Remove from old scene if appropriate.
 			if ( _scene && _displayObject )
+			{
 				_scene.remove( this );
+			}
 
 			_scene = value;
 

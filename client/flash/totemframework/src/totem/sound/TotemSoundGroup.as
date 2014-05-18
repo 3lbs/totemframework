@@ -108,7 +108,9 @@ package totem.sound
 			var s : TotemSound;
 
 			for each ( s in _sounds )
+			{
 				s.resetSoundTransform( true );
+			}
 		}
 
 		protected function handleSoundLoaded( e : TotemSoundEvent ) : void

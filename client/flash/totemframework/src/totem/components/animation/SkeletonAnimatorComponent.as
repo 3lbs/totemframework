@@ -48,6 +48,11 @@ package totem.components.animation
 			this.armature.addEventListener( AnimationEvent.LOOP_COMPLETE, handleAimationLoopComplete );
 		}
 
+		public function getArmature() : Armature
+		{
+			return armature;
+		}
+
 		public function getBone( name : String ) : Bone
 		{
 			return armature.getBone( name );

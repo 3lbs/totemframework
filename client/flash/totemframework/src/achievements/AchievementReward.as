@@ -14,21 +14,17 @@
 //
 //------------------------------------------------------------------------------
 
-package achievment
+package achievements
 {
 
-	public class AchieveConfig
+	public class AchievementReward
 	{
 
-		public static const STATE_ACTIVE : int = 2;
+		public var name : String;
 
-		public static const STATE_COMPLETED : int = 3;
+		public var value : Object;
 
-		public static const STATE_HIDDEN : int = 0;
-
-		public static const STATE_VISIBLE : int = 1;
-
-		public function AchieveConfig()
+		public function AchievementReward()
 		{
 		}
 	}

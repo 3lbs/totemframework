@@ -413,7 +413,6 @@
     <classEntry path="totem.process.Process"/>
     <classEntry path="totem.process.ProcessEvent"/>
     <classEntry path="totem.process.ProcessGroup"/>
-    <classEntry path="totem.sound.SoundAssetParam"/>
     <classEntry path="totem.sound.SoundChannelUtil"/>
     <classEntry path="totem.sound.SoundComponent"/>
     <classEntry path="totem.sound.SoundDebugArt"/>
@@ -537,6 +536,13 @@
     <classEntry path="minimvc.MiniContext"/>
     <classEntry path="minimvc.MiniController"/>
     <classEntry path="minimvc.MiniMediator"/>
+    <classEntry path="totem.core.time.scheduler.ScheduleEvent"/>
+    <classEntry path="totem.sound.playSound"/>
+    <classEntry path="totem.sound.stopSound"/>
+    <classEntry path="achievements.AchievementReward"/>
+    <classEntry path="totem.loaders.starling.DragonBonesLoader"/>
+    <classEntry path="gorilla.resource.DragonBonesResource"/>
+    <classEntry path="totem.loaders.starling.DragonBonesFactoryCache"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

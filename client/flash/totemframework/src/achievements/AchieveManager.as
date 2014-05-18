@@ -14,10 +14,16 @@
 //
 //------------------------------------------------------------------------------
 
-package achievment
+package achievements
 {
 
-	public class AchieveManager
+	import flash.events.IEventDispatcher;
+	import flash.filesystem.File;
+	import flash.utils.Dictionary;
+
+	import totem.events.RemovableEventDispatcher;
+
+	public class AchieveManager extends RemovableEventDispatcher
 	{
 		public static const ACTIVE_IF_GREATER_THAN : String = ">";
 
@@ -30,19 +36,39 @@ package achievment
 			return _instance ||= new AchieveManager( new SingletonEnforcer());
 		}
 
-		private var _achievements : Object;
+		private var _achievements : AchievementObject;
 
-		private var _props : Object;
+		private var _initialized : Boolean;
+
+		private var _props : Dictionary;
+
+		private var dispatcher : IEventDispatcher;
 
 		public function AchieveManager( enforcer : SingletonEnforcer )
 		{
-
 			if ( !enforcer )
 			{
 				throw new Error( "Cannot instantiate a singleton class. Use static getInstance instead." );
 			}
-			_props = {};
-			_achievements = {};
+			_props = new Dictionary();
+		}
+
+		public function addAchievement( achievements : AchievementObject ) : void
+		{
+			_achievements = achievements;
+
+			//checkPropertyExists( a.children );
+			//_achievements[ a.id ] = a;
+		}
+
+		public function addDispatcher( d : IEventDispatcher ) : void
+		{
+			dispatcher = d;
+		}
+
+		public function addProperty( p : AchieveProperty ) : void
+		{
+			_props[ p.name ] = p;
 		}
 
 		public function addValue( theProp : *, theValue : int ) : void
@@ -61,21 +87,21 @@ package achievment
 			}
 		}
 
-		public function checkAchievements( theTags : Array = null ) : Vector.<Achievement>
+		public function checkAchievements( theTags : Array = null ) : Vector.<AchievementObject>
 		{
-			var result : Vector.<Achievement> = null;
+			var result : Vector.<AchievementObject> = null;
 
 			for ( var n : String in _achievements )
 			{
-				var achivement : Achievement = _achievements[ n ];
+				var achivement : AchievementObject = _achievements[ n ];
 
 				if ( achivement.unlocked == false )
 				{
 					var aActiveProps : int = 0;
 
-					for ( var p : int = 0; p < achivement.props.length; p++ )
+					for ( var p : int = 0; p < achivement.properties.length; p++ )
 					{
-						var aProp : Property = _props[ achivement.props[ p ]];
+						var aProp : AchieveProperty = _props[ achivement.properties[ p ]];
 
 						if (( theTags == null || hasTag( aProp, theTags )) && aProp.isActive())
 						{
@@ -83,11 +109,11 @@ package achievment
 						}
 					}
 
-					if ( aActiveProps == achivement.props.length )
+					if ( aActiveProps == achivement.properties.length )
 					{
 						achivement.unlocked = true;
 
-						result = result || new Vector.<Achievement>;
+						result = result || new Vector.<AchievementObject>;
 						result.push( achivement );
 					}
 				}
@@ -99,12 +125,14 @@ package achievment
 		public function defineAchievement( theName : String, relatedProps : Array ) : void
 		{
 			checkPropertyExists( relatedProps );
-			_achievements[ theName ] = new Achievement( theName, relatedProps );
+			//_achievements[ theName ] = new Achievement( theName, relatedProps );
 		}
 
 		public function defineProperty( theName : String, theInitialValue : int, theaActivationMode : String, theValue : int, theTags : Array = null ) : void
 		{
-			_props[ theName ] = new Property( theName, theInitialValue, theaActivationMode, theValue, theTags );
+			//
+
+			//_props[ theName ] = new AchieveProperty( theName, theInitialValue, theaActivationMode, theValue, theTags );
 		}
 
 		public function dumpProperties() : String
@@ -119,17 +147,46 @@ package achievment
 			return result.substr( 0, result.length - 2 );
 		}
 
+		public function getActiveAchievement( result : Vector.<AchievementObject> = null ) : Vector.<AchievementObject>
+		{
+
+			result ||= new Vector.<AchievementObject>();
+
+			if ( _achievements )
+			{
+
+			}
+
+			return result;
+		}
+
 		public function getValue( prop : String ) : int
 		{
 			checkPropertyExists( prop );
 			return _props[ prop ].value;
 		}
 
+		public function initialize( url : String, missions : Array ) : void
+		{
+			if ( _initialized )
+				return;
+
+			_initialized = true;
+
+			var file : File = new File( url );
+
+		}
+
+		public function processAchievement() : void
+		{
+
+		}
+
 		public function resetProperties( theTags : Array = null ) : void
 		{
 			for ( var n : String in _props )
 			{
-				var aProp : Property = _props[ n ];
+				var aProp : AchieveProperty = _props[ n ];
 
 				if ( theTags == null || hasTag( aProp, theTags ))
 				{
@@ -203,17 +260,17 @@ package achievment
 			_props[ theProp ].value = theValue;
 		}
 
-		private function hasTag( theProp : Property, theTags : Array ) : Boolean
+		private function hasTag( theProp : AchieveProperty, theTags : Array ) : Boolean
 		{
 			var result : Boolean = false;
 
 			for ( var i : int = 0; i < theTags.length; i++ )
 			{
-				if ( theProp.tags != null && theProp.tags.indexOf( theTags[ i ]) != -1 )
+				/*if ( theProp.tags != null && theProp.tags.indexOf( theTags[ i ]) != -1 )
 				{
 					result = true;
 					break;
-				}
+				}*/
 			}
 
 			return result;

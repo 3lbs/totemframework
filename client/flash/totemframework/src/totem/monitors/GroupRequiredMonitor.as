@@ -22,9 +22,9 @@ package totem.monitors
 
 		private var _requires : Vector.<IMonitor> = new Vector.<IMonitor>();
 
-		public function GroupRequiredMonitor( id : String = "" )
+		public function GroupRequiredMonitor( id : String = "", loadLimit : int = MAX )
 		{
-			super( id );
+			super( id, loadLimit );
 		}
 
 		public function canStart() : Boolean

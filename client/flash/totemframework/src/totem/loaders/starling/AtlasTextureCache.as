@@ -60,23 +60,23 @@ package totem.loaders.starling
 
 		private var _bitmapDatas : Dictionary;
 
-		private var _textures : Dictionary;
+		private var _atlas : Dictionary;
 
 		public function AtlasTextureCache( singletonEnforcer : SingletonEnforcer )
 		{
 			if ( !singletonEnforcer )
 				throw new Error( "Cannot instantiate a singleton class. Use static getInstance instead." );
 
-			_textures = new Dictionary();
+			_atlas = new Dictionary();
 			_bitmapDatas = new Dictionary();
 		}
 
 		public function clearIndex( url : String ) : Boolean
 		{
-			if ( _textures[ url ])
+			if ( _atlas[ url ])
 			{
-				_textures[ url ].dispose();
-				_textures[ url ] = null;
+				_atlas[ url ].dispose();
+				_atlas[ url ] = null;
 				return true;
 			}
 			return false;
@@ -90,15 +90,15 @@ package totem.loaders.starling
 
 		public function createIndex( url : String, texture : TextureAtlas, force : Boolean = false ) : void
 		{
-			if ( _textures[ url ] && force )
+			if ( _atlas[ url ] && force )
 			{
-				_textures[ url ].dispose();
-				_textures[ url ] = null;
+				_atlas[ url ].dispose();
+				_atlas[ url ] = null;
 			}
 
-			if ( !_textures[ url ] || force )
+			if ( !_atlas[ url ] || force )
 			{
-				_textures[ url ] = texture;
+				_atlas[ url ] = texture;
 			}
 		}
 
@@ -106,16 +106,16 @@ package totem.loaders.starling
 		{
 			super.destroy();
 
-			for ( var key : String in _textures )
+			for ( var key : String in _atlas )
 			{
-				var texure : TextureAtlas = _textures[ key ];
+				var texure : TextureAtlas = _atlas[ key ];
 				texure.dispose();
 
-				_textures[ key ] = null;
-				delete _textures[ key ];
+				_atlas[ key ] = null;
+				delete _atlas[ key ];
 			}
 
-			_textures = null;
+			_atlas = null;
 
 			for ( key in _bitmapDatas )
 			{
@@ -137,7 +137,7 @@ package totem.loaders.starling
 
 		public function getTextureAtlas( url : String ) : TextureAtlas
 		{
-			return _textures[ url ];
+			return _atlas[ url ];
 		}
 	}
 }

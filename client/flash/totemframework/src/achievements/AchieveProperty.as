@@ -8,89 +8,74 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
 
-package achievment
+package achievements
 {
 
 	/**
 	 * Describes a property used to measure an achievement progress. A property is pretty much a counter
 	 * with some special attributes (such as default value and update constraints).
 	 */
-	public class Property
+	[Bindable]
+	public class AchieveProperty
 	{
-		private var _activation : String;
 
-		private var _activationValue : int;
+		public var _activationValue : int;
 
-		private var _initialValue : int;
+		[Transient]
+		public var activation : String = AchieveManager.ACTIVE_IF_LESS_THAN;
 
-		private var _name : String;
+		[Id]
+		public var id : int;
 
-		private var _tags : Array;
+		public var initialValue : int;
 
-		private var _value : int;
+		// name of prop or event
+		public var name : String;
 
-		public function Property( theName : String, theInitialValue : int, theActivation : String, theActivationValue : int, theTags : Array = null )
+		[Marshall( field = "id" )]
+		public var propID : String;
+
+		public var value : int;
+
+		public function AchieveProperty( theActivationValue : int = 0, theTags : Array = null )
 		{
-			_name = theName;
-			_activation = theActivation;
 			_activationValue = theActivationValue;
-			_initialValue = theInitialValue;
-			_tags = theTags;
 
 			reset();
-		}
-
-		public function get activation() : String
-		{
-			return _activation;
 		}
 
 		public function isActive() : Boolean
 		{
 			var result : Boolean = false;
 
-			switch ( _activation )
+			switch ( activation )
 			{
 				case AchieveManager.ACTIVE_IF_GREATER_THAN:
-					result = _value > _activationValue;
+					result = value > _activationValue;
 					break;
 				case AchieveManager.ACTIVE_IF_LESS_THAN:
-					result = _value < _activationValue;
+					result = value < _activationValue;
 					break;
 			}
 
 			return result;
 		}
 
-		public function get name() : String
-		{
-			return _name;
-		}
-
 		public function reset() : void
 		{
-			_value = _initialValue;
+			value = initialValue;
 		}
 
-		public function get tags() : Array
+		[Marshall( field = "activation" )]
+		public function setActivation( value : String ) : void
 		{
-			return _tags;
-		}
-
-		public function get value() : int
-		{
-			return _value;
-		}
-
-		public function set value( v : int ) : void
-		{
-			_value = v;
+			activation = value;
 		}
 	}
 }
