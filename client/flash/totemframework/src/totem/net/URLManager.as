@@ -18,7 +18,7 @@ package totem.net
 {
 
 	import flash.filesystem.File;
-
+	
 	import ladydebug.Logger;
 
 	public class URLManager
@@ -59,6 +59,7 @@ package totem.net
 		{
 			return _file.resolvePath( value );
 		}
+		
 
 		public function getURL( value : String = "", delimiter : String = "|" ) : String
 		{

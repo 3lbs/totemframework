@@ -18,7 +18,6 @@ package minimvc
 {
 
 	import flash.events.Event;
-	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
 
 	import totem.core.Destroyable;
@@ -30,9 +29,9 @@ package minimvc
 
 		private var _lastEvent : Event;
 
-		private var eventDispatcher : IEventDispatcher;
+		private var eventDispatcher : MiniContext;
 
-		public function MiniController( eventDispatcher : IEventDispatcher )
+		public function MiniController( eventDispatcher : MiniContext )
 		{
 			super();
 
@@ -65,7 +64,6 @@ package minimvc
 
 			super.destroy();
 		}
-
 
 		public function hasCommand( commandName : String ) : Boolean
 		{
@@ -110,8 +108,14 @@ package minimvc
 					{
 						var CommandClass : Class = _commands[ event.type ];
 						var command : Object;
-						
+
 						command = new CommandClass();
+
+						if ( command.hasOwnProperty( "context" ))
+						{
+							command.context = eventDispatcher;
+						}
+
 						command.execute( event );
 					}
 				}

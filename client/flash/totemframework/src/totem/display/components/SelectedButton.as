@@ -32,9 +32,21 @@ package totem.display.components
 
 		protected var _selected : int;
 
+		private var _locked : Boolean = true;
+
 		public function SelectedButton( mc : MovieClip )
 		{
 			super( mc );
+		}
+
+		public function get locked() : Boolean
+		{
+			return _locked;
+		}
+
+		public function set locked( value : Boolean ) : void
+		{
+			_locked = value;
 		}
 
 		public function get selected() : Boolean
@@ -52,7 +64,7 @@ package totem.display.components
 
 			_selected = value ? SELECTED : UN_SELECTED;
 
-			if ( _selected )
+			if ( _selected == SELECTED )
 			{
 				gotoAndStop( SELECTED_STATE_FRAME );
 			}
@@ -64,7 +76,7 @@ package totem.display.components
 
 		override protected function handleMouseEvent( event : MouseEvent ) : void
 		{
-			if ( _selected == SELECTED || !enabled )
+			if (( _selected == SELECTED && locked ) || !enabled )
 			{
 				return;
 			}

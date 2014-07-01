@@ -201,7 +201,6 @@
     <classEntry path="totem.core.params.DataObjectLoader"/>
     <classEntry path="totem.core.params.DataParamProxy"/>
     <classEntry path="totem.core.params.GameItemParam"/>
-    <classEntry path="totem.core.params.TextureItem"/>
     <classEntry path="totem.core.params.Transform2DParam"/>
     <classEntry path="totem.core.params.URLAssetParam"/>
     <classEntry path="totem.core.params.animation.AnimationDataParam"/>
@@ -543,6 +542,7 @@
     <classEntry path="totem.loaders.starling.DragonBonesLoader"/>
     <classEntry path="gorilla.resource.DragonBonesResource"/>
     <classEntry path="totem.loaders.starling.DragonBonesFactoryCache"/>
+    <classEntry path="totem.math.Circle"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

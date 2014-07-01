@@ -20,14 +20,14 @@ package totem.components.display
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
 	import ladydebug.Logger;
-
+	
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-
+	
 	import starling.display.Sprite;
-
+	
 	import totem.core.time.ITicked;
 	import totem.data.type.Point2d;
 	import totem.display.layout.starling.TStarlingSprite;
@@ -85,6 +85,8 @@ package totem.components.display
 			super();
 			addChild( _rootSprite );
 			_rootSprite.touchable = true;
+			
+			this.touchable = true;
 		}
 
 		public function addLayer( layer : DisplayObjectSceneLayer ) : DisplayObjectSceneLayer

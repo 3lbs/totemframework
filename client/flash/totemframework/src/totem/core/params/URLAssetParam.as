@@ -17,7 +17,7 @@
 package totem.core.params
 {
 
-	public class URLAssetParam extends BaseParam
+	public class URLAssetParam
 	{
 
 		private var _url : String;

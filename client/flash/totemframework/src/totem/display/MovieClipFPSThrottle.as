@@ -20,7 +20,7 @@ package totem.display
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.utils.getTimer;
-
+	
 	import totem.display.layout.TSprite;
 
 	public class MovieClipFPSThrottle extends TSprite
@@ -28,13 +28,19 @@ package totem.display
 
 		private var _fps : Number;
 
+		private var _isReversing : Boolean;
+
 		private var _lastTime : Number = 0;
 
 		private var _loop : Boolean;
 
 		private var _movieClip : MovieClip;
 
+		private var _playing : Boolean;
+
 		private var _rate : Number = 0;
+
+		private var _reverse : Boolean = false;
 
 		private var _totalFrames : int;
 
@@ -53,7 +59,8 @@ package totem.display
 
 			stop();
 
-			addChild( _movieClip );
+			if ( !_movieClip.parent )
+				addChild( _movieClip );
 		}
 
 		public function get currentFrame() : int
@@ -63,7 +70,7 @@ package totem.display
 
 		override public function destroy() : void
 		{
-			removeEventListener( Event.ENTER_FRAME, update );
+			_movieClip.removeEventListener( Event.ENTER_FRAME, updatePlay );
 
 			_movieClip.stop();
 			_movieClip = null;
@@ -88,7 +95,31 @@ package totem.display
 		public function gotoAndPlay( frame : Object, scene : String = null ) : void
 		{
 			_movieClip.gotoAndStop( frame, scene );
+
 			play();
+		}
+
+		/**
+		 Sends the playhead to the specified frame on and reverses from that frame.
+
+		 @param frame: A number representing the frame number or a string representing the label of the frame to which the playhead is sent.
+		 */
+		public function gotoAndReverse( frame : Object ) : void
+		{
+			_movieClip.gotoAndStop( frame );
+
+			this._playInReverse();
+		}
+
+		public function gotoAndStop( frame : Object ) : void
+		{
+			_movieClip.gotoAndStop( frame );
+			stop();
+		}
+
+		public function isPlaying() : Boolean
+		{
+			return ( _playing || _isReversing );
 		}
 
 		public function set loop( value : Boolean ) : void
@@ -103,13 +134,28 @@ package totem.display
 
 		public function play() : void
 		{
+
+			this._stopReversing();
+
+			_playing = true;
+
 			_lastTime = getTimer();
-			addEventListener( Event.ENTER_FRAME, update, false, 0, true );
+			_lastTime = getTimer();
+			_movieClip.addEventListener( Event.ENTER_FRAME, updatePlay, false, 0, true );
+		}
+
+		public function reverse() : void
+		{
+			this._playInReverse();
 		}
 
 		public function stop() : void
 		{
-			removeEventListener( Event.ENTER_FRAME, update );
+
+			_playing = false;
+
+			this._stopReversing();
+			_movieClip.removeEventListener( Event.ENTER_FRAME, updatePlay );
 		}
 
 		public function get totalFrames() : int
@@ -117,7 +163,77 @@ package totem.display
 			return _totalFrames;
 		}
 
-		private function update( eve : Event ) : void
+		override public function set visible( value : Boolean ) : void
+		{
+			super.visible = value;
+
+			_movieClip.visible = value;
+		}
+
+		protected function _gotoFrameBefore( e : Event ) : void
+		{
+
+			var time = getTimer();
+			var dt = time - _lastTime;
+
+			if ( dt <= _rate )
+				return;
+
+			_lastTime = time;
+
+			if ( this.currentFrame == 1 )
+			{
+				if ( _loop )
+				{
+					super.gotoAndStop( this.totalFrames );
+				}
+				else
+				{
+					stop();
+				}
+
+				dispatchEvent( new Event( Event.COMPLETE ));
+			}
+			else
+			{
+				_movieClip.prevFrame();
+			}
+		}
+
+		protected function _playInReverse() : void
+		{
+			if ( this._isReversing )
+				return;
+
+			this._isReversing = true;
+
+			_movieClip.addEventListener( Event.ENTER_FRAME, _gotoFrameBefore, false, 0, true );
+		}
+
+		protected function _stopReversing() : void
+		{
+			if ( !this._isReversing )
+				return;
+
+			this._isReversing = false;
+
+			_movieClip.removeEventListener( Event.ENTER_FRAME, _gotoFrameBefore );
+		}
+
+		private function _elaspedTime() : Boolean
+		{
+			var time = getTimer();
+			var dt = time - _lastTime;
+
+			if ( dt <= _rate )
+				return false;
+
+			_lastTime = time;
+
+			return true;
+		}
+
+		private function updatePlay( eve : Event ) : void
 		{
 			var time = getTimer();
 			var dt = time - _lastTime;
@@ -127,25 +243,22 @@ package totem.display
 
 			_lastTime = time;
 
-			if ( dt > _rate )
+			if ( currentFrame >= ( _totalFrames ))
 			{
-				if ( currentFrame >= ( _totalFrames - 1 ))
+				if ( _loop )
 				{
-					if ( _loop )
-					{
-						_movieClip.gotoAndStop( 1 );
-					}
-					else
-					{
-						stop();
-					}
-
-					dispatchEvent( new Event( Event.COMPLETE ));
+					_movieClip.gotoAndStop( 1 );
 				}
 				else
 				{
-					_movieClip.nextFrame();
+					stop();
 				}
+
+				dispatchEvent( new Event( Event.COMPLETE ));
+			}
+			else
+			{
+				_movieClip.nextFrame();
 			}
 		}
 	}

@@ -86,7 +86,6 @@ package totem.display.layout.starling
 
 		public function set enabled( a_enabled : Boolean ) : void
 		{
-			//this.mouseEnabled = a_enabled;
 			_enabled = a_enabled;
 		}
 

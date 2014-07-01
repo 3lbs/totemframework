@@ -20,26 +20,17 @@ package totem.core.params.display
 	public class AtlasDataParam
 	{
 
-		public var atlasHDURL : String;
-
 		public var atlasURL : String;
 
 		public var generateMipMaps : Boolean;
 
-		public var imageURL : String;
-
 		public var id : String;
 
-		public var imageHDURL : String;
+		public var imageURL : String;
 
 		public function AtlasDataParam()
 		{
 			super();
-		}
-
-		public function getAtlasURL( hd : Boolean = false ) : String
-		{
-			return ( hd ) ? atlasHDURL : atlasURL;
 		}
 	}
 }

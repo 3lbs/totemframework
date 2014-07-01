@@ -65,6 +65,10 @@ package totem.core.input
 
 		private var _moveEnabled : Boolean = false;
 
+		private var _prevVector : Vector2D = new Vector2D();
+
+		private var _priority : int = 0;
+
 		private var _result : Vector2D = new Vector2D();
 
 		private var _state : int = ALL;
@@ -128,6 +132,16 @@ package totem.core.input
 			_moveEnabled = value;
 		}
 
+		public function get priority() : int
+		{
+			return _priority;
+		}
+
+		public function set priority( value : int ) : void
+		{
+			_priority = value;
+		}
+
 		public function setState( s : int ) : void
 		{
 			_state = s;
@@ -148,7 +162,7 @@ package totem.core.input
 
 		public function start() : void
 		{
-			_container.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
+			_container.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown, false, priority, true );
 		}
 
 		protected function calculateDirection( _result : Vector2D ) : Vector2D
@@ -179,10 +193,11 @@ package totem.core.input
 		{
 
 			_first.x = event.localX;
-			_first.y = event.localY;
 
-			_container.addEventListener( MouseEvent.MOUSE_UP, handleMouseUp );
-			_container.addEventListener( MouseEvent.MOUSE_OUT, handleMouseUp );
+			_prevVector.copy( _first );
+
+			_container.addEventListener( MouseEvent.MOUSE_UP, handleMouseUp, false, priority, true );
+			_container.addEventListener( MouseEvent.MOUSE_OUT, handleMouseUp, false, priority, true );
 
 			if ( _moveEnabled )
 			{
@@ -196,16 +211,15 @@ package totem.core.input
 
 			_result.copy( _last );
 
-			_result.subtract( _first );
+			_result.subtract( _prevVector );
 
-			if ( _result.length > _magnitude )
+			var dir : Vector2D;
+
+			if (( dir = calculateDirection( _result )) != null )
 			{
-				var dir : Vector2D;
+				moveDispatch.dispatch( dir.x, dir.y );
 
-				if (( dir = calculateDirection( _result )) != null )
-				{
-					moveDispatch.dispatch( dir.x, dir.y );
-				}
+				_prevVector.copy( _last );
 			}
 
 		}

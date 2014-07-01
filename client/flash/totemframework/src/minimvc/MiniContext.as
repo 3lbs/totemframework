@@ -19,7 +19,7 @@ package minimvc
 
 	import flash.display.DisplayObjectContainer;
 	import flash.utils.Dictionary;
-	
+
 	import totem.core.IDestroyable;
 	import totem.events.RemovableEventDispatcher;
 
@@ -62,6 +62,9 @@ package minimvc
 					IDestroyable( _models[ clazz ]).destroy();
 				}
 
+				if ( _models[ clazz ].hasOwnProperty( "context" ))
+					_models[ clazz ].context = null;
+
 				_models[ clazz ] = null;
 				delete _models[ clazz ];
 			}
@@ -86,12 +89,15 @@ package minimvc
 
 		}
 
-		protected function registerModel( clazz : Class, instance : * ) : void
+		protected function registerModel( clazz : Class, instance : Object ) : void
 		{
 			if ( _models[ clazz ])
 			{
 				return;
 			}
+
+			if ( instance.hasOwnProperty( "context" ))
+				instance.context = this;
 
 			_models[ clazz ] = instance;
 		}
