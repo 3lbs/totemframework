@@ -24,13 +24,23 @@ package starling.textures
         private var mRepeat:Boolean = false;
         
         public function TextureOptions(scale:Number=1.0, mipMapping:Boolean=false, 
-                                       format:String="bgra")
+                                       format:String="bgra", repeat:Boolean=false)
         {
             mScale = scale;
             mFormat = format;
             mMipMapping = mipMapping;
+            mRepeat = repeat;
         }
         
+        /** Creates a clone of the TextureOptions object with the exact same properties. */
+        public function clone():TextureOptions
+        {
+            var clone:TextureOptions = new TextureOptions(mScale, mMipMapping, mFormat, mRepeat);
+            clone.mOptimizeForRenderToTexture = mOptimizeForRenderToTexture;
+            clone.mOnReady = mOnReady;
+            return clone;
+        }
+
         /** The scale factor, which influences width and height properties. If you pass '-1',
          *  the current global content scale factor will be used. */
         public function get scale():Number { return mScale; }
@@ -39,7 +49,9 @@ package starling.textures
             mScale = value > 0 ? value : Starling.contentScaleFactor;
         }
         
-        /** The <code>Context3DTextureFormat</code> of the underlying texture data. */
+        /** The <code>Context3DTextureFormat</code> of the underlying texture data. Only used
+         *  for textures that are created from Bitmaps; the format of ATF files is set when they
+         *  are created. */
         public function get format():String { return mFormat; }
         public function set format(value:String):void { mFormat = value; }
         

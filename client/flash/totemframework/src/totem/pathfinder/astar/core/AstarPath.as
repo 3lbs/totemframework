@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2014 
+//   3lbs Copyright 2013 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -39,6 +39,7 @@ THE SOFTWARE.
 package totem.pathfinder.astar.core
 {
 
+	import totem.core.Destroyable;
 	import totem.pathfinder.astar.basic2d.IPositionTile;
 
 	/**
@@ -46,7 +47,7 @@ package totem.pathfinder.astar.core
 	 *
 	 * @author Jeroen Beckers
 	 */
-	public class AstarPath
+	public class AstarPath extends Destroyable
 	{
 
 		private var _cost : Number;
@@ -83,6 +84,17 @@ package totem.pathfinder.astar.core
 			return _cost;
 		}
 
+		override public function destroy() : void
+		{
+
+			super.destroy();
+
+			_path.length = 0;
+
+			_simplifiedPath.length = 0;
+
+		}
+
 		/**
 		 * Returns a list representation of the path
 		 *
@@ -111,10 +123,10 @@ package totem.pathfinder.astar.core
 
 			for ( i = 1; i < _simplifiedPath.length - 1; i++ )
 			{
-				tileA = _simplifiedPath[i] as IPositionTile;
-				tileB = _simplifiedPath[i-1] as IPositionTile;
-				tileC = _simplifiedPath[i+1] as IPositionTile;
-				
+				tileA = _simplifiedPath[ i ] as IPositionTile;
+				tileB = _simplifiedPath[ i - 1 ] as IPositionTile;
+				tileC = _simplifiedPath[ i + 1 ] as IPositionTile;
+
 				if ( tileA.getPosition().equals( tileB.getPosition()) || Math.atan2( tileA.getPosition().y - tileB.getPosition().y, tileA.getPosition().x - tileB.getPosition().x ) == Math.atan2( tileC.getPosition().y - tileA.getPosition().y, tileC.getPosition().x - tileA.getPosition().x ))
 				{
 					// Same point or same angle

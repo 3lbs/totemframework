@@ -29,7 +29,7 @@ package totem.components.display.starling
 	import totem.math.MathUtils;
 	import totem.math.Vector2D;
 
-	public class DisplayStarlingRenderer extends TickedComponent implements IDisplay2DRenderer, ISpatialObserver
+	public class DisplayObjectComponentRenderer extends TickedComponent implements IDisplay2DRenderer, ISpatialObserver
 	{
 
 		public static const NAME : String = "DisplayStarlingRenderer";
@@ -40,7 +40,7 @@ package totem.components.display.starling
 
 			if ( zIndex > -5 )
 			{
-				DisplayStarlingRenderer( displayRenderer ).zIndex = zIndex;
+				DisplayObjectComponentRenderer( displayRenderer ).zIndex = zIndex;
 			}
 
 			displayRenderer.scene = sceneLayer;
@@ -74,7 +74,7 @@ package totem.components.display.starling
 
 		private var _zIndexDirty : Boolean;
 
-		public function DisplayStarlingRenderer( name : String = null )
+		public function DisplayObjectComponentRenderer( name : String = null )
 		{
 			super( name || NAME );
 		}

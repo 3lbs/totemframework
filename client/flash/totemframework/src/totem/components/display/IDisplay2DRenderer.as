@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2014 
+//   3lbs Copyright 2013 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -29,6 +29,8 @@ package totem.components.display
 		function set alpha( value : Number ) : void;
 
 		function get displayObject() : DisplayObject;
+
+		function getName() : String;
 
 		function get position() : Vector2D;
 

@@ -20,9 +20,9 @@ package totem.components.animation
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 
-	import totem.components.display.starling.DisplayStarlingRenderer;
+	import totem.components.display.starling.DisplayObjectComponentRenderer;
 
-	public class AnimatorComponent extends DisplayStarlingRenderer implements IAnimator
+	public class AnimatorComponent extends DisplayObjectComponentRenderer implements IAnimator
 	{
 
 		public var animationComplete : ISignal = new Signal();

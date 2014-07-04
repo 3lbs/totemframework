@@ -249,6 +249,7 @@ package totem.pathfinder.astar.core
 		 */
 		public function clearCache() : void
 		{
+			
 			_cachedPaths = new Dictionary();
 		}
 

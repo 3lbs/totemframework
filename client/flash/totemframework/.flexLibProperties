@@ -112,7 +112,7 @@
     <classEntry path="totem.components.display.DisplayObjectSceneLayer"/>
     <classEntry path="totem.components.display.IDisplay2DRenderer"/>
     <classEntry path="totem.components.display.SceneAlignment"/>
-    <classEntry path="totem.components.display.starling.DisplayStarlingRenderer"/>
+    <classEntry path="totem.components.display.starling.DisplayObjectComponentRenderer"/>
     <classEntry path="totem.components.effects.ParticleEffectComponent"/>
     <classEntry path="totem.components.input.IInputComponent"/>
     <classEntry path="totem.components.input.InputNotifComponent"/>
@@ -201,6 +201,7 @@
     <classEntry path="totem.core.params.DataObjectLoader"/>
     <classEntry path="totem.core.params.DataParamProxy"/>
     <classEntry path="totem.core.params.GameItemParam"/>
+    <classEntry path="totem.core.params.TextureItem"/>
     <classEntry path="totem.core.params.Transform2DParam"/>
     <classEntry path="totem.core.params.URLAssetParam"/>
     <classEntry path="totem.core.params.animation.AnimationDataParam"/>
@@ -535,14 +536,7 @@
     <classEntry path="minimvc.MiniContext"/>
     <classEntry path="minimvc.MiniController"/>
     <classEntry path="minimvc.MiniMediator"/>
-    <classEntry path="totem.core.time.scheduler.ScheduleEvent"/>
-    <classEntry path="totem.sound.playSound"/>
-    <classEntry path="totem.sound.stopSound"/>
-    <classEntry path="achievements.AchievementReward"/>
-    <classEntry path="totem.loaders.starling.DragonBonesLoader"/>
-    <classEntry path="gorilla.resource.DragonBonesResource"/>
-    <classEntry path="totem.loaders.starling.DragonBonesFactoryCache"/>
-    <classEntry path="totem.math.Circle"/>
+    <classEntry path="totem.components.display.starling.DisplayObjectRenderer"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

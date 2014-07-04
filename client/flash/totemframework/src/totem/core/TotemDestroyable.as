@@ -34,7 +34,7 @@ package totem.core
 			initilized = true;
 		}
 
-		public function get name() : String
+		public function getName() : String
 		{
 			return _name;
 		}

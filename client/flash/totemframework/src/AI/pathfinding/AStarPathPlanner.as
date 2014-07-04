@@ -47,6 +47,13 @@ package AI.pathfinding
 		{
 			_analyzers.push( analyzer );
 		}
+		
+		
+		public function reset() : void
+		{
+			_aStar.clearCache();
+		}
+		
 
 		public function getTile( x, y ) : IPositionTile
 		{

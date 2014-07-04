@@ -20,7 +20,7 @@ package totem.components.display
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	import starling.events.Event;
-
+	
 	import totem.display.layout.starling.TStarlingSprite;
 
 	/**
@@ -125,6 +125,26 @@ package totem.components.display
 			removeChild( dor.displayObject );
 		}
 
+		
+		public function getRendererByName ( name : String ) : IDisplay2DRenderer
+		{
+			var i : int = 0;
+			var l : int = rendererList.length;
+			var d : IDisplay2DRenderer;
+			
+			for ( ; i < l; ++i )
+			{
+				d = rendererList[ i ];
+				
+				if (  d.getName() == name )
+				{
+					return d;
+				}
+			}
+			
+			return null;
+		}
+		
 		public function updateOrder() : void
 		{
 			// Get our renderers in order.
