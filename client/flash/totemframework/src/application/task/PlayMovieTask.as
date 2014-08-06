@@ -17,49 +17,83 @@
 package application.task
 {
 
-	import flash.events.Event;
+	import flash.events.NetStatusEvent;
+	import flash.net.NetConnection;
+	import flash.net.NetStream;
 
 	import totem.core.task.Task;
-	import totem.display.MovieClipFPSThrottle;
-	import totem.monitors.promise.wait;
+	import totem.display.video.SimpleStageVideo;
 
 	public class PlayMovieTask extends Task
 	{
 		private var _delay : int;
 
-		private var _movieClip : MovieClipFPSThrottle;
+		private var _stageVideoProxy : SimpleStageVideo;
 
-		public function PlayMovieTask( m : MovieClipFPSThrottle, delay : int )
+		private var _url : String;
+
+		private var stream : NetStream;
+
+		public function PlayMovieTask( url : String, m : SimpleStageVideo, delay : int )
 		{
 			super();
-
-			_movieClip = m;
-
+			_url = url;
+			_stageVideoProxy = m;
 			_delay = delay;
 		}
 
 		override public function destroy() : void
 		{
-			_movieClip.stop();
-			_movieClip.removeEventListener( Event.COMPLETE, handleEnterFrame );
-			_movieClip = null;
+
+			_stageVideoProxy = null;
+
+			stream.close();
+			stream = null;
 
 			super.destroy();
 		}
 
-		override protected function doStart() : void
+		public function onCuePoint( info : Object ) : void
 		{
-			_movieClip.addEventListener( Event.COMPLETE, handleEnterFrame, false, 0, true );
-			_movieClip.play();
-
-			if ( _delay > 0 )
-				wait( _delay, complete );
 		}
 
-		protected function handleEnterFrame( event : Event ) : void
+		public function onMetaData( info : Object ) : void
 		{
-			_movieClip.removeEventListener( Event.COMPLETE, handleEnterFrame );
-			complete();
+		}
+
+		override protected function doStart() : void
+		{
+
+			//var customClient:Object = new Object(); customClient.onMetaData = metaDataHandler;
+
+			var customClient:Object = new Object();
+			
+			
+			var nc : NetConnection = new NetConnection();
+			nc.connect( null );
+			
+			
+			stream = new NetStream( nc );
+			stream.client = customClient;
+
+			stream.addEventListener( NetStatusEvent.NET_STATUS, netStatusHandler );
+
+			//stream.close();
+			_stageVideoProxy.attachNetStream( stream );
+
+			stream.play( _url );
+
+			_stageVideoProxy.toggle( false );
+			//if ( _delay > 0 )
+			//wait( _delay, complete );
+		}
+
+		private function netStatusHandler( evt : NetStatusEvent ) : void
+		{
+			if ( evt.info.code == "NetStream.Play.Stop" )
+			{
+				complete();
+			}
 		}
 	}
 }

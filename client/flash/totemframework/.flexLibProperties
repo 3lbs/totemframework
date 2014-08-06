@@ -32,7 +32,7 @@
     <classEntry path="application.rateourapp.RateOurAppModel"/>
     <classEntry path="application.rateourapp.RateParam"/>
     <classEntry path="application.task.AddDisplayObjectTask"/>
-    <classEntry path="application.task.DelayTask"/>
+    <classEntry path="totem.core.task.util.DelayTask"/>
     <classEntry path="application.task.FadeFromTask"/>
     <classEntry path="application.task.FadeToTask"/>
     <classEntry path="application.task.FunctionTask"/>
@@ -112,7 +112,6 @@
     <classEntry path="totem.components.display.DisplayObjectSceneLayer"/>
     <classEntry path="totem.components.display.IDisplay2DRenderer"/>
     <classEntry path="totem.components.display.SceneAlignment"/>
-    <classEntry path="totem.components.display.starling.DisplayObjectComponentRenderer"/>
     <classEntry path="totem.components.effects.ParticleEffectComponent"/>
     <classEntry path="totem.components.input.IInputComponent"/>
     <classEntry path="totem.components.input.InputNotifComponent"/>
@@ -201,7 +200,6 @@
     <classEntry path="totem.core.params.DataObjectLoader"/>
     <classEntry path="totem.core.params.DataParamProxy"/>
     <classEntry path="totem.core.params.GameItemParam"/>
-    <classEntry path="totem.core.params.TextureItem"/>
     <classEntry path="totem.core.params.Transform2DParam"/>
     <classEntry path="totem.core.params.URLAssetParam"/>
     <classEntry path="totem.core.params.animation.AnimationDataParam"/>
@@ -210,7 +208,7 @@
     <classEntry path="totem.core.params.display.AssetParam"/>
     <classEntry path="totem.core.params.display.AtlasDataParam"/>
     <classEntry path="totem.core.params.display.BitmapDataParam"/>
-    <classEntry path="totem.core.params.display.MovieClipDataParam"/>
+    <classEntry path="totem.core.params.display.MovieClipParam"/>
     <classEntry path="totem.core.params.display.TextureParam"/>
     <classEntry path="totem.core.params.getDataParam"/>
     <classEntry path="totem.core.state.IMachine"/>
@@ -232,7 +230,6 @@
     <classEntry path="totem.core.task.animation.StarlingMovieClipTask"/>
     <classEntry path="totem.core.task.animation.TweenToTask"/>
     <classEntry path="totem.core.task.enum.TaskState"/>
-    <classEntry path="totem.core.task.util.AtlasSpriteLoaderTask"/>
     <classEntry path="totem.core.task.util.Delegate"/>
     <classEntry path="totem.core.task.util.DelegateTask"/>
     <classEntry path="totem.core.task.util.DisplayLoaderTask"/>
@@ -536,7 +533,21 @@
     <classEntry path="minimvc.MiniContext"/>
     <classEntry path="minimvc.MiniController"/>
     <classEntry path="minimvc.MiniMediator"/>
-    <classEntry path="totem.components.display.starling.DisplayObjectRenderer"/>
+    <classEntry path="totem.core.time.scheduler.ScheduleEvent"/>
+    <classEntry path="totem.sound.playSound"/>
+    <classEntry path="totem.sound.stopSound"/>
+    <classEntry path="achievements.AchievementReward"/>
+    <classEntry path="totem.loaders.starling.DragonBonesLoader"/>
+    <classEntry path="gorilla.resource.DragonBonesResource"/>
+    <classEntry path="totem.loaders.starling.DragonBonesFactoryCache"/>
+    <classEntry path="totem.math.Circle"/>
+    <classEntry path="totem.core.task.util.WaitForLoadTask"/>
+    <classEntry path="totem.core.task.util.ILoadTask"/>
+    <classEntry path="totem.animation.AnimatorMovieClip"/>
+    <classEntry path="totem.display.video.events.SimpleStageVideoToggleEvent"/>
+    <classEntry path="totem.display.video.SimpleStageVideo"/>
+    <classEntry path="totem.display.video.events.SimpleStageVideoEvent"/>
+    <classEntry path="totem.display.starling.MovieClipProxy"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

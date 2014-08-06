@@ -88,8 +88,6 @@ package totem.core
 		protected function onRemove() : void
 		{
 			_safetyFlag = true;
-
-			destroy();
 		}
 
 		protected function onRetire() : void

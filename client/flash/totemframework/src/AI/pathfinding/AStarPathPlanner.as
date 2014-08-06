@@ -51,7 +51,7 @@ package AI.pathfinding
 		
 		public function reset() : void
 		{
-			_aStar.clearCache();
+			_aStar.reset();
 		}
 		
 

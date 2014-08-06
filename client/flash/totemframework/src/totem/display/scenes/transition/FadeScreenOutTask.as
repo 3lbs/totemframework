@@ -102,7 +102,7 @@ package totem.display.scenes.transition
 
 			timelineMax = new TimelineMax({ onComplete: complete, delay: .5 });
 			timelineMax.stop();
-			timelineMax.append( new TweenMax( _tempContainer, time, { tint: 0x000000 }));
+			timelineMax.append( new TweenMax( _tempContainer, time, { tint: 0xFFFFFF }));
 			timelineMax.append( new TweenMax( _tempContainer, time, { alpha: 0 }));
 			timelineMax.play()
 		}

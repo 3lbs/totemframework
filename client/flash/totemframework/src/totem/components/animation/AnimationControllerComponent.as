@@ -69,7 +69,7 @@ package totem.components.animation
 			if ( random )
 			{
 				_playing = true;
-				var frame : int = NumberUtil.randomIntegerWithinRange( data.start, data.end ) - 1;
+				var frame : int = 0; //NumberUtil.randomIntegerWithinRange( data.start, data.end ) - 1;
 				animationComponent.goToAndPlay( data.name, frame, type );
 			}
 			else

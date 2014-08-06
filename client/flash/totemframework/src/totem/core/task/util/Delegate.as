@@ -16,13 +16,14 @@
 
 package totem.core.task.util
 {
+	import totem.core.Destroyable;
 
 	/**
 	 * A Delegate wraps a method and its parameters for deferred execution.
 	 *
 	 * @author Jens Halm
 	 */
-	public class Delegate
+	public class Delegate extends Destroyable
 	{
 
 		private var method : Function;
@@ -51,6 +52,13 @@ package totem.core.task.util
 			return method.apply( null, params );
 		}
 
+		override public function destroy () : void
+		{
+			if ( params )
+				params.length = 0;
+			
+			method = null;
+		}
 	}
 
 }

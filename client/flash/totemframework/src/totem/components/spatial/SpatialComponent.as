@@ -49,7 +49,7 @@ package totem.components.spatial
 
 		protected var properties : Dictionary;
 
-		private var _bounds : AABBox; // = new AABBox();
+		protected var _bounds : AABBox; // = new AABBox();
 
 		private var _depth : int;
 
@@ -130,6 +130,7 @@ package totem.components.spatial
 			
 			if ( _bounds.containsPoint( pt ) == false )
 				trace("stop");*/
+				
 			return _bounds.containsPoint( pt );
 		}
 
@@ -461,7 +462,7 @@ package totem.components.spatial
 				tempOffset.copy( position ).addTo( boundsOffset ); //.addTo( positionOffset );
 				_bounds.moveTo( tempOffset );
 
-				//drawHitArea();
+				drawHitArea();
 
 			}
 
@@ -478,6 +479,7 @@ package totem.components.spatial
 			if ( !boundImage )
 			{
 				boundImage = new Quad( _bounds.width, _bounds.height, ColorUtil.AQUA );
+				boundImage.alpha = .3;
 				displayComponent.displayObject.parent.addChild( boundImage );
 			}
 

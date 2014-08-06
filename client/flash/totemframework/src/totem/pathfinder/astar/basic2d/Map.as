@@ -197,10 +197,12 @@ package totem.pathfinder.astar.basic2d
 		{
 			super.destroy();
 			
-			while( _map.length )
-				_map.pop();
+			var l : int = _map.length;
+			while( l-- )
+			{
+				_map[l] = null;
+			}
 			
-			_map.length = 0;
 		}
 		/**
 		 * Returns the heuristic that is currently being used

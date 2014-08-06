@@ -46,6 +46,8 @@ package totem.net
 
 		public static var SOUNDS : URLManager;
 
+		public static var UI : URLManager;
+
 		public static var UNITS : URLManager;
 
 		public static function getURL( url : String, location : URLManager ) : String
@@ -70,11 +72,14 @@ package totem.net
 
 			IMAGES = URLManager.instance( ASSETS.getURL( "images" ));
 
+			UI = URLManager.instance( ASSETS.getURL( "UI" ));
+
 			if ( MobileUtil.isHD())
 			{
 				IMAGES = URLManager.instance( IMAGES.getURL( "hd" ));
+				UI = URLManager.instance( UI.getURL( "hd" ));
 			}
-		
+
 			ANIMATIONS = URLManager.instance( ASSETS.getURL( "animations" ));
 
 			var readerRaw : URLManager = URLManager.instance( RESOURCE.getURL( "reader" ));

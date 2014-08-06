@@ -8,31 +8,25 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
 
-package application.task
+package totem.core.task.util
 {
 
-	import totem.core.task.Task;
-	import totem.monitors.promise.wait;
+	import totem.events.IRemovableEventDispatcher;
 
-	public class DelayTask extends Task
+	public interface ILoadTask extends IRemovableEventDispatcher
 	{
-		private var time : Number;
+		function isComplete() : Boolean;
 
-		public function DelayTask( t : Number )
-		{
-			time = t;
-			super();
-		}
-		
-		override protected function doStart():void
-		{
-			wait( time, complete );
-		}
+		function load() : void;
+
+		function get status() : Number;
+
+		function unloadData() : void;
 	}
 }

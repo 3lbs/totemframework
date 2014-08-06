@@ -14,33 +14,35 @@
 //
 //------------------------------------------------------------------------------
 
-
-package totem.core.params.display
+package totem.core.task.util
 {
-	import totem.core.params.animation.AnimationDataParam;
 
-	public class MovieClipDataParam  extends AssetParam
+	import flash.events.Event;
+
+	import totem.core.task.Task;
+
+	public class WaitForLoadTask extends Task
 	{
+		private var dispatcher : ILoadTask;
 
-		public var fps : int;
-
-		public var name : String;
-
-		private var _animationData : Vector.<AnimationDataParam> = new Vector.<AnimationDataParam>();
-
-		public function MovieClipDataParam()
+		public function WaitForLoadTask( target : ILoadTask )
 		{
 			super();
+
+			dispatcher = target;
+
+			dispatcher.addEventListener( Event.COMPLETE, handleComplete );
 		}
 
-		public function get animationData() : Vector.<AnimationDataParam>
+		override protected function doStart() : void
 		{
-			return _animationData;
+			dispatcher.load();
 		}
 
-		public function set animationData( value : Vector.<AnimationDataParam> ) : void
+		protected function handleComplete( event : Event ) : void
 		{
-			_animationData = value;
+			// TODO Auto-generated method stub
+			complete();
 		}
 	}
 }

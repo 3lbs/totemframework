@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -107,7 +107,7 @@ package totem.pathfinder.astar.core
 	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	
+
 	import totem.core.Destroyable;
 	import totem.monitors.promise.IPromise;
 
@@ -174,7 +174,7 @@ package totem.pathfinder.astar.core
 
 		/**
 	   * Indicates whether the there is being looked for a path or not
-		  */
+			 */
 		private var _isSearching : Boolean = false;
 
 		/**
@@ -249,7 +249,6 @@ package totem.pathfinder.astar.core
 		 */
 		public function clearCache() : void
 		{
-			
 			_cachedPaths = new Dictionary();
 		}
 
@@ -307,6 +306,34 @@ package totem.pathfinder.astar.core
 		public function set iterations( iterations : Number ) : void
 		{
 			_iterations = iterations;
+		}
+
+		public function reset() : void
+		{
+			clearCache();
+
+			this._timer.stop();
+			this._timer.reset();
+
+			this._isSearching = false;
+			
+			if ( _currentRequest )
+				_currentRequest.dispose();
+
+			this._currentRequest = null;
+			this._start = null;
+			this._end = null;
+
+			this._requestAnalyzers = null;
+
+			this._sourceMap = null;
+
+			_heap = null;
+
+			_queue.dispose();
+
+			_queue = new SortedQueue();
+
 		}
 
 		/**
@@ -696,6 +723,12 @@ class SortedQueue
 	public function SortedQueue()
 	{
 		_queue = new Array();
+	}
+
+	public function dispose() : void
+	{
+		while ( _queue.length )
+			PathRequest( _queue.pop()).dispose();
 	}
 
 	/**

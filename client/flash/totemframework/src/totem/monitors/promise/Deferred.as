@@ -190,6 +190,8 @@ package totem.monitors.promise
 
 		override public function dispose() : void
 		{
+			clearListeners();
+			
 			_state = PENDING;
 
 			_outcome = null;

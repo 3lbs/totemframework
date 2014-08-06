@@ -1,7 +1,22 @@
+//------------------------------------------------------------------------------
+//
+//     _______ __ __           
+//    |   _   |  |  |--.-----. 
+//    |___|   |  |  _  |__ --| 
+//     _(__   |__|_____|_____| 
+//    |:  1   |                
+//    |::.. . |                
+//    `-------'      
+//                       
+//   3lbs Copyright 2014 
+//   For more information see http://www.3lbs.com 
+//   All rights reserved. 
+//
+//------------------------------------------------------------------------------
+
 package totem.core.task.animation
 {
 
-	import starling.core.Starling;
 	import starling.display.MovieClip;
 	import starling.events.Event;
 
@@ -10,11 +25,18 @@ package totem.core.task.animation
 
 		private var movieClip : MovieClip;
 
-		public function StarlingMovieClipTask( mc : MovieClip, time : int )
+		public function StarlingMovieClipTask( mc : MovieClip, loop : int = 0 )
 		{
 			super();
 
 			movieClip = mc;
+		}
+
+		override public function destroy() : void
+		{
+			super.destroy();
+
+			movieClip = null;
 		}
 
 		override protected function doStart() : void
@@ -26,19 +48,8 @@ package totem.core.task.animation
 
 		private function handleClipPlayComplete( event : Event ) : void
 		{
-			// delay?
-			
-			
-			Starling.juggler.remove( movieClip );
-			
+
 			complete();
-		}
-		
-		override public function destroy():void
-		{
-			super.destroy();
-			
-			movieClip = null;
 		}
 	}
 }

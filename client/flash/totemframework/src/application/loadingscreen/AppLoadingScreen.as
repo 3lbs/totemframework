@@ -17,37 +17,29 @@
 package application.loadingscreen
 {
 
-	import flash.display.Loader;
-	import flash.display.MovieClip;
 	import flash.events.Event;
-	import flash.net.URLRequest;
-	import flash.system.ApplicationDomain;
-	import flash.system.LoaderContext;
-
+	
 	import totem.core.task.Task;
-	import totem.display.MovieClipFPSThrottle;
 	import totem.display.scenes.BaseLoadingScreen;
-	import totem.net.AppURL;
-	import totem.utils.Alignment;
-	import totem.utils.DisplayObjectUtil;
-	import totem.utils.MobileUtil;
+	import totem.display.video.SimpleStageVideo;
 
 	public class AppLoadingScreen extends BaseLoadingScreen
 	{
-		private var FRAME_RATE : Number;
-
-		private var _loader : Loader;
+		private var _url : String;
 
 		private var delay : int;
 
-		private var movieClipPlayer : MovieClipFPSThrottle;
+		private var stageVideoProxy : SimpleStageVideo;
 
-		public function AppLoadingScreen( w : Number, h : Number, delay : int )
+		public function AppLoadingScreen( url : String, w : Number, h : Number, delay : int )
 		{
 
 			super();
 
+			_url = url;
+
 			this.delay = delay;
+			backgroundVisible = false;
 			contentWidth = w;
 			contentHeight = h;
 
@@ -57,64 +49,40 @@ package application.loadingscreen
 		override public function destroy() : void
 		{
 
-			if ( _loader.parent )
-				_loader.parent.removeChild( _loader );
+			stageVideoProxy.destroy();
+			stageVideoProxy = null;
 
-			_loader.unloadAndStop();
-
-			_loader = null;
-			
 			super.destroy();
 		}
 
-		public function get3lbsScreen() : MovieClipFPSThrottle
+		protected function handleStageVideoInit( event : Event ) : void
 		{
-			return movieClipPlayer;
-		}
+			stageVideoProxy.removeEventListener( Event.INIT, handleStageVideoInit );
 
-		protected function handleIntroLoaded( event : Event ) : void
-		{
-
-			movieClipPlayer = new MovieClipFPSThrottle( _loader.content as MovieClip, 24 );
-
-			addChild( movieClipPlayer );
-
-			MobileUtil.viewRect();
-
-			DisplayObjectUtil.alignInRect( movieClipPlayer, MobileUtil.viewRect(), Alignment.CENTER );
-
-			updateDisplay();
-
-			var introTask : Intro3lbsScreenTask = new Intro3lbsScreenTask( this, delay );
+			var introTask : Intro3lbsScreenTask = new Intro3lbsScreenTask( _url, stageVideoProxy, delay );
 			introTask.onCompleted.add( handleComplete );
 			introTask.start();
 		}
 
 		protected function init( event : Event ) : void
 		{
+			backgroundVisible = false;
 			removeEventListener( Event.ADDED_TO_STAGE, init );
-			backgroundColor = 0xFFFFFF;
-
-			FRAME_RATE = stage.frameRate;
-			stage.frameRate = 30;
 
 			//var _urlRequest : URLRequest = new URLRequest( "/res/assets/intro3lbsmachine_portrait.swf" );
+			//var url : String = MobileUtil.isHD() ? "Intro3lbsMachineFinal_HD.swf" : "Intro3lbsMachineFinal_S.swf";
 
-			var url : String = MobileUtil.isHD() ? "Intro3lbsMachineFinal_HD.swf" : "Intro3lbsMachineFinal_S.swf";
-			var _urlRequest : URLRequest = new URLRequest( AppURL.ASSETS.getURL( url ));
-			_loader = new Loader();
-			var _lc : LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain, null );
+			stageVideoProxy = new SimpleStageVideo( contentWidth, contentHeight );
+			stageVideoProxy.addEventListener( Event.INIT, handleStageVideoInit );
 
-			_loader.contentLoaderInfo.addEventListener( Event.COMPLETE, handleIntroLoaded );
-			_loader.load( _urlRequest, _lc );
-
+			addChild( stageVideoProxy );
 		}
 
 		private function handleComplete( task : Task ) : void
 		{
 			task.destroy();
 
-			stage.frameRate = FRAME_RATE;
+			//stage.frameRate = FRAME_RATE;
 			dispatchEvent( new Event( Event.COMPLETE ));
 		}
 	}

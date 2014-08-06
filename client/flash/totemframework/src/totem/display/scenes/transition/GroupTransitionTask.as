@@ -20,6 +20,7 @@ package totem.display.scenes.transition
 	import totem.core.task.SequenceTask;
 	import totem.display.scenes.BaseLoadingScreen;
 	import totem.display.scenes.SceneStateMachine;
+	import totem.core.task.util.WaitForLoadTask;
 
 	public class GroupTransitionTask extends SequenceTask
 	{
@@ -69,11 +70,13 @@ package totem.display.scenes.transition
 
 
 			stateMachine.parentScreen.addScreen( loadingScreen );
+			addTask( new WaitForLoadTask ( loadingScreen ) );
 
 			addTask( new FadeScreenInTask( loadingScreen, bitmapDataHolder, transitionType ));
 			addTask( new SwitchAndWaitForSceneTask( stateMachine, nextSceneStateName ));
 			addTask( new FadeScreenOutTask( loadingScreen, bitmapDataHolder, transitionType ));
 
+			
 			return super.start();
 		}
 

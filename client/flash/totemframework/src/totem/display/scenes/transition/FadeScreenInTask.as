@@ -104,7 +104,7 @@ package totem.display.scenes.transition
 				g.drawRect( 0, 0, loadingScreen.width, loadingScreen.height );
 
 				var ct : ColorTransform = new ColorTransform();
-				ct.color = 0x000000;
+				ct.color = 0xFFFFFF;
 				_tempContainer.transform.colorTransform = ct;
 			}
 			else

@@ -166,7 +166,7 @@ package totem.components.display.starling
 
 		public function get positionOffset() : Vector2D
 		{
-			return _positionOffset.clone();
+			return _positionOffset;
 		}
 
 		/**
@@ -187,7 +187,7 @@ package totem.components.display.starling
 
 		public function get scale() : Vector2D
 		{
-			return _scale.clone();
+			return _scale;
 		}
 
 		/**

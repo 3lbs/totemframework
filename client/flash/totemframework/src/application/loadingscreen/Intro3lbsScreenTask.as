@@ -17,31 +17,25 @@
 package application.loadingscreen
 {
 
-	import application.task.DelayTask;
-	import application.task.FadeFromTask;
-	import application.task.FadeToTask;
+	import totem.core.task.util.DelayTask;
 	import application.task.PlayMovieTask;
-	
+
 	import totem.core.task.SequenceTask;
+	import totem.display.video.SimpleStageVideo;
 
 	public class Intro3lbsScreenTask extends SequenceTask
 	{
 		private const NAME : String = "SCREEN_TASK";
 
-		private var introScreen : AppLoadingScreen;
-
-		public function Intro3lbsScreenTask( screen : AppLoadingScreen, delay : int = 0 )
+		public function Intro3lbsScreenTask( url : String, stageVideoProxy : SimpleStageVideo, delay : int = 0 )
 		{
 			super( NAME );
 
-			introScreen = screen;
-			introScreen.visible = false;
-
 			addTask( new DelayTask( 100 ));
-			addTask( new FadeFromTask( introScreen, 0x000000, .3 ));
-			addTask( new PlayMovieTask( introScreen.get3lbsScreen(), delay ) );
+			//addTask( new FadeFromTask( introScreen, 0x000000, .3 ));
+			addTask( new PlayMovieTask( url, stageVideoProxy, delay ));
 			//addTask( new DelayTask( delay ));
-			addTask( new FadeToTask( introScreen, 0x000000, .3 ));
+			//addTask( new FadeToTask( introScreen, 0x000000, .3 ));
 			addTask( new DelayTask( 100 ));
 
 		}
@@ -50,7 +44,6 @@ package application.loadingscreen
 		{
 			super.destroy();
 
-			introScreen = null;
 		}
 	}
 }

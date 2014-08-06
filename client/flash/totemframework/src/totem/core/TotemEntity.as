@@ -78,9 +78,15 @@ package totem.core
 
 		override public function destroy() : void
 		{
+			
+			for ( var componentClass : * in components_ )
+			{
+				removeComponent( componentClass );
+			}
+			
 			super.destroy();
 			// deleyed destroy?????
-			deconstruct();
+			//deconstruct();
 		}
 
 		public function getComponent( ComponentClass : Class ) : *

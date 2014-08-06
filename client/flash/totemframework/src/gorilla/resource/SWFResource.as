@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,6 +17,8 @@
 package gorilla.resource
 {
 
+	import flash.display.Loader;
+	import flash.display.LoaderInfo;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -24,9 +26,9 @@ package gorilla.resource
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
-
+	
 	import org.casalib.util.StageReference;
-
+	
 	import totem.loaders.safeloaders.SafeLoader;
 
 	[EditorData( extensions = "swf" )]
@@ -182,6 +184,16 @@ package gorilla.resource
 			_loader.addEventListener( "mx.managers.SystemManager.isStageRoot", systemManagerHandler );
 		}
 
+		public function get loader() : Loader
+		{
+			return safeloader.realLoader;
+		}
+		
+		public function get loaderInfo () : LoaderInfo
+		{
+			return safeloader.loaderInfo;
+		}
+
 		/**
 		 * @inheritDoc
 		 */
@@ -202,7 +214,7 @@ package gorilla.resource
 		override protected function onLoadComplete( event : Event = null ) : void
 		{
 			//if ( safeloader && safeloader.stage )
-				//StageReference.getStage().removeChild( safeloader );
+			//StageReference.getStage().removeChild( safeloader );
 
 			super.onLoadComplete( event );
 		}

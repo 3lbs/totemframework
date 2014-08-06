@@ -129,6 +129,11 @@ package totem.loaders.safeloaders
 			return _realLI.contentType;
 		}
 
+		public function get loaderInfo () : LoaderInfo
+		{
+			return _realLI;
+		}
+		
 		override public function destroy() : void
 		{
 			super.destroy();

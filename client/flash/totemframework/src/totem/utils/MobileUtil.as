@@ -17,6 +17,10 @@
 package totem.utils
 {
 
+	
+	
+	
+	
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
 	import flash.system.Capabilities;

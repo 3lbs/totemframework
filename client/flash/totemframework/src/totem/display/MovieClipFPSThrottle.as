@@ -20,11 +20,13 @@ package totem.display
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.utils.getTimer;
-	
+
 	import totem.display.layout.TSprite;
 
 	public class MovieClipFPSThrottle extends TSprite
 	{
+
+		protected var _movieClip : MovieClip;
 
 		private var _fps : Number;
 
@@ -32,9 +34,7 @@ package totem.display
 
 		private var _lastTime : Number = 0;
 
-		private var _loop : Boolean;
-
-		private var _movieClip : MovieClip;
+		protected var _loop : Boolean;
 
 		private var _playing : Boolean;
 
@@ -70,8 +70,9 @@ package totem.display
 
 		override public function destroy() : void
 		{
-			_movieClip.removeEventListener( Event.ENTER_FRAME, updatePlay );
-
+			
+			stop();
+			
 			_movieClip.stop();
 			_movieClip = null;
 
@@ -140,8 +141,7 @@ package totem.display
 			_playing = true;
 
 			_lastTime = getTimer();
-			_lastTime = getTimer();
-			_movieClip.addEventListener( Event.ENTER_FRAME, updatePlay, false, 0, true );
+			_movieClip.addEventListener( Event.ENTER_FRAME, _updatePlay, false, 0, true );
 		}
 
 		public function reverse() : void
@@ -155,7 +155,7 @@ package totem.display
 			_playing = false;
 
 			this._stopReversing();
-			_movieClip.removeEventListener( Event.ENTER_FRAME, updatePlay );
+			_movieClip.removeEventListener( Event.ENTER_FRAME, _updatePlay );
 		}
 
 		public function get totalFrames() : int
@@ -233,7 +233,7 @@ package totem.display
 			return true;
 		}
 
-		private function updatePlay( eve : Event ) : void
+		protected function _updatePlay( eve : Event ) : void
 		{
 			var time = getTimer();
 			var dt = time - _lastTime;

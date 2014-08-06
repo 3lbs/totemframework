@@ -19,14 +19,16 @@ package totem.ui.popup
 
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
-	
+	import flash.utils.getTimer;
+
 	import ladydebug.Logger;
-	
+
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-	
+
 	import totem.core.IDestroyable;
 	import totem.display.layout.TContainer;
 	import totem.ui.StopPropagationController;
@@ -84,6 +86,8 @@ package totem.ui.popup
 		 * Stage width.
 		 */
 		private var _width : uint;
+
+		private var clickedCleared : int;
 
 		private var propagationController : StopPropagationController;
 
@@ -314,6 +318,16 @@ package totem.ui.popup
 			_height = height;
 		}
 
+		private function backgroundClose( displayObject : DisplayObject ) : void
+		{
+
+			if ( getTimer() > clickedCleared )
+			{
+				displayObject.dispatchEvent( new Event( Event.CLOSE ));
+			}
+
+		}
+
 		private function getChannel( channel : int ) : ChannalData
 		{
 			if ( _popUpChannelMap[ channel ])
@@ -395,12 +409,20 @@ package totem.ui.popup
 				var displayObject : DisplayObject = popUpData.popUp;
 				var transition : BasePopUpTransition = popUpData.transition;
 
+				clickedCleared = getTimer() + 2000;
+
 				if ( !channel.backgroundScreen.parent )
 				{
 
-					Logger.info( this, "backgroundScreen", " please" );
 					channel.backgroundScreen.visible = true;
 					_container.addChild( channel.backgroundScreen );
+
+					channel.backgroundScreen.addEventListener( MouseEvent.CLICK, function()
+					{
+
+						backgroundClose( displayObject );
+					}, false, 0, true );
+
 				}
 
 				displayObject.scaleX = displayObject.scaleY = scale;
@@ -408,7 +430,7 @@ package totem.ui.popup
 				center( displayObject );
 
 				propagationController.enabled = true;
-				
+
 				if ( transition )
 				{
 					transition.animateIn();
@@ -422,10 +444,11 @@ package totem.ui.popup
 			}
 			else
 			{
+				channel.backgroundScreen.removeEventListeners();
+
 				if ( channel.backgroundScreen.parent )
 					_container.removeChild( channel.backgroundScreen );
 			}
-
 
 			popupDispatcher.dispatch( isActive());
 		}
