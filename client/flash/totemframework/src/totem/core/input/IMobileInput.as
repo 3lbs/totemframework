@@ -24,6 +24,14 @@ package totem.core.input
 
 		function handleSingleTouch( x : Number, y : Number ) : void;
 
+		//function handleTouchBegin( x : Number, y : Number ) : void;
+
+		//function handleTouchEnd( x : Number, y : Number ) : void;
+
+		function handleLongPress( x : Number, y : Number, end : Boolean = false  ) : void;
+
+		//function handleTouchMove( x : Number, y : Number ) : void;
+
 		function handleTouchZoom( scale : Number, offsetX : Number, offsetY : Number, end : Boolean = false ) : void;
 	}
 }

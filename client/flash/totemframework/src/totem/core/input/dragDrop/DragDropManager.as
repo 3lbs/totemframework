@@ -28,13 +28,10 @@ package totem.core.input.dragDrop
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
-
+	
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
-	import starling.display.Stage;
 	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 
 	/**
 	 * Handles drag and drop operations based on Starling touch events.

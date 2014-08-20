@@ -285,7 +285,7 @@ package totem.components.spatial
 			}
 		}
 
-		public function setScale( x : Number, y : Number, z : Number ) : void
+		public function setScale( x : Number, y : Number, z : Number = 1 ) : void
 		{
 			_scaleX = x;
 			_scaleY = y;

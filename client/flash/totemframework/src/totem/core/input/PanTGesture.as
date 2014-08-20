@@ -44,13 +44,17 @@ package totem.core.input
 
 		override protected function onTouchEnd( touches : Vector.<Touch> ) : void
 		{
-			if ( state == POSSIBLE )
+			if ( state == FAILED )
 			{
-				state = FAILED;
+				return;
+			}
+			else if ( state == POSSIBLE )
+			{
+				setState( FAILED );
 			}
 			else
 			{
-				state = ENDED;
+				setState(  ENDED );
 
 				_observers.handlePan( _offsetX, _offsetY, true );
 			}
@@ -86,7 +90,7 @@ package totem.core.input
 					_offsetX = _dx;
 					_offsetY = _dy;
 
-					state = BEGAN;
+					setState( BEGAN );
 				}
 			}
 			else if ( state == BEGAN || state == CHANGED )
@@ -99,7 +103,7 @@ package totem.core.input
 				_offsetX = prevLocationX - _location.x;
 				_offsetY = prevLocationY - _location.y;
 
-				state = CHANGED;
+				setState( CHANGED );
 			}
 
 			if ( state == BEGAN || state == CHANGED )

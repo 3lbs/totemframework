@@ -17,8 +17,11 @@
 package totem.core.input
 {
 
+	import flash.system.Capabilities;
+	import flash.utils.Dictionary;
+	
 	import starling.events.Touch;
-
+	
 	import totem.core.Destroyable;
 	import totem.data.type.Point2d;
 
@@ -31,11 +34,15 @@ package totem.core.input
 
 		public static const CHANGED : int = 5;
 
+		public static var DEFAULT_SLOP : uint = Math.round( 20 / 252 * flash.system.Capabilities.screenDPI );
+
 		public static const ENDED : int = 3;
 
 		public static const FAILED : int = 1;
 
 		public static const POSSIBLE : int = 0;
+
+		protected var _gesturesToFail : Dictionary = new Dictionary( true );
 
 		protected var _location : Point2d = new Point2d();
 
@@ -47,7 +54,7 @@ package totem.core.input
 
 		protected var _touchesCount : int = 0;
 
-		protected var state : int;
+		private var _state : int = POSSIBLE;
 
 		public function TGesture()
 		{
@@ -56,7 +63,17 @@ package totem.core.input
 
 		public function complete() : Boolean
 		{
-			return state != FAILED;
+			return _state != FAILED;
+		}
+
+		override public function destroy() : void
+		{
+			_gesturesToFail = null;
+		}
+
+		public function requireGestureToFail( gesture : TGesture ) : void
+		{
+			_gesturesToFail[ gesture ] = true;
 		}
 
 		public function reset() : void
@@ -65,8 +82,36 @@ package totem.core.input
 
 			_offsetX = 0;
 			_offsetY = 0;
+			
+			_location.reset();
+			
+/*
+			if ( state == POSSIBLE )
+			{
+				// manual reset() call. Set to FAILED to keep our State Machine clean and stable
+				setState( FAILED );
+			}
+			else if ( state == BEGAN || state == CHANGED )
+			{
+				// manual reset() call. Set to CANCELLED to keep our State Machine clean and stable
+				setState( CANCELED );
+			}
+			else
+			{
+				// reset from GesturesManager after reaching one of the 4 final states:
+				// (state == GestureState.RECOGNIZED ||
+				// state == GestureState.ENDED ||
+				// state == GestureState.FAILED ||
+				// state == GestureState.CANCELLED)
+			}*/
+			setState( POSSIBLE );
 
-			state = POSSIBLE;
+			//_state = POSSIBLE;
+		}
+
+		public function get state() : int
+		{
+			return _state;
 		}
 
 		public function subscribe( input : IMobileInput ) : void
@@ -83,10 +128,9 @@ package totem.core.input
 		{
 			if ( state == POSSIBLE )
 			{
-				state = FAILED;
+				_state = FAILED;
 			}
 		}
-
 
 		protected function onTouchBegin( touch : Vector.<Touch> ) : void
 		{
@@ -103,6 +147,41 @@ package totem.core.input
 
 		}
 
+		protected function setState( newState : int ) : Boolean
+		{
+			if ( _state == newState && _state == CHANGED )
+			{
+				return true;
+			}
+
+			if ( newState == BEGAN )
+			{
+				var gestureToFail : TGesture;
+				var key : *;
+
+				// first we check if other required-to-fail gestures recognized
+				// TODO: is this really necessary? using "requireGestureToFail" API assume that
+				// required-to-fail gesture always recognizes AFTER this one.
+				for ( key in _gesturesToFail )
+				{
+					gestureToFail = key as TGesture;
+
+					if ( gestureToFail.state != POSSIBLE && gestureToFail.state != FAILED )
+					{
+						// Looks like other gesture won't fail,
+						// which means the required condition will not happen, so we must fail
+						setState( FAILED );
+						return false;
+					}
+				}
+
+			}
+
+			_state = newState;
+
+			return true;
+		}
+
 		protected function updateLocation( x : Number, y : Number ) : void
 		{
 			_location.x = x;
@@ -115,7 +194,7 @@ package totem.core.input
 			if ( state == ENDED || state == FAILED )
 			{
 			}
-				reset();
+			
 
 			_touchesCount = touches.length;
 
@@ -127,13 +206,14 @@ package totem.core.input
 			_touchesCount = touches.length;
 
 			onTouchEnd( touches );
+			
 		}
 
 		internal function touchMove( touches : Vector.<Touch> ) : void
 		{
 
 			_touchesCount = touches.length;
-			
+
 			onTouchMove( touches );
 		}
 	}

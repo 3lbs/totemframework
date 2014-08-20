@@ -18,9 +18,11 @@ package totem.loaders.starling
 {
 
 	import flash.filesystem.File;
-
+	
+	import dragonBones.textures.StarlingTextureAtlas;
+	
 	import starling.textures.TextureAtlas;
-
+	
 	import totem.loaders.XMLDataLoader;
 
 	public class AtlasTextureLoader extends TextureDataLoader

@@ -85,8 +85,6 @@ package totem.core
 			}
 			
 			super.destroy();
-			// deleyed destroy?????
-			//deconstruct();
 		}
 
 		public function getComponent( ComponentClass : Class ) : *

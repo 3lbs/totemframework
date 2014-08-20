@@ -24,6 +24,10 @@ package totem.core.params.display
 		public var atlas : String;
 
 		public var name : String;
+		
+		public var offsetX : Number = 0;
+		
+		public var offsetY : Number = 0;
 
 		public function TextureParam()
 		{

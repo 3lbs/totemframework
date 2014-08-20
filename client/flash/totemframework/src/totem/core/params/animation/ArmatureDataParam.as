@@ -21,13 +21,12 @@ package totem.core.params.animation
 	{
 
 		//armatureName:String, animationName:String = null, skeletonName:String = null, textureAtlasName:String = null, skinName:String = null
-		public var animationName : String;
 
 		public var armatureName : String;
 
-		public var skeletonName : String;
+		public var id : String;
 
-		public var textureAtlasName : String;
+		public var skeletonURL : String;
 
 		public function ArmatureDataParam()
 		{

@@ -42,6 +42,11 @@ package totem.display.components
 			return button;
 		}
 
+		public function get buttonCount() : int
+		{
+			return buttonGroup.length;
+		}
+
 		public function get data() : Object
 		{
 			return ( _currentSelectButton ) ? _currentSelectButton.data : null;
@@ -68,6 +73,11 @@ package totem.display.components
 			}
 
 			return null;
+		}
+
+		public function getButtonByIndex( idx : int ) : IButton
+		{
+			return buttonGroup[ idx ];
 		}
 
 		public function getButtonData( value : Object ) : IButton

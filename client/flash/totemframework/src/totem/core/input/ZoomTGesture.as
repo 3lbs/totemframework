@@ -80,7 +80,6 @@ package totem.core.input
 
 			_initialDistance = _transformVector.length;
 
-			trace( "zoom begin" );
 		}
 
 		override protected function onTouchEnd( touches : Vector.<Touch> ) : void
@@ -90,12 +89,12 @@ package totem.core.input
 			{
 				if ( state == BEGAN || state == CHANGED )
 				{
-					state = ENDED;
+					setState( ENDED );
 				}
 				else if ( state == POSSIBLE )
 				{
 
-					state = FAILED;
+					setState( FAILED );
 				}
 			}
 
@@ -123,7 +122,6 @@ package totem.core.input
 
 		override protected function onTouchMove( touches : Vector.<Touch> ) : void
 		{
-			trace( "touchcount", _touchesCount );
 
 			if ( _touchesCount < 2 )
 				return;
@@ -142,7 +140,6 @@ package totem.core.input
 				//var absD : Number = d >= 0 ? d : -d;
 
 				var abs : int = ( d + ( d >> 31 )) ^ ( d >> 31 );
-				trace( d, abs );
 
 				if ( abs < _delta )
 				{
@@ -180,14 +177,13 @@ package totem.core.input
 
 			if ( state == POSSIBLE )
 			{
-				state = BEGAN;
+				setState( BEGAN );
 			}
 			else
 			{
-				state = CHANGED;
+				setState( CHANGED );
 			}
 
-			trace( "scale", _scale );
 			_observers.handleTouchZoom( _scale, _offsetX, _offsetY );
 		}
 	}

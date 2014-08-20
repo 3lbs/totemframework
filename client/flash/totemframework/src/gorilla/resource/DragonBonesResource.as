@@ -22,14 +22,15 @@ package gorilla.resource
 	import flash.events.Event;
 	import flash.utils.ByteArray;
 
-
 	public class DragonBonesResource extends DataResource
 	{
 		private var _factory : StarlingFactory;
 
-		public function DragonBonesResource()
+
+		public function DragonBonesResource( )
 		{
 			super();
+
 		}
 
 		public function get factory() : StarlingFactory

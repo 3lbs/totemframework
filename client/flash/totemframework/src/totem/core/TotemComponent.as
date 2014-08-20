@@ -49,7 +49,7 @@ package totem.core
 
 		override public function destroy() : void
 		{
-			super.destroy();
+			// DO NOT SUPER THIS
 			owner = null;
 		}
 

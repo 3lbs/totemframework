@@ -28,6 +28,8 @@ package totem.core.params.display
 
 		public var imageURL : String;
 
+		public var load : Boolean;
+
 		public function AtlasDataParam()
 		{
 			super();

@@ -101,7 +101,7 @@ package totem.display.scenes.transition
 				screenFadeBitmapData.bitmapData.draw( loadingScreen );
 
 				g.beginBitmapFill( screenFadeBitmapData.bitmapData );
-				g.drawRect( 0, 0, loadingScreen.width, loadingScreen.height );
+				g.drawRect( 0, 0, loadingScreen.width, loadingScreen.height ); 
 
 				var ct : ColorTransform = new ColorTransform();
 				ct.color = 0xFFFFFF;

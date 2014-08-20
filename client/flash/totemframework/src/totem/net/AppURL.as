@@ -18,7 +18,7 @@ package totem.net
 {
 
 	import localization.LocalizationManager;
-
+	
 	import totem.utils.MobileUtil;
 
 	public class AppURL
@@ -74,13 +74,16 @@ package totem.net
 
 			UI = URLManager.instance( ASSETS.getURL( "UI" ));
 
+			ANIMATIONS = URLManager.instance( ASSETS.getURL( "animations" ));
+
+			
 			if ( MobileUtil.isHD())
 			{
 				IMAGES = URLManager.instance( IMAGES.getURL( "hd" ));
 				UI = URLManager.instance( UI.getURL( "hd" ));
+				ANIMATIONS = URLManager.instance( ANIMATIONS.getURL( "hd" ) );
 			}
 
-			ANIMATIONS = URLManager.instance( ASSETS.getURL( "animations" ));
 
 			var readerRaw : URLManager = URLManager.instance( RESOURCE.getURL( "reader" ));
 

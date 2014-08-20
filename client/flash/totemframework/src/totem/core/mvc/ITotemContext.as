@@ -19,7 +19,7 @@ package totem.core.mvc
 
 	import flash.display.DisplayObjectContainer;
 	import flash.events.IEventDispatcher;
-
+	
 	import totem.core.ITotemSystem;
 	import totem.core.TotemEntity;
 	import totem.core.TotemGroup;
@@ -45,5 +45,7 @@ package totem.core.mvc
 		function getManager( clazz : Class ) : *;
 		
 		function getEntity( name : String ) : TotemEntity;
+		
+		function hasEntity ( name : String ) : Boolean;
 	}
 }

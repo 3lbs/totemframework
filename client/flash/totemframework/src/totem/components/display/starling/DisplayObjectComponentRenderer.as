@@ -98,6 +98,7 @@ package totem.components.display.starling
 
 		override public function destroy() : void
 		{
+			
 			super.destroy();
 
 			scene = null;

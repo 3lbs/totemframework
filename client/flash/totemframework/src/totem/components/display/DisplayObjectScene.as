@@ -20,14 +20,14 @@ package totem.components.display
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
+
 	import ladydebug.Logger;
-	
+
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-	
+
 	import starling.display.Sprite;
-	
+
 	import totem.core.time.ITicked;
 	import totem.data.type.Point2d;
 	import totem.display.layout.starling.TStarlingSprite;
@@ -64,6 +64,8 @@ package totem.components.display
 
 		protected var _zoom : Number = 1;
 
+		private var _cachePosition : Vector2D = new Vector2D();
+
 		private var _height : Number;
 
 		private var _layers : Vector.<DisplayObjectSceneLayer> = new Vector.<DisplayObjectSceneLayer>();
@@ -85,7 +87,7 @@ package totem.components.display
 			super();
 			addChild( _rootSprite );
 			_rootSprite.touchable = true;
-			
+
 			this.touchable = true;
 		}
 
@@ -227,7 +229,7 @@ package totem.components.display
 			// Update our state based on the tracked object, if any.
 			if ( trackObject )
 			{
-				position = new Vector2D( -( trackObject.position.x + trackOffset.x ), -( trackObject.position.y + trackOffset.y ));
+				position = _cachePosition.setTo( -( trackObject.position.x + trackOffset.x ), -( trackObject.position.y + trackOffset.y ));
 			}
 
 			// Apply limit to camera movement.
@@ -246,7 +248,7 @@ package totem.components.display
 				centeredLimitBounds.width = trackLimitRectangle.width - ( _width / zoom );
 				centeredLimitBounds.height = trackLimitRectangle.height - ( _height / zoom );
 
-				position = new Vector2D( TotemUtil.clamp( position.x, -centeredLimitBounds.right, -centeredLimitBounds.left ), TotemUtil.clamp( position.y, -centeredLimitBounds.bottom, -centeredLimitBounds.top ));
+				position = _cachePosition.setTo( TotemUtil.clamp( position.x, -centeredLimitBounds.right, -centeredLimitBounds.left ), TotemUtil.clamp( position.y, -centeredLimitBounds.bottom, -centeredLimitBounds.top ));
 			}
 
 			updateTransform();

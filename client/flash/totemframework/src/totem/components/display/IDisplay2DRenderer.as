@@ -18,7 +18,7 @@ package totem.components.display
 {
 
 	import starling.display.DisplayObject;
-
+	
 	import totem.math.Vector2D;
 
 	public interface IDisplay2DRenderer
@@ -29,6 +29,8 @@ package totem.components.display
 		function set alpha( value : Number ) : void;
 
 		function get displayObject() : DisplayObject;
+		
+		function set displayObject( value : DisplayObject ) : void;
 
 		function getName() : String;
 

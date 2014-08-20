@@ -27,6 +27,8 @@ package totem.core.input
 
 		private var _touchTarget : DisplayObject;
 
+		private var longPressGesture : LongPressTGesture;
+
 		private var panGesture : PanTGesture;
 
 		private var touches : Vector.<Touch> = new Vector.<Touch>();
@@ -42,6 +44,11 @@ package totem.core.input
 			panGesture = new PanTGesture();
 
 			zoomGesture = new ZoomTGesture();
+
+			longPressGesture = new LongPressTGesture();
+			longPressGesture.minPressDuration = 250;
+
+			panGesture.requireGestureToFail( longPressGesture );
 		}
 
 		override public function destroy() : void
@@ -78,6 +85,7 @@ package totem.core.input
 
 			panGesture.subscribe( input );
 			zoomGesture.subscribe( input );
+			longPressGesture.subscribe( input );
 		}
 
 		/**
@@ -132,6 +140,7 @@ package totem.core.input
 					case TouchPhase.BEGAN:
 
 						e.getTouches( _touchTarget, TouchPhase.BEGAN, touches );
+						longPressGesture.touchBegin( touches );
 						panGesture.touchBegin( touches );
 						zoomGesture.touchBegin( touches );
 
@@ -140,13 +149,21 @@ package totem.core.input
 					case TouchPhase.ENDED:
 
 						e.getTouches( _touchTarget, TouchPhase.ENDED, touches );
+						longPressGesture.touchEnd( touches );
 						panGesture.touchEnd( touches );
 						zoomGesture.touchEnd( touches );
-
-						if ( !panGesture.complete() && !zoomGesture.complete())
+						//&& !longPressGesture.complete() 
+						
+						// this is wrong
+						
+						if ( !panGesture.complete() && !zoomGesture.complete() && !longPressGesture.complete())
 						{
 							_observers.handleSingleTouch( t.globalX, t.globalY );
 						}
+
+						longPressGesture.reset();
+						panGesture.reset();
+						zoomGesture.reset();
 
 						e.stopImmediatePropagation();
 						break;
@@ -154,9 +171,9 @@ package totem.core.input
 					case TouchPhase.MOVED:
 
 						e.getTouches( _touchTarget, TouchPhase.MOVED, touches );
+						longPressGesture.touchMove( touches );
 						panGesture.touchMove( touches );
 						zoomGesture.touchMove( touches );
-
 						e.stopImmediatePropagation();
 						break;
 				}
