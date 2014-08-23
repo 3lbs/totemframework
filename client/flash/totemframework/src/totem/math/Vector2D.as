@@ -18,7 +18,7 @@ package totem.math
 {
 
 	import flash.geom.Point;
-
+	
 	import totem.core.Destroyable;
 	import totem.data.type.Point2d;
 
@@ -459,13 +459,15 @@ package totem.math
 		 * Shortens this Vector down to unit length.
 		 *
 		 */
-		public function normalize() : void
+		public function normalize() : Vector2D
 		{
 			if ( length != 0 )
 			{
 				x /= _length;
 				y /= _length;
 			}
+			
+			return  this;
 		}
 
 		/**

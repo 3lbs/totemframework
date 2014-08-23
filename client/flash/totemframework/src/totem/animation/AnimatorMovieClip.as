@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2014 
+//   3lbs Copyright 2013 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -68,6 +68,11 @@ package totem.animation
 			}
 		}
 
+		public function get currentAnimation() : Object
+		{
+			return _currentAnimation;
+		}
+
 		override public function destroy() : void
 		{
 
@@ -76,9 +81,9 @@ package totem.animation
 			super.destroy();
 		}
 
-		public function getAnimations() : Object
+		public function getAnimations( value : String ) : Object
 		{
-			return null;
+			return animations[ value ];
 		}
 
 		public function hasAnimation( name : String ) : Boolean
@@ -88,6 +93,9 @@ package totem.animation
 
 		public function playAnimation( name : String, loop : Boolean = false ) : void
 		{
+
+			if ( !hasAnimation( name ))
+				return;
 
 			_loop = loop;
 			gotoAndPlay( name );

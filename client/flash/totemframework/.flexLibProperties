@@ -547,8 +547,6 @@
     <classEntry path="totem.display.video.SimpleStageVideo"/>
     <classEntry path="totem.display.video.events.SimpleStageVideoEvent"/>
     <classEntry path="totem.display.starling.MovieClipProxy"/>
-    <classEntry path="totem.loaders.starling.DragonBonesJSONLoader"/>
-    <classEntry path="totem.core.input.LongPressTGesture"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
