@@ -237,7 +237,7 @@
     <classEntry path="totem.core.task.util.SynchronousDelegateTask"/>
     <classEntry path="totem.core.task.util.XmlLoaderTask"/>
     <classEntry path="totem.core.time.AnimatedComponent"/>
-    <classEntry path="totem.core.time.Clock"/>
+    <classEntry path="totem.time.GameTick"/>
     <classEntry path="totem.core.time.IAnimated"/>
     <classEntry path="totem.core.time.IQueued"/>
     <classEntry path="totem.core.time.ITicked"/>
@@ -547,6 +547,7 @@
     <classEntry path="totem.display.video.SimpleStageVideo"/>
     <classEntry path="totem.display.video.events.SimpleStageVideoEvent"/>
     <classEntry path="totem.display.starling.MovieClipProxy"/>
+    <classEntry path="totem.animation.AnimatorSequenceMovieClip"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

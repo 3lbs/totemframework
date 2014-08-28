@@ -35,7 +35,7 @@ package totem.ui.popup
 
 		override public function animateIn() : void
 		{
-			TweenMax.from( popUp, .8, { alpha: .3, x: popUp.x - 150, ease: Back.easeOut });
+			TweenMax.from( popUp, .8, { alpha: .3, x: popUp.x - 150, ease: Back.easeOut, onComplete: complete });
 		}
 
 		override public function animateOut() : void

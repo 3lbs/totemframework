@@ -29,9 +29,10 @@ package totem.core.time
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
-
+	
 	import ladydebug.Logger;
-
+	
+	import totem.core.Destroyable;
 	import totem.core.ITotemSystem;
 	import totem.core.TotemComponent;
 	import totem.utils.IPrioritizable;
@@ -54,7 +55,7 @@ package totem.core.time
 	 * @see ITickedObject
 	 * @see IAnimatedObject
 	 */
-	public class TimeManager implements ITotemSystem
+	public class TimeManager extends Destroyable implements ITotemSystem
 	{
 
 		/**
@@ -282,10 +283,12 @@ package totem.core.time
 				thinkHeap.remove( object );
 		}
 
-		public function destroy() : void
+		override public function destroy() : void
 		{
 			if ( started )
 				stop();
+
+			super.destroy();
 		}
 
 		public function fireTick() : void

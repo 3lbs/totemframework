@@ -22,6 +22,8 @@ package totem.core.params.display
 
 		public var atlasURL : String;
 
+		public var cacheBitmapData : Boolean;
+
 		public var generateMipMaps : Boolean;
 
 		public var id : String;

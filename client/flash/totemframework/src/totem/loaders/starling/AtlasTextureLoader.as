@@ -17,12 +17,12 @@
 package totem.loaders.starling
 {
 
-	import flash.filesystem.File;
-	
 	import dragonBones.textures.StarlingTextureAtlas;
-	
+
+	import flash.filesystem.File;
+
 	import starling.textures.TextureAtlas;
-	
+
 	import totem.loaders.XMLDataLoader;
 
 	public class AtlasTextureLoader extends TextureDataLoader
@@ -30,11 +30,11 @@ package totem.loaders.starling
 
 		private var _textureAtlas : TextureAtlas;
 
+		private var _xmlData : XML;
+
 		private var cache : Boolean;
 
 		private var imageURL : String;
-
-		private var xmlData : XML;
 
 		private var xmlLoader : XMLDataLoader;
 
@@ -53,7 +53,7 @@ package totem.loaders.starling
 			xmlLoader.destroy();
 			xmlLoader = null;
 
-			xmlData = null;
+			_xmlData = null;
 
 			_textureAtlas = null;
 		}
@@ -62,7 +62,7 @@ package totem.loaders.starling
 		{
 			xmlLoader = getItemByID( filename );
 
-			xmlData = xmlLoader.XMLData;
+			_xmlData = xmlLoader.XMLData;
 
 			if ( !imageURL )
 			{
@@ -84,10 +84,15 @@ package totem.loaders.starling
 			return _textureAtlas;
 		}
 
+		public function get xmlData() : XML
+		{
+			return _xmlData;
+		}
+
 		override protected function finished() : void
 		{
 
-			_textureAtlas = new TextureAtlas( texture, xmlData );
+			_textureAtlas = new TextureAtlas( texture, _xmlData );
 
 			if ( xmlLoader )
 			{

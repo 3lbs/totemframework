@@ -52,13 +52,17 @@ package totem.ui.popup
 			_instance = new PopUpManager( container, new PopupEnforcer());
 		}
 
-		public var backgroundAlpha : Number = .2;
-
-		public var backgroundColor : int = 0x000000;
-
 		public var defaultPopupTransition : Class;
 
 		public var popupDispatcher : ISignal = new Signal( Boolean );
+
+		private var _backgroundAlpha : Number = .2;
+
+		private var _backgroundClickEnabled : Boolean = true;
+
+		private var _backgroundColor : int = 0x000000;
+
+		private var _backgroundDirty : Boolean = false;
 
 		private var _closedCallback : Function;
 
@@ -118,6 +122,38 @@ package totem.ui.popup
 
 			_popUpPool = new SimpleObjectPool( createPopUpData, null, 8 );
 
+		}
+
+		public function get backgroundAlpha() : Number
+		{
+			return _backgroundAlpha;
+		}
+
+		public function set backgroundAlpha( value : Number ) : void
+		{
+			_backgroundAlpha = value;
+			_backgroundDirty = true;
+		}
+
+		public function get backgroundClickEnabled() : Boolean
+		{
+			return _backgroundClickEnabled;
+		}
+
+		public function set backgroundClickEnabled( value : Boolean ) : void
+		{
+			_backgroundClickEnabled = value;
+		}
+
+		public function get backgroundColor() : int
+		{
+			return _backgroundColor;
+		}
+
+		public function set backgroundColor( value : int ) : void
+		{
+			_backgroundColor = value;
+			_backgroundDirty = true;
 		}
 
 		/**
@@ -321,7 +357,7 @@ package totem.ui.popup
 		private function backgroundClose( displayObject : DisplayObject ) : void
 		{
 
-			if ( getTimer() > clickedCleared )
+			if ( getTimer() > clickedCleared && _backgroundClickEnabled )
 			{
 				displayObject.dispatchEvent( new Event( Event.CLOSE ));
 			}
@@ -415,6 +451,14 @@ package totem.ui.popup
 				{
 
 					channel.backgroundScreen.visible = true;
+
+					if ( _backgroundDirty )
+					{
+						channel.backgroundScreen.backgroundAlpha = _backgroundAlpha;
+						channel.backgroundScreen.backgroundColor = _backgroundColor;
+						_backgroundDirty = false;
+					}
+					
 					_container.addChild( channel.backgroundScreen );
 
 					channel.backgroundScreen.addEventListener( MouseEvent.CLICK, function()

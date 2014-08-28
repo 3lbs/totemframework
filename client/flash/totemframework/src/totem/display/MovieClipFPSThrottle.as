@@ -26,6 +26,8 @@ package totem.display
 	public class MovieClipFPSThrottle extends TSprite
 	{
 
+		protected var _loop : Boolean;
+
 		protected var _movieClip : MovieClip;
 
 		private var _fps : Number;
@@ -33,8 +35,6 @@ package totem.display
 		private var _isReversing : Boolean;
 
 		private var _lastTime : Number = 0;
-
-		protected var _loop : Boolean;
 
 		private var _playing : Boolean;
 
@@ -70,9 +70,9 @@ package totem.display
 
 		override public function destroy() : void
 		{
-			
+
 			stop();
-			
+
 			_movieClip.stop();
 			_movieClip = null;
 
@@ -141,7 +141,7 @@ package totem.display
 			_playing = true;
 
 			_lastTime = getTimer();
-			_movieClip.addEventListener( Event.ENTER_FRAME, _updatePlay, false, 0, true );
+			_movieClip.addEventListener( Event.ENTER_FRAME, _updatePlay );
 		}
 
 		public function reverse() : void
@@ -192,7 +192,7 @@ package totem.display
 					stop();
 				}
 
-				dispatchEvent( new Event( Event.COMPLETE ));
+				complete();
 			}
 			else
 			{
@@ -220,19 +220,6 @@ package totem.display
 			_movieClip.removeEventListener( Event.ENTER_FRAME, _gotoFrameBefore );
 		}
 
-		private function _elaspedTime() : Boolean
-		{
-			var time = getTimer();
-			var dt = time - _lastTime;
-
-			if ( dt <= _rate )
-				return false;
-
-			_lastTime = time;
-
-			return true;
-		}
-
 		protected function _updatePlay( eve : Event ) : void
 		{
 			var time = getTimer();
@@ -254,12 +241,37 @@ package totem.display
 					stop();
 				}
 
-				dispatchEvent( new Event( Event.COMPLETE ));
+				complete();
 			}
 			else
 			{
 				_movieClip.nextFrame();
 			}
+
+			onUpdateAnimation();
+		}
+
+		protected function complete() : void
+		{
+			dispatchEvent( new Event( Event.COMPLETE ));
+		}
+
+		protected function onUpdateAnimation() : void
+		{
+
+		}
+
+		private function _elaspedTime() : Boolean
+		{
+			var time = getTimer();
+			var dt = time - _lastTime;
+
+			if ( dt <= _rate )
+				return false;
+
+			_lastTime = time;
+
+			return true;
 		}
 	}
 }

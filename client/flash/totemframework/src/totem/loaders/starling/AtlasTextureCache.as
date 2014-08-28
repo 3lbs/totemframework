@@ -17,12 +17,14 @@
 package totem.loaders.starling
 {
 
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
 	import starling.textures.TextureAtlas;
 
 	import totem.core.Destroyable;
+	import totem.display.BitmapDataAtlas;
 
 	public class AtlasTextureCache extends Destroyable
 	{
@@ -58,9 +60,11 @@ package totem.loaders.starling
 			return instance;
 		}
 
-		private var _bitmapDatas : Dictionary;
-
 		private var _atlas : Dictionary;
+
+		private var _atlasBitmap : Dictionary;
+
+		private var _bitmapDatas : Dictionary;
 
 		public function AtlasTextureCache( singletonEnforcer : SingletonEnforcer )
 		{
@@ -69,6 +73,7 @@ package totem.loaders.starling
 
 			_atlas = new Dictionary();
 			_bitmapDatas = new Dictionary();
+			_atlasBitmap = new Dictionary();
 		}
 
 		public function clearIndex( url : String ) : Boolean
@@ -80,6 +85,21 @@ package totem.loaders.starling
 				return true;
 			}
 			return false;
+		}
+
+		public function createBitmapAtlas( url : String, bitmapDataAtlas : BitmapDataAtlas, force : Boolean = false ) : void
+		{
+			if ( _atlasBitmap[ url ] && force )
+			{
+				_atlasBitmap[ url ].dispose();
+				_atlasBitmap[ url ] = null;
+			}
+
+			if ( !_atlasBitmap[ url ] || force )
+			{
+				_atlasBitmap[ url ] = bitmapDataAtlas;
+			}
+
 		}
 
 		public function createBitmapData( url : String, bitmapData : BitmapData, force : Boolean = false ) : void
@@ -133,6 +153,11 @@ package totem.loaders.starling
 		public function getBitmapData( url : String ) : BitmapData
 		{
 			return _bitmapDatas[ url ];
+		}
+
+		public function getBitmapDataAtlas( url : String ) : BitmapDataAtlas
+		{
+			return _atlasBitmap[ url ];
 		}
 
 		public function getTextureAtlas( url : String ) : TextureAtlas

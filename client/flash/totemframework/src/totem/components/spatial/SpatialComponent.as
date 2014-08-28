@@ -18,10 +18,12 @@ package totem.components.spatial
 {
 
 	import flash.utils.Dictionary;
-	
+
 	import starling.display.Quad;
-	
+
+	import totem.components.display.DisplayObjectSceneLayer;
 	import totem.components.display.IDisplay2DRenderer;
+	import totem.core.mvc.view.ViewMap;
 	import totem.core.params.Transform2DParam;
 	import totem.core.time.TickedComponent;
 	import totem.data.type.Point2d;
@@ -34,6 +36,8 @@ package totem.components.spatial
 		public static const NAME : String = "spatialComponent";
 
 		public var boundsOffset : Vector2D = new Vector2D();
+
+		protected var _bounds : AABBox; // = new AABBox();
 
 		protected var _position : Vector2D = new Vector2D();
 
@@ -48,8 +52,6 @@ package totem.components.spatial
 		protected var dirtyScale : Boolean = true;
 
 		protected var properties : Dictionary;
-
-		protected var _bounds : AABBox; // = new AABBox();
 
 		private var _depth : int;
 
@@ -127,10 +129,10 @@ package totem.components.spatial
 			/*trace( pt.toString() );
 			trace( _bounds.toString () );
 			trace(  _bounds.containsPoint( pt ) );
-			
+
 			if ( _bounds.containsPoint( pt ) == false )
 				trace("stop");*/
-				
+
 			return _bounds.containsPoint( pt );
 		}
 
@@ -168,7 +170,7 @@ package totem.components.spatial
 			_height = value;
 
 			_bounds.setSize( _width, _height )
-				
+
 			dirtyPosition = true;
 			updateTransfrom();
 		}
@@ -337,7 +339,7 @@ package totem.components.spatial
 			_width = value;
 
 			_bounds.setSize( _width, _height );
-				
+
 			dirtyPosition = true;
 			updateTransfrom();
 		}
@@ -422,7 +424,7 @@ package totem.components.spatial
 			dirtyPosition = true;
 
 			_bounds.setSize( _width, _height );
-			
+
 			updateTransfrom();
 
 			dispatchUpdate();
@@ -476,19 +478,23 @@ package totem.components.spatial
 
 			var displayComponent : IDisplay2DRenderer = getSibling( IDisplay2DRenderer );
 
-			if ( !boundImage )
+			if ( !boundImage && displayComponent )
 			{
 				boundImage = new Quad( _bounds.width, _bounds.height, ColorUtil.AQUA );
 				boundImage.alpha = .3;
+			}
+
+			if ( !boundImage.parent && displayComponent.displayObject.parent )
+			{
 				displayComponent.displayObject.parent.addChild( boundImage );
 			}
 
 			if ( boundImage )
 			{
 				var p : Vector2D = _bounds.center; //.subtractedBy( defaultOffset ); //.subtract( positionOffset );
-				
+
 				boundImage.x = p.x; // - (width * 0.5);
-				boundImage.y = p.y ; //- ( height * 0.5 );
+				boundImage.y = p.y; //- ( height * 0.5 );
 			}
 
 		}

@@ -4,7 +4,7 @@ package totem.core.input.simple
     import flash.events.Event;
     import flash.events.MouseEvent;
     
-    import totem.core.time.Clock;
+    import totem.time.GameTick;
     
     /**
      * Mouse system.
@@ -69,9 +69,9 @@ package totem.core.input.simple
         }
         
         private var _stage:Stage;
-        private var _clock:Clock;
+        private var _clock:GameTick;
         [Inject]
-        public function inject(stage:Stage, clock:Clock):void
+        public function inject(stage:Stage, clock:GameTick):void
         {
             _stage = stage;
             _clock = clock;

@@ -18,9 +18,10 @@ package totem.loaders.starling
 {
 
 	import flash.display.BitmapData;
-
+	
 	import starling.textures.TextureAtlas;
-
+	
+	import totem.display.BitmapDataAtlas;
 	import totem.loaders.XMLDataLoader;
 	import totem.monitors.GroupMonitor;
 	import totem.monitors.IMonitor;
@@ -108,6 +109,13 @@ package totem.loaders.starling
 			if ( _bitmapData && cacheBitmapData )
 			{
 				AtlasTextureCache.getInstance().createBitmapData( id, _bitmapData );
+				
+				var bitmapDataAtlas : BitmapDataAtlas = new BitmapDataAtlas( _bitmapData, textureLoader.xmlData );
+				AtlasTextureCache.getInstance().createBitmapAtlas( id, bitmapDataAtlas );
+			}
+			else
+			{
+				// unload texture???
 			}
 
 			super.finished();

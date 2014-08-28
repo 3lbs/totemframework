@@ -50,6 +50,8 @@ package totem.core
 		override public function destroy() : void
 		{
 			// DO NOT SUPER THIS
+			
+			_isDestroyed = true;
 			owner = null;
 		}
 

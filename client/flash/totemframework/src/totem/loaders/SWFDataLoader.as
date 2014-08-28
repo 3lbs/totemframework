@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -50,6 +50,11 @@ package totem.loaders
 			var resource : IResource = ResourceManager.getInstance().load( url, SWFResource );
 			resource.completeCallback( handleSwfComplete );
 			resource.failedCallback( onFailed );
+		}
+
+		public function unload() : void
+		{
+			ResourceManager.getInstance().unload( url, SWFResource );
 		}
 
 		private function handleSwfComplete( resource : SWFResource ) : void

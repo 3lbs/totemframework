@@ -18,6 +18,7 @@ package application.loadingscreen
 {
 
 	import flash.events.Event;
+	import flash.media.StageWebView;
 	
 	import totem.core.task.Task;
 	import totem.display.scenes.BaseLoadingScreen;
@@ -67,6 +68,9 @@ package application.loadingscreen
 		protected function init( event : Event ) : void
 		{
 			backgroundVisible = false;
+			
+			//stage.visible = false;
+			
 			removeEventListener( Event.ADDED_TO_STAGE, init );
 
 			//var _urlRequest : URLRequest = new URLRequest( "/res/assets/intro3lbsmachine_portrait.swf" );
@@ -76,6 +80,9 @@ package application.loadingscreen
 			stageVideoProxy.addEventListener( Event.INIT, handleStageVideoInit );
 
 			addChild( stageVideoProxy );
+			
+			
+			var stageWebView : StageWebView  = new StageWebView();
 		}
 
 		private function handleComplete( task : Task ) : void

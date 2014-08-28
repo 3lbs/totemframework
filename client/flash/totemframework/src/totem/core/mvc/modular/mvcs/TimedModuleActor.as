@@ -17,51 +17,75 @@
 package totem.core.mvc.modular.mvcs
 {
 
-	import flash.utils.getTimer;
-
+	import totem.core.ITotemSystem;
 	import totem.core.time.ITicked;
+	import totem.core.time.TimeManager;
 
-	public class TimedModuleActor extends ModuleActor implements ITicked
+	public class TimedModuleActor extends ModuleActor implements ITicked, ITotemSystem
 	{
 
-		private var _interval : Number = 0;
+		[Inject]
+		public var timeManager : TimeManager;
+
+		public var updatePriority : Number = 0.0;
+
+		private var _isRegisteredForUpdates : Boolean;
 
 		private var _lastUpdate : Number = 0;
+
+		private var _registerForUpdates : Boolean;
 
 		public function TimedModuleActor()
 		{
 			super();
 		}
 
-		public function get interval() : Number
+		override public function destroy() : void
 		{
-			return _interval;
+			registerForTicks = false;
+
+			timeManager = null;
+
+			super.destroy();
 		}
 
-		public function set interval( value : Number ) : void
+		public function initialize() : void
 		{
-			_interval = value;
+			registerForTicks = true;
 		}
 
-		public final function onTick() : void
+		public function onTick() : void
 		{
-			var time : Number = getTimer();
 
-			var delta : Number = time - _lastUpdate;
+		}
 
-			if ( delta < _interval )
+		/**
+		 * @private
+		 */
+		public function get registerForTicks() : Boolean
+		{
+			return _registerForUpdates;
+		}
+
+		/**
+		 * Set to register/unregister for tick updates.
+		 */
+		public function set registerForTicks( value : Boolean ) : void
+		{
+			_registerForUpdates = value;
+
+			if ( _registerForUpdates && !_isRegisteredForUpdates )
 			{
-				return;
+				// Need to register.
+				_isRegisteredForUpdates = true;
+					//timeManager.addTickedObject( this, updatePriority );
 			}
-
-			_lastUpdate = time;
-
-			update( delta );
-		}
-
-		protected function update( time : Number ) : void
-		{
-
+			else if ( !_registerForUpdates && _isRegisteredForUpdates )
+			{
+				// Need to unregister.
+				_isRegisteredForUpdates = false;
+					//timeManager.removeTickedObject( this );
+			}
 		}
 	}
 }

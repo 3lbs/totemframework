@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -19,14 +19,14 @@ package totem.animation
 
 	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
-	import flash.events.Event;
 	import flash.utils.Dictionary;
-
+	
 	import totem.display.MovieClipFPSThrottle;
 
 	public class AnimatorMovieClip extends MovieClipFPSThrottle
 	{
-		private var _currentAnimation : Object;
+
+		protected var _currentAnimation : Object;
 
 		private var animations : Dictionary;
 
@@ -50,8 +50,6 @@ package totem.animation
 			for ( var i : uint = 0; i < l; i++ )
 			{
 				label = labels[ i ];
-				trace( "frame " + label.frame + ": " + label.name );
-
 				animation = new Object();
 				animation.start = label.frame;
 
@@ -93,6 +91,11 @@ package totem.animation
 
 		public function playAnimation( name : String, loop : Boolean = false ) : void
 		{
+			onPlayAniamtion( name, loop );
+		}
+
+		protected function onPlayAniamtion( name : String, loop : Boolean = false ) : void
+		{
 
 			if ( !hasAnimation( name ))
 				return;
@@ -103,10 +106,8 @@ package totem.animation
 			_currentAnimation = animations[ name ];
 		}
 
-		override protected function _updatePlay( eve : Event ) : void
+		override protected function onUpdateAnimation() : void
 		{
-			super._updatePlay( eve );
-
 			if ( currentFrame >= _currentAnimation.end )
 			{
 				if ( _loop )
@@ -117,8 +118,6 @@ package totem.animation
 				{
 					stop();
 				}
-
-				dispatchEvent( new Event( Event.COMPLETE ));
 			}
 		}
 	}

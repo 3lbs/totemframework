@@ -30,7 +30,7 @@ package totem.core
 
 	public class TotemEntity extends TotemObject
 	{
-		public var notifBroadcaster : NotifBroadcaster = new NotifBroadcaster();
+		//public var notifBroadcaster : NotifBroadcaster = new NotifBroadcaster();
 
 		private var alternativeMapping : Dictionary = new Dictionary();
 
@@ -111,7 +111,7 @@ package totem.core
 		{
 			super.initialize();
 
-			injector.map( NotifBroadcaster ).toValue( notifBroadcaster );
+			//injector.map( NotifBroadcaster ).toValue( notifBroadcaster );
 
 			for each ( var component : TotemComponent in components_ )
 			{
@@ -119,7 +119,7 @@ package totem.core
 				component.doAdd();
 			}
 
-			notifBroadcaster.dispatchNotifWith( TotemNotification.ENTITY_INITIALIZED );
+			//notifBroadcaster.dispatchNotifWith( TotemNotification.ENTITY_INITIALIZED );
 		}
 
 		public function mapInterface( component : TotemComponent, ComponentClass : Class ) : void

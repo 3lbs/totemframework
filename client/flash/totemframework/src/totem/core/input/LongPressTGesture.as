@@ -55,7 +55,7 @@ package totem.core.input
 			{
 				var touch : Touch = touches[ 0 ];
 				
-				updateLocation( touches[ 0 ].globalX, touches[ 0 ].globalY );
+				updateLocation( touch.globalX, touch.globalY );
 				
 				_numTouchesRequiredReached = true;
 				_timer.reset();
@@ -70,8 +70,9 @@ package totem.core.input
 			{
 				if (state == BEGAN || state == CHANGED)
 				{
-					updateLocation( _location.x, _location.y );
-					_observers.handleLongPress( _offsetX, _offsetY, true );
+					var touch : Touch = touches[ 0 ];
+					updateLocation( touch.globalX, touch.globalY );
+					_observers.handleLongPress( _location.x, _location.y , true );
 					setState(ENDED);
 				}
 				else

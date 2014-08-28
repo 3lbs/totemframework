@@ -99,7 +99,7 @@ package totem.core
 
 			stage.addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame, false, 0, true );
 
-			Logger.info( this, "handleStageInitComplete", "would be great" );
+			//Logger.info( this, "handleStageInitComplete", "would be great" );
 			
 			initialize();
 

@@ -98,7 +98,7 @@ package totem.components.display.starling
 
 		override public function destroy() : void
 		{
-			
+
 			super.destroy();
 
 			scene = null;
@@ -112,19 +112,19 @@ package totem.components.display.starling
 
 		public function set displayObject( value : DisplayObject ) : void
 		{
-			
+
 			if ( _scene && _displayObject )
 			{
 				_scene.remove( this );
 			}
-			
+
 			_displayObject = value;
 
 			if ( _scene && _displayObject )
 			{
 				_scene.add( this );
 			}
-			
+
 			_transformDirty = true;
 
 			if ( getName() && owner && owner.getName())
@@ -139,7 +139,20 @@ package totem.components.display.starling
 
 		public function set offset( value : Vector2D ) : void
 		{
-			_offset = value;
+			
+			if ( value.equal( _offset ))
+				return;
+			
+			
+			if ( getName() == "food" )
+			{
+				trace( _offset );
+				trace( "break" );
+			}
+			
+			_offset.x = value.x;
+			_offset.y = value.y;
+			_transformDirty = true;
 		}
 
 		override public function onTick() : void
@@ -180,6 +193,13 @@ package totem.components.display.starling
 
 			if ( value.equal( _positionOffset ))
 				return;
+
+			
+			if ( getName() == "food" )
+			{
+				trace( _positionOffset );
+				trace( "break" );
+			}
 
 			_positionOffset.x = value.x;
 			_positionOffset.y = value.y;
@@ -292,6 +312,12 @@ package totem.components.display.starling
 			displayObject.transformationMatrix = _transformMatrix;
 			displayObject.visible = _visible;
 			displayObject.alpha = alpha;
+
+			if ( getName() == "food" )
+			{
+				trace( _positionOffset );
+				trace( "break" );
+			}
 
 			_transformDirty = false;
 		}
