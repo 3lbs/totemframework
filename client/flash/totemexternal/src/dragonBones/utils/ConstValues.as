@@ -5,6 +5,7 @@
 	final public class ConstValues
 	{
 		public static const ANGLE_TO_RADIAN:Number = Math.PI / 180;
+		public static const RADIAN_TO_ANGLE:Number = 180 / Math.PI;
 		
 		public static const DRAGON_BONES:String = "dragonBones";
 		public static const ARMATURE:String = "armature";
@@ -33,6 +34,7 @@
 		public static const A_IMAGE_PATH:String = "imagePath";
 		public static const A_FRAME_RATE:String = "frameRate";
 		public static const A_NAME:String = "name";
+		public static const A_IS_GLOBAL:String = "isGlobal";
 		public static const A_PARENT:String = "parent";
 		public static const A_LENGTH:String = "length";
 		public static const A_TYPE:String = "type";
@@ -42,6 +44,7 @@
 		public static const A_OFFSET:String = "offset";
 		public static const A_LOOP:String = "loop";
 		public static const A_EVENT:String = "event";
+		public static const A_EVENT_PARAMETERS:String = "eventParameters";
 		public static const A_SOUND:String = "sound";
 		public static const A_ACTION:String = "action";
 		public static const A_HIDE:String = "hide";

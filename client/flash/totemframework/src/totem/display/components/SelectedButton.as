@@ -19,6 +19,7 @@ package totem.display.components
 
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
+	import flash.filters.BitmapFilter;
 
 	public class SelectedButton extends MovieClipButton implements IButton
 	{
@@ -34,11 +35,24 @@ package totem.display.components
 
 		private var _locked : Boolean = true;
 
+		private var _viewed : Boolean;
+
+		private var _viewedFilters : Array = new Array();
+
 		public function SelectedButton( mc : MovieClip )
 		{
 			super( mc );
 		}
 
+		
+		override public function destroy():void
+		{
+			_viewedFilters.length = 0;
+			_viewedFilters = null;
+			
+			super.destroy();
+		}
+		
 		public function get locked() : Boolean
 		{
 			return _locked;
@@ -72,6 +86,74 @@ package totem.display.components
 			{
 				gotoAndStop( UP_STATE_FRAME );
 			}
+		}
+
+		public function get viewed() : Boolean
+		{
+			return _viewed;
+		}
+
+		public function set viewed( value : Boolean ) : void
+		{
+			if ( value == _viewed )
+				return;
+
+			_viewed = value;
+
+			if ( _viewedFilters.length )
+			{
+				var filters : Array = _movieClip.filters;
+				var filter : BitmapFilter;
+				var l : int = _viewedFilters.length;
+				
+				if ( _viewed )
+				{
+					while ( l-- )
+					{
+						filter = _viewedFilters[ l ];
+						if ( filters.indexOf( filter ) == -1 )
+						{
+							filters.push( filter );
+						}
+					}
+	
+					_movieClip.filters = filters;
+				}
+				else
+				{
+					var idx : int;
+					while ( l-- )
+					{
+						filter = _viewedFilters[ l ];
+						if ( ( idx = filters.indexOf( filter ) ) > -1 )
+						{
+							filters.splice( idx, 1 );
+						}
+					}
+				}
+				
+			}
+
+		}
+
+		public function get viewedFilters() : Array
+		{
+			return _viewedFilters;
+		}
+
+		public function set viewedFilters( value : Array ) : void
+		{
+			
+			if ( value == _viewedFilters )
+				return;
+			
+			if ( value == null )
+			{
+				viewed = false;
+			}
+			
+			_viewedFilters = value;
+
 		}
 
 		override protected function handleMouseEvent( event : MouseEvent ) : void

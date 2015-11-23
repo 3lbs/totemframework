@@ -110,6 +110,7 @@ package totem.utils.objectpool
 				objectPool.setHelper( helper );
 
 			var type : Class = ( identifierOrType is Class ) ? identifierOrType : null;
+			
 			objectPool.allocate( count, type );
 		}
 

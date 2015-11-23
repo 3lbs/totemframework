@@ -29,11 +29,12 @@
 	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 	POSSIBILITY OF SUCH DAMAGE.
 */
-package org.casalib.util {
+
+package org.casalib.util 
+{
 	import flash.xml.XMLDocument;
-	import flash.xml.XMLNodeType;
 	import flash.xml.XMLNode;
-	import org.casalib.util.NumberUtil;
+	import flash.xml.XMLNodeType;
 	
 	
 	/**
@@ -83,13 +84,19 @@ package org.casalib.util {
 					trace(StringUtil.truncate('Mississippi', 2, 3, '...')); // Traces "Mis...pi"
 				</code>
 		*/
-		public static function truncate(source:String, trailing:uint, leading:uint = 0, separator:String = ""):String {
+		public static function truncate(source:String, trailing:uint, leading:uint = 0, separator:String = "..."):String 
+		{
 			const lead:String  = source.substr(0, leading);
 			const trail:String = source.substr(-trailing, trailing);
 			
 			return lead + separator + trail;
 		}
 		
+
+		public static function ellipsis ( source: String, length : uint = 0, separator : String = "..."  ) : String
+		{
+			return source.slice(0, length).concat(source.length > length ? "..." : "");
+		}
 		
 		/**
 			Transforms source String to title case.

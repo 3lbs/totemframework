@@ -17,6 +17,7 @@
 package totem.utils
 {
 
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 
 	import starling.utils.ScaleMode;
@@ -62,6 +63,14 @@ package totem.utils
 			return factor;
 		}
 
+		public static function fitIntoRect( rectangle : Rectangle, into : Rectangle, fillRect : Boolean = true, align : String = Alignment.CENTER ) : Number
+		{
+
+			var s : Number = 1;
+
+			return s;
+		}
+
 		private static function nextSuitableScaleFactor( factor : Number, up : Boolean ) : Number
 		{
 			var divisor : Number = 1.0;
@@ -88,10 +97,6 @@ package totem.utils
 			}
 
 			return 1.0 / divisor;
-		}
-
-		public function RectUtil()
-		{
 		}
 	}
 }

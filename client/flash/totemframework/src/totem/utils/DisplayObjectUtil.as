@@ -109,6 +109,7 @@ package totem.utils
 			
 			return pt;
 		}
+		
 			
 		public static function alignInRect( displayObject : DisplayObject, rectangle : Rectangle, align : String = Alignment.CENTER, applyTransform : Boolean = true ) : Matrix
 		{

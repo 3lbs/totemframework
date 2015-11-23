@@ -19,14 +19,14 @@ package totem.core
 
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-	
+
 	import totem.totem_internal;
 
 	public class TotemSystem extends TotemObject implements ITotemSystem
 	{
 
 		[Inject]
-		protected var eventDispatcher : IEventDispatcher;
+		public var eventDispatcher : IEventDispatcher;
 
 		public function TotemSystem( name : String = null )
 		{

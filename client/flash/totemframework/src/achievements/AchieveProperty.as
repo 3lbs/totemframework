@@ -22,60 +22,65 @@ package achievements
 	 * with some special attributes (such as default value and update constraints).
 	 */
 	[Bindable]
+	[Marshall( field = "operator", field = "property", field = "activationValue" )]
 	public class AchieveProperty
 	{
 
-		public var _activationValue : int;
-
 		[Transient]
-		public var activation : String = AchieveManager.ACTIVE_IF_LESS_THAN;
+		public var activationValue : int;
 
 		[Id]
 		public var id : int;
 
-		public var initialValue : int;
+		public var active : Boolean;
 
-		// name of prop or event
-		public var name : String;
+		[Transient]
+		public var operator : String;
 
-		[Marshall( field = "id" )]
+		public var owner_id : String;
+
+		[Column( name = 'prop_id' )]
 		public var propID : String;
 
-		public var value : int;
+		[Transient]
+		public var property : String;
 
-		public function AchieveProperty( theActivationValue : int = 0, theTags : Array = null )
+		public var value : int = 0;
+
+		// you can use this for the as3 vanile reflection
+		public function AchieveProperty( pOperator : String = "", pProperty : String = "", pActivationValue : Object = 0 )
 		{
-			_activationValue = theActivationValue;
-
-			reset();
+			operator = pOperator;
+			property = pProperty;
+			activationValue = parseInt( String( pActivationValue ) );
 		}
 
-		public function isActive() : Boolean
+		public function isActivated() : Boolean
+		{
+			return ( active == true );
+		}
+
+		public function isConditionMet() : Boolean
 		{
 			var result : Boolean = false;
 
-			switch ( activation )
+			switch ( operator )
 			{
 				case AchieveManager.ACTIVE_IF_GREATER_THAN:
-					result = value > _activationValue;
+					result = value > activationValue;
 					break;
 				case AchieveManager.ACTIVE_IF_LESS_THAN:
-					result = value < _activationValue;
+					result = value < activationValue;
+					break;
+				case AchieveManager.ACTIVE_IF_EQUAL_TO:
+					result = value == activationValue;
+					break;
+				case AchieveManager.ACTIVE_IF_NOT_EQUAL_TO:
+					result = value != activationValue;
 					break;
 			}
 
 			return result;
-		}
-
-		public function reset() : void
-		{
-			value = initialValue;
-		}
-
-		[Marshall( field = "activation" )]
-		public function setActivation( value : String ) : void
-		{
-			activation = value;
 		}
 	}
 }

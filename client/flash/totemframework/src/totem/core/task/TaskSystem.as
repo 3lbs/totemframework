@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -50,6 +50,36 @@ package totem.core.task
 			_tasks = null;
 		}
 
+		public function hasTask( value : Task ) : Boolean
+		{
+			var l : int = _tasks.size;
+
+			while ( l-- )
+			{
+				if ( _tasks.getTask( l ) == value )
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public function hasTaskByName( value : String ) : Boolean
+		{
+			var l : int = _tasks.size;
+
+			while ( l-- )
+			{
+				if ( _tasks.getTask( l ).getName() == value )
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		override public function initialize() : void
 		{
 			_tasks = new SequenceTask( "main" );
@@ -64,7 +94,10 @@ package totem.core.task
 
 		private function handleTaskComplete( task : Task ) : void
 		{
-			_tasks.removeTask( task );
+			if ( _tasks.removeTask( task ))
+			{
+				task.destroy();
+			}
 		}
 	}
 }

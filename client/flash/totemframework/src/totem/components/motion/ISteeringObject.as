@@ -18,15 +18,18 @@ package totem.components.motion
 {
 
 	import AI.steering.ISteering;
-	
+
 	import totem.components.spatial.ISpatial2D;
 
 	public interface ISteeringObject extends ISpatial2D
 	{
+
+		function setBehavior( behavior : ISteering ) : ISteering;
+
 		function get steering() : ISteering;
 
 		function get velocity() : Number;
-		
-		function set velocity ( value : Number ) : void;
+
+		function set velocity( value : Number ) : void;
 	}
 }

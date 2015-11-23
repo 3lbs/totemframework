@@ -1,3 +1,4 @@
+
 //------------------------------------------------------------------------------
 //
 //     _______ __ __           
@@ -18,11 +19,9 @@ package application.loadingscreen
 {
 
 	import flash.events.Event;
-	import flash.media.StageWebView;
 	
 	import totem.core.task.Task;
 	import totem.display.scenes.BaseLoadingScreen;
-	import totem.display.video.SimpleStageVideo;
 
 	public class AppLoadingScreen extends BaseLoadingScreen
 	{
@@ -30,7 +29,6 @@ package application.loadingscreen
 
 		private var delay : int;
 
-		private var stageVideoProxy : SimpleStageVideo;
 
 		public function AppLoadingScreen( url : String, w : Number, h : Number, delay : int )
 		{
@@ -41,28 +39,26 @@ package application.loadingscreen
 
 			this.delay = delay;
 			backgroundVisible = false;
+			backgroundColor = 0;
 			contentWidth = w;
 			contentHeight = h;
 
+			
 			addEventListener( Event.ADDED_TO_STAGE, init );
 		}
 
 		override public function destroy() : void
 		{
 
-			stageVideoProxy.destroy();
-			stageVideoProxy = null;
+			//stageVideoProxy.destroy();
+			//stageVideoProxy = null;
 
 			super.destroy();
 		}
 
 		protected function handleStageVideoInit( event : Event ) : void
 		{
-			stageVideoProxy.removeEventListener( Event.INIT, handleStageVideoInit );
-
-			var introTask : Intro3lbsScreenTask = new Intro3lbsScreenTask( _url, stageVideoProxy, delay );
-			introTask.onCompleted.add( handleComplete );
-			introTask.start();
+			//stageVideoProxy.removeEventListener( Event.INIT, handleStageVideoInit );
 		}
 
 		protected function init( event : Event ) : void
@@ -76,13 +72,17 @@ package application.loadingscreen
 			//var _urlRequest : URLRequest = new URLRequest( "/res/assets/intro3lbsmachine_portrait.swf" );
 			//var url : String = MobileUtil.isHD() ? "Intro3lbsMachineFinal_HD.swf" : "Intro3lbsMachineFinal_S.swf";
 
-			stageVideoProxy = new SimpleStageVideo( contentWidth, contentHeight );
-			stageVideoProxy.addEventListener( Event.INIT, handleStageVideoInit );
+			//stageVideoProxy = new SimpleStageVideo( contentWidth, contentHeight );
+			//stageVideoProxy.addEventListener( Event.INIT, handleStageVideoInit );
 
-			addChild( stageVideoProxy );
+			//addChild( stageVideoProxy );
 			
 			
-			var stageWebView : StageWebView  = new StageWebView();
+
+			var introTask : Intro3lbsScreenTask = new Intro3lbsScreenTask( _url, this, delay );
+			introTask.onCompleted.add( handleComplete );
+			introTask.start();
+			
 		}
 
 		private function handleComplete( task : Task ) : void

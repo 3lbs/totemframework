@@ -144,12 +144,6 @@ package totem.components.display.starling
 				return;
 			
 			
-			if ( getName() == "food" )
-			{
-				trace( _offset );
-				trace( "break" );
-			}
-			
 			_offset.x = value.x;
 			_offset.y = value.y;
 			_transformDirty = true;
@@ -313,12 +307,14 @@ package totem.components.display.starling
 			displayObject.visible = _visible;
 			displayObject.alpha = alpha;
 
+			
+			
 			if ( getName() == "food" )
 			{
-				trace( _positionOffset );
+				trace( _offset );
 				trace( "break" );
 			}
-
+			
 			_transformDirty = false;
 		}
 

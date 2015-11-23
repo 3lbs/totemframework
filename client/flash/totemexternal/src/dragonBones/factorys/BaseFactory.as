@@ -199,8 +199,6 @@ package dragonBones.factorys
 			var armatureData:ArmatureData;
 			var animationArmatureData:ArmatureData;
 			var skinData:SkinData;
-			
-			var armatureDataCopy:ArmatureData;
 			var skinDataCopy:SkinData;
 			
 			if(skeletonName)
@@ -278,7 +276,7 @@ package dragonBones.factorys
 				buildSlots(armature, armatureData, skinData, skinDataCopy);
 			}
 			
-			//
+			// update armature pose
 			armature.advanceTime(0);
 			return armature;
 		}
@@ -288,9 +286,9 @@ package dragonBones.factorys
 		 * @param animationRawData (XML, JSON).
 		 * @param target armature.
 		 */
-		public function addAnimationToArmature(animationRawData:Object, armature:Armature):void
+		public function addAnimationToArmature(animationRawData:Object, armature:Armature, isGlobalData:Boolean = false):void
 		{
-			armature._armatureData.addAnimationData(DataParser.parseAnimationDataByAnimationRawData(animationRawData,armature._armatureData));
+			armature._armatureData.addAnimationData(DataParser.parseAnimationDataByAnimationRawData(animationRawData,armature._armatureData, isGlobalData));
 		}
 		
 		/**
@@ -403,15 +401,15 @@ package dragonBones.factorys
 							}
 							
 							var childArmature:Armature = buildArmature(displayData.name, displayDataCopy?displayDataCopy.name:null, _currentDataName, _currentTextureAtlasName);
-							if(childArmature)
-							{
-								helpArray[i] = childArmature;
-							}
+							helpArray[i] = childArmature;
 							break;
 						
 						case DisplayData.IMAGE:
-						default:
 							helpArray[i] = generateDisplay(_textureAtlasDic[_currentTextureAtlasName], displayData.name, displayData.pivot.x, displayData.pivot.y);
+							break;
+						
+						default:
+							helpArray[i] = null;
 							break;
 						
 					}
@@ -421,14 +419,21 @@ package dragonBones.factorys
 				//如果显示对象有name属性并且name属性可以设置的话，将name设置为与slot同名，dragonBones并不依赖这些属性，只是方便开发者
 				for each(var displayObject:Object in helpArray)
 				{
-					if(displayObject && "name" in displayObject)
+					if(displayObject is Armature)
 					{
-						try
+						(displayObject as Armature).display["name"] = slot.name;
+					}
+					else
+					{
+						if(displayObject && "name" in displayObject)
 						{
-							displayObject["name"] = slot.name;
-						}
-						catch(err:Error)
-						{
+							try
+							{
+								displayObject["name"] = slot.name;
+							}
+							catch(err:Error)
+							{
+							}
 						}
 					}
 				}
@@ -479,8 +484,6 @@ package dragonBones.factorys
 		{
 			return null;
 		}
-		
-		
 		
 		//==================================================
 		//解析dbswf和dbpng，如果不能序列化amf3格式无法实现解析

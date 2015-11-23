@@ -50,6 +50,10 @@ package totem.display.layout
 			updateDisplay();
 		}
 
+		/**
+		 * 
+		 * 
+		 */
 		public function updateDisplay() : void
 		{
 			graphics.clear();
@@ -60,7 +64,9 @@ package totem.display.layout
 				{
 					graphics.beginBitmapFill( _backgroundBitmapData );
 					graphics.drawRect( 0, 0, contentWidth, contentHeight );
+					//graphics.
 					graphics.endFill();
+					this.alpha = backgroundAlpha;
 				}
 				else
 				{

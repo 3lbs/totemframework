@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -17,6 +17,9 @@
 package totem.loaders
 {
 
+	import application.param.FontParam;
+
+	import flash.system.ApplicationDomain;
 	import flash.text.Font;
 
 	import gorilla.resource.FontResource;
@@ -46,13 +49,13 @@ package totem.loaders
 			return false;
 		}
 
-		private var fontNames : Array;
+		private var fontNames : Vector.<FontParam>;
 
 		private var fontResource : FontResource;
 
 		private var url : String;
 
-		public function FontsLoader( url : String, fontNames : Array, id : String = "" )
+		public function FontsLoader( url : String, fontNames : Vector.<FontParam>, id : String = "" )
 		{
 			this.fontNames = fontNames;
 			this.id = id || url;
@@ -72,14 +75,39 @@ package totem.loaders
 		{
 			fontResource = resource;
 
-			for each ( var fontName : String in fontNames )
+			var l : int = fontNames.length;
+
+			var fontParam : FontParam;
+
+			while ( l-- )
 			{
-				if ( !hasFont( fontName ))
+				fontParam = fontNames[ l ];
+
+				if ( !hasFont( fontParam.clazz ))
 				{
-					fontResource.registerFont( fontName );
+					fontResource.registerFont( fontParam.clazz );
 				}
 			}
-			
+
+			/*	var FontLibrary : Class;
+
+				var applicationDomain : ApplicationDomain = loader.content.loaderInfo.applicationDomain;
+				//checkFonts();
+
+				for each ( var fontName : String in fontNames )
+				{
+					if ( applicationDomain.hasDefinition( fontName ))
+					{
+						FontLibrary = applicationDomain.getDefinition( fontName ) as Class;
+
+						if ( FontLibrary )
+						{
+							var font : Font = new FontLibrary();
+							Font.registerFont( FontLibrary );
+						}
+					}
+				}*/
+
 			finished();
 		}
 

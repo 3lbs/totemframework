@@ -38,6 +38,7 @@ package gorilla.resource
 
 		public function registerFont( fontName : String ) : void
 		{
+		
 			var FontLibrary : Class = getAssetClass( fontName ) as Class;
 			Font.registerFont( FontLibrary );
 		}

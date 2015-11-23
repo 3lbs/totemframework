@@ -1,4 +1,4 @@
-package dragonBones.display
+﻿package dragonBones.display
 {
 	import flash.display.BlendMode;
 	import flash.geom.Matrix;
@@ -134,7 +134,7 @@ package dragonBones.display
 		/** @private */
 		override dragonBones_internal function updateDisplayVisible(value:Boolean):void
 		{
-			if(_starlingDisplay)
+			if(_starlingDisplay && this._parent)
 			{
 				_starlingDisplay.visible = this._parent.visible && this._visible && value;
 			}
@@ -153,6 +153,7 @@ package dragonBones.display
 		{
 			if(_starlingDisplay)
 			{
+				super.updateDisplayColor(aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier);
 				_starlingDisplay.alpha = aMultiplier;
 				if (_starlingDisplay is Quad)
 				{

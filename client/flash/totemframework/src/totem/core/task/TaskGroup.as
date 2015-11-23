@@ -174,7 +174,7 @@ package totem.core.task
 		{
 			super.destroy();
 
-			//removeAllTasks();
+			removeAllTasks();
 		}
 
 		/**

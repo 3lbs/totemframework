@@ -122,7 +122,12 @@ trace(mediators.hasMediator(view));
 
 		}
 
-		protected function dispatch( event : Event ) : void
+		protected function addContextListener( type : String, listener : Function, useCapture : Boolean = false, priority : int = 0, useWeakReference : Boolean = true ) : void
+		{
+			eventDispatcher.addEventListener( type, listener, useCapture, priority, useWeakReference );
+		}
+		
+		protected function dispatchContext( event : Event ) : void
 		{
 			if ( eventDispatcher.hasEventListener( event.type ))
 				eventDispatcher.dispatchEvent( event );

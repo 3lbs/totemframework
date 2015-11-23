@@ -250,7 +250,7 @@
 			}
 			else
 			{
-				durationScale = duration * 0.001 / animationData.duration;
+				durationScale = duration * 1000 / animationData.duration;
 			}
 			
 			playTimes = isNaN(playTimes)?animationData.playTimes:playTimes;
@@ -326,8 +326,6 @@
 					slot.childArmature.animation.gotoAndPlay(animationName, fadeInTime);
 				}
 			}
-			
-			_lastAnimationState.advanceTime(0);
 			
 			return _lastAnimationState;
 		}

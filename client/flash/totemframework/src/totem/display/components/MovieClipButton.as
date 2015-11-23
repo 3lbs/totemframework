@@ -37,12 +37,12 @@ package totem.display.components
 
 		protected var UP_STATE_FRAME : int = 1;
 
+		protected var _enabled : Boolean = true;
+
 		/** @var Reference to MovieClip */
 		protected var _movieClip : MovieClip;
 
 		private var _data : Object;
-
-		private var _enabled : Boolean = true;
 
 		/** @var Reference to TextField */
 		private var _label : TextField;
@@ -55,12 +55,15 @@ package totem.display.components
 
 		public function MovieClipButton( mc : MovieClip )
 		{
+			
 			_movieClip = mc;
+			_movieClip.stop();
 			_movieClip.gotoAndStop( 1 );
 			_movieClip.buttonMode = true;
 			_movieClip.useHandCursor = true;
 
 			findLabel();
+			
 
 			// Add event listeners
 			attachButtonListeners();

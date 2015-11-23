@@ -162,6 +162,18 @@ package AI.goal
 			subgoals.length = 0;
 		}
 
+		public function reset() : void
+		{
+			return;
+			
+			var l : int = subgoals.length;
+			
+			while ( l-- )
+			{
+				subgoals[ l ].reset();
+			}
+		}
+
 		public function get status() : int
 		{
 			return _status;

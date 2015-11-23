@@ -28,7 +28,7 @@ package totem.loaders
 
 		public static function getObject( file : File ) : Object
 		{
-			return JSON.parse( DocumentService.getInstance().readFile( file ));
+			return JSON.parse( DocumentService.getInstance().readFile( file ) || "");
 		}
 
 		public static function getObjectClass( file : File, clazz : Class ) : *

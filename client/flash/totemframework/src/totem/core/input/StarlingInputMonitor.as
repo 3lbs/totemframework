@@ -116,7 +116,7 @@ package totem.core.input
 		private function _handleTouch( e : TouchEvent ) : void
 		{
 
-			if ( !_enabled )
+			if ( !_enabled || !_observers )
 				return;
 
 			var t : Touch = e.getTouch( _touchTarget );

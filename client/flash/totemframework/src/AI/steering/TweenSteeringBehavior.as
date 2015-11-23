@@ -20,8 +20,10 @@ package AI.steering
 	import AI.steering.motion.IMotion;
 	import AI.steering.motion.MLinear;
 
-	import flash.geom.Point;
 	import flash.utils.Dictionary;
+
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
 
 	import totem.components.motion.ISteeringObject;
 	import totem.core.Destroyable;
@@ -38,9 +40,18 @@ package AI.steering
 
 		private static const PI2 : Number = ( 180 / Math.PI );
 
-		private var _distance : Number;
+		public var dispatchComplete : ISignal = new Signal();
 
-		private var _duration : Number;
+		protected var _distance : Number;
+
+		protected var _duration : Number;
+
+		protected var _targetPoint : Vector2D;
+
+		// degrees
+		protected var angle : Number = 0;
+
+		protected var steeringComponent : ISteeringObject;
 
 		private var _motion : IMotion;
 
@@ -50,15 +61,9 @@ package AI.steering
 
 		private var _startPosition : Vector2D = new Vector2D();
 
-		private var _targetPoint : Vector2D;
-
 		private var _timeElapsed : Number;
 
-		private var angle : Number = 0;
-
 		private var defalutEaseType : Class = MLinear;
-
-		private var steeringComponent : ISteeringObject;
 
 		public function TweenSteeringBehavior( component : ISteeringObject )
 		{
@@ -73,10 +78,16 @@ package AI.steering
 
 			_motionMap = null;
 
-			_startPosition.dispose();
-			_startPosition = null;
+			if ( _startPosition )
+			{
+				_startPosition.dispose();
+				_startPosition = null;
+			}
 
 			steeringComponent = null;
+
+			dispatchComplete.removeAll();
+			dispatchComplete = null;
 
 			_targetPoint = null;
 		}
@@ -149,7 +160,7 @@ package AI.steering
 		{
 			if ( _targetPoint )
 			{
-				var position : Vector2D = steeringComponent.position;
+				//var position : Vector2D = steeringComponent.position;
 
 				_timeElapsed += TimeManager.TICK_RATE;
 
@@ -163,6 +174,8 @@ package AI.steering
 					steeringComponent.x = _targetPoint.x;
 					steeringComponent.y = _targetPoint.y;
 					_targetPoint = null;
+
+					dispatchComplete.dispatch();
 				}
 
 				return true;

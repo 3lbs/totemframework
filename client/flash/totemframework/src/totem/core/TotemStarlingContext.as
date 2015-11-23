@@ -21,8 +21,6 @@ package totem.core
 	import flash.display3D.Context3D;
 	import flash.events.Event;
 	
-	import ladydebug.Logger;
-	
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -90,11 +88,15 @@ package totem.core
 			starlingEngine.simulateMultitouch = true;
 			//starlingEngine.enableErrorChecking = true;
 
+			context3D = starlingEngine.context;
+			context3D.present();
 			
 			starlingStage = starlingEngine.root as Sprite;
 
+
 			paused = true;
 
+			
 			starlingEngineBuilder.destroy();
 
 			stage.addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame, false, 0, true );

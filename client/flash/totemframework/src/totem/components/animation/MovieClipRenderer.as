@@ -54,6 +54,11 @@ package totem.components.animation
 			movieClip.currentFrame = frame;
 		}
 
+		override public function hasAnimation( name : String ) : Boolean
+		{
+			return ( _movieClip.hasAnimation( name ));
+		}
+
 		public function get movieClip() : AnimationMovieClip
 		{
 			return _movieClip

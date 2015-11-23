@@ -19,10 +19,12 @@ package totem.time
 
 	import flash.display.DisplayObject;
 	import flash.events.Event;
-	
+	import flash.utils.getTimer;
+
 	import org.osflash.signals.Signal;
-	
+
 	import totem.core.IDestroyable;
+	import totem.core.time.TimeManager;
 
 	/**
 	 * Clock system.
@@ -30,22 +32,30 @@ package totem.time
 	public final class GameTick extends Signal implements IDestroyable //implements ISystem
 	{
 
-		public var TICKS_PER_SECOND : int = 60;
+		public static var TICKS_PER_SECOND : int = 30;
 
 		/**
 		 * The rate at which ticks are fired, in seconds.
 		 */
-		public var TICK_RATE : Number = 1.0 / Number( TICKS_PER_SECOND );
+		public static var TICK_RATE : Number = 1.0 / Number( TICKS_PER_SECOND );
+
+		public static var TICK_RATE_MS : Number = TICK_RATE * 1000;
 
 		private var _destroyed : Boolean;
 
 		private var _displayObject : DisplayObject;
 
-		public function GameTick( display : DisplayObject )
+		private var _lastTime : Number;
+
+		private var _rate : Number;
+
+		public function GameTick( display : DisplayObject, r : Number = 30 )
 		{
 			super( Number );
 
 			_displayObject = display;
+
+			_rate = TICK_RATE_MS;
 
 			//1 / _displayObject.frameRate
 
@@ -73,6 +83,16 @@ package totem.time
 			return _destroyed;
 		}
 
+		public function get rate() : Number
+		{
+			return _rate;
+		}
+
+		public function set rate( value : Number ) : void
+		{
+			_rate = value;
+		}
+
 		protected function handleAddToStage( event : Event ) : void
 		{
 			_displayObject.removeEventListener( Event.ADDED_TO_STAGE, handleAddToStage );
@@ -81,6 +101,14 @@ package totem.time
 
 		private function tick( e : Event ) : void
 		{
+
+			var time : Number = getTimer();
+			var dt : Number = time - _lastTime;
+
+			if ( dt <= _rate )
+				return;
+
+			_lastTime = time;
 			dispatch( TICK_RATE );
 		}
 	}

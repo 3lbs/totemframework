@@ -20,7 +20,7 @@ package achievements
 	public class AchievementReward
 	{
 
-		public var name : String;
+		public var property : String;
 
 		public var value : Object;
 

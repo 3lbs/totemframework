@@ -8,7 +8,7 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
@@ -39,9 +39,11 @@ package totem.core.mvc.controller.command
 			this.commandManager = commandManager;
 		}*/
 
-		public function append( command : Command ) : void
+		public function append( command : Command ) : Command
 		{
 			childrenCommands.push( command );
+
+			return command;
 		}
 
 		[Inject]

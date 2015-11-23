@@ -52,7 +52,7 @@ package AI.goal
 			if ( notPresent( goal ))
 			{
 				removeAllSubgoals();
-				
+
 				addSubgoal( goal );
 			}
 
@@ -96,14 +96,6 @@ package AI.goal
 			}
 		}
 
-		override public function terminate():void
-		{
-			super.terminate();
-
-			evaluators.length = 0;
-
-		}
-
 		override public function process() : int
 		{
 			activateIfInactive();
@@ -120,6 +112,15 @@ package AI.goal
 		public function removeEvaluators() : void
 		{
 			evaluators.length = 0;
+		}
+
+
+		override public function terminate() : void
+		{
+			super.terminate();
+
+			evaluators.length = 0;
+
 		}
 
 		protected function notPresent( goal : Goal ) : Boolean

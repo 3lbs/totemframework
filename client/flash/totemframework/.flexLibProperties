@@ -26,7 +26,7 @@
     <classEntry path="application.loadingscreen.AppLoadingScreen"/>
     <classEntry path="application.loadingscreen.Intro3lbsScreenTask"/>
     <classEntry path="application.param.AppParam"/>
-    <classEntry path="application.param.FontParam"/>
+    <classEntry path="application.param.FontSWFParam"/>
     <classEntry path="application.rateourapp.RateOurAppCommand"/>
     <classEntry path="application.rateourapp.RateOurAppDialog"/>
     <classEntry path="application.rateourapp.RateOurAppModel"/>
@@ -548,6 +548,14 @@
     <classEntry path="totem.display.video.events.SimpleStageVideoEvent"/>
     <classEntry path="totem.display.starling.MovieClipProxy"/>
     <classEntry path="totem.animation.AnimatorSequenceMovieClip"/>
+    <classEntry path="totem.loaders.starling.DragonBonesFactoryLoader"/>
+    <classEntry path="totem.display.ISWFObject"/>
+    <classEntry path="totem.loaders.atlas.NativeTextureAtlasLoader"/>
+    <classEntry path="localization.ResourceBundleLoader"/>
+    <classEntry path="achievements.AchieveEvent"/>
+    <classEntry path="totem.utils.TotemObjectUtil"/>
+    <classEntry path="totem.utils.TotemStringUtil"/>
+    <classEntry path="application.param.FontParam"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

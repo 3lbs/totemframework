@@ -111,6 +111,7 @@ package totem.events
 			return this._listenerManager.getTotalEventListeners( type );
 		}
 
+		[Transient]
 		public function get destroyed() : Boolean
 		{
 			return this._isDestroyed;

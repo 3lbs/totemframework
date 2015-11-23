@@ -58,6 +58,11 @@ package totem.components.animation
 			return armature.getBone( name );
 		}
 
+		override public function hasAnimation( name : String ) : Boolean
+		{
+			return ( armature.animation.hasAnimation( name ))
+		}
+
 		override public function onTick() : void
 		{
 			super.onTick();

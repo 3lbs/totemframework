@@ -65,7 +65,9 @@ package totem.loaders
 
 		private function onFailed( resource : Resource ) : void
 		{
+			trace("faild to load xml");
 			failed();
+			
 		}
 
 		private function onXMLComplete( resource : XMLResource ) : void

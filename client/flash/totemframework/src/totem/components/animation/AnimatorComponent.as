@@ -44,6 +44,11 @@ package totem.components.animation
 		{
 		}
 
+		public function hasAnimation( name : String ) : Boolean
+		{
+			return false;
+		}
+
 		public function pauseAnimation() : void
 		{
 
@@ -62,11 +67,11 @@ package totem.components.animation
 		override protected function onRemove() : void
 		{
 			super.onRemove();
-			
+
 			animationComplete.removeAll();
-			
+
 			animationLoopComplete.removeAll();
-			
+
 			stopAnimation();
 		}
 

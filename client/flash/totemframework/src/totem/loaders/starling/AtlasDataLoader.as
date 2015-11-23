@@ -23,11 +23,11 @@ package totem.loaders.starling
 	
 	import totem.display.BitmapDataAtlas;
 	import totem.loaders.XMLDataLoader;
-	import totem.monitors.GroupMonitor;
+	import totem.monitors.GroupRequiredMonitor;
 	import totem.monitors.IMonitor;
 	import totem.monitors.IRequireMonitor;
 
-	public class AtlasDataLoader extends GroupMonitor
+	public class AtlasDataLoader extends GroupRequiredMonitor
 	{
 
 		private static const ATLAS_ID : String = "atlasid";
@@ -111,7 +111,7 @@ package totem.loaders.starling
 				AtlasTextureCache.getInstance().createBitmapData( id, _bitmapData );
 				
 				var bitmapDataAtlas : BitmapDataAtlas = new BitmapDataAtlas( _bitmapData, textureLoader.xmlData );
-				AtlasTextureCache.getInstance().createBitmapAtlas( id, bitmapDataAtlas );
+				AtlasTextureCache.getInstance().createNativeAtlas( id, bitmapDataAtlas );
 			}
 			else
 			{

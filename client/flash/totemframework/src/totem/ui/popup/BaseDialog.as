@@ -27,8 +27,6 @@ package totem.ui.popup
 
 		public var dialogRect : BoxRectangle;
 
-		private var _initalized : Boolean;
-
 		public function BaseDialog()
 		{
 			initialize();

@@ -97,8 +97,13 @@ package totem.core.input
 					setState( FAILED );
 				}
 			}
+			
+			if ( _observers )
+			{
+				_observers.handleTouchZoom( _scale, _offsetX, _offsetY, true );
+				
+			}
 
-			_observers.handleTouchZoom( _scale, _offsetX, _offsetY, true );
 
 		/*else //== 1
 	{

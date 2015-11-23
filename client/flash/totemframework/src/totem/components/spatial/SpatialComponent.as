@@ -18,12 +18,10 @@ package totem.components.spatial
 {
 
 	import flash.utils.Dictionary;
-
+	
 	import starling.display.Quad;
-
-	import totem.components.display.DisplayObjectSceneLayer;
+	
 	import totem.components.display.IDisplay2DRenderer;
-	import totem.core.mvc.view.ViewMap;
 	import totem.core.params.Transform2DParam;
 	import totem.core.time.TickedComponent;
 	import totem.data.type.Point2d;
@@ -465,7 +463,6 @@ package totem.components.spatial
 				_bounds.moveTo( tempOffset );
 
 				drawHitArea();
-
 			}
 
 		}

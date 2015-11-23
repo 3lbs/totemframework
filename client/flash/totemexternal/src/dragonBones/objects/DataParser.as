@@ -130,18 +130,17 @@
 			return null;
 		}
 		
-		public static function parseAnimationDataByAnimationRawData(animationRawData:Object, armatureData:ArmatureData):AnimationData
+		public static function parseAnimationDataByAnimationRawData(animationRawData:Object, armatureData:ArmatureData, isGlobalData:Boolean = false):AnimationData
 		{
 			var animationData:AnimationData = armatureData.animationDataList[0];
 			
-			
 			if(animationRawData is XML)
 			{
-				return XMLDataParser.parseAnimationData((animationRawData as XML), armatureData, animationData.frameRate);
+				return XMLDataParser.parseAnimationData((animationRawData as XML), armatureData, animationData.frameRate, isGlobalData);
 			}
 			else
 			{
-				return ObjectDataParser.parseAnimationData(animationRawData, armatureData, animationData.frameRate);
+				return ObjectDataParser.parseAnimationData(animationRawData, armatureData, animationData.frameRate, isGlobalData);
 			}
 		}
 		

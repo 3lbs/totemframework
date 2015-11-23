@@ -36,9 +36,11 @@ package totem.monitors
 
 		public static const LOADING : int = 1;
 
-		private var _id : String;
+		public var delay : int = 100;
 
-		private var _status : int = EMPTY;
+		protected var _status : int = EMPTY;
+
+		private var _id : String;
 
 		public function AbstractMonitorProxy( id : String = "" )
 		{
@@ -94,7 +96,7 @@ package totem.monitors
 			if ( _status == COMPLETE )
 				return;
 
-			wait( 10, complete );
+			wait( delay, complete );
 		}
 
 		totem_internal function start() : void

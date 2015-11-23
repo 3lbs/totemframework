@@ -17,6 +17,8 @@
 package totem.math
 {
 
+	import flash.geom.Rectangle;
+
 	import totem.core.Destroyable;
 	import totem.data.type.Point2d;
 
@@ -95,6 +97,11 @@ package totem.math
 
 		}
 
+		public function containRect( rect : Rectangle ) : Boolean
+		{
+			return  !(( rect.top > bottom ) || ( rect.bottom < top ) || ( rect.left > right ) || ( rect.right < left ));;
+		}
+
 		public function contains( x : int, y : int ) : Boolean
 		{
 			if (( x > right ) || ( x < left ) || ( y < top ) || ( y > bottom ))
@@ -127,6 +134,11 @@ package totem.math
 			disposed.push( this );
 
 			return this;
+		}
+
+		public function fromRectangle() : void
+		{
+
 		}
 
 		public function isOverlapping( box : AABBox ) : Boolean
@@ -210,7 +222,7 @@ package totem.math
 
 		public function toString() : String
 		{
-			return ( "center: " + center.toString() + ", dimen: l = " + left + ", r = " + right + ", t = " + top +  ", b = " + bottom )
+			return ( "center: " + center.toString() + ", dimen: l = " + left + ", r = " + right + ", t = " + top + ", b = " + bottom )
 		}
 	}
 }

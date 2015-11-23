@@ -27,29 +27,38 @@ package totem.components.motion
 
 		public static const NAME : String = "TweenComponent";
 
-		private var _previousSteering : ISteering;
+		//private var _previousSteering : ISteering;
 
 		private var _steering : ISteering;
 
 		private var _velocity : Number;
 
-		public function TweenComponent( data : MovingParam )
+		public function TweenComponent( data : MovingParam, steering : ISteering = null )
 		{
 			super( NAME, data );
 
-			_velocity = data.velocity;
+			if ( data )
+			{
+				_velocity = data.velocity;
+			}
 
-			_steering = new TweenSteeringBehavior( this );
+			_steering = steering || new TweenSteeringBehavior( this );
 		}
 
 		override public function destroy() : void
 		{
 			_steering.destroy();
 			_steering = null;
+
+			/*if ( _previousSteering )
+			{
+				_previousSteering.destroy();
+				_previousSteering = null;
+			}*/
 			super.destroy();
 		}
 
-		public function goToPreviousBehavior() : Boolean
+		/*public function goToPreviousBehavior() : Boolean
 		{
 			if ( _previousSteering )
 			{
@@ -63,7 +72,7 @@ package totem.components.motion
 			}
 
 			return false;
-		}
+		}*/
 
 		override public function onTick() : void
 		{
@@ -78,8 +87,17 @@ package totem.components.motion
 		{
 			if ( _steering )
 			{
+
+				/*if ( _previousSteering )
+				{
+					_previousSteering.destroy();
+					_previousSteering = null;
+				}
+*/
 				_steering.stop();
-				_previousSteering = _steering;
+				_steering.destroy();
+				
+				//_previousSteering = _steering;
 			}
 
 			_steering = behavior;
@@ -100,6 +118,20 @@ package totem.components.motion
 		public function set velocity( value : Number ) : void
 		{
 			_velocity = value;
+		}
+
+		override protected function onActivate() : void
+		{
+			super.onActivate();
+
+			_steering = new TweenSteeringBehavior( this );
+		}
+
+		override protected function onRetire() : void
+		{
+			super.onRetire();
+
+			_steering.stop();
 		}
 	}
 }

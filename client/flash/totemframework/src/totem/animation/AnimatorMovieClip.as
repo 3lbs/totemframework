@@ -97,7 +97,7 @@ package totem.animation
 		protected function onPlayAniamtion( name : String, loop : Boolean = false ) : void
 		{
 
-			if ( !hasAnimation( name ))
+			if ( !hasAnimation( name )  || _currentAnimation == animations[ name ] )
 				return;
 
 			_loop = loop;

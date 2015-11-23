@@ -17,17 +17,18 @@
 package application.loadingscreen
 {
 
-	import totem.core.task.util.DelayTask;
+	import flash.display.DisplayObjectContainer;
+	
 	import application.task.PlayMovieTask;
-
+	
 	import totem.core.task.SequenceTask;
-	import totem.display.video.SimpleStageVideo;
+	import totem.core.task.util.DelayTask;
 
 	public class Intro3lbsScreenTask extends SequenceTask
 	{
 		private const NAME : String = "SCREEN_TASK";
 
-		public function Intro3lbsScreenTask( url : String, stageVideoProxy : SimpleStageVideo, delay : int = 0 )
+		public function Intro3lbsScreenTask( url : String, stageVideoProxy : DisplayObjectContainer, delay : int = 0 )
 		{
 			super( NAME );
 

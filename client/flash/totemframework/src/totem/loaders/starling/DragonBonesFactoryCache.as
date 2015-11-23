@@ -17,12 +17,15 @@
 package totem.loaders.starling
 {
 
+	import dragonBones.factorys.BaseFactory;
+
 	import flash.utils.Dictionary;
-	
-	import dragonBones.factorys.StarlingFactory;
 
 	public class DragonBonesFactoryCache
 	{
+
+		public static const NATIVE_EXT : String = "_native";
+
 		private static var _instance : DragonBonesFactoryCache;
 
 		public static function getInstance() : DragonBonesFactoryCache
@@ -41,18 +44,17 @@ package totem.loaders.starling
 				throw new Error( "Cannot instantiate a singleton class. Use static getInstance instead." );
 			}
 
-			//_factories = new Dictionary();
 		}
 
-		public function createIndex( id : String, texture : StarlingFactory, force : Boolean = false ) : void
+		public function createIndex( id : String, factory : BaseFactory, force : Boolean = false ) : void
 		{
 			if ( !_factories[ id ] || force )
 			{
-				_factories[ id ] = texture;
+				_factories[ id ] = factory;
 			}
 		}
 
-		public function getFactory( id : String ) : StarlingFactory
+		public function getFactory( id : String ) : BaseFactory
 		{
 			return _factories[ id ];
 		}

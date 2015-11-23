@@ -57,7 +57,7 @@ package totem.utils
 			}
 			catch ( error : IOError )
 			{
-				ioErrorHandler();
+				ioErrorHandler( file );
 			}
 
 			return str;
@@ -77,14 +77,14 @@ package totem.utils
 			}
 			catch ( error : IOError )
 			{
-				ioErrorHandler();
+				ioErrorHandler( file );
 			}
 		}
 
-		private function ioErrorHandler() : void
+		private function ioErrorHandler( file :File ) : void
 		{
 			// TODO Auto Generated method stub
-			trace( "IoError" );
+			trace( "IoError: " + file.name + ", " + file.nativePath );
 		}
 	}
 }

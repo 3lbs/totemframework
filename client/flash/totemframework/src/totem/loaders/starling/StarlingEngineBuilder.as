@@ -19,14 +19,15 @@ package totem.loaders.starling
 
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProfile;
 	import flash.geom.Rectangle;
-	
+
 	import org.casalib.util.StageReference;
-	
+
 	import starling.core.Starling;
 	import starling.events.Event;
-	
+
 	import totem.loaders.stage3d.Stage3DProxy;
 	import totem.monitors.AbstractMonitorProxy;
 	import totem.utils.MobileUtil;
@@ -93,7 +94,7 @@ package totem.loaders.starling
 
 			if ( MobileUtil.isAndroid())
 				Starling.handleLostContext = true;
-			
+
 			handleStageLoaded( null );
 		}
 

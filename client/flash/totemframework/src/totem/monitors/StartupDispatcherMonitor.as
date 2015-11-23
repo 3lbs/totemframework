@@ -94,7 +94,7 @@ package totem.monitors
 
 			if ( _monitors.size == 0 )
 			{
-				wait( 100, finished );
+				wait( delay, finished );
 			}
 		}
 	}

@@ -19,7 +19,7 @@ package totem.display.starling
 
 	import flash.media.Sound;
 	import flash.utils.Dictionary;
-
+	
 	import starling.animation.IAnimatable;
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -55,6 +55,11 @@ package totem.display.starling
 			_currentTime = 0.0;
 			_currentFrame = 0;
 			_autoDiscardAnimations = autoDiscardAnimations;
+		}
+		
+		public function hasAnimation( animName : String ) : Boolean
+		{
+			return ( _animations[ animName ] != null );
 		}
 
 		public function addAnimation( animName : String, textures : Vector.<Texture>, fps : Number = 12, loop : Boolean = true ) : Animation

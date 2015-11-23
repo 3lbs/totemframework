@@ -108,7 +108,6 @@ package totem.components.animation
 		private function handleAnimationComplete() : void
 		{
 			_playing = false;
-
 			onAnimationComplete.dispatch();
 		}
 
@@ -120,7 +119,15 @@ package totem.components.animation
 		private function play( ani : String, type : AnimatorEnum = null ) : void
 		{
 			_playing = true;
-			animationComponent.playAnimation( ani, type );
+			
+			if ( animationComponent.hasAnimation( ani ) == false )
+			{
+				handleAnimationComplete();
+			}
+			else
+			{
+				animationComponent.playAnimation( ani, type );			
+			}
 		}
 	}
 }

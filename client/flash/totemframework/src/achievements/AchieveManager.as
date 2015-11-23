@@ -17,17 +17,18 @@
 package achievements
 {
 
-	import flash.events.IEventDispatcher;
-	import flash.filesystem.File;
 	import flash.utils.Dictionary;
 
-	import totem.events.RemovableEventDispatcher;
-
-	public class AchieveManager extends RemovableEventDispatcher
+	public class AchieveManager
 	{
+
+		public static const ACTIVE_IF_EQUAL_TO : String = "==";
+
 		public static const ACTIVE_IF_GREATER_THAN : String = ">";
 
 		public static const ACTIVE_IF_LESS_THAN : String = "<";
+
+		public static const ACTIVE_IF_NOT_EQUAL_TO : String = "!=";
 
 		private static var _instance : AchieveManager;
 
@@ -36,13 +37,12 @@ package achievements
 			return _instance ||= new AchieveManager( new SingletonEnforcer());
 		}
 
-		private var _achievements : AchievementObject;
+		private var _indexAchievements : Achievement;
 
-		private var _initialized : Boolean;
 
 		private var _props : Dictionary;
 
-		private var dispatcher : IEventDispatcher;
+		private var tempResult : Vector.<Achievement> = new Vector.<Achievement>();
 
 		public function AchieveManager( enforcer : SingletonEnforcer )
 		{
@@ -50,177 +50,100 @@ package achievements
 			{
 				throw new Error( "Cannot instantiate a singleton class. Use static getInstance instead." );
 			}
-			_props = new Dictionary();
+			_props = new Dictionary( true );
 		}
 
-		public function addAchievement( achievements : AchievementObject ) : void
+		public function addProperty( p : AchieveProperty, enum : Object ) : void
 		{
-			_achievements = achievements;
-
-			//checkPropertyExists( a.children );
-			//_achievements[ a.id ] = a;
+			_props[ p ] = enum;
 		}
 
-		public function addDispatcher( d : IEventDispatcher ) : void
+		public function addValue( theProp : Object, theValue : int ) : void
 		{
-			dispatcher = d;
-		}
 
-		public function addProperty( p : AchieveProperty ) : void
-		{
-			_props[ p.name ] = p;
-		}
-
-		public function addValue( theProp : *, theValue : int ) : void
-		{
-			if ( theProp is String )
+			for ( var key : AchieveProperty in _props )
 			{
-				setValue( theProp, getValue( theProp ) + theValue );
-
-			}
-			else if ( theProp is Array )
-			{
-				for ( var i : int = 0; i < theProp.length; i++ )
+				if ( _props[ key ] == theProp )
 				{
-					setValue( theProp[ i ], getValue( theProp[ i ]) + theValue );
-				}
-			}
-		}
-
-		public function checkAchievements( theTags : Array = null ) : Vector.<AchievementObject>
-		{
-			var result : Vector.<AchievementObject> = null;
-
-			for ( var n : String in _achievements )
-			{
-				var achivement : AchievementObject = _achievements[ n ];
-
-				if ( achivement.unlocked == false )
-				{
-					var aActiveProps : int = 0;
-
-					for ( var p : int = 0; p < achivement.properties.length; p++ )
-					{
-						var aProp : AchieveProperty = _props[ achivement.properties[ p ]];
-
-						if (( theTags == null || hasTag( aProp, theTags )) && aProp.isActive())
-						{
-							aActiveProps++;
-						}
-					}
-
-					if ( aActiveProps == achivement.properties.length )
-					{
-						achivement.unlocked = true;
-
-						result = result || new Vector.<AchievementObject>;
-						result.push( achivement );
-					}
+					key.value = int( key.value ) + theValue;
 				}
 			}
 
+		}
+
+		///  this is for the button to flash prompt users a achievement has completed
+		//  this could also be a an update loop.   
+		//  but check and update state on app changes
+		public function checkAchievements() : Boolean
+		{
+			var achivements : Vector.<Achievement> = _indexAchievements.getActiveAchievements( tempResult );
+			var achivement : Achievement;
+			var i : int = achivements.length;
+
+			var success : Boolean = false;
+
+			while ( i-- )
+			{
+				achivement = achivements[ i ];
+
+				//  you might want to make a list of ones you already alerted about
+				if ( achivement.checkPropertiesComplete())
+				{
+					success = true;
+					
+					achivement.update();
+				}
+			}
+
+			tempResult.length = 0;
+
+			return success;
+		}
+
+		public function getAchievementByID( id : String ) : Achievement
+		{
+			return _indexAchievements.getAchievementByID( id );
+		}
+
+		public function getActiveAchievements( result : Vector.<Achievement> = null, tags : Array = null ) : Vector.<Achievement>
+		{
+
+			result ||= new Vector.<Achievement>();
+			result.concat( _indexAchievements.getActiveAchievements( result ));
 			return result;
 		}
 
-		public function defineAchievement( theName : String, relatedProps : Array ) : void
-		{
-			checkPropertyExists( relatedProps );
-			//_achievements[ theName ] = new Achievement( theName, relatedProps );
-		}
-
-		public function defineProperty( theName : String, theInitialValue : int, theaActivationMode : String, theValue : int, theTags : Array = null ) : void
-		{
-			//
-
-			//_props[ theName ] = new AchieveProperty( theName, theInitialValue, theaActivationMode, theValue, theTags );
-		}
-
-		public function dumpProperties() : String
-		{
-			var result : String = "";
-
-			for ( var i : String in _props )
-			{
-				result += i + "=" + _props[ i ].value + ", ";
-			}
-
-			return result.substr( 0, result.length - 2 );
-		}
-
-		public function getActiveAchievement( result : Vector.<AchievementObject> = null ) : Vector.<AchievementObject>
+		public function getViewableAchievements( result : Vector.<Achievement> = null, tags : Array = null ) : Vector.<Achievement>
 		{
 
-			result ||= new Vector.<AchievementObject>();
-
-			if ( _achievements )
-			{
-
-			}
-
+			result ||= new Vector.<Achievement>();
+			result.concat( _indexAchievements.getViewableAchievements( result ));
 			return result;
 		}
 
-		public function getValue( prop : String ) : int
+		public function initialize( achievements : Achievement ) : void
 		{
-			checkPropertyExists( prop );
-			return _props[ prop ].value;
+			_indexAchievements = achievements;
+			_indexAchievements.update();
+			
 		}
 
-		public function initialize( url : String, missions : Array ) : void
+		public function removeProperty( p : AchieveProperty ) : void
 		{
-			if ( _initialized )
-				return;
-
-			_initialized = true;
-
-			var file : File = new File( url );
-
-		}
-
-		public function processAchievement() : void
-		{
-
-		}
-
-		public function resetProperties( theTags : Array = null ) : void
-		{
-			for ( var n : String in _props )
+			if ( _props[ p ])
 			{
-				var aProp : AchieveProperty = _props[ n ];
+				_props[ p ] = null;
+				delete _props[ p ];
 
-				if ( theTags == null || hasTag( aProp, theTags ))
-				{
-					aProp.reset();
-				}
 			}
 		}
 
-		public function setValue( theProp : *, theValue : int, theIgnoreActivationContraint : Boolean = false ) : void
+		private function checkPropertyExists( prop : * ) : Boolean
 		{
-			if ( theProp is String )
-			{
-				doSetValue( theProp, theValue, theIgnoreActivationContraint );
-
-			}
-			else if ( theProp is Array )
-			{
-				for ( var i : int = 0; i < theProp.length; i++ )
-				{
-					doSetValue( theProp[ i ], getValue( theProp[ i ]) + theValue, theIgnoreActivationContraint );
-				}
-			}
-		}
-
-		private function checkPropertyExists( prop : * ) : void
-		{
-			var problematic : String = "";
 
 			if ( prop is String )
 			{
-				if ( _props[ prop ] == null )
-				{
-					problematic = prop;
-				}
+				return ( _props[ prop ] != null )
 
 			}
 			else if ( prop is Array )
@@ -229,51 +152,12 @@ package achievements
 				{
 					if ( _props[ prop[ i ]] == null )
 					{
-						problematic = prop[ i ];
+						return false;
 					}
 				}
 			}
 
-			if ( problematic.length != 0 )
-			{
-				throw new ArgumentError( "Unknown achievement property \"" + problematic + "\". Check if it was correctly defined by defineProperty()." );
-			}
-		}
-
-		private function doSetValue( theProp : String, theValue : int, theIgnoreActivationContraint : Boolean = false ) : void
-		{
-			checkPropertyExists( theProp );
-
-			if ( !theIgnoreActivationContraint )
-			{
-				switch ( _props[ theProp ].activation )
-				{
-					case AchieveManager.ACTIVE_IF_GREATER_THAN:
-						theValue = theValue > _props[ theProp ].value ? theValue : _props[ theProp ].value;
-						break;
-					case AchieveManager.ACTIVE_IF_LESS_THAN:
-						theValue = theValue < _props[ theProp ].value ? theValue : _props[ theProp ].value;
-						break;
-				}
-			}
-
-			_props[ theProp ].value = theValue;
-		}
-
-		private function hasTag( theProp : AchieveProperty, theTags : Array ) : Boolean
-		{
-			var result : Boolean = false;
-
-			for ( var i : int = 0; i < theTags.length; i++ )
-			{
-				/*if ( theProp.tags != null && theProp.tags.indexOf( theTags[ i ]) != -1 )
-				{
-					result = true;
-					break;
-				}*/
-			}
-
-			return result;
+			return false;
 		}
 	}
 }

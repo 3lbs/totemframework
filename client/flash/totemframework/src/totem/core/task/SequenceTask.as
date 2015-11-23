@@ -80,6 +80,8 @@ package totem.core.task
 		override protected function handleRemoveAll() : void
 		{
 			currentIndex = 0;
+			
+			super.handleRemoveAll();
 		}
 
 		/**

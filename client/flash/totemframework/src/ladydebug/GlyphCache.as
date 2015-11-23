@@ -1,10 +1,9 @@
 package ladydebug
 {
     import flash.display.BitmapData;
-    import flash.geom.Matrix;
     import flash.geom.Point;
+    import flash.system.Capabilities;
     import flash.text.AntiAliasType;
-    import flash.text.GridFitType;
     import flash.text.TextField;
     import flash.text.TextFormat;
     
@@ -16,6 +15,10 @@ package ladydebug
         public function GlyphCache()
         {
             // Set up the text field.
+			
+			var heightText : uint = Math.round( 25 / 252 * flash.system.Capabilities.screenDPI );
+			_textFormat.size = heightText;
+			
             _textField.setTextFormat(_textFormat);
             _textField.defaultTextFormat = _textFormat;
             
@@ -35,6 +38,8 @@ package ladydebug
             var curPos:Point = new Point(x, y);
             var linesConsumed:int = 1;
             
+			var heightText : uint = Math.round( 26 / 252 * flash.system.Capabilities.screenDPI );
+		
             // Get each character.
             const glyphCount:int = line.length;
             for(var i:int=0; i<glyphCount; i++)
@@ -46,7 +51,7 @@ package ladydebug
                 {
                     // New line!
                     curPos.x = x;
-                    curPos.y += 16;
+                    curPos.y += heightText;
                     linesConsumed++;
                     continue;
                 }
@@ -70,7 +75,9 @@ package ladydebug
                 var newGlyph:Glyph = new Glyph();
                 _textField.text = String.fromCharCode(charCode);
                 
-                newGlyph.bitmap = new BitmapData(_textField.textWidth + 1, 16, true, 0x0);
+				var heightText : uint = Math.round( 26 / 252 * flash.system.Capabilities.screenDPI );
+
+                newGlyph.bitmap = new BitmapData(_textField.textWidth + 1, heightText, true, 0x0);
                 
                 newGlyph.bitmap.draw(_textField, null, null, null, null, true);
                 newGlyph.rect = newGlyph.bitmap.rect;

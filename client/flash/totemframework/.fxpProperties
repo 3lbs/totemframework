@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fxpProperties abbreviated="false" authoringTool="Flex Builder" compiles="true" parentProject="1bf495fd-8c13-431a-af83-9e694ecce810" projectUUID="1bf495fd-8c13-431a-af83-9e694ecce810" pureCatalystProject="false" sdkVersion="4.6.0" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016" version="15">
+  <projects>
+    <project filename="TotemExternal.fxpl" position="1" projectUUID="60b405c3-88af-4695-8c6b-abd7eb75475d" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016"/>
+  </projects>
+  <src/>
+  <swc>
+    <linked location="sdkPlaceHolder" path="sdkPlaceHolder" position="0" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016"/>
+    <linked location="E:/3lbs/projects/libraries/totemframework/client/flash/totemframework/libs" path="/libs" position="2" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016"/>
+    <linked location="C:/Program Files/Adobe/Adobe Flash Builder 4.7 (64 Bit)/sdks/4.6.0/frameworks/libs/framework.swc" path="/linked-swc/framework.swc" position="3" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016"/>
+    <linked location="E:/3lbs/projects/libraries/totemframework/client/flash/totemframework/lib_assets" path="/lib_assets" position="4" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016"/>
+    <linked location="${FLEXUNIT_LIB_LOCATION}/version4libs/Common" path="${FLEXUNIT_LIB_LOCATION}/version4libs/Common" position="5" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016"/>
+    <linked location="${FLEXUNIT_LIB_LOCATION}/version4libs/ASProject" path="${FLEXUNIT_LIB_LOCATION}/version4libs/ASProject" position="6" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016"/>
+    <linked location="${FLEXUNIT_LIB_LOCATION}/version4libs/ASProject_Extended" path="${FLEXUNIT_LIB_LOCATION}/version4libs/ASProject_Extended" position="7" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016"/>
+    <linked location="${FLEXUNIT_LOCALE_LOCATION}" path="${FLEXUNIT_LOCALE_LOCATION}" position="8" uuid="c3b69896-9d33-426a-84eb-8acd13d3e016"/>
+  </swc>
+  <misc/>
+  <theme/>
+  <mxmlFormattingPrefs groupAttributesByState="true" maxLineWidth="100" mxmlAlignAttributes="true" mxmlAttributeOrder="id,userLabel,includeIn,excludeFrom,visible,x,y,z,left,right,top,bottom,width,height,minWidth,minHeight,maxWidth,maxHeight,label" mxmlKeepAttributeValuesOrganized="true"/>
+</fxpProperties>

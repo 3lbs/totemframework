@@ -20,7 +20,7 @@ package application.param
 	public class AppParam
 	{
 
-		public var fonts : FontParam;
+		public var fonts : Vector.<FontSWFParam>;
 
 		public var name : String;
 

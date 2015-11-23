@@ -7,5 +7,6 @@ package gorilla.resource
 		function completeCallback ( func : Function ) : void;
 		
 		function failedCallback ( func : Function ) : void;
+		
 	}
 }

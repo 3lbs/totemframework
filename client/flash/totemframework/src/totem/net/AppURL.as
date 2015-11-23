@@ -18,7 +18,7 @@ package totem.net
 {
 
 	import localization.LocalizationManager;
-	
+
 	import totem.utils.MobileUtil;
 
 	public class AppURL
@@ -46,6 +46,8 @@ package totem.net
 
 		public static var SOUNDS : URLManager;
 
+		public static var SWFS : URLManager;
+
 		public static var UI : URLManager;
 
 		public static var UNITS : URLManager;
@@ -57,6 +59,7 @@ package totem.net
 
 		public static function initialize( url : String ) : void
 		{
+			var res : String = ( MobileUtil.isHD()) ? "2x" : "1x";
 
 			APPLICATION = URLManager.instance( url );
 
@@ -74,20 +77,21 @@ package totem.net
 
 			UI = URLManager.instance( ASSETS.getURL( "UI" ));
 
+			SWFS = URLManager.instance( ASSETS.getURL( "swfs" ));
+
 			ANIMATIONS = URLManager.instance( ASSETS.getURL( "animations" ));
 
-			
 			if ( MobileUtil.isHD())
 			{
 				IMAGES = URLManager.instance( IMAGES.getURL( "hd" ));
 				UI = URLManager.instance( UI.getURL( "hd" ));
-				ANIMATIONS = URLManager.instance( ANIMATIONS.getURL( "hd" ) );
+				ANIMATIONS = URLManager.instance( ANIMATIONS.getURL( "hd" ));
 			}
-
 
 			var readerRaw : URLManager = URLManager.instance( RESOURCE.getURL( "reader" ));
 
-			READER_ASSETS = URLManager.instance( readerRaw.getURL( "assets" ));
+
+			READER_ASSETS = URLManager.instance( readerRaw.getURL( res ));
 
 			READER = URLManager.instance( readerRaw.getURL( LocalizationManager.getCurrentLocale().split( "-" ).join( "_" )));
 

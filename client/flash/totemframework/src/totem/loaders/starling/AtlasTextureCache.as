@@ -17,12 +17,11 @@
 package totem.loaders.starling
 {
 
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
-
+	
 	import starling.textures.TextureAtlas;
-
+	
 	import totem.core.Destroyable;
 	import totem.display.BitmapDataAtlas;
 
@@ -87,21 +86,6 @@ package totem.loaders.starling
 			return false;
 		}
 
-		public function createBitmapAtlas( url : String, bitmapDataAtlas : BitmapDataAtlas, force : Boolean = false ) : void
-		{
-			if ( _atlasBitmap[ url ] && force )
-			{
-				_atlasBitmap[ url ].dispose();
-				_atlasBitmap[ url ] = null;
-			}
-
-			if ( !_atlasBitmap[ url ] || force )
-			{
-				_atlasBitmap[ url ] = bitmapDataAtlas;
-			}
-
-		}
-
 		public function createBitmapData( url : String, bitmapData : BitmapData, force : Boolean = false ) : void
 		{
 			if ( !_bitmapDatas[ url ] && bitmapData )
@@ -120,6 +104,21 @@ package totem.loaders.starling
 			{
 				_atlas[ url ] = texture;
 			}
+		}
+
+		public function createNativeAtlas( url : String, nativeAtlas : BitmapDataAtlas, force : Boolean = false ) : void
+		{
+			if ( _atlasBitmap[ url ] && force )
+			{
+				_atlasBitmap[ url ].dispose();
+				_atlasBitmap[ url ] = null;
+			}
+
+			if ( !_atlasBitmap[ url ] || force )
+			{
+				_atlasBitmap[ url ] = nativeAtlas;
+			}
+
 		}
 
 		override public function destroy() : void

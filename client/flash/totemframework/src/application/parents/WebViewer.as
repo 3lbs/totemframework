@@ -50,8 +50,11 @@ package application.parents
 		{
 			super.destroy();
 
+			
 			webView.removeEventListener( ErrorEvent.ERROR, handleErrorLoading );
 			webView.removeEventListener( Event.COMPLETE, handleCompleteLoad );
+			webView.reload();
+			webView.viewPort = null;
 			webView.dispose();
 			webView = null;
 

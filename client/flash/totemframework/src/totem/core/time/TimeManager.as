@@ -201,6 +201,7 @@ package totem.core.time
 				Logger.warn( this, "advance", "Exceeded maximum number of ticks for frame (" + elapsed.toFixed() + "ms dropped) ." );
 			}
 
+			
 			// Make sure that we don't fall behind too far. This helps correct
 			// for short-term drops in framerate as well as the scenario where
 			// we are consistently running behind.

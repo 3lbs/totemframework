@@ -17,44 +17,49 @@
 package totem.loaders.starling
 {
 
-	import flash.display.BitmapData;
-	import flash.filesystem.File;
-	
+	import dragonBones.factorys.BaseFactory;
 	import dragonBones.factorys.StarlingFactory;
 	import dragonBones.objects.DataParser;
 	import dragonBones.objects.SkeletonData;
-	
-	import starling.textures.TextureAtlas;
-	
+
+	import flash.filesystem.File;
+
 	import totem.loaders.JSONNativeFileLoader;
 	import totem.monitors.RequiredProxy;
 
 	public class DragonBonesJSONLoader extends RequiredProxy
 	{
+		private var _createNative : Boolean;
 
-		private var _bitmapData : BitmapData;
-
-		private var _textureAtlas : TextureAtlas;
+		private var _factory : BaseFactory;
 
 		private var atlasID : String;
 
-		private var factory : StarlingFactory;
-
 		private var url : String;
 
-		public function DragonBonesJSONLoader( url : String, skeletonID : String, atlasID : String )
+		public function DragonBonesJSONLoader( url : String, skeletonID : String, atlasID : String, createNative : Boolean = false )
 		{
 			this.id = skeletonID || url;
 			this.url = url;
+
+			_createNative = createNative;
 
 			this.atlasID = atlasID;
 
 			super( id );
 		}
 
-		public function getFactory() : StarlingFactory
+		override public function destroy() : void
 		{
-			return factory;
+			super.destroy();
+
+			_factory = null
+
+		}
+
+		public function getFactory() : BaseFactory
+		{
+			return _factory;
 		}
 
 		override public function start() : void
@@ -62,35 +67,33 @@ package totem.loaders.starling
 
 			super.start();
 
-			DragonBonesFactoryCache.getInstance().createIndex( id, factory );
+			_factory = DragonBonesFactoryCache.getInstance().getFactory( atlasID );
 
-			_textureAtlas = AtlasTextureCache.getInstance().getTextureAtlas( atlasID );
-
-			if ( !_textureAtlas )
+			if ( _factory && _factory.getSkeletonData( id ))
 			{
-				throw new Error("sorry but must preload atlas");
+				finished();
 				return;
 			}
-			
-			finished();
-		}
 
-		override protected function finished() : void
-		{
-
-			factory = new StarlingFactory();
+			if ( !_factory )
+			{
+				throw new Error( "sorry but must preload atlas" );
+				return;
+			}
 
 			var file : File = new File( url );
 			var _JSONData : Object = JSONNativeFileLoader.getObject( file );
 
 			var skeletonData : SkeletonData = DataParser.parseData( _JSONData );
-			factory.addSkeletonData( skeletonData, id );
-			factory.addTextureAtlas( _textureAtlas, id );
 
-			//addDispatcher( new JSONNativeFileLoader());
+			_factory.addSkeletonData( skeletonData, id );
 
-			//var dragonResource : DragonBonesResource = ResourceManager.getInstance().load( url, DragonBonesResource ) as DragonBonesResource;
-			//dragonResource.completeCallback( handleArmatureLoaded );
+			if ( _createNative )
+			{
+
+				_factory = DragonBonesFactoryCache.getInstance().getFactory( atlasID + DragonBonesFactoryCache.NATIVE_EXT );
+				_factory.addSkeletonData( skeletonData, id );
+			}
 
 			super.finished();
 		}

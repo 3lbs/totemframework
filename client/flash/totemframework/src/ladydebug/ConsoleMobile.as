@@ -37,13 +37,15 @@ package ladydebug
 	import flash.events.StageOrientationEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
+	import flash.system.Capabilities;
 	import flash.system.System;
 	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
-
+	
 	import totem.core.input.simple.KeyboardKey;
 	import totem.monitors.promise.wait;
 
@@ -255,19 +257,23 @@ package ladydebug
 
 			debugTextField = new TextField();
 
+			var heightText : uint = Math.round( 20 / 252 * flash.system.Capabilities.screenDPI );
+
 			debugTextField.textColor = 0xFF6600;
 			debugTextField.text = "Debug Console";
 			debugTextField.selectable = false;
 			debugTextField.mouseEnabled = true;
 			debugTextField.multiline = false;
-			debugTextField.height = 20;
+			debugTextField.height = heightText * 2;
+			debugTextField.autoSize = TextFieldAutoSize.LEFT;
 			debugTextField.x = 10;
 			debugTextField.y = 20;
-
+			
 			var myformat : TextFormat = new TextFormat();
 			myformat.color = 0xFF6600;
 			myformat.underline = true;
-
+			myformat.size = heightText;
+			
 			debugTextField.setTextFormat( myformat );
 			debugTextField.addEventListener( MouseEvent.CLICK, handleTextClick );
 
@@ -461,6 +467,10 @@ package ladydebug
 
 		protected function createInputField() : TextField
 		{
+			
+			var heightText : uint = Math.round( 25 / 252 * flash.system.Capabilities.screenDPI );
+
+			
 			_input = new TextField();
 			_input.type = TextFieldType.INPUT;
 			_input.border = true;
@@ -470,7 +480,7 @@ package ladydebug
 			_input.condenseWhite = false;
 			var format : TextFormat = _input.getTextFormat();
 			format.font = "_typewriter";
-			format.size = 11;
+			format.size = heightText;
 			format.color = 0xFFFFFF;
 			_input.setTextFormat( format );
 			_input.defaultTextFormat = format;
