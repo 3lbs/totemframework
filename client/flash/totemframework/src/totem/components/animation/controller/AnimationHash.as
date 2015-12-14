@@ -8,31 +8,31 @@
 //    |::.. . |                
 //    `-------'      
 //                       
-//   3lbs Copyright 2013 
+//   3lbs Copyright 2014 
 //   For more information see http://www.3lbs.com 
 //   All rights reserved. 
 //
 //------------------------------------------------------------------------------
 
-package totem.core.params.animation
+package totem.components.animation.controller
 {
 
-	public class AnimationDataParam
+	import totem.utils.Rndm;
+
+	public class AnimationHash
 	{
 
-		public var end : int;
-
-		public var loop : Boolean;
+		public var list : Vector.<AnimationAction>;
 
 		public var name : String;
 
-		public var start : int;
-		
-		public var states : Array;
-
-		public function AnimationDataParam()
+		public function AnimationHash()
 		{
-			super();
+		}
+
+		public function getRandomAnimation( key : String ) : AnimationAction
+		{
+			return list[ Rndm.integer( 0, list.length )];
 		}
 	}
 }

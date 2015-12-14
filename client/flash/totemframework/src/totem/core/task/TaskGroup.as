@@ -172,9 +172,9 @@ package totem.core.task
 
 		override public function destroy() : void
 		{
-			super.destroy();
 
 			removeAllTasks();
+			super.destroy();
 		}
 
 		/**
@@ -517,6 +517,8 @@ package totem.core.task
 		protected function handleRemovedTask( task : Task, index : uint ) : void
 		{
 		/* template method */
+			
+			//task.destroy();
 		}
 
 		/**

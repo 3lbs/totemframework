@@ -47,7 +47,6 @@ package minimvc
 
 		override public function destroy() : void
 		{
-			_mainStage = null;
 
 			controller.destroy();
 			controller = null;
@@ -70,6 +69,7 @@ package minimvc
 			}
 
 			_models = null;
+			_mainStage = null;
 
 			super.destroy();
 		}

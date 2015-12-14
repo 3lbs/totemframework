@@ -17,8 +17,8 @@
 package totem.loaders.starling
 {
 
-	import dragonBones.factorys.BaseFactory;
-	import dragonBones.factorys.StarlingFactory;
+	import dragonBones.factories.BaseFactory;
+	import dragonBones.factories.StarlingFactory;
 	
 	import starling.textures.TextureAtlas;
 	

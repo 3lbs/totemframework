@@ -1,4 +1,4 @@
-﻿package dragonBones.factorys
+﻿package dragonBones.factories
 {
 	/**
 	* Copyright 2012-2013. DragonBones. All Rights Reserved.
@@ -13,7 +13,10 @@
 	import dragonBones.Armature;
 	import dragonBones.Slot;
 	import dragonBones.core.dragonBones_internal;
+	import dragonBones.display.StarlingFastSlot;
 	import dragonBones.display.StarlingSlot;
+	import dragonBones.fast.FastArmature;
+	import dragonBones.fast.FastSlot;
 	import dragonBones.textures.ITextureAtlas;
 	import dragonBones.textures.StarlingTextureAtlas;
 	
@@ -23,9 +26,8 @@
 	import starling.textures.SubTexture;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-    import starling.textures.TextureSmoothing;
 
-    use namespace dragonBones_internal;
+	use namespace dragonBones_internal;
 	
 	/**
 	 * A object managing the set of armature resources for Starling engine. It parses the raw data, stores the armature resources and creates armature instances.
@@ -61,11 +63,7 @@
 		 * Apply a scale for SWF specific texture. Use 1 for no scale.
 		 */
 		public var scaleForTexture:Number;
-		/**
-		 * Apply a smoothing to generated display. Select from TextureSmoothing class.
-		 */
-		public var displaySmoothing:String = TextureSmoothing.BILINEAR;
-
+		
 		/**
 		 * Creates a new StarlingFactory instance.
 		 */
@@ -90,10 +88,10 @@
 				var width:int = getNearest2N(content.width) * scaleForTexture;
 				var height:int = getNearest2N(content.height) * scaleForTexture;
 				
-				_helpMatrix.a = 1;
-				_helpMatrix.b = 0;
-				_helpMatrix.c = 0;
-				_helpMatrix.d = 1;
+//				_helpMatrix.a = 1;
+//				_helpMatrix.b = 0;
+//				_helpMatrix.c = 0;
+//				_helpMatrix.d = 1;
 				_helpMatrix.scale(scaleForTexture, scaleForTexture);
 				_helpMatrix.tx = 0;
 				_helpMatrix.ty = 0;				
@@ -128,9 +126,27 @@
 		}
 		
 		/** @private */
+		override protected function generateFastArmature():FastArmature
+		{
+			var armature:FastArmature = new FastArmature(new Sprite());
+			return armature;
+		}
+		
+		/** @private */
 		override protected function generateSlot():Slot
 		{
 			var slot:Slot = new StarlingSlot();
+			return slot;
+		}
+		
+		/**
+		 * @private
+		 * Generates an Slot instance.
+		 * @return Slot An Slot instance.
+		 */
+		override protected function generateFastSlot():FastSlot
+		{
+			var slot:FastSlot = new StarlingFastSlot();
 			return slot;
 		}
 		
@@ -140,17 +156,25 @@
 			var subTexture:SubTexture = (textureAtlas as TextureAtlas).getTexture(fullName) as SubTexture;
 			if (subTexture)
 			{
-				var subTextureFrame:Rectangle = (textureAtlas as TextureAtlas).getFrame(fullName);
-				if(subTextureFrame)
-				{
-					pivotX += subTextureFrame.x;
-					pivotY += subTextureFrame.y;
-				}
-				
 				var image:Image = new Image(subTexture);
+				if (isNaN(pivotX) || isNaN(pivotY))
+				{
+					var subTextureFrame:Rectangle = (textureAtlas as TextureAtlas).getFrame(fullName);
+					if(subTextureFrame)
+					{
+						pivotX = subTextureFrame.width / 2;//pivotX;
+						pivotY = subTextureFrame.height / 2;// pivotY;
+					}
+					else
+					{
+						pivotX = subTexture.width / 2;//pivotX;
+						pivotY = subTexture.height / 2;// pivotY;
+					}
+					
+				}
 				image.pivotX = pivotX;
 				image.pivotY = pivotY;
-                image.smoothing = displaySmoothing;
+				
 				return image;
 			}
 			return null;

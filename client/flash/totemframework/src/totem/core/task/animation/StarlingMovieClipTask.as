@@ -29,6 +29,7 @@ package totem.core.task.animation
 		{
 			super();
 
+			setRestartable( false );
 			movieClip = mc;
 		}
 

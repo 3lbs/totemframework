@@ -58,11 +58,12 @@ package totem.core.task
 		 *
 		 * @param name an optional name for log output
 		 */
-		public function SequenceTask( name : String = null )
+		public function SequenceTask( name : String = null, isRestartable : Boolean = true )
 		{
 			super();
 
 			setName(( name == null ) ? "[SequentialTaskGroup]" : name );
+			setRestartable( isRestartable );
 		}
 
 		/**

@@ -17,12 +17,13 @@
 package totem.components.animation
 {
 
+	import flash.events.Event;
+	
 	import dragonBones.Armature;
 	import dragonBones.Bone;
+	import dragonBones.Slot;
 	import dragonBones.events.AnimationEvent;
-
-	import flash.events.Event;
-
+	
 	import totem.core.time.TimeManager;
 
 	public class SkeletonAnimatorComponent extends AnimatorComponent implements IAnimator
@@ -40,11 +41,6 @@ package totem.components.animation
 
 			this.armature = armature;
 			this.armature.addEventListener( AnimationEvent.COMPLETE, handleAnimationComplete );
-
-			//this.armature.addEventListener( AnimationEvent.MOVEMENT_CHANGE, aramtureEventHandler );
-
-			//this.armature.addEventListener( AnimationEvent.START, aramtureEventHandler );
-
 			this.armature.addEventListener( AnimationEvent.LOOP_COMPLETE, handleAimationLoopComplete );
 		}
 
@@ -56,6 +52,21 @@ package totem.components.animation
 		public function getBone( name : String ) : Bone
 		{
 			return armature.getBone( name );
+		}
+		
+		public function invalidateArmature () : void
+		{
+			armature.invalidUpdate();
+		}
+		
+		public function getSlot ( name : String ) : Slot
+		{
+			return armature.getSlot( name );
+		}
+		
+		public function removeSlotByName ( name : String ) : Slot
+		{
+			return armature.removeSlotByName( name );
 		}
 
 		override public function hasAnimation( name : String ) : Boolean
@@ -76,9 +87,8 @@ package totem.components.animation
 			stopAnimation();
 		}
 
-		override public function playAnimation( animName : String, type : AnimatorEnum = null ) : void
+		override public function playAnimation( animName : String, loop : int = 1 ) : void
 		{
-			var loop : int = ( type ) ? type.type : NaN;
 			armature.animation.gotoAndPlay( animName, -1, -1, loop );
 		}
 

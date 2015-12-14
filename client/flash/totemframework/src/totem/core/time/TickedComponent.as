@@ -84,6 +84,7 @@ package totem.core.time
 		{
 			super.onActivate();
 
+			//registerForTicks = true;
 			registerForTicks = true;
 		}
 
@@ -92,7 +93,6 @@ package totem.core.time
 			super.onAdd();
 
 			// This causes the component to be registerd if it isn't already.
-			registerForTicks = registerForTicks;
 		}
 
 		override protected function onRemove() : void

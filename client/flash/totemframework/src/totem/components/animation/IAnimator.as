@@ -22,11 +22,11 @@ package totem.components.animation
 	public interface IAnimator extends IDisplay2DRenderer
 	{
 
-		function goToAndPlay( animName : String, frame : int, type : AnimatorEnum = null ) : void;
+		function goToAndPlay( animName : String, frame : int, loop : int = 1 ) : void;
 
 		function pauseAnimation() : void;
 
-		function playAnimation( animName : String, type : AnimatorEnum = null ) : void;
+		function playAnimation( animName : String, loop : int = 1 ) : void;
 
 		function stopAnimation() : void;
 	}

@@ -28,7 +28,7 @@ package AI.steering
 		function moveTo( vector : Vector2D, easeType : Class = null ) : Number;
 
 		function stop() : void;
-
+		
 		function update() : Boolean;
 		
 		function get direction () : Number;

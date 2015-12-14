@@ -307,14 +307,7 @@ package totem.components.display.starling
 			displayObject.visible = _visible;
 			displayObject.alpha = alpha;
 
-			
-			
-			if ( getName() == "food" )
-			{
-				trace( _offset );
-				trace( "break" );
-			}
-			
+		
 			_transformDirty = false;
 		}
 
@@ -333,6 +326,8 @@ package totem.components.display.starling
 			{
 				displayObject.visible = _visible;
 			}
+			
+			_transformDirty = true;
 		}
 
 		/**
@@ -419,7 +414,7 @@ package totem.components.display.starling
 		{
 			super.onActivate();
 			scene = _scene;
-			visible = true;
+			//visible = true;
 		}
 
 		override protected function onAdd() : void

@@ -62,7 +62,7 @@ package totem.display.starling
 			return ( _animations[ animName ] != null );
 		}
 
-		public function addAnimation( animName : String, textures : Vector.<Texture>, fps : Number = 12, loop : Boolean = true ) : Animation
+		public function addAnimation( animName : String, textures : Vector.<Texture>, fps : Number = 12, loop : int = 0 ) : Animation
 		{
 			if ( textures.length > 0 )
 			{
@@ -274,7 +274,7 @@ package totem.display.starling
 		}
 
 		/** Starts playback. Beware that the clip has to be added to a juggler, too! */
-		public function play( animName : String = "", loop : int = -1, fps : int = -1 ) : void
+		public function play( animName : String = "", loop : int = 1, fps : int = 1 ) : void
 		{
 			if ( animName == "" && _currentAnimation )
 			{

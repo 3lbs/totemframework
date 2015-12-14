@@ -40,7 +40,7 @@ package totem.components.animation
 			stopAnimation();
 		}
 
-		public function goToAndPlay( animName : String, frame : int, type : AnimatorEnum = null ) : void
+		public function goToAndPlay( animName : String, frame : int, loop : int = 1 ) : void
 		{
 		}
 
@@ -54,7 +54,7 @@ package totem.components.animation
 
 		}
 
-		public function playAnimation( animName : String, type : AnimatorEnum = null ) : void
+		public function playAnimation( animName : String, loop : int = 1 ) : void
 		{
 
 		}

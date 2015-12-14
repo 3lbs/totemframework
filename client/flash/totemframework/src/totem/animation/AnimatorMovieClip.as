@@ -19,8 +19,9 @@ package totem.animation
 
 	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
+	import flash.events.Event;
 	import flash.utils.Dictionary;
-	
+
 	import totem.display.MovieClipFPSThrottle;
 
 	public class AnimatorMovieClip extends MovieClipFPSThrottle
@@ -28,9 +29,11 @@ package totem.animation
 
 		protected var _currentAnimation : Object;
 
+		protected var _count : int;
+
 		private var animations : Dictionary;
 
-		public function AnimatorMovieClip( mc : MovieClip, fps : int = 12, loop : Boolean = false )
+		public function AnimatorMovieClip( mc : MovieClip, fps : int = 12, loop : int = 0 )
 		{
 			super( mc, fps, loop );
 
@@ -89,35 +92,42 @@ package totem.animation
 			return ( name in animations );
 		}
 
-		public function playAnimation( name : String, loop : Boolean = false ) : void
+		public function playAnimation( name : String, loop : int = 0 ) : void
 		{
 			onPlayAniamtion( name, loop );
 		}
 
-		protected function onPlayAniamtion( name : String, loop : Boolean = false ) : void
+		protected function onPlayAniamtion( name : String, loop : int = 0 ) : Boolean
 		{
 
-			if ( !hasAnimation( name )  || _currentAnimation == animations[ name ] )
-				return;
+			if ( !hasAnimation( name ) || _currentAnimation == animations[ name ])
+				return false;
 
+			_count = 0;
 			_loop = loop;
 			gotoAndPlay( name );
 
 			_currentAnimation = animations[ name ];
+			
+			return true;
 		}
 
 		override protected function onUpdateAnimation() : void
 		{
 			if ( currentFrame >= _currentAnimation.end )
 			{
-				if ( _loop )
+				_count += 1;
+
+				if ( _loop == 0 ||  _count < _loop )
 				{
 					_movieClip.gotoAndStop( _currentAnimation.start );
 				}
 				else
 				{
 					stop();
+					dispatchEvent( new Event( Event.COMPLETE ));
 				}
+
 			}
 		}
 	}

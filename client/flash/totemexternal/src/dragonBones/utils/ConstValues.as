@@ -18,6 +18,7 @@
 		public static const FRAME:String = "frame";
 		public static const TRANSFORM:String = "transform";
 		public static const COLOR_TRANSFORM:String = "colorTransform";
+		public static const COLOR:String = "color";
 		public static const RECTANGLE:String = "rectangle";
 		public static const ELLIPSE:String = "ellipse";
 		
@@ -43,6 +44,7 @@
 		public static const A_SCALE:String = "scale";
 		public static const A_OFFSET:String = "offset";
 		public static const A_LOOP:String = "loop";
+		public static const A_PLAY_TIMES:String = "playTimes";
 		public static const A_EVENT:String = "event";
 		public static const A_EVENT_PARAMETERS:String = "eventParameters";
 		public static const A_SOUND:String = "sound";
@@ -75,6 +77,7 @@
 		public static const A_RED_MULTIPLIER:String = "rM";
 		public static const A_GREEN_MULTIPLIER:String = "gM";
 		public static const A_BLUE_MULTIPLIER:String = "bM";
+		public static const A_CURVE:String = "curve";
 		
 		public static const A_SCALE_X_OFFSET:String = "scXOffset";
 		public static const A_SCALE_Y_OFFSET:String = "scYOffset";

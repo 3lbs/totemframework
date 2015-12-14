@@ -14,25 +14,10 @@
 //
 //------------------------------------------------------------------------------
 
-package totem.components.animation
+package totem.core.params
 {
 
-	public class AnimatorEnum
+	public interface IAnimationData
 	{
-		public static const LOOP : AnimatorEnum = new AnimatorEnum( 0 );
-
-		public static const PLAY_ONCE : AnimatorEnum = new AnimatorEnum( 1 );
-
-		private var _type : int;
-
-		public function AnimatorEnum( type : int )
-		{
-			_type = type;
-		}
-
-		public function get type() : int
-		{
-			return _type;
-		}
 	}
 }

@@ -112,6 +112,8 @@ package totem.core.task.util
 			if ( startFunction != null )
 			{
 				startFunction( this );
+				
+				complete();
 			}
 		}
 

@@ -52,6 +52,8 @@ package totem.net
 
 		public static var UNITS : URLManager;
 
+		private static var SIZE : URLManager;
+
 		public static function getURL( url : String, location : URLManager ) : String
 		{
 			return location.getURL( url );
@@ -65,6 +67,8 @@ package totem.net
 
 			RESOURCE = URLManager.instance( APPLICATION.getURL( "res" ));
 
+			SIZE = URLManager.instance( RESOURCE.getURL( res ));
+
 			ASSETS = URLManager.instance( RESOURCE.getURL( "assets" ));
 
 			DATA = URLManager.instance( RESOURCE.getURL( "data" ));
@@ -73,27 +77,17 @@ package totem.net
 
 			ACHIEVEMENTS = URLManager.instance( DATA.getURL( "achievements" ));
 
-			IMAGES = URLManager.instance( ASSETS.getURL( "images" ));
+			IMAGES = URLManager.instance( SIZE.getURL( "images" ));
 
-			UI = URLManager.instance( ASSETS.getURL( "UI" ));
+			UI = URLManager.instance( SIZE.getURL( "ui" ));
 
 			SWFS = URLManager.instance( ASSETS.getURL( "swfs" ));
 
-			ANIMATIONS = URLManager.instance( ASSETS.getURL( "animations" ));
+			ANIMATIONS = URLManager.instance( SIZE.getURL( "animations" ));
 
-			if ( MobileUtil.isHD())
-			{
-				IMAGES = URLManager.instance( IMAGES.getURL( "hd" ));
-				UI = URLManager.instance( UI.getURL( "hd" ));
-				ANIMATIONS = URLManager.instance( ANIMATIONS.getURL( "hd" ));
-			}
+			READER_ASSETS = URLManager.instance( SIZE.getURL( "reader" ));
 
-			var readerRaw : URLManager = URLManager.instance( RESOURCE.getURL( "reader" ));
-
-
-			READER_ASSETS = URLManager.instance( readerRaw.getURL( res ));
-
-			READER = URLManager.instance( readerRaw.getURL( LocalizationManager.getCurrentLocale().split( "-" ).join( "_" )));
+			READER = URLManager.instance( RESOURCE.getURL( "reader" ));
 
 			SOUNDS = URLManager.instance( ASSETS.getURL( "sounds" ));
 

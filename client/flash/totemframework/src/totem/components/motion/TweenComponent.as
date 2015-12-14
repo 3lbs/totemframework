@@ -124,7 +124,7 @@ package totem.components.motion
 		{
 			super.onActivate();
 
-			_steering = new TweenSteeringBehavior( this );
+			//setBehavior( new TweenSteeringBehavior( this ) );
 		}
 
 		override protected function onRetire() : void

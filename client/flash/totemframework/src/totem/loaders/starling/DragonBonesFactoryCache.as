@@ -17,9 +17,9 @@
 package totem.loaders.starling
 {
 
-	import dragonBones.factorys.BaseFactory;
-
 	import flash.utils.Dictionary;
+	
+	import dragonBones.factories.BaseFactory;
 
 	public class DragonBonesFactoryCache
 	{

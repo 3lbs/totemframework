@@ -17,13 +17,12 @@
 package totem.loaders.starling
 {
 
-	import dragonBones.factorys.BaseFactory;
-	import dragonBones.factorys.StarlingFactory;
-	import dragonBones.objects.DataParser;
-	import dragonBones.objects.SkeletonData;
-
 	import flash.filesystem.File;
-
+	
+	import dragonBones.factories.BaseFactory;
+	import dragonBones.objects.DataParser;
+	import dragonBones.objects.DragonBonesData;
+	
 	import totem.loaders.JSONNativeFileLoader;
 	import totem.monitors.RequiredProxy;
 
@@ -84,9 +83,9 @@ package totem.loaders.starling
 			var file : File = new File( url );
 			var _JSONData : Object = JSONNativeFileLoader.getObject( file );
 
-			var skeletonData : SkeletonData = DataParser.parseData( _JSONData );
+			var skeletonData : DragonBonesData = DataParser.parseData( _JSONData );
 
-			_factory.addSkeletonData( skeletonData, id );
+			_factory.addSkeletonData( skeletonData );
 
 			if ( _createNative )
 			{

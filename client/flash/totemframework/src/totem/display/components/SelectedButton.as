@@ -27,7 +27,7 @@ package totem.display.components
 
 		protected const SELECTED_SOFT : int = 20;
 
-		protected var SELECTED_STATE_FRAME : int = 2;
+		protected var SELECTED_STATE_FRAME : int = 5;
 
 		protected const UN_SELECTED : int = 0;
 

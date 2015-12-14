@@ -72,8 +72,6 @@ package AI.steering
 
 		override public function destroy() : void
 		{
-			super.destroy();
-
 			_motion = null;
 
 			_motionMap = null;
@@ -90,6 +88,8 @@ package AI.steering
 			dispatchComplete = null;
 
 			_targetPoint = null;
+
+			super.destroy();
 		}
 
 		public function get direction() : Number

@@ -21,11 +21,12 @@ package totem.core
 	import flash.events.Event;
 	import flash.events.StageOrientationEvent;
 	import flash.events.UncaughtErrorEvent;
-
+	import flash.system.Capabilities;
+	
 	import ladydebug.Logger;
-
+	
 	import org.casalib.util.StageReference;
-
+	
 	import totem.core.mvc.TotemContext;
 	import totem.monitors.promise.wait;
 
@@ -42,7 +43,7 @@ package totem.core
 			addEventListener( Event.RESIZE, handleResizeEvent );
 			addEventListener( StageOrientationEvent.ORIENTATION_CHANGE, handleStageChange );
 
-			//trace( Capabilities.screenResolutionX, Capabilities.screenResolutionY )
+			trace( Capabilities.screenResolutionX, Capabilities.screenResolutionY )
 		}
 
 		protected function handleAddToStage( event : Event ) : void
@@ -76,7 +77,7 @@ package totem.core
 		private function handleFirstEnterFrame( event : Event ) : void
 		{
 			removeEventListener( Event.ENTER_FRAME, handleFirstEnterFrame );
-			wait( 100, initialization );
+			wait( 10, initialization );
 		}
 
 		private function uncaughtErrorHandler( e : UncaughtErrorEvent ) : void

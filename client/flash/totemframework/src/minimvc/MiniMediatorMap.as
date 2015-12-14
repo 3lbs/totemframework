@@ -20,7 +20,7 @@ package minimvc
 	import flash.events.Event;
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
-	
+
 	import totem.core.Destroyable;
 
 	/**
@@ -52,6 +52,16 @@ package minimvc
 		{
 			_instance = instance;
 			initialize();
+		}
+
+		public function addMediator( view : Object, mediatorClass : Class ) : void
+		{
+			var mediator : MiniMediator;
+			mediator = new mediatorClass();
+			mediator.instance = _instance;
+			_mediators[ view ] = mediator;
+			mediator.viewComponent = view;
+			mediator.initialize();
 		}
 
 		/**

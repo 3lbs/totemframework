@@ -40,10 +40,12 @@ package totem.core.task
 		 *
 		 * @param name an optional name for log output
 		 */
-		public function ParallellTask( name : String = null )
+		public function ParallellTask( name : String = null, isRestartable : Boolean = true )
 		{
 			super();
 			setName(( name == null ) ? "[ConcurrentTaskGroup]" : name );
+			setRestartable( isRestartable );
+
 		}
 
 		/**

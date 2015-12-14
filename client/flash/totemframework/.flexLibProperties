@@ -95,10 +95,8 @@
     <classEntry path="totem.animation.AnimatorComponent"/>
     <classEntry path="totem.animation.AnimatorType"/>
     <classEntry path="totem.animation.PointAnimator"/>
-    <classEntry path="totem.components.animation.AnimationControllerComponent"/>
-    <classEntry path="totem.components.animation.AnimationSet"/>
+    <classEntry path="totem.components.animation.controller.AnimationControllerComponent"/>
     <classEntry path="totem.components.animation.AnimatorComponent"/>
-    <classEntry path="totem.components.animation.AnimatorEnum"/>
     <classEntry path="totem.components.animation.AnimatorEvent"/>
     <classEntry path="totem.components.animation.IAnimator"/>
     <classEntry path="totem.components.animation.MovieClipRenderer"/>
@@ -201,7 +199,7 @@
     <classEntry path="totem.core.params.GameItemParam"/>
     <classEntry path="totem.core.params.Transform2DParam"/>
     <classEntry path="totem.core.params.URLAssetParam"/>
-    <classEntry path="totem.core.params.animation.AnimationDataParam"/>
+    <classEntry path="totem.core.params.animation.AnimationInfo"/>
     <classEntry path="totem.core.params.animation.ArmatureDataParam"/>
     <classEntry path="totem.core.params.animation.SkeletonDataParam"/>
     <classEntry path="totem.core.params.display.AssetParam"/>
@@ -225,7 +223,7 @@
     <classEntry path="totem.core.task.Task"/>
     <classEntry path="totem.core.task.TaskGroup"/>
     <classEntry path="totem.core.task.TaskSystem"/>
-    <classEntry path="totem.core.task.animation.AnimationTask"/>
+    <classEntry path="totem.core.task.animation.AnimationSequenceTask"/>
     <classEntry path="totem.core.task.animation.StarlingMovieClipTask"/>
     <classEntry path="totem.core.task.animation.TweenToTask"/>
     <classEntry path="totem.core.task.enum.TaskState"/>
@@ -556,6 +554,14 @@
     <classEntry path="totem.utils.TotemObjectUtil"/>
     <classEntry path="totem.utils.TotemStringUtil"/>
     <classEntry path="application.param.FontParam"/>
+    <classEntry path="totem.animation.Animation"/>
+    <classEntry path="totem.core.task.EventTask"/>
+    <classEntry path="totem.core.task.animation.AnimationTask"/>
+    <classEntry path="totem.components.animation.controller.AnimationAction"/>
+    <classEntry path="totem.components.animation.controller.AnimationHash"/>
+    <classEntry path="totem.components.animation.AnimationDataParam"/>
+    <classEntry path="totem.core.params.IAnimationData"/>
+    <classEntry path="totem.components.animation.controller.AnimationSequenceControllerComponent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

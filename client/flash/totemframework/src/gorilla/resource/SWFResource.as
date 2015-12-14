@@ -27,8 +27,6 @@ package gorilla.resource
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	
-	import org.casalib.util.StageReference;
-	
 	import totem.loaders.safeloaders.SafeLoader;
 
 	[EditorData( extensions = "swf" )]

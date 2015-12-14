@@ -1,5 +1,8 @@
 ﻿package dragonBones
 {
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	
 	import dragonBones.animation.AnimationState;
 	import dragonBones.animation.TimelineState;
 	import dragonBones.core.DBObject;
@@ -7,15 +10,10 @@
 	import dragonBones.events.FrameEvent;
 	import dragonBones.events.SoundEvent;
 	import dragonBones.events.SoundEventManager;
+	import dragonBones.objects.BoneData;
 	import dragonBones.objects.DBTransform;
 	import dragonBones.objects.Frame;
-	import dragonBones.objects.FrameCached;
-	import dragonBones.objects.TimelineCached;
-	import dragonBones.objects.TransformFrame;
 	import dragonBones.utils.TransformUtil;
-	
-	import flash.geom.Matrix;
-	import flash.geom.Point;
 	
 	use namespace dragonBones_internal;
 	
@@ -26,54 +24,38 @@
 		 */
 		private static const _soundManager:SoundEventManager = SoundEventManager.getInstance();
 		
-		
-		/**
-		 * Unrecommended API. Recommend use slot.childArmature.
-		 */
-		public function get childArmature():Armature
+		public static function initWithBoneData(boneData:BoneData):Bone
 		{
-			var slot:Slot = this.slot;
-			if(slot)
-			{
-				return slot.childArmature;
-			}
-			return null;
+			var outputBone:Bone = new Bone();
+			
+			outputBone.name = boneData.name;
+			outputBone.inheritRotation = boneData.inheritRotation;
+			outputBone.inheritScale = boneData.inheritScale;
+			outputBone.origin.copy(boneData.transform);
+			
+			return outputBone;
 		}
 		
-		/**
-		 * Unrecommended API. Recommend use slot.display.
-		 */
-		public function get display():Object
-		{
-			var slot:Slot = this.slot;
-			if(slot)
-			{
-				return slot.display;
-			}
-			return null;
-		}
-		public function set display(value:Object):void
-		{
-			var slot:Slot = this.slot;
-			if(slot)
-			{
-				slot.display = value;
-			}
-		}
+		public var applyOffsetTranslationToChild:Boolean = true;
 		
-		/**
-		 * Unrecommended API. Recommend use offset.
-		 */
-		public function get node():DBTransform
-		{
-			return _offset;
-		}
+		public var applyOffsetRotationToChild:Boolean = true;
+		
+		public var applyOffsetScaleToChild:Boolean = false;
 		
 		/**
 		 * AnimationState that slots belong to the bone will be controlled by.
 		 * Sometimes, we want slots controlled by a spedific animation state when animation is doing mix or addition.
 		 */
 		public var displayController:String;
+		
+		/** @private */
+		protected var _boneList:Vector.<Bone>;
+		
+		/** @private */
+		protected var _slotList:Vector.<Slot>;
+		
+		/** @private */
+		protected var _timelineStateList:Vector.<TimelineState>;
 		
 		/** @private */
 		dragonBones_internal var _tween:DBTransform;
@@ -85,74 +67,16 @@
 		dragonBones_internal var _needUpdate:int;
 		
 		/** @private */
-		dragonBones_internal var _isColorChanged:Boolean;
+		//dragonBones_internal var _isColorChanged:Boolean;
 		
 		/** @private */
-		dragonBones_internal var _frameCachedPosition:int;
-		
-		/** @private */
-		dragonBones_internal var _frameCachedDuration:int;
-		
-		/** @private */
-		dragonBones_internal var _timelineCached:TimelineCached;
-		
-		/** @private */
-		protected var _boneList:Vector.<Bone>;
-		
-		/** @private */
-		protected var _slotList:Vector.<Slot>;
-		
-		/** @private */
-		protected var _timelineStateList:Vector.<TimelineState>;
-		
-		private var _tempGlobalTransformForChild:DBTransform;
 		dragonBones_internal var _globalTransformForChild:DBTransform;
-		private var _tempGlobalTransformMatrixForChild:Matrix;
+		/** @private */
 		dragonBones_internal var _globalTransformMatrixForChild:Matrix;
 		
-		public var applyOffsetTranslationToChild:Boolean = true;
-		public var applyOffsetRotationToChild:Boolean = true;
-		public var applyOffsetScaleToChild:Boolean = false;
+		private var _tempGlobalTransformForChild:DBTransform;
+		private var _tempGlobalTransformMatrixForChild:Matrix;
 		
-		/** @private */
-		override public function set visible(value:Boolean):void
-		{
-			if(this._visible != value)
-			{
-				this._visible = value;
-				for each(var slot:Slot in _slotList)
-				{
-					slot.updateDisplayVisible(this._visible);
-				}
-			}
-		}
-		
-		/** @private */
-		override dragonBones_internal function setArmature(value:Armature):void
-		{
-			super.setArmature(value);
-			
-			var i:int = _boneList.length;
-			while(i --)
-			{
-				_boneList[i].setArmature(this._armature);
-			}
-			
-			i = _slotList.length;
-			while(i --)
-			{
-				_slotList[i].setArmature(this._armature);
-			}
-		}
-		
-		public function get slot():Slot
-		{
-			return _slotList.length > 0?_slotList[0]:null;
-		}
-		
-		/**
-		 * Creates a Bone blank instance.
-		 */
 		public function Bone()
 		{
 			super();
@@ -168,9 +92,7 @@
 			_timelineStateList = new Vector.<TimelineState>;
 			
 			_needUpdate = 2;
-			_isColorChanged = false;
-			_frameCachedPosition = -1;
-			_frameCachedDuration = -1;
+			//_isColorChanged = false;
 		}
 		
 		/**
@@ -207,17 +129,9 @@
 			_boneList = null;
 			_slotList = null;
 			_timelineStateList = null;
-			_timelineCached = null;
 		}
 		
-		/**
-		 * Force update the bone in next frame even if the bone is not moving.
-		 */
-		public function invalidUpdate():void
-		{
-			_needUpdate = 2;
-		}
-		
+//骨架装配
 		/**
 		 * If contains some bone or slot
 		 * @param Slot or Bone instance
@@ -243,6 +157,155 @@
 		}
 		
 		/**
+		 * Add a bone as child
+		 * @param a Bone instance
+		 * @see dragonBones.core.DBObject
+		 */
+		public function addChildBone(childBone:Bone, updateLater:Boolean = false):void
+		{
+			if(!childBone)
+			{
+				throw new ArgumentError();
+			}
+			
+			if(childBone == this || childBone.contains(this))
+			{
+				throw new ArgumentError("An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)");
+			}
+			
+			if(childBone.parent == this)
+			{
+				return;
+			}
+			
+			if(childBone.parent)
+			{
+				childBone.parent.removeChildBone(childBone);
+			}
+			
+			_boneList.fixed = false;
+			_boneList[_boneList.length] = childBone;
+			_boneList.fixed = true;
+			childBone.setParent(this);
+			childBone.setArmature(_armature);
+			
+			if(_armature && !updateLater)
+			{
+				_armature.updateAnimationAfterBoneListChanged();
+			}
+		}
+		
+		/**
+		 * remove a child bone 
+		 * @param a Bone instance
+		 * @see dragonBones.core.DBObject
+		 */
+		public function removeChildBone(childBone:Bone, updateLater:Boolean = false):void
+		{
+			if(!childBone)
+			{
+				throw new ArgumentError();
+			}
+			
+			var index:int = _boneList.indexOf(childBone);
+			if(index < 0)
+			{
+				throw new ArgumentError();
+			}
+			
+			_boneList.fixed = false;
+			_boneList.splice(index, 1);
+			_boneList.fixed = true;
+			childBone.setParent(null);
+			childBone.setArmature(null);
+			
+			if(_armature && !updateLater)
+			{
+				_armature.updateAnimationAfterBoneListChanged(false);
+			}
+		}
+		
+		/**
+		 * Add a slot as child
+		 * @param a Slot instance
+		 * @see dragonBones.core.DBObject
+		 */
+		public function addSlot(childSlot:Slot):void
+		{
+			if(!childSlot)
+			{
+				throw new ArgumentError();
+			}
+			
+			if(childSlot.parent)
+			{
+				childSlot.parent.removeSlot(childSlot);
+			}
+			
+			_slotList.fixed = false;
+			_slotList[_slotList.length] = childSlot;
+			_slotList.fixed = true;
+			childSlot.setParent(this);
+			childSlot.setArmature(this._armature);
+		}
+		
+		/**
+		 * remove a child slot
+		 * @param a Slot instance
+		 * @see dragonBones.core.DBObject
+		 */
+		public function removeSlot(childSlot:Slot):void
+		{
+			if(!childSlot)
+			{
+				throw new ArgumentError();
+			}
+			
+			var index:int = _slotList.indexOf(childSlot);
+			if(index < 0)
+			{
+				throw new ArgumentError();
+			}
+			
+			_slotList.fixed = false;
+			_slotList.splice(index, 1);
+			_slotList.fixed = true;
+			childSlot.setParent(null);
+			childSlot.setArmature(null);
+		}
+		
+		/** @private */
+		override dragonBones_internal function setArmature(value:Armature):void
+		{
+			if(_armature == value)
+			{
+				return;
+			}
+			if(_armature)
+			{
+				_armature.removeBoneFromBoneList(this);
+				_armature.updateAnimationAfterBoneListChanged(false);
+			}
+			_armature = value;
+			if(_armature)
+			{
+				_armature.addBoneToBoneList(this);
+			}
+			
+			var i:int = _boneList.length;
+			while(i --)
+			{
+				_boneList[i].setArmature(this._armature);
+			}
+			
+			i = _slotList.length;
+			while(i --)
+			{
+				_slotList[i].setArmature(this._armature);
+			}
+		}
+		
+		/**
 		 * Get all Bone instance associated with this bone.
 		 * @return A Vector.&lt;Slot&gt; instance.
 		 * @see dragonBones.Slot
@@ -262,94 +325,13 @@
 			return returnCopy?_slotList.concat():_slotList;
 		}
 		
+//动画
 		/**
-		 * Add a bone or slot as child
-		 * @param a Slot or Bone instance
-		 * @see dragonBones.core.DBObject
+		 * Force update the bone in next frame even if the bone is not moving.
 		 */
-		public function addChild(child:DBObject):void
+		public function invalidUpdate():void
 		{
-			if(!child)
-			{
-				throw new ArgumentError();
-			}
-			var bone:Bone = child as Bone;
-			if(bone == this || (bone && bone.contains(this)))
-			{
-				throw new ArgumentError("An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)");
-			}
-			
-			if(child.parent)
-			{
-				child.parent.removeChild(child);
-			}
-			
-			if(bone)
-			{
-				_boneList.fixed = false;
-				_boneList[_boneList.length] = bone;
-				_boneList.fixed = true;
-				bone.setParent(this);
-				bone.setArmature(this._armature);
-			}
-			else if(child is Slot)
-			{
-				var slot:Slot = child as Slot;
-				_slotList.fixed = false;
-				_slotList[_slotList.length] = slot;
-				_slotList.fixed = true;
-				slot.setParent(this);
-				slot.setArmature(this._armature);
-			}
-		}
-		
-		/**
-		 * remove a child bone or slot
-		 * @param a Slot or Bone instance
-		 * @see dragonBones.core.DBObject
-		 */
-		public function removeChild(child:DBObject):void
-		{
-			if(!child)
-			{
-				throw new ArgumentError();
-			}
-			
-			var index:int;
-			if(child is Bone)
-			{
-				var bone:Bone = child as Bone;
-				index = _boneList.indexOf(bone);
-				if(index >= 0)
-				{
-					_boneList.fixed = false;
-					_boneList.splice(index, 1);
-					_boneList.fixed = true;
-					bone.setParent(null);
-					bone.setArmature(null);
-				}
-				else
-				{
-					throw new ArgumentError();
-				}
-			}
-			else if(child is Slot)
-			{
-				var slot:Slot = child as Slot;
-				index = _slotList.indexOf(slot);
-				if(index >= 0)
-				{
-					_slotList.fixed = false;
-					_slotList.splice(index, 1);
-					_slotList.fixed = true;
-					slot.setParent(null);
-					slot.setArmature(null);
-				}
-				else
-				{
-					throw new ArgumentError();
-				}
-			}
+			_needUpdate = 2;
 		}
 		
 		override protected function calculateRelativeParentTransform():void
@@ -372,29 +354,6 @@
 			}
 			else
 			{
-				return;
-			}
-			
-			if(_frameCachedPosition >= 0 && _frameCachedDuration <= 0)
-			{
-				var frameCached:FrameCached = _timelineCached.timeline[_frameCachedPosition];
-				var transform:DBTransform = frameCached.transform;
-				this._global.x = transform.x;
-				this._global.y = transform.x;
-				this._global.skewX = transform.skewX;
-				this._global.skewY = transform.skewY;
-				this._global.scaleX = transform.scaleX;
-				this._global.scaleY = transform.scaleY;
-				//this._global.copy(_frameCached.transform);
-				
-				var matrix:Matrix = frameCached.matrix;
-				this._globalTransformMatrix.a = matrix.a;
-				this._globalTransformMatrix.b = matrix.b;
-				this._globalTransformMatrix.c = matrix.c;
-				this._globalTransformMatrix.d = matrix.d;
-				this._globalTransformMatrix.tx = matrix.tx;
-				this._globalTransformMatrix.ty = matrix.ty;
-				//this._globalTransformMatrix.copyFrom(_frameCached.matrix);
 				return;
 			}
 			
@@ -454,50 +413,21 @@
 					_globalTransformForChild.skewY += this._offset.skewY;
 				}
 				
-				TransformUtil.transformToMatrix(_globalTransformForChild, _globalTransformMatrixForChild, true);
+				TransformUtil.transformToMatrix(_globalTransformForChild, _globalTransformMatrixForChild);
 				if(parentGlobalTransformMatrix)
 				{
 					_globalTransformMatrixForChild.concat(parentGlobalTransformMatrix);
 					TransformUtil.matrixToTransform(_globalTransformMatrixForChild, _globalTransformForChild, _globalTransformForChild.scaleX * parentGlobalTransform.scaleX >= 0, _globalTransformForChild.scaleY * parentGlobalTransform.scaleY >= 0 );
 				}
 			}
-			
-			if(_frameCachedDuration > 0)    // && _frameCachedPosition >= 0
-			{
-				_timelineCached.addFrame(this._global, this._globalTransformMatrix, _frameCachedPosition, _frameCachedDuration);
-			}
-		}
-		
-		/** @private */
-		dragonBones_internal function updateColor(
-			aOffset:Number, 
-			rOffset:Number, 
-			gOffset:Number, 
-			bOffset:Number, 
-			aMultiplier:Number, 
-			rMultiplier:Number, 
-			gMultiplier:Number, 
-			bMultiplier:Number,
-			colorChanged:Boolean
-		):void
-		{
-			for each(var slot:Slot in _slotList)
-			{
-				slot.updateDisplayColor(
-					aOffset, rOffset, gOffset, bOffset, 
-					aMultiplier, rMultiplier, gMultiplier, bMultiplier
-				);
-			}
-			
-			_isColorChanged = colorChanged;
 		}
 		
 		/** @private */
 		dragonBones_internal function hideSlots():void
 		{
-			for each(var slot:Slot in _slotList)
+			for each(var childSlot:Slot in _slotList)
 			{
-				slot.changeDisplay(-1);
+				childSlot.changeDisplay(-1);
 			}
 		}
 		
@@ -507,27 +437,11 @@
 			var displayControl:Boolean = 
 				animationState.displayControl &&
 				(!displayController || displayController == animationState.name) &&
-				animationState.getMixingTransform(name) == 0
+				animationState.containsBoneMask(name)
 			
 			if(displayControl)
 			{
-				var slot:Slot;
-				var tansformFrame:TransformFrame = frame as TransformFrame;
-				var displayIndex:int = tansformFrame.displayIndex;
-				for each(slot in _slotList)
-				{
-					slot.changeDisplay(displayIndex);
-					slot.updateDisplayVisible(tansformFrame.visible);
-					if(displayIndex >= 0)
-					{
-						if(!isNaN(tansformFrame.zOrder) && tansformFrame.zOrder != slot._tweenZOrder)
-						{
-							slot._tweenZOrder = tansformFrame.zOrder;
-							this._armature._slotsZOrderChanged = true;
-						}
-					}
-				}
-				
+				var childSlot:Slot;
 				if(frame.event && this._armature.hasEventListener(FrameEvent.BONE_FRAME_EVENT))
 				{
 					var frameEvent:FrameEvent = new FrameEvent(FrameEvent.BONE_FRAME_EVENT);
@@ -536,7 +450,6 @@
 					frameEvent.frameLabel = frame.event;
 					this._armature._eventList.push(frameEvent);
 				}
-				
 				if(frame.sound && _soundManager.hasEventListener(SoundEvent.SOUND))
 				{
 					var soundEvent:SoundEvent = new SoundEvent(SoundEvent.SOUND);
@@ -550,9 +463,9 @@
 				//后续会扩展更多的action，目前只有gotoAndPlay的含义
 				if(frame.action) 
 				{
-					for each(slot in _slotList)
+					for each(childSlot in _slotList)
 					{
-						var childArmature:Armature = slot.childArmature;
+						var childArmature:Armature = childSlot.childArmature;
 						if(childArmature)
 						{
 							childArmature.animation.gotoAndPlay(frame.action);
@@ -580,6 +493,12 @@
 			{
 				_timelineStateList.splice(index, 1);
 			}
+		}
+		
+		/** @private */
+		dragonBones_internal function removeAllStates():void
+		{
+			_timelineStateList.length = 0;
 		}
 		
 		private function blendingTimeline():void
@@ -626,7 +545,7 @@
 				
 				//Traversal the layer from up to down
 				//layer由高到低依次遍历
-
+				
 				while(i --)
 				{
 					timelineState = _timelineStateList[i];
@@ -680,6 +599,67 @@
 		private function sortState(state1:TimelineState, state2:TimelineState):int
 		{
 			return state1._animationState.layer < state2._animationState.layer?-1:1;
+		}
+		
+		/**
+		 * Unrecommended API. Recommend use slot.childArmature.
+		 */
+		public function get childArmature():Armature
+		{
+			if(slot)
+			{
+				return slot.childArmature;
+			}
+			return null;
+		}
+		
+		/**
+		 * Unrecommended API. Recommend use slot.display.
+		 */
+		public function get display():Object
+		{
+			if(slot)
+			{
+				return slot.display;
+			}
+			return null;
+		}
+		public function set display(value:Object):void
+		{
+			if(slot)
+			{
+				slot.display = value;
+			}
+		}
+		
+		/**
+		 * Unrecommended API. Recommend use offset.
+		 */
+		public function get node():DBTransform
+		{
+			return _offset;
+		}
+		
+		
+		
+		
+		/** @private */
+		override public function set visible(value:Boolean):void
+		{
+			if(this._visible != value)
+			{
+				this._visible = value;
+				for each(var childSlot:Slot in _slotList)
+				{
+					childSlot.updateDisplayVisible(this._visible);
+				}
+			}
+		}
+		
+		
+		public function get slot():Slot
+		{
+			return _slotList.length > 0?_slotList[0]:null;
 		}
 	}
 }

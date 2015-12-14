@@ -28,7 +28,7 @@ package totem.display.starling
 
 		public var durations : Vector.<Number>;
 
-		public var loop : Boolean;
+		public var loop : int;
 
 		public var sounds : Vector.<Sound>;
 
@@ -40,7 +40,7 @@ package totem.display.starling
 
 		/** An Animation is a single instance of one Animation for an ExtendedMovieClip.
 		 */
-		public function Animation( list : Vector.<Texture>, fps : Number = 12, loop : Boolean = true )
+		public function Animation( list : Vector.<Texture>, fps : Number = 12, loop : int = 0 )
 		{
 			if ( list.length > 0 )
 			{

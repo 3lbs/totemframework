@@ -1,12 +1,11 @@
 package dragonBones.core
 {
+	import flash.geom.Matrix;
+	
 	import dragonBones.Armature;
 	import dragonBones.Bone;
-	import dragonBones.core.dragonBones_internal;
 	import dragonBones.objects.DBTransform;
 	import dragonBones.utils.TransformUtil;
-	
-	import flash.geom.Matrix;
 	
 	use namespace dragonBones_internal;
 
@@ -36,12 +35,12 @@ package dragonBones.core
 		
 		/** @private */
 		dragonBones_internal var _global:DBTransform;
-		
 		/** @private */
 		dragonBones_internal var _globalTransformMatrix:Matrix;
 		
 		dragonBones_internal static var _tempParentGlobalTransformMatrix:Matrix = new Matrix();
 		dragonBones_internal static var _tempParentGlobalTransform:DBTransform = new DBTransform();
+		
 		
 		/**
 		 * This DBObject instance global transform instance.
@@ -55,7 +54,7 @@ package dragonBones.core
 		/** @private */
 		protected var _origin:DBTransform;
 		/**
-		 * This Bone instance origin transform instance.
+		 * This DBObject instance related to parent transform instance.
 		 * @see dragonBones.objects.DBTransform
 		 */
 		public function get origin():DBTransform
@@ -66,7 +65,7 @@ package dragonBones.core
 		/** @private */
 		protected var _offset:DBTransform;
 		/**
-		 * This Bone instance offset transform instance.
+		 * This DBObject instance offset transform instance (For manually control).
 		 * @see dragonBones.objects.DBTransform
 		 */
 		public function get offset():DBTransform
@@ -97,15 +96,7 @@ package dragonBones.core
 		/** @private */
 		dragonBones_internal function setArmature(value:Armature):void
 		{
-			if(_armature)
-			{
-				_armature.removeDBObject(this);
-			}
 			_armature = value;
-			if(_armature)
-			{
-				_armature.addDBObject(this);
-			}
 		}
 		
 		/** @private */
@@ -166,7 +157,6 @@ package dragonBones.core
 		
 		protected function calculateParentTransform():Object
 		{
-			
 			if(this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale))
 			{
 				var parentGlobalTransform:DBTransform = this._parent._globalTransformForChild;
@@ -193,7 +183,7 @@ package dragonBones.core
 					}
 					
 					parentGlobalTransformMatrix = DBObject._tempParentGlobalTransformMatrix;
-					TransformUtil.transformToMatrix(parentGlobalTransform, parentGlobalTransformMatrix, true);
+					TransformUtil.transformToMatrix(parentGlobalTransform, parentGlobalTransformMatrix);
 				}
 				
 				return {parentGlobalTransform:parentGlobalTransform, parentGlobalTransformMatrix:parentGlobalTransformMatrix};
@@ -204,14 +194,32 @@ package dragonBones.core
 		protected function updateGlobal():Object
 		{
 			calculateRelativeParentTransform();
-			TransformUtil.transformToMatrix(_global, _globalTransformMatrix, true);
 			var output:Object = calculateParentTransform();
-			
 			if(output != null)
 			{
-				_globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
-				TransformUtil.matrixToTransform(_globalTransformMatrix, _global, _global.scaleX * output.parentGlobalTransform.scaleX >= 0, _global.scaleY * output.parentGlobalTransform.scaleY >= 0);
+				//计算父骨头绝对坐标
+				var parentMatrix:Matrix = output.parentGlobalTransformMatrix;
+				var parentGlobalTransform:DBTransform = output.parentGlobalTransform;
+				//计算绝对坐标
+				var x:Number = _global.x;
+				var y:Number = _global.y;
+				
+				_global.x = parentMatrix.a * x + parentMatrix.c * y + parentMatrix.tx;
+				_global.y = parentMatrix.d * y + parentMatrix.b * x + parentMatrix.ty;
+				
+				if(this.inheritRotation)
+				{
+					_global.skewX += parentGlobalTransform.skewX;
+					_global.skewY += parentGlobalTransform.skewY;
+				}
+				
+				if(this.inheritScale)
+				{
+					_global.scaleX *= parentGlobalTransform.scaleX;
+					_global.scaleY *= parentGlobalTransform.scaleY;
+				}
 			}
+			TransformUtil.transformToMatrix(_global, _globalTransformMatrix);
 			return output;
 		}
 	}

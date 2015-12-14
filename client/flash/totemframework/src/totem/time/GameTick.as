@@ -24,7 +24,6 @@ package totem.time
 	import org.osflash.signals.Signal;
 
 	import totem.core.IDestroyable;
-	import totem.core.time.TimeManager;
 
 	/**
 	 * Clock system.
@@ -46,6 +45,8 @@ package totem.time
 		private var _displayObject : DisplayObject;
 
 		private var _lastTime : Number;
+
+		private var _pause : Boolean;
 
 		private var _rate : Number;
 
@@ -83,6 +84,19 @@ package totem.time
 			return _destroyed;
 		}
 
+		public function get pause() : Boolean
+		{
+			return _pause;
+		}
+
+		public function set pause( value : Boolean ) : void
+		{
+			if ( _pause == value )
+				return;
+
+			_pause = value;
+		}
+
 		public function get rate() : Number
 		{
 			return _rate;
@@ -101,6 +115,9 @@ package totem.time
 
 		private function tick( e : Event ) : void
 		{
+
+			if ( _pause == true )
+				return;
 
 			var time : Number = getTimer();
 			var dt : Number = time - _lastTime;

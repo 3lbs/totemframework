@@ -14,33 +14,36 @@
 //
 //------------------------------------------------------------------------------
 
-
 package totem.core.params.display
 {
-	import totem.core.params.animation.AnimationDataParam;
 
-	public class MovieClipParam  extends AssetParam
+	import totem.components.animation.controller.AnimationHash;
+	import totem.core.params.animation.AnimationInfo;
+
+	public class MovieClipParam extends AssetParam
 	{
+
+		public var animationHashList : Vector.<AnimationHash>;
 
 		public var fps : int;
 
 		public var name : String;
 
-		private var _animationData : Vector.<AnimationDataParam> = new Vector.<AnimationDataParam>();
+		private var _animationInfo : Vector.<AnimationInfo> = new Vector.<AnimationInfo>();
 
 		public function MovieClipParam()
 		{
 			super();
 		}
 
-		public function get animationData() : Vector.<AnimationDataParam>
+		public function get animationInfo() : Vector.<AnimationInfo>
 		{
-			return _animationData;
+			return _animationInfo;
 		}
 
-		public function set animationData( value : Vector.<AnimationDataParam> ) : void
+		public function set animationInfo( value : Vector.<AnimationInfo> ) : void
 		{
-			_animationData = value;
+			_animationInfo = value;
 		}
 	}
 }

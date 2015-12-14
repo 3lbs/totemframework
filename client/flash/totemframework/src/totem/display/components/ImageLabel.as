@@ -33,10 +33,15 @@ package totem.display.components
 
 		private var _movieClip : MovieClip;
 
+		private var _visible : Boolean = true;
+
 		public function ImageLabel( mc : MovieClip )
 		{
 			_movieClip = mc;
 			_movieClip.gotoAndStop( 1 );
+
+			_movieClip.mouseEnabled = false;
+			_movieClip.mouseChildren = false;
 
 			findLabel();
 
@@ -63,25 +68,10 @@ package totem.display.components
 
 			var frame : int = ( value ) ? 1 : 2;
 			_movieClip.gotoAndStop( frame );
-			
+
 			refresh();
 		}
 
-		/**
-		 * Refresh button display.
-		 */
-		protected function refresh() : void
-		{
-			
-			findLabel();
-			
-			if ( _label && _labelText )
-			{
-				setLabel( _labelText );
-			}
-			
-		}
-		
 		public function setLabel( value : String ) : void
 		{
 
@@ -91,6 +81,24 @@ package totem.display.components
 			{
 				_label.htmlText = value;
 			}
+		}
+
+		public function setText( value : String ) : void
+		{
+			if ( _label )
+				_label.htmlText = value;
+		}
+
+		public function get visible() : Boolean
+		{
+			return _visible;
+		}
+
+		public function set visible( value : Boolean ) : void
+		{
+			_visible = value;
+
+			_movieClip.visible = value;
 		}
 
 		protected function findLabel() : void
@@ -108,7 +116,24 @@ package totem.display.components
 					_label.text = "";
 					_label.mouseEnabled = false;
 					_label.selectable = false;
+
+					break;
 				}
+			}
+
+		}
+
+		/**
+		 * Refresh button display.
+		 */
+		protected function refresh() : void
+		{
+
+			findLabel();
+
+			if ( _label && _labelText )
+			{
+				setLabel( _labelText );
 			}
 
 		}

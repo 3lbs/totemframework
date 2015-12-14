@@ -31,9 +31,9 @@ package totem.core.task
 		public function addTask( task : Task ) : Task
 		{
 
-			if ( !task.restartable )
+			//if ( !task.restartable )
 			{
-				task.onCompleted.addOnce( handleTaskComplete );
+				//task.onCompleted.addOnce( handleTaskComplete );
 			}
 
 			_tasks.addTask( task );
@@ -92,12 +92,12 @@ package totem.core.task
 			return task
 		}
 
-		private function handleTaskComplete( task : Task ) : void
+		/*private function handleTaskComplete( task : Task ) : void
 		{
 			if ( _tasks.removeTask( task ))
 			{
 				task.destroy();
 			}
-		}
+		}*/
 	}
 }

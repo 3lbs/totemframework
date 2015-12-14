@@ -18,9 +18,9 @@ package totem.components.spatial
 {
 
 	import flash.utils.Dictionary;
-	
+
 	import starling.display.Quad;
-	
+
 	import totem.components.display.IDisplay2DRenderer;
 	import totem.core.params.Transform2DParam;
 	import totem.core.time.TickedComponent;
@@ -490,8 +490,8 @@ package totem.components.spatial
 			{
 				var p : Vector2D = _bounds.center; //.subtractedBy( defaultOffset ); //.subtract( positionOffset );
 
-				boundImage.x = p.x; // - (width * 0.5);
-				boundImage.y = p.y; //- ( height * 0.5 );
+				boundImage.x = p.x - ( boundImage.width * 0.5 );
+				boundImage.y = p.y - ( boundImage.height * 0.5 );
 			}
 
 		}

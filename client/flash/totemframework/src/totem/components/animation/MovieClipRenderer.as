@@ -40,15 +40,8 @@ package totem.components.animation
 			displayObject = mc;
 		}
 
-		override public function goToAndPlay( animName : String, frame : int, type : AnimatorEnum = null ) : void
+		override public function goToAndPlay( animName : String, frame : int, loop : int = 1 ) : void
 		{
-			var loop : int = -1;
-
-			if ( type != null )
-			{
-				loop = ( type == AnimatorEnum.LOOP ) ? 1 : 0;
-			}
-
 			movieClip.play( animName, loop );
 
 			movieClip.currentFrame = frame;
@@ -89,15 +82,8 @@ package totem.components.animation
 			_paused = true;
 		}
 
-		override public function playAnimation( animName : String, type : AnimatorEnum = null ) : void
+		override public function playAnimation( animName : String, loop : int = 1 ) : void
 		{
-			var loop : int = -1;
-
-			if ( type != null )
-			{
-				loop = ( type == AnimatorEnum.LOOP ) ? 1 : 0;
-			}
-
 			movieClip.play( animName, loop );
 		}
 

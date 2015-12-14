@@ -23,7 +23,7 @@ package application.parents
 	import flash.filesystem.File;
 	import flash.geom.Rectangle;
 	import flash.media.StageWebView;
-
+	
 	import totem.display.layout.TContainer;
 	import totem.utils.MobileUtil;
 
@@ -72,6 +72,31 @@ package application.parents
 			return webView.isHistoryBackEnabled;
 		}
 
+		public function copyFolder  ( file : File ) : void
+		{
+			//var file : File = new File( url );
+			
+			var path : String;
+			
+			if ( MobileUtil.isIOS())
+			{
+				path = new File( file.nativePath ).url;
+			}
+			else
+			{
+				var source : File =  file.parent;
+				var destination : File = File.applicationStorageDirectory.resolvePath( tempDirectory );
+				
+				if ( !destination.exists )
+				{
+					destination.createDirectory();
+				}
+				
+				source.copyTo( destination, true );
+				path = "file://" + destination.resolvePath( file.name ).nativePath;
+			}
+		}
+		
 		public function loadPageURL( url : String ) : void
 		{
 			this.url = url;

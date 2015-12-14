@@ -442,7 +442,7 @@ package totem.core.task
 				return false;
 			}
 			cancelTimer();
-			_state = ( restartable ) ? TaskState.INACTIVE : TaskState.FINISHED;
+			_state = ( _restartable == true ) ? TaskState.INACTIVE : TaskState.FINISHED;
 
 			if ( _parent != null )
 			{

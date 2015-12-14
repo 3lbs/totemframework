@@ -17,13 +17,12 @@
 package totem.loaders.atlas
 {
 
-	import dragonBones.factorys.NativeFactory;
-	import dragonBones.factorys.StarlingFactory;
+	import flash.filesystem.File;
+	
+	import dragonBones.factories.NativeFactory;
 	import dragonBones.textures.ITextureAtlas;
 	import dragonBones.textures.NativeTextureAtlas;
-
-	import flash.filesystem.File;
-
+	
 	import totem.loaders.BitmapDataLoader;
 	import totem.loaders.starling.AtlasTextureCache;
 	import totem.loaders.starling.DragonBonesFactoryCache;

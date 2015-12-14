@@ -24,7 +24,7 @@ package totem.utils
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
-
+	
 	import org.casalib.util.StageReference;
 
 	/**
@@ -124,6 +124,10 @@ package totem.utils
 			{
 				return isRetina();
 			}
+			else if ( isWindows() )
+			{
+				return false;
+			}
 			else
 			{
 				if ( !_STAGE )
@@ -149,6 +153,12 @@ package totem.utils
 			return Capabilities.manufacturer.indexOf( "iOS" ) > -1;
 		}
 
+		
+		public static function isWindows() : Boolean
+		{
+			return Capabilities.version.indexOf( "WIN" ) > -1;
+		}
+		
 		public static function isIpad() : Boolean
 		{
 

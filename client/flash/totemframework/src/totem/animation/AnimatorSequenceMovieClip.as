@@ -25,14 +25,14 @@ package totem.animation
 
 		public static const SEQUENCE_COMPLETE_EVENT : String = "SequenceCompleteEvent";
 
-		private var _sequence : Array;
+		private var _sequence : Vector.<Animation>;
 
-		public function AnimatorSequenceMovieClip( mc : MovieClip, fps : int = 12, loop : Boolean = false )
+		public function AnimatorSequenceMovieClip( mc : MovieClip, fps : int = 12, loop : int = 0 )
 		{
 			super( mc, fps, loop );
 		}
 
-		override public function playAnimation( name : String, loop : Boolean = false ) : void
+		override public function playAnimation( name : String, loop : int = 0 ) : void
 		{
 			if ( !_sequence )
 			{
@@ -40,14 +40,28 @@ package totem.animation
 			}
 		}
 
-		public function playSequence( value : Array ) : void
+		public function playSequence( value : Vector.<Animation> ) : void
 		{
+
 			_sequence = value;
 
-			var _currentSequence : String = _sequence.shift();
+			var _currentSequence : Animation = _sequence.shift();
+			onPlayAniamtion( _currentSequence.name, _currentSequence.loop );
 
-			onPlayAniamtion( _currentSequence, false );
 		}
+
+		/*override protected function onPlayAniamtion( name : String, loop : int = 0 ) : Boolean
+		{
+			var result : Boolean = super.onPlayAniamtion( name, loop );
+			
+			if ( !result )
+			{
+				var _currentSequence : Animation = _sequence.shift();
+				onPlayAniamtion( _currentSequence.name, _currentSequence.loop );
+			}
+			
+			return result;
+		}*/
 
 		override protected function onUpdateAnimation() : void
 		{
@@ -60,15 +74,30 @@ package totem.animation
 
 			if ( currentFrame >= _currentAnimation.end )
 			{
-				if ( _sequence.length = 0 )
+
+				_count += 1;
+
+				if ( _loop == 0 || _count < _loop )
 				{
-					_sequence = null;
-					stop();
-					dispatchEvent( new Event( SEQUENCE_COMPLETE_EVENT ));
+					_movieClip.gotoAndStop( _currentAnimation.start );
 				}
-				else if ( _sequence.length > 0 )
+				else
 				{
-					onPlayAniamtion( _sequence.shift(), false );
+					//stop();
+					//dispatchEvent( new Event( Event.COMPLETE ));
+
+					if ( _sequence.length == 0 )
+					{
+						_sequence = null;
+						stop();
+						dispatchEvent( new Event( SEQUENCE_COMPLETE_EVENT ));
+					}
+					else if ( _sequence.length > 0 )
+					{
+						var _currentSequence : Animation = _sequence.shift();
+						onPlayAniamtion( _currentSequence.name, _currentSequence.loop );
+					}
+
 				}
 			}
 		}

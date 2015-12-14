@@ -23,11 +23,12 @@ package totem.display.components
 	import flash.text.TextField;
 
 	import totem.events.RemovableEventDispatcher;
+	import totem.monitors.promise.wait;
 
 	public class MovieClipButton extends RemovableEventDispatcher
 	{
 
-		protected var DISABLE_STATE_FRAME : int = 2;
+		protected var DISABLE_STATE_FRAME : int = 4;
 
 		protected var DOWN_STATE_FRAME : int = 3;
 
@@ -47,7 +48,11 @@ package totem.display.components
 		/** @var Reference to TextField */
 		private var _label : TextField;
 
+		private var _labelDisableColor : uint;
+
 		private var _labelText : String;
+
+		private var _labelTextColor : uint;
 
 		private var _name : String;
 
@@ -55,7 +60,7 @@ package totem.display.components
 
 		public function MovieClipButton( mc : MovieClip )
 		{
-			
+
 			_movieClip = mc;
 			_movieClip.stop();
 			_movieClip.gotoAndStop( 1 );
@@ -63,7 +68,11 @@ package totem.display.components
 			_movieClip.useHandCursor = true;
 
 			findLabel();
-			
+
+			if ( _label )
+			{
+				_labelTextColor = _labelDisableColor = _label.textColor;
+			}
 
 			// Add event listeners
 			attachButtonListeners();
@@ -153,12 +162,23 @@ package totem.display.components
 			if ( _enabled )
 			{
 				attachButtonListeners();
-				_movieClip.mouseEnabled = true;
+
+				if ( _label )
+				{
+					_label.textColor = _labelTextColor;
+				}
 				gotoAndStop( UP_STATE_FRAME );
+				_movieClip.mouseEnabled = true;
 			}
 			else
 			{
 				detachButtontListeners();
+
+				if ( _label )
+				{
+					_label.textColor = _labelDisableColor;
+				}
+
 				gotoAndStop( DISABLE_STATE_FRAME );
 				_movieClip.mouseEnabled = false;
 			}
@@ -187,6 +207,16 @@ package totem.display.components
 		public function get label() : TextField
 		{
 			return _label;
+		}
+
+		public function get labelDisableColor() : uint
+		{
+			return _labelDisableColor;
+		}
+
+		public function set labelDisableColor( value : uint ) : void
+		{
+			_labelDisableColor = value;
 		}
 
 		/**
@@ -292,6 +322,8 @@ package totem.display.components
 					_label.text = "";
 					_label.mouseEnabled = false;
 					_label.selectable = false;
+					
+					break;
 				}
 			}
 
@@ -310,7 +342,7 @@ package totem.display.components
 				return;
 			}
 
-			/*switch ( event.type )
+			switch ( event.type )
 			{
 				case MouseEvent.ROLL_OVER:
 				case MouseEvent.MOUSE_OVER:
@@ -327,7 +359,7 @@ package totem.display.components
 					gotoAndStop( UP_STATE_FRAME );
 					break;
 				}
-			}*/
+			}
 
 			dispatchEvent( event.clone());
 
@@ -344,12 +376,11 @@ package totem.display.components
 		{
 
 			findLabel();
-
+			
 			if ( _label && _labelText )
 			{
 				setText( _labelText );
 			}
-
 		}
 
 		protected function resetContent() : void
@@ -357,5 +388,6 @@ package totem.display.components
 			refresh();
 			gotoAndStop( UP_STATE_FRAME );
 		}
+
 	}
 }

@@ -64,7 +64,9 @@ package totem.ui.popup
 
 		protected function complete() : void
 		{
-			completeTransition.dispatch( this );
+			
+			//if ( completeTransition )
+				completeTransition.dispatch( this );
 			//popUp = null;
 		}
 	}

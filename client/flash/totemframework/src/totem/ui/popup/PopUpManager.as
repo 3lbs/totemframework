@@ -406,7 +406,8 @@ package totem.ui.popup
 
 			var displayObject : DisplayObject = transition.popUp;
 
-			_container.removeChild( displayObject );
+			if ( displayObject.parent )
+				_container.removeChild( displayObject );
 
 			propagationController.enabled = false;
 

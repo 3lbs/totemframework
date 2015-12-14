@@ -16,31 +16,33 @@
 
 package totem.core.params.animation
 {
-	
+
+	import totem.components.animation.controller.AnimationHash;
 
 	public class SkeletonDataParam
 	{
+		public var animationHashList : Vector.<AnimationHash>;
 
 		public var armatureData : ArmatureDataParam;
 
-		public var fps : int;
-
 		public var atlasID : String;
 
-		private var _animationData : Vector.<AnimationDataParam> = new Vector.<AnimationDataParam>();
+		public var fps : int;
+
+		private var _animationInfo : Vector.<AnimationInfo> = new Vector.<AnimationInfo>();
 
 		public function SkeletonDataParam()
 		{
 		}
 
-		public function get animationData() : Vector.<AnimationDataParam>
+		public function get animationInfo() : Vector.<AnimationInfo>
 		{
-			return _animationData;
+			return _animationInfo;
 		}
 
-		public function set animationData( value : Vector.<AnimationDataParam> ) : void
+		public function set animationInfo( value : Vector.<AnimationInfo> ) : void
 		{
-			_animationData = value;
+			_animationInfo = value;
 		}
 	}
 }

@@ -18,7 +18,7 @@ package AI.goal
 {
 
 	import flash.events.Event;
-
+	
 	import totem.components.motion.TweenComponent;
 
 	public class Goal

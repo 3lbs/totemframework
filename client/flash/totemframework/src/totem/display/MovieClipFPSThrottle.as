@@ -26,7 +26,7 @@ package totem.display
 	public class MovieClipFPSThrottle extends TSprite
 	{
 
-		protected var _loop : Boolean;
+		protected var _loop : int;
 
 		protected var _movieClip : MovieClip;
 
@@ -44,11 +44,11 @@ package totem.display
 
 		private var _totalFrames : int;
 
-		public function MovieClipFPSThrottle( mc : MovieClip, fps : int = 12, loop : Boolean = false )
+		public function MovieClipFPSThrottle( mc : MovieClip, fps : int = 12, loop : int = 0 )
 		{
 
 			_movieClip = mc;
-			_movieClip.gotoAndStop( 1 );
+			//_movieClip.gotoAndStop( 1 );
 
 			_totalFrames = _movieClip.totalFrames;
 
@@ -57,7 +57,7 @@ package totem.display
 
 			_lastTime = getTimer();
 
-			stop();
+			//stop();
 
 			if ( !_movieClip.parent )
 				addChild( _movieClip );
@@ -123,7 +123,7 @@ package totem.display
 			return ( _playing || _isReversing );
 		}
 
-		public function set loop( value : Boolean ) : void
+		public function set loop( value : int ) : void
 		{
 			_loop = value;
 		}
@@ -183,7 +183,7 @@ package totem.display
 
 			if ( this.currentFrame == 1 )
 			{
-				if ( _loop )
+				if ( _loop == 0  )
 				{
 					super.gotoAndStop( this.totalFrames );
 				}
@@ -232,7 +232,7 @@ package totem.display
 
 			if ( currentFrame >= ( _totalFrames ))
 			{
-				if ( _loop )
+				if ( _loop == 0 )
 				{
 					_movieClip.gotoAndStop( 1 );
 				}

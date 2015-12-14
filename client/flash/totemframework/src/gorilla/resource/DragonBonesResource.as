@@ -17,10 +17,10 @@
 package gorilla.resource
 {
 
-	import dragonBones.factorys.StarlingFactory;
-
 	import flash.events.Event;
 	import flash.utils.ByteArray;
+	
+	import dragonBones.factories.StarlingFactory;
 
 	public class DragonBonesResource extends DataResource
 	{

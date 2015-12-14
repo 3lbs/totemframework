@@ -17,12 +17,14 @@
 package totem.sound
 {
 
+	import aze.motion.eaze;
+
 	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
 	import flash.utils.Dictionary;
-	
-	import aze.motion.eaze;
-	
+
+	import ladydebug.Logger;
+
 	import totem.events.RemovableEventDispatcher;
 	import totem.sound.groups.BGMGroup;
 	import totem.sound.groups.SFXGroup;
@@ -438,7 +440,25 @@ package totem.sound
 			if ( id in soundsDic )
 				TotemSound( soundsDic[ id ]).stop();
 			else
-				trace( this, "stopSound() : sound", id, "doesn't exist." );
+				Logger.warn( this, "stopSound()", " sound: " + id + "doesn't exist." );
+		}
+
+		public function stopSoundFadeOut( id : String, tweenDuration : Number = 2 ) : void
+		{
+
+			//tweenVolume
+			if ( id in soundsDic )
+			{
+				var _stopSound : Function = function( totemSound : TotemSound ) {
+					totemSound.stop();
+				}
+				tweenVolume( id, 0, tweenDuration, _stopSound );
+
+			}
+			else
+			{
+				Logger.warn( this, "stopSound()", " sound: " + id + "doesn't exist." );
+			}
 		}
 
 		/**
