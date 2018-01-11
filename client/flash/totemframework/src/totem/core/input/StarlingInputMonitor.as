@@ -46,7 +46,7 @@ package totem.core.input
 			zoomGesture = new ZoomTGesture();
 
 			longPressGesture = new LongPressTGesture();
-			longPressGesture.minPressDuration = 250;
+			longPressGesture.minPressDuration = 100;
 
 			panGesture.requireGestureToFail( longPressGesture );
 		}

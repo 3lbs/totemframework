@@ -332,7 +332,7 @@ package totem.core.input.dragDrop
 		 */
 		protected static function updateDropTarget( location : Point ) : void
 		{
-			var target : DisplayObject = Starling.current.stage.hitTest( location, true );
+			var target : DisplayObject = Starling.current.stage.hitTest( location );
 
 			while ( target && !( target is IDropTarget ))
 			{

@@ -30,7 +30,7 @@ package totem.core
 	import totem.core.mvc.TotemContext;
 	import totem.monitors.promise.wait;
 
-	[SWF( frameRate = "60", backgroundColor = "0xFFFFFF" )]
+	[SWF( frameRate = "60", backgroundColor = "0x00FF00" )]
 	public class TotemGameSprite extends Sprite
 	{
 

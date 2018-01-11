@@ -104,8 +104,8 @@ package totem.core.mvc
 			{
 				_stage = _mainClass.stage;
 				//initializeApplication();
-				wait( 10, initializeApplication );
 			}
+			wait( 10, initializeApplication );
 		}
 
 		public function get stage() : Stage

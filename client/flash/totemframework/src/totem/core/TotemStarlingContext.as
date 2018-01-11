@@ -25,11 +25,11 @@ package totem.core
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
-	import totem.core.mvc.modular.mvcs.TotemModuleContext;
+	import totem.core.mvc.TotemContext;
 	import totem.loaders.starling.StarlingEngineBuilder;
 	import totem.monitors.promise.wait;
 
-	public class TotemStarlingContext extends TotemModuleContext // implements ITicked
+	public class TotemStarlingContext extends TotemContext // implements ITicked
 	{
 
 		public var starlingEngine : Starling;
