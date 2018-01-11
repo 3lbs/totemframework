@@ -33,9 +33,10 @@ package iso3lbs.display
 			_hitMap = val;
 		}
 
-		override public function hitTest( localPoint : Point, forTouch : Boolean = false ) : DisplayObject
+		
+		override public function hitTest( localPoint : Point ) : DisplayObject
 		{
-			var hitCase : DisplayObject = super.hitTest( localPoint, forTouch );
+			var hitCase : DisplayObject = super.hitTest( localPoint );
 
 			if ( hitCase == null || _hitMap == null )
 			{

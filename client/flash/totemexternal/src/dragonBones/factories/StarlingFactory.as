@@ -107,14 +107,14 @@
 				throw new Error();
 			}			
 			var textureAtlas:StarlingTextureAtlas = new StarlingTextureAtlas(texture, textureAtlasRawData, false);			
-			if (Starling.handleLostContext)
+/*		if (Starling.handleLostContext)
 			{
-				textureAtlas._bitmapData = bitmapData;
+				//textureAtlas._bitmapData = bitmapData;
 			}
-			else
+			//else
 			{
+			}*/
 				bitmapData.dispose();
-			}
 			return textureAtlas;
 		}
 		
